@@ -1,21 +1,15 @@
 import unittest
 
-from domino_puzzle import Domino, Cell, Board
+from domino_puzzle import Domino, Cell, Board, BoardError
     
 class DummyRandom(object):
     def __init__(self, choiceIndexes=None, randints=None):
         self.choiceIndexes = choiceIndexes or []
         self.randints = randints or []
-        
-    def choice(self, seq):
-        choiceIndex = self.choiceIndexes.pop(0)
-        for i, item in enumerate(seq):
-            if i == choiceIndex:
-                return item
-        raise IndexError(choiceIndex)
     
     def randint(self, a, b):
-        return self.randints[(a, b)].pop(0)
+        results = self.randints.get((a, b), None)
+        return results.pop(0) if results else 0 
 
 class CellTest(unittest.TestCase):
     def testRepr(self):
@@ -128,6 +122,16 @@ x x x x
         
         self.assertEqual(90, domino.degrees)
 
+    def testRemoveAndRotate(self):
+        board = Board(3, 4)
+        domino = Domino(1, 5)
+        board.add(domino, 0, 0)
+        
+        board.remove(domino)
+        domino.rotate(270)
+        
+        self.assertEqual(270, domino.degrees)
+
     def testRotateAndAdd(self):
         board = Board(4, 3)
         domino = Domino(5, 6)
@@ -144,6 +148,127 @@ x x x x
         display = board.display()
         
         self.assertMultiLineEqual(expected_display, display)
+
+    def testOccupied(self):
+        board = Board(4, 3)
+        board.add(Domino(2, 3), 1, 0)
+        
+        with self.assertRaisesRegexp(BoardError, 'Position 1, 0 is occupied.'):
+            board.add(Domino(1, 2), 0, 0)
+
+    def testOffBoard(self):
+        board = Board(4, 3)
+        
+        with self.assertRaisesRegexp(BoardError,
+                                     'Position 4, 0 is off the board.'):
+            board.add(Domino(1, 2), 3, 0)
+
+    def testFill(self):
+        dummy_random = DummyRandom(randints={(0, 4): [1, 1]}) # directions
+        dominoes = Domino.create(6)
+        board = Board(2, 2)
+        expected_display = """\
+0 1
+- -
+0 0
+"""
+        
+        board.fill(dominoes, dummy_random)
+        display = board.display()
+        
+        self.assertMultiLineEqual(expected_display, display)
+
+    def testFillWithRandomDomino(self):
+        dummy_random = DummyRandom(randints={(0, 27): [5],
+                                             (0, 26): [2],
+                                             (0, 4): [1, 1]}) # directions
+        dominoes = Domino.create(6)
+        board = Board(2, 2)
+        expected_display = """\
+5 2
+- -
+0 0
+"""
+        
+        board.fill(dominoes, dummy_random)
+        display = board.display()
+        
+        self.assertMultiLineEqual(expected_display, display)
+
+    def testFillWithFlip(self):
+        dummy_random = DummyRandom(randints={(0, 4): [1, 1], # directions
+                                             (0, 1): [0, 1]})# flips
+        dominoes = Domino.create(6)
+        board = Board(2, 2)
+        expected_display = """\
+0 0
+- -
+0 1
+"""
+        
+        board.fill(dominoes, dummy_random)
+        display = board.display()
+        
+        self.assertMultiLineEqual(expected_display, display)
+
+    def testFillWithMoreRotation(self):
+        dummy_random = DummyRandom(randints={(0, 4): [1, 1, 1]}) # directions
+        dominoes = Domino.create(6)
+        board = Board(2, 3)
+        expected_display = """\
+0|2
+   
+0 1
+- -
+0 0
+"""
+        
+        board.fill(dominoes, dummy_random)
+        display = board.display()
+        
+        self.assertMultiLineEqual(expected_display, display)
+    
+    def testFillWithBacktrack(self):
+        """ Force a backtrack.
+        
+        This scenario will get to the following grid and then be forced to
+        backtrack.
+        x 3 4 x
+          - -  
+        0 0 0 2
+        -     -
+        0 0|1 0
+        """
+        dummy_random = DummyRandom(randints={(0, 4): [1, 0, 1, 1]})# directions
+        dominoes = Domino.create(6)
+        board = Board(4, 3)
+        expected_display = """\
+0|4 0|5
+       
+0 0|3 2
+-     -
+0 0|1 0
+"""
+        
+        board.fill(dominoes, dummy_random)
+        display = board.display()
+        
+        self.assertMultiLineEqual(expected_display, display)
+    
+    def testFlip(self):
+        board = Board(3, 2)
+        domino = Domino(1, 5)
+        expected_display = """\
+x x x
+     
+5|1 x
+"""
+        
+        board.add(domino, 0, 0)
+        domino.flip()
+        
+        self.assertMultiLineEqual(expected_display, board.display())
+    
     
 class DominoTest(unittest.TestCase):
     def testRepr(self):
@@ -159,3 +284,30 @@ class DominoTest(unittest.TestCase):
         pips = domino.head.pips
         
         self.assertEqual(5, pips)
+
+    def testCreate(self):
+        expected_dominoes = [Domino(0, 0),
+                             Domino(0, 1),
+                             Domino(0, 2),
+                             Domino(1, 1),
+                             Domino(1, 2),
+                             Domino(2, 2)]
+        dominoes = Domino.create(2)
+        
+        self.assertEqual(expected_dominoes, dominoes)
+    
+    def testRotateFullCircle(self):
+        domino = Domino(1, 5)
+        
+        domino.rotate(180)
+        domino.rotate(180)
+        
+        self.assertEqual(0, domino.degrees)
+    
+    def testRotateNegative(self):
+        domino = Domino(1, 5)
+        
+        domino.rotate(-90)
+        
+        self.assertEqual(270, domino.degrees)
+    

@@ -1,3 +1,5 @@
+from random import Random
+
 class Cell(object):
     def __init__(self, pips):
         self.pips = pips
@@ -8,6 +10,9 @@ class Cell(object):
     
     def __repr__(self):
         return 'Cell({})'.format(self.pips)
+
+class BoardError(StandardError):
+    pass
 
 class Board(object):
     def __init__(self, width, height):
@@ -21,10 +26,18 @@ class Board(object):
         try:
             dx, dy = item.direction
             self.add(item.head, x, y)
-            self.add(item.tail, x+dx, y+dy)
+            try:
+                self.add(item.tail, x+dx, y+dy)
+            except BoardError:
+                self.remove(item.head)
+                raise
         except AttributeError:
             if item.x is not None:
                 self.cells[item.x][item.y] = None
+            if not (0 <= x < self.width and 0 <= y < self.height):
+                raise BoardError('Position {}, {} is off the board.'.format(x, y))
+            if self.cells[x][y] is not None:
+                raise BoardError('Position {}, {} is occupied.'.format(x, y))
             self.cells[x][y] = item
             item.board = self
             item.x = x
@@ -36,7 +49,7 @@ class Board(object):
             self.remove(item.tail)
         except AttributeError:
             self.cells[item.x][item.y] = None
-            item.x = item.y = None
+            item.x = item.y = item.board = None
     
     def __getitem__(self, x):
         return self.cells[x]
@@ -59,9 +72,40 @@ class Board(object):
                     divider = '|' if dx else '-'
                     display[row-dy][col+dx] = divider
         return ''.join(''.join(row) + '\n' for row in display)
-
+    
+    def fill(self, dominoes, random):
+        for y in range(self.height):
+            for x in range(self.width):
+                if self[x][y] is None:
+                    domino_index = random.randint(0, len(dominoes)-1)
+                    domino = dominoes.pop(domino_index)
+                    rotation = random.randint(0, 4) * 90
+                    domino.rotate(rotation)
+                    for _ in range(4):
+                        try:
+                            self.add(domino, x, y)
+                            if random.randint(0, 1):
+                                domino.flip()
+                            if self.fill(dominoes, random):
+                                return True
+                            self.remove(domino)
+                        except BoardError:
+                            pass
+                        domino.rotate(90)
+                    dominoes.insert(domino_index, domino)
+                    return False
+        return True
+    
 class Domino(object):
     directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+    @classmethod
+    def create(cls, max_pips):
+        dominoes = []
+        for head_pips in range(max_pips+1):
+            for tail_pips in range(head_pips, max_pips+1):
+                dominoes.append(Domino(head_pips, tail_pips))
+        return dominoes
+    
     def __init__(self, head_pips, tail_pips):
         self.head = Cell(head_pips)
         self.tail = Cell(tail_pips)
@@ -73,8 +117,12 @@ class Domino(object):
     def __repr__(self):
         return "Domino({}, {})".format(self.head.pips, self.tail.pips)
     
+    def __eq__(self, other):
+        return (self.head.pips == other.head.pips and
+                self.tail.pips == other.tail.pips)
+    
     def rotate(self, degrees):
-        self.degrees = self.degrees + degrees
+        self.degrees = (self.degrees + degrees) % 360
         self.calculateDirection()
         if self.head.board:
             dx, dy = self.direction
@@ -86,6 +134,13 @@ class Domino(object):
         board = self.head.board
         board.remove(self)
         board.add(self, x, y)
+    
+    def flip(self):
+        board = self.tail.board
+        x, y = self.tail.x, self.tail.y
+        board.remove(self)
+        self.rotate(180)
+        board.add(self, x, y)
         pass
         
     def calculateDirection(self):
@@ -93,39 +148,37 @@ class Domino(object):
 
 if __name__ == '__main__':
     print 'Searching...'
+    random = Random()
+    board = Board(8, 7)
+    dominoes = Domino.create(6)
+    board.fill(dominoes, random)
+    print board.display()
+    
 elif __name__ == '__live_coding__':
     import unittest
     def testSomething(self):
-        board = Board(4, 3)
-        domino = Domino(5, 6)
-        domino.rotate(-90)
-        board.add(domino, 1, 2)
+        dummy_random = DummyRandom(randints={(0, 4): [1, 1], # directions
+                                             (0, 1): [0, 1]})# flips
+        dominoes = Domino.create(6)
+        board = Board(7, 8)
         expected_display = """\
-x 5 x x
-  -    
-x 6 x x
-       
-x x x x
+0 0
+- -
+0 1
 """
-
+        
+        board.fill(dominoes, dummy_random)
         display = board.display()
         
         self.assertMultiLineEqual(expected_display, display)
     
     class DummyRandom(object):
-        def __init__(self, choiceIndexes=None, randints=None):
-            self.choiceIndexes = choiceIndexes or []
-            self.randints = randints or []
-            
-        def choice(self, seq):
-            choiceIndex = self.choiceIndexes.pop(0)
-            for i, item in enumerate(seq):
-                if i == choiceIndex:
-                    return item
-            raise IndexError(choiceIndex)
+        def __init__(self, randints=None):
+            self.randints = randints or {}
         
         def randint(self, a, b):
-            return self.randints[(a, b)].pop(0)
+            results = self.randints.get((a, b), None)
+            return results.pop(0) if results else 0 
         
     class DummyTest(unittest.TestCase):
         
