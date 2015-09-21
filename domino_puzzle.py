@@ -15,9 +15,37 @@ class BoardError(StandardError):
     pass
 
 class Board(object):
+    @classmethod
+    def create(cls, state):
+        lines = state.splitlines(False)
+        lines.reverse()
+        height = (len(lines)+1) / 2
+        width = (len(lines[0])+1) / 2
+        board = Board(width, height)
+        for x in range(width-1):
+            for y in range(height):
+                head = lines[y*2][x*2]
+                if head != 'x':
+                    right_joint = lines[y*2][x*2+1]
+                    upper_joint = y+1 < height and lines[y*2+1][x*2]
+                    if right_joint == '|':
+                        tail = lines[y*2][x*2+2]
+                        degrees = 0
+                    elif upper_joint == '-':
+                        tail = lines[y*2+2][x*2]
+                        degrees = 90
+                    else:
+                        tail = None
+                    if tail:
+                        domino = Domino(int(head), int(tail))
+                        domino.rotate(degrees)
+                        board.add(domino, x, y)
+        return board
+    
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        self.dominoes = set()
         self.cells = []
         for _ in range(width):
             self.cells.append([None] * height)
@@ -31,6 +59,7 @@ class Board(object):
             except BoardError:
                 self.remove(item.head)
                 raise
+            self.dominoes.add(item)
         except AttributeError:
             if item.x is not None:
                 self.cells[item.x][item.y] = None
@@ -47,6 +76,7 @@ class Board(object):
         try:
             self.remove(item.head)
             self.remove(item.tail)
+            self.dominoes.remove(item)
         except AttributeError:
             self.cells[item.x][item.y] = None
             item.x = item.y = item.board = None
@@ -57,14 +87,29 @@ class Board(object):
     def __repr__(self):
         return 'Board({}, {})'.format(self.width, self.height)
     
-    def display(self):
-        display = [[' '] * (self.width*2-1) for _ in range(self.height*2-1)]
+    def display(self, cropped=False):
+        if not cropped:
+            xmin = ymin = 0
+            xmax, ymax = self.width-1, self.height-1
+        else:
+            xmin = self.width
+            ymin = self.height
+            xmax = ymax = 0
+            for domino in self.dominoes:
+                for cell in (domino.head, domino.tail):
+                    xmin = min(xmin, cell.x)
+                    xmax = max(xmax, cell.x)
+                    ymin = min(ymin, cell.y)
+                    ymax = max(ymax, cell.y)
+        width = xmax-xmin+1
+        height = ymax-ymin+1
+        display = [[' '] * (width*2-1) for _ in range(height*2-1)]
 
-        for y in range(self.height):
-            for x in range(self.width):
-                row = (self.height - y - 1)*2
+        for y in range(height):
+            for x in range(width):
+                row = (height - y - 1)*2
                 col = x*2
-                cell = self[x][y]
+                cell = self[x+xmin][y+ymin]
                 cell_display = 'x' if cell is None else str(cell.pips)
                 display[row][col] = cell_display
                 if cell is not None and cell.domino.head == cell:
@@ -95,6 +140,29 @@ class Board(object):
                     dominoes.insert(domino_index, domino)
                     return False
         return True
+    
+    def isConnected(self):
+        visited = set()
+        unvisited = set()
+        for domino in self.dominoes:
+            unvisited.add(domino)
+            break
+        while unvisited:
+            domino = unvisited.pop()
+            new_neighbours = domino.findNeighbours()
+            unvisited |= new_neighbours - visited
+            visited.add(domino)
+            
+        return visited == self.dominoes
+    
+    def hasLoner(self):
+        for domino in self.dominoes:
+            neighbours = domino.findNeighbours()
+            has_matching_neighbour = any(domino.isMatch(neighbour)
+                                         for neighbour in neighbours)
+            if not has_matching_neighbour:
+                return True
+        return False
     
 class Domino(object):
     directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
@@ -129,11 +197,15 @@ class Domino(object):
             self.head.board.add(self.tail, self.head.x+dx, self.head.y+dy)
     
     def move(self, dx, dy):
-        x = self.head.x + dx
-        y = self.head.y + dy
+        x = self.head.x
+        y = self.head.y
         board = self.head.board
         board.remove(self)
-        board.add(self, x, y)
+        try:
+            board.add(self, x+dx, y+dy)
+        except StandardError:
+            board.add(self, x, y)
+            raise
     
     def flip(self):
         board = self.tail.board
@@ -145,32 +217,111 @@ class Domino(object):
         
     def calculateDirection(self):
         self.direction = Domino.directions[self.degrees/90]
+    
+    def findNeighbourCell(self, dx, dy):
+        x = self.head.x + dx
+        y = self.head.y + dy
+        board = self.head.board
+        if 0 <= x < board.width and 0 <= y < board.height:
+            return board[x][y]
+        
+    def findNeighbours(self):
+        neighbour_cells = set()
+        dx, dy = self.direction
+        neighbour_cells.add(self.findNeighbourCell(-dx, -dy))
+        neighbour_cells.add(self.findNeighbourCell(2*dx, 2*dy))
+        neighbour_cells.add(self.findNeighbourCell(dy, dx))
+        neighbour_cells.add(self.findNeighbourCell(-dy, -dx))
+        neighbour_cells.add(self.findNeighbourCell(dx+dy, dy+dx))
+        neighbour_cells.add(self.findNeighbourCell(dx-dy, dy-dx))
+        neighbour_cells.discard(None)
+        neighbour_dominoes = set([cell.domino for cell in neighbour_cells])
+        return neighbour_dominoes
+    
+    def isMatch(self, other):
+        return (self.head.pips == other.head.pips or
+                self.tail.pips == other.tail.pips or
+                self.head.pips == other.tail.pips or
+                self.tail.pips == other.head.pips)
+
+class BoardGraph(object):
+    def walk(self, board):
+        complete = set()
+        new = set()
+        new.add(board.display())
+        while new:
+            state = new.pop()
+            board = Board.create(state)
+            dominoes = board.dominoes
+            for domino in dominoes:
+                dx, dy = domino.direction
+                self._try_move(domino, dx, dy, new, complete)
+                self._try_move(domino, -dx, -dy, new, complete)
+            complete.add(state)
+        self.last = state
+        return complete
+    
+    def _try_move(self, domino, dx, dy, new, complete):
+        try:
+            domino.move(dx, dy)
+            board = domino.head.board
+            new_state = board.display()
+            if (new_state not in complete and
+                board.isConnected() and
+                not board.hasLoner()):
+                
+                new.add(new_state)
+            domino.move(-dx, -dy)
+        except BoardError:
+            pass
+        
 
 if __name__ == '__main__':
     print 'Searching...'
     random = Random()
-    board = Board(8, 7)
-    dominoes = Domino.create(6)
-    board.fill(dominoes, random)
-    print board.display()
+    max_states = 0
+    best_last = None
+    for _ in range(10):
+        while True:
+            dominoes = Domino.create(6)
+            board = Board(5, 4)
+            board.fill(dominoes, random)
+            if not board.hasLoner():
+                break
+        offset = board.width + board.height
+        big_board = Board(board.width + 2*offset, board.height + 2*offset)
+        for domino in list(board.dominoes): #copy for iteration
+            x = domino.head.x + offset
+            y = domino.head.y + offset
+            board.remove(domino)
+            big_board.add(domino, x, y)
+        graph = BoardGraph()
+        states = graph.walk(big_board)
+        print len(states)
+        if len(states) > max_states:
+            best_last = graph.last
+            max_states = len(states)
+            
+    print Board.create(best_last).display(cropped=True)
+        
     
 elif __name__ == '__live_coding__':
     import unittest
     def testSomething(self):
-        dummy_random = DummyRandom(randints={(0, 4): [1, 1], # directions
-                                             (0, 1): [0, 1]})# flips
-        dominoes = Domino.create(6)
-        board = Board(7, 8)
+        board = Board.create("""\
+3 x x x
+-    
+2 0|2 x
+     
+x x x x
+""")
         expected_display = """\
-0 0
-- -
-0 1
+3 x x
+-    
+2 0|2
 """
         
-        board.fill(dominoes, dummy_random)
-        display = board.display()
-        
-        self.assertMultiLineEqual(expected_display, display)
+        self.assertMultiLineEqual(expected_display, board.display(cropped=True))
     
     class DummyRandom(object):
         def __init__(self, randints=None):

@@ -1,6 +1,6 @@
 import unittest
 
-from domino_puzzle import Domino, Cell, Board, BoardError
+from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph
     
 class DummyRandom(object):
     def __init__(self, choiceIndexes=None, randints=None):
@@ -65,6 +65,22 @@ x x x x
         
         self.assertMultiLineEqual(expected_display, display)
 
+    def testDisplayCropped(self):
+        board = Board.create("""\
+3 x x x
+-    
+2 0|2 x
+     
+x x x x
+""")
+        expected_display = """\
+3 x x
+-    
+2 0|2
+"""
+        
+        self.assertMultiLineEqual(expected_display, board.display(cropped=True))
+    
     def testRotate(self):
         board = Board(4, 3)
         domino = Domino(5, 6)
@@ -122,6 +138,15 @@ x x x x
         
         self.assertEqual(90, domino.degrees)
 
+    def testRemove(self):
+        board = Board(3, 4)
+        domino = Domino(1, 5)
+        board.add(domino, 0, 0)
+        
+        board.remove(domino)
+        
+        self.assertEqual(set(), board.dominoes)
+
     def testRemoveAndRotate(self):
         board = Board(3, 4)
         domino = Domino(1, 5)
@@ -163,6 +188,20 @@ x x x x
                                      'Position 4, 0 is off the board.'):
             board.add(Domino(1, 2), 3, 0)
 
+    def testBadMove(self):
+        start_state = """\
+0|2 x
+     
+0|1 x
+"""
+        board = Board.create(start_state)
+        domino = board[0][0].domino
+        
+        with self.assertRaises(BoardError):
+            domino.move(-1, 0)
+        
+        self.assertMultiLineEqual(start_state, board.display())
+    
     def testFill(self):
         dummy_random = DummyRandom(randints={(0, 4): [1, 1]}) # directions
         dominoes = Domino.create(6)
@@ -269,6 +308,84 @@ x x x
         
         self.assertMultiLineEqual(expected_display, board.display())
     
+    def testCreate(self):
+        state = """\
+0|2 x
+     
+0|1 x
+"""
+
+        board = Board.create(state)
+        display = board.display()
+        
+        self.assertMultiLineEqual(state, display)
+    
+    def testCreateRightEdge(self):
+        state = """\
+x 0|2
+     
+0|1 x
+"""
+        
+        board = Board.create(state)
+        
+        self.assertMultiLineEqual(state, board.display())
+            
+    def testCreateVertical(self):
+        state = """\
+1 0|2
+-    
+0 x x
+"""
+        
+        board = Board.create(state)
+        
+        self.assertMultiLineEqual(state, board.display())
+            
+    def testIsConnected(self):
+        state = """\
+1 0|2 x x
+-        
+0 0|4 0|3
+"""
+        board = Board.create(state)
+        
+        
+        self.assertTrue(board.isConnected())
+    
+    def testIsNotConnected(self):
+        state = """\
+1 0|2 x x
+-        
+0 x x 0|3
+"""
+        board = Board.create(state)
+        
+        
+        self.assertFalse(board.isConnected())
+    
+    def testHasNoLoner(self):
+        state = """\
+1 0 x 1|3
+- -      
+0 2 x 0|3
+"""
+        board = Board.create(state)
+        
+        
+        self.assertFalse(board.hasLoner())
+    
+    def testHasLoner(self):
+        state = """\
+1 0 x 1|2
+- -      
+0 2 x 0|3
+"""
+        board = Board.create(state)
+         
+         
+        self.assertTrue(board.hasLoner())
+    
     
 class DominoTest(unittest.TestCase):
     def testRepr(self):
@@ -310,4 +427,170 @@ class DominoTest(unittest.TestCase):
         domino.rotate(-90)
         
         self.assertEqual(270, domino.degrees)
+    
+    def testFindNeighbours(self):
+        state = """\
+1 0|2 x x
+-        
+0 0|4 0|3
+"""
+        board = Board.create(state)
+        domino = board[1][1].domino
+        expected_neighbours = set([board[0][1].domino, board[1][0].domino])
+        
+        neighbours = domino.findNeighbours()
+        
+        self.assertEqual(expected_neighbours, neighbours)
+    
+    def testIsMatch(self):
+        domino = Domino(0, 1)
+        
+        self.assertFalse(domino.isMatch(Domino(2, 2)))
+        self.assertTrue(domino.isMatch(Domino(0, 2)))
+        self.assertTrue(domino.isMatch(Domino(2, 1)))
+        self.assertTrue(domino.isMatch(Domino(2, 0)))
+        self.assertTrue(domino.isMatch(Domino(1, 2)))
+
+class BoardGraphTest(unittest.TestCase):
+    def testWalkRight(self):
+        board = Board.create("""\
+0|2 x
+     
+0|1 x
+""")
+        graph = BoardGraph()
+        expected_states = set("""\
+0|2
+   
+0|1
+---
+0|2 x
+     
+x 0|1
+---
+x 0|2
+     
+0|1 x
+""".split('---\n'))
+        
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)
+    
+    def testWalkLeft(self):
+        board = Board.create("""\
+x 0|2
+     
+0|1 x
+""")
+        graph = BoardGraph()
+        expected_states = set("""\
+0|2
+   
+0|1
+---
+0|2 x
+     
+x 0|1
+---
+x 0|2
+     
+0|1 x
+""".split('---\n'))
+        
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)
+    
+    def testWalkDown(self):
+        board = Board.create("""\
+3 x x
+-    
+2 0|2
+     
+0|1 x
+""")
+        graph = BoardGraph()
+        expected_states = set("""\
+3 x x
+-    
+2 0|2
+     
+0|1 x
+---
+3 x x
+-    
+2 0|2
+     
+x 0|1
+---
+3 0|2
+-    
+2 0|1
+""".split('---\n'))
+        
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)
+    
+    def testWalkLast(self):
+        board = Board.create("""\
+3 x x
+-    
+2 0|2
+     
+0|1 x
+""")
+        graph = BoardGraph()
+        expected_last = """\
+3 0|2
+-    
+2 0|1
+"""
+        
+        graph.walk(board)
+        
+        self.assertMultiLineEqual(expected_last, graph.last)
+    
+    def testWalkNoSplit(self):
+        board = Board.create("""\
+3 x x
+-    
+2 x x
+     
+3|1 x
+""")
+        graph = BoardGraph()
+        expected_states = set("""\
+3 x
+-  
+2 x
+   
+3|1
+""".split('---\n'))
+        
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)
+    
+    def testWalkNoLoner(self):
+        board = Board.create("""\
+3 x x
+-    
+2 5|2
+     
+3|1 x
+""")
+        graph = BoardGraph()
+        expected_states = set("""\
+3 x x
+-    
+2 5|2
+     
+3|1 x
+""".split('---\n'))
+        
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)
     
