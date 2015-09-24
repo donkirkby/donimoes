@@ -1,4 +1,5 @@
 from random import Random
+import os
 
 class Cell(object):
     def __init__(self, pips):
@@ -16,17 +17,17 @@ class BoardError(StandardError):
 
 class Board(object):
     @classmethod
-    def create(cls, state):
+    def create(cls, state, border=0):
         lines = state.splitlines(False)
         lines.reverse()
         height = (len(lines)+1) / 2
         width = (len(lines[0])+1) / 2
-        board = Board(width, height)
-        for x in range(width-1):
+        board = Board(width + 2*border, height + 2*border)
+        for x in range(width):
             for y in range(height):
                 head = lines[y*2][x*2]
                 if head != 'x':
-                    right_joint = lines[y*2][x*2+1]
+                    right_joint = x+1 < width and lines[y*2][x*2+1]
                     upper_joint = y+1 < height and lines[y*2+1][x*2]
                     if right_joint == '|':
                         tail = lines[y*2][x*2+2]
@@ -39,7 +40,7 @@ class Board(object):
                     if tail:
                         domino = Domino(int(head), int(tail))
                         domino.rotate(degrees)
-                        board.add(domino, x, y)
+                        board.add(domino, x+border, y+border)
         return board
     
     def __init__(self, width, height):
@@ -248,10 +249,10 @@ class BoardGraph(object):
     def walk(self, board):
         complete = set()
         new = set()
-        new.add(board.display())
+        new.add(board.display(cropped=True))
         while new:
             state = new.pop()
-            board = Board.create(state)
+            board = Board.create(state, border=1)
             dominoes = board.dominoes
             for domino in dominoes:
                 dx, dy = domino.direction
@@ -265,7 +266,7 @@ class BoardGraph(object):
         try:
             domino.move(dx, dy)
             board = domino.head.board
-            new_state = board.display()
+            new_state = board.display(cropped=True)
             if (new_state not in complete and
                 board.isConnected() and
                 not board.hasLoner()):
@@ -275,53 +276,120 @@ class BoardGraph(object):
         except BoardError:
             pass
         
-
-if __name__ == '__main__':
+def main():
     print 'Searching...'
+    out_path = 'problems'
+    if not os.path.isdir(out_path):
+        os.mkdir(out_path)
     random = Random()
     max_states = 0
     best_last = None
-    for _ in range(10):
+    for _ in range(50):
         while True:
             dominoes = Domino.create(6)
             board = Board(5, 4)
             board.fill(dominoes, random)
             if not board.hasLoner():
                 break
-        offset = board.width + board.height
-        big_board = Board(board.width + 2*offset, board.height + 2*offset)
-        for domino in list(board.dominoes): #copy for iteration
-            x = domino.head.x + offset
-            y = domino.head.y + offset
-            board.remove(domino)
-            big_board.add(domino, x, y)
         graph = BoardGraph()
-        states = graph.walk(big_board)
-        print len(states)
+        states = graph.walk(board)
+        state_count = len(states)
+        print state_count
+        filename = os.path.join(out_path, 'length{:05}.txt'.format(state_count))
+        with open(filename, 'a') as f:
+            f.write(graph.last + '\n\n\n##########\n\n')
         if len(states) > max_states:
             best_last = graph.last
-            max_states = len(states)
+            max_states = state_count
             
     print Board.create(best_last).display(cropped=True)
-        
     
+    """ Interesting puzzles:
+    length 58: (good starter)
+    x x x x 0 x
+            -  
+    2|5 3|5 3 x
+               
+    4|3 4|4 x x
+               
+    x x 6|1 1|2
+               
+    6|0 3 x 1|4
+        -      
+    x x 6 x x x
+    
+    medium 390:
+    x x x x x 5 x x
+              -    
+    x x x x x 3 x x
+                   
+    0|3 x x x 3|2 4
+                  -
+    x 3|6 x x x 3 0
+                -  
+    x x 3|4 x x 1 4
+                  -
+    x x x 0|0 0|6 4
+    
+    challenge 877:
+    1|4 1|0 x x x 1
+                  -
+    x x 3|1 1|2 x 5
+                   
+    x 0|4 x x 1 5|4
+              -    
+    0|0 x x x 6 5|2
+    
+    other:
+    
+    x x x x x x x x 6 x
+                    -  
+    x x x x x x x 6 6 x
+                  -    
+    x x x x 5 4|5 2 2|4
+            -          
+    x x 5|5 6 x x x 4 x
+                    -  
+    x 3|5 x x x x x 3 x
+                       
+    5|1 x x x x x 0|3 x
+    
+    Another:
+    x x 0 x 3 x x x x x x
+        -   -            
+    0|3 6 x 4 1|5 x x x x
+                         
+    x x 2|3 5|3 x x x x x
+                         
+    x x x x x 4|0 x x 3|1
+                         
+    x x x x x x 0|0 1|4 x    
+    """
+        
+if __name__ == '__main__':
+    main()
 elif __name__ == '__live_coding__':
     import unittest
     def testSomething(self):
         board = Board.create("""\
-3 x x x
--    
-2 0|2 x
-     
-x x x x
+x 3 5 x
+  - -  
+x 2 4 x
+       
+x 3|5 x
 """)
-        expected_display = """\
-3 x x
--    
-2 0|2
-"""
+        graph = BoardGraph()
+        expected_states = set("""\
+3 5
+- -
+2 4
+   
+3|5
+""".split('---\n'))
         
-        self.assertMultiLineEqual(expected_display, board.display(cropped=True))
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)
     
     class DummyRandom(object):
         def __init__(self, randints=None):

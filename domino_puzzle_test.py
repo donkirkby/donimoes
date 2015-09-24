@@ -342,6 +342,25 @@ x 0|2
         
         self.assertMultiLineEqual(state, board.display())
             
+    def testCreateWithBorder(self):
+        state = """\
+3 x x
+-    
+2 0|2
+"""
+        board = Board.create(state, border=1)
+        expected_display = """\
+x x x x x
+         
+x 3 x x x
+  -      
+x 2 0|2 x
+         
+x x x x x
+"""
+        
+        self.assertMultiLineEqual(expected_display, board.display())
+    
     def testIsConnected(self):
         state = """\
 1 0|2 x x
@@ -504,11 +523,11 @@ x 0|2
     
     def testWalkDown(self):
         board = Board.create("""\
-3 x x
--    
-2 0|2
-     
-0|1 x
+x 3 x x x
+  -      
+x 2 0|2 x
+         
+x 0|1 x x
 """)
         graph = BoardGraph()
         expected_states = set("""\
@@ -524,9 +543,19 @@ x 0|2
      
 x 0|1
 ---
+3 x x x
+-      
+2 0|2 x
+       
+x x 0|1
+---
 3 0|2
 -    
 2 0|1
+---
+3 0|2 x
+-      
+2 x 0|1
 """.split('---\n'))
         
         states = graph.walk(board)
@@ -543,9 +572,9 @@ x 0|1
 """)
         graph = BoardGraph()
         expected_last = """\
-3 0|2
--    
-2 0|1
+3 0|2 x
+-      
+2 x 0|1
 """
         
         graph.walk(board)
@@ -554,19 +583,11 @@ x 0|1
     
     def testWalkNoSplit(self):
         board = Board.create("""\
-3 x x
--    
-2 x x
-     
-3|1 x
+x 3|2 3|1 x
 """)
         graph = BoardGraph()
         expected_states = set("""\
-3 x
--  
-2 x
-   
-3|1
+3|2 3|1
 """.split('---\n'))
         
         states = graph.walk(board)
@@ -575,19 +596,19 @@ x 0|1
     
     def testWalkNoLoner(self):
         board = Board.create("""\
-3 x x
--    
-2 5|2
-     
-3|1 x
+x 3 5 x
+  - -  
+x 2 4 x
+       
+x 3|5 x
 """)
         graph = BoardGraph()
         expected_states = set("""\
-3 x x
--    
-2 5|2
-     
-3|1 x
+3 5
+- -
+2 4
+   
+3|5
 """.split('---\n'))
         
         states = graph.walk(board)
