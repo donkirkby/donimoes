@@ -11,6 +11,25 @@ class Cell(object):
     
     def __repr__(self):
         return 'Cell({})'.format(self.pips)
+    
+    def findNeighbourCell(self, dx, dy):
+        x = self.x + dx
+        y = self.y + dy
+        board = self.board
+        if 0 <= x < board.width and 0 <= y < board.height:
+            neighbour = board[x][y]
+            if neighbour is not None and neighbour.domino == self.domino:
+                neighbour = None
+            return neighbour
+        
+    def findNeighbours(self):
+        neighbour_cells = set()
+        neighbour_cells.add(self.findNeighbourCell(0, 1))
+        neighbour_cells.add(self.findNeighbourCell(1, 0))
+        neighbour_cells.add(self.findNeighbourCell(0, -1))
+        neighbour_cells.add(self.findNeighbourCell(-1, 0))
+        neighbour_cells.remove(None)
+        return neighbour_cells
 
 class BoardError(StandardError):
     pass
@@ -21,7 +40,7 @@ class Board(object):
         lines = state.splitlines(False)
         lines.reverse()
         height = (len(lines)+1) / 2
-        width = (len(lines[0])+1) / 2
+        width = height and (len(lines[0])+1) / 2
         board = Board(width + 2*border, height + 2*border)
         for x in range(width):
             for y in range(height):
@@ -219,23 +238,8 @@ class Domino(object):
     def calculateDirection(self):
         self.direction = Domino.directions[self.degrees/90]
     
-    def findNeighbourCell(self, dx, dy):
-        x = self.head.x + dx
-        y = self.head.y + dy
-        board = self.head.board
-        if 0 <= x < board.width and 0 <= y < board.height:
-            return board[x][y]
-        
     def findNeighbours(self):
-        neighbour_cells = set()
-        dx, dy = self.direction
-        neighbour_cells.add(self.findNeighbourCell(-dx, -dy))
-        neighbour_cells.add(self.findNeighbourCell(2*dx, 2*dy))
-        neighbour_cells.add(self.findNeighbourCell(dy, dx))
-        neighbour_cells.add(self.findNeighbourCell(-dy, -dx))
-        neighbour_cells.add(self.findNeighbourCell(dx+dy, dy+dx))
-        neighbour_cells.add(self.findNeighbourCell(dx-dy, dy-dx))
-        neighbour_cells.discard(None)
+        neighbour_cells = self.head.findNeighbours() | self.tail.findNeighbours()
         neighbour_dominoes = set([cell.domino for cell in neighbour_cells])
         return neighbour_dominoes
     
@@ -256,27 +260,74 @@ class BoardGraph(object):
             dominoes = board.dominoes
             for domino in dominoes:
                 dx, dy = domino.direction
-                self._try_move(domino, dx, dy, new, complete)
-                self._try_move(domino, -dx, -dy, new, complete)
+                self.try_move(domino, dx, dy, new, complete)
+                self.try_move(domino, -dx, -dy, new, complete)
             complete.add(state)
         self.last = state
         return complete
     
-    def _try_move(self, domino, dx, dy, new, complete):
+    def try_move(self, domino, dx, dy, new, complete):
         try:
-            domino.move(dx, dy)
-            board = domino.head.board
-            new_state = board.display(cropped=True)
-            if (new_state not in complete and
-                board.isConnected() and
-                not board.hasLoner()):
-                
+            new_state = self.move(domino, dx, dy)
+            if new_state not in complete:
                 new.add(new_state)
-            domino.move(-dx, -dy)
         except BoardError:
             pass
+    
+    def move(self, domino, dx, dy):
+        """ Move a domino and calculate the new board state.
         
-def main():
+        Afterward, put the board back in its original state.
+        @return: the new board state
+        @raise BoardError: if the move is illegal
+        """
+        domino.move(dx, dy)
+        try:
+            board = domino.head.board
+            if not board.isConnected():
+                raise BoardError('Board is not connected.')
+            if board.hasLoner():
+                raise BoardError('Board has a lonely domino.')
+            return board.display(cropped=True)
+        finally:
+            domino.move(-dx, -dy)
+    
+
+class CaptureBoardGraph(BoardGraph):
+    def move(self, domino, dx, dy):
+        """ Move a domino and calculate the new board state.
+        
+        Afterward, put the board back in its original state.
+        @return: the new board state
+        @raise BoardError: if the move is illegal
+        """
+        start = domino.head.board.display(cropped=True)
+        matching_dominoes = set()
+        domino.move(dx, dy)
+        try:
+            board = domino.head.board
+            for cell in (domino.head, domino.tail):
+                for neighbour in cell.findNeighbours():
+                    if neighbour.pips == cell.pips:
+                        matching_dominoes.add((neighbour.domino,
+                                               neighbour.domino.head.x,
+                                               neighbour.domino.head.y))
+            if not matching_dominoes:
+                raise BoardError('A legal move must have captures.')
+            matching_dominoes.add((domino, domino.head.x, domino.head.y))
+            for matching_domino, _, _ in matching_dominoes:
+                board.remove(matching_domino)
+            if not board.isConnected():
+                raise BoardError('Board is not connected.')
+            return board.display(cropped=True)
+        finally:
+            for matching_domino, x, y in matching_dominoes:
+                board.add(matching_domino, x, y)
+            domino.move(-dx, -dy)
+            end = domino.head.board.display(cropped=True)
+            assert start == end
+        
+def findBoards():
     print 'Searching...'
     out_path = 'problems'
     if not os.path.isdir(out_path):
@@ -365,31 +416,50 @@ def main():
                          
     x x x x x x 0|0 1|4 x    
     """
+    
+def findCaptureBoards():
+    print 'Searching...'
+    out_path = 'problems'
+    if not os.path.isdir(out_path):
+        os.mkdir(out_path)
+    random = Random()
+    limit = 5
+    count = 0
+    while count < limit:
+        dominoes = Domino.create(6)
+        board = Board(4, 5)
+        board.fill(dominoes, random)
+        start = board.display()
+        try:
+            graph = CaptureBoardGraph()
+            states = graph.walk(board)
+        except StandardError as ex:
+            print ex
+            print start
+        if '' in states:
+            print
+            print start
+            count += 1
+        else:
+            print '.',
+            
         
 if __name__ == '__main__':
-    main()
+    findCaptureBoards()
 elif __name__ == '__live_coding__':
     import unittest
     def testSomething(self):
         board = Board.create("""\
-x 3 5 x
-  - -  
-x 2 4 x
-       
-x 3|5 x
+3
+-
+4
 """)
-        graph = BoardGraph()
-        expected_states = set("""\
-3 5
-- -
-2 4
-   
-3|5
-""".split('---\n'))
         
-        states = graph.walk(board)
+        head = board[0][0]
+        domino = head.domino
         
-        self.assertEqual(expected_states, states)
+        self.assertEqual(90, domino.degrees)
+        self.assertEqual(head, domino.head)
     
     class DummyRandom(object):
         def __init__(self, randints=None):

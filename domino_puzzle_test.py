@@ -1,6 +1,7 @@
 import unittest
 
-from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph
+from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph,\
+    CaptureBoardGraph
     
 class DummyRandom(object):
     def __init__(self, choiceIndexes=None, randints=None):
@@ -25,6 +26,19 @@ class CellTest(unittest.TestCase):
         pips = cell.pips
         
         self.assertEqual(5, pips)
+    
+    def testFindNeighbours(self):
+        board = Board.create("""\
+x 3|2
+     
+1|0 x
+""")
+        cell = board[1][0]
+        expected_neighbours = set([board[1][1]])
+        
+        neighbours = cell.findNeighbours()
+        
+        self.assertEqual(expected_neighbours, neighbours)
     
 class BoardTest(unittest.TestCase):
     def testRepr(self):
@@ -615,3 +629,40 @@ x 3|5 x
         
         self.assertEqual(expected_states, states)
     
+class CaptureBoardGraphTest(unittest.TestCase):
+    def testCaptureRight(self):
+        board = Board.create("""\
+0|2 x
+     
+1|0 x
+""")
+        graph = CaptureBoardGraph()
+        expected_states = set("""\
+0|2
+   
+1|0
+---
+""".split('---\n'))
+        
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)
+
+    def testSomeUncaptured(self):
+        board = Board.create("""\
+4|4 3
+    -
+1|5 4
+""")
+        graph = CaptureBoardGraph()
+        expected_states = set("""\
+4|4 3
+    -
+1|5 4
+---
+1|5
+""".split('---\n'))
+        
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)
