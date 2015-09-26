@@ -666,3 +666,24 @@ class CaptureBoardGraphTest(unittest.TestCase):
         states = graph.walk(board)
         
         self.assertEqual(expected_states, states)
+
+    def testMoveWithoutCapture(self):
+        board = Board.create("""\
+4|3
+   
+1|2
+""")
+        graph = CaptureBoardGraph()
+        expected_states = set("""\
+4|3
+   
+1|2
+---
+x 4|3
+     
+1|2 x
+""".split('---\n'))
+        
+        states = graph.walk(board)
+        
+        self.assertEqual(expected_states, states)

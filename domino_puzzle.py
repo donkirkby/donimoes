@@ -303,6 +303,7 @@ class CaptureBoardGraph(BoardGraph):
         """
         start = domino.head.board.display(cropped=True)
         matching_dominoes = set()
+        complement_found = False
         domino.move(dx, dy)
         try:
             board = domino.head.board
@@ -312,9 +313,12 @@ class CaptureBoardGraph(BoardGraph):
                         matching_dominoes.add((neighbour.domino,
                                                neighbour.domino.head.x,
                                                neighbour.domino.head.y))
-            if not matching_dominoes:
-                raise BoardError('A legal move must have captures.')
-            matching_dominoes.add((domino, domino.head.x, domino.head.y))
+                    complement_found = (complement_found or
+                                        neighbour.pips + cell.pips == 6)
+            if matching_dominoes:
+                matching_dominoes.add((domino, domino.head.x, domino.head.y))
+            elif not complement_found:
+                raise BoardError('A legal move must have captures or complements.')
             for matching_domino, _, _ in matching_dominoes:
                 board.remove(matching_domino)
             if not board.isConnected():
@@ -442,7 +446,41 @@ def findCaptureBoards():
             count += 1
         else:
             print '.',
-            
+
+"""
+Unsolvable?
+6 2 5|3
+- -    
+1 5 1 5
+    - -
+1|1 4 5
+       
+3 3|6 1
+-     -
+3 5|6 0
+
+Unsolvable?
+4 6|2 2
+-     -
+2 2 3 3
+  - -  
+1 0 0 6
+-     -
+5 2|2 6
+       
+5|5 6|1
+
+Unsolvable?
+2|6 3 4
+    - -
+2 4 4 4
+- -    
+0 5 5 0
+    - -
+1|6 5 6
+       
+1|5 0|0
+"""            
         
 if __name__ == '__main__':
     findCaptureBoards()
@@ -450,16 +488,24 @@ elif __name__ == '__live_coding__':
     import unittest
     def testSomething(self):
         board = Board.create("""\
-3
--
-4
+4|3
+   
+1|2
 """)
+        graph = CaptureBoardGraph()
+        expected_states = set("""\
+4|3
+   
+1|2
+---
+x 4|3
+     
+1|2 x
+""".split('---\n'))
         
-        head = board[0][0]
-        domino = head.domino
+        states = graph.walk(board)
         
-        self.assertEqual(90, domino.degrees)
-        self.assertEqual(head, domino.head)
+        self.assertEqual(expected_states, states)
     
     class DummyRandom(object):
         def __init__(self, randints=None):
