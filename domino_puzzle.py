@@ -324,6 +324,8 @@ class CaptureBoardGraph(BoardGraph):
         domino.move(dx, dy)
         try:
             board = domino.head.board
+            if not board.isConnected():
+                raise BoardError('Board is not connected after move.')
             for cell in (domino.head, domino.tail):
                 for neighbour in cell.findNeighbours():
                     if neighbour.pips == cell.pips:
@@ -339,7 +341,7 @@ class CaptureBoardGraph(BoardGraph):
             for matching_domino, _, _ in matching_dominoes:
                 board.remove(matching_domino)
             if not board.isConnected():
-                raise BoardError('Board is not connected.')
+                raise BoardError('Board is not connected after capture.')
             return board.display(cropped=True)
         finally:
             for matching_domino, x, y in matching_dominoes:
@@ -487,17 +489,22 @@ elif __name__ == '__live_coding__':
     import unittest
     def testSomething(self):
         board = Board.create("""\
-6|2 3 
-    -
-2|4 4
+3 x x
+-    
+2 0|2
+     
+0|1 x
 """)
-        graph = CaptureBoardGraph()
-        expected_solution = ['34u', '24r']
-        
+        graph = BoardGraph()
+        expected_last = """\
+3 0|2 x
+-      
+2 x 0|1
+"""
+         
         graph.walk(board)
-        solution = graph.get_solution()
-        
-        self.assertEqual(expected_solution, solution)
+         
+        self.assertMultiLineEqual(expected_last, graph.last)
         
     class DummyRandom(object):
         def __init__(self, randints=None):
