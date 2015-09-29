@@ -484,6 +484,35 @@ class DominoTest(unittest.TestCase):
         self.assertTrue(domino.isMatch(Domino(2, 0)))
         self.assertTrue(domino.isMatch(Domino(1, 2)))
 
+    def testDescribeMove(self):
+        domino = Domino(1, 2)
+        dx, dy = 1, 0
+        expected_move = '12r'
+        
+        move = domino.describe_move(dx, dy)
+        
+        self.assertEqual(expected_move, move)
+        
+    def testDescribeMoveReversed(self):
+        domino = Domino(1, 2)
+        domino.rotate(180)
+        dx, dy = 1, 0
+        expected_move = '21r'
+        
+        move = domino.describe_move(dx, dy)
+        
+        self.assertEqual(expected_move, move)
+        
+    def testDescribeMoveUpReversed(self):
+        domino = Domino(1, 2)
+        domino.rotate(90)
+        dx, dy = 0, 1
+        expected_move = '21u'
+        
+        move = domino.describe_move(dx, dy)
+        
+        self.assertEqual(expected_move, move)
+        
 class BoardGraphTest(unittest.TestCase):
     def testWalkRight(self):
         board = Board.create("""\
@@ -687,3 +716,17 @@ x 4|3
         states = graph.walk(board)
         
         self.assertEqual(expected_states, states)
+
+    def testSolution(self):
+        graph = CaptureBoardGraph()
+        expected_solution = ['34u', '24r']
+        board = Board.create("""\
+6|2 3 
+    -
+2|4 4
+""")
+        for _ in range(1000):
+            graph.walk(board)
+            solution = graph.get_solution()
+            
+            self.assertEqual(expected_solution, solution)

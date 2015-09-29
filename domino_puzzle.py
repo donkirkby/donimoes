@@ -1,5 +1,8 @@
-from random import Random
 import os
+from random import Random
+
+from networkx.classes.digraph import DiGraph
+from networkx.algorithms.shortest_paths.generic import shortest_path
 
 class Cell(object):
     def __init__(self, pips):
@@ -186,6 +189,8 @@ class Board(object):
     
 class Domino(object):
     directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+    direction_names = 'ruld'
+    
     @classmethod
     def create(cls, max_pips):
         dominoes = []
@@ -227,6 +232,14 @@ class Domino(object):
             board.add(self, x, y)
             raise
     
+    def describe_move(self, dx, dy):
+        name = '{}{}'.format(self.head.pips, self.tail.pips)
+        if 90 <= self.degrees <= 180:
+            name = name[::-1] # reverse
+        direction_index = self.directions.index((dx, dy))
+        direction_name = self.direction_names[direction_index]
+        return name + direction_name
+    
     def flip(self):
         board = self.tail.board
         x, y = self.tail.x, self.tail.y
@@ -251,26 +264,31 @@ class Domino(object):
 
 class BoardGraph(object):
     def walk(self, board):
-        complete = set()
-        new = set()
-        new.add(board.display(cropped=True))
-        while new:
-            state = new.pop()
+        pending_nodes = []
+        self.graph = DiGraph()
+        self.start = board.display(cropped=True)
+        self.graph.add_node(self.start)
+        pending_nodes.append(self.start)
+        while pending_nodes:
+            state = pending_nodes.pop()
             board = Board.create(state, border=1)
-            dominoes = board.dominoes
+            dominoes = set(board.dominoes)
             for domino in dominoes:
                 dx, dy = domino.direction
-                self.try_move(domino, dx, dy, new, complete)
-                self.try_move(domino, -dx, -dy, new, complete)
-            complete.add(state)
+                self.try_move(state, domino, dx, dy, pending_nodes)
+                self.try_move(state, domino, -dx, -dy, pending_nodes)
         self.last = state
-        return complete
+        return set(self.graph.nodes())
     
-    def try_move(self, domino, dx, dy, new, complete):
+    def try_move(self, old_state, domino, dx, dy, pending_states):
         try:
             new_state = self.move(domino, dx, dy)
-            if new_state not in complete:
-                new.add(new_state)
+            move = domino.describe_move(dx, dy)
+            if not self.graph.has_node(new_state):
+                # new node
+                self.graph.add_node(new_state)
+                pending_states.append(new_state)
+            self.graph.add_edge(old_state, new_state, move=move)
         except BoardError:
             pass
     
@@ -291,7 +309,6 @@ class BoardGraph(object):
             return board.display(cropped=True)
         finally:
             domino.move(-dx, -dy)
-    
 
 class CaptureBoardGraph(BoardGraph):
     def move(self, domino, dx, dy):
@@ -330,7 +347,15 @@ class CaptureBoardGraph(BoardGraph):
             domino.move(-dx, -dy)
             end = domino.head.board.display(cropped=True)
             assert start == end
-        
+            
+    def get_solution(self):
+        solution_nodes = shortest_path(self.graph, self.start, '')
+        solution = []
+        for i in range(len(solution_nodes)-1):
+            source, target = solution_nodes[i:i+2]
+            solution.append(self.graph[source][target]['move'])
+        return solution
+    
 def findBoards():
     print 'Searching...'
     out_path = 'problems'
@@ -429,9 +454,16 @@ def findCaptureBoards():
     random = Random()
     limit = 5
     count = 0
+    report = 2
+    attempt = 0
     while count < limit:
+        attempt += 1
+        if attempt >= report:
+            print '.',
+            report *= 2
+            attempt = 0
         dominoes = Domino.create(6)
-        board = Board(4, 5)
+        board = Board(4, 6)
         board.fill(dominoes, random)
         start = board.display()
         try:
@@ -444,69 +476,29 @@ def findCaptureBoards():
             print
             print start
             count += 1
-        else:
-            print '.',
+            report = 2
+            attempt = 0
+            solution = graph.get_solution()
+            print str(len(solution)) + 100 * ' ' + ', '.join(solution)
 
-"""
-Unsolvable?
-6 2 5|3
-- -    
-1 5 1 5
-    - -
-1|1 4 5
-       
-3 3|6 1
--     -
-3 5|6 0
-
-Unsolvable?
-4 6|2 2
--     -
-2 2 3 3
-  - -  
-1 0 0 6
--     -
-5 2|2 6
-       
-5|5 6|1
-
-Unsolvable?
-2|6 3 4
-    - -
-2 4 4 4
-- -    
-0 5 5 0
-    - -
-1|6 5 6
-       
-1|5 0|0
-"""            
-        
 if __name__ == '__main__':
     findCaptureBoards()
 elif __name__ == '__live_coding__':
     import unittest
     def testSomething(self):
         board = Board.create("""\
-4|3
-   
-1|2
+6|2 3 
+    -
+2|4 4
 """)
         graph = CaptureBoardGraph()
-        expected_states = set("""\
-4|3
-   
-1|2
----
-x 4|3
-     
-1|2 x
-""".split('---\n'))
+        expected_solution = ['34u', '24r']
         
-        states = graph.walk(board)
+        graph.walk(board)
+        solution = graph.get_solution()
         
-        self.assertEqual(expected_states, states)
-    
+        self.assertEqual(expected_solution, solution)
+        
     class DummyRandom(object):
         def __init__(self, randints=None):
             self.randints = randints or {}
