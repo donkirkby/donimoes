@@ -3,6 +3,7 @@ from random import Random
 
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
+from datetime import datetime
 
 class Cell(object):
     def __init__(self, pips):
@@ -358,6 +359,19 @@ class CaptureBoardGraph(BoardGraph):
             solution.append(self.graph[source][target]['move'])
         return solution
     
+
+    def get_choice_counts(self):
+        solution_nodes = shortest_path(self.graph, self.start, '')
+        return [len(self.graph[node]) for node in solution_nodes[:-1]]
+
+    def get_average_choices(self):
+        choices = self.get_choice_counts()
+        return sum(choices) / float(len(choices))
+
+    def get_max_choices(self):
+        choices = self.get_choice_counts()
+        return max(choices)
+    
 def findBoards():
     print 'Searching...'
     out_path = 'problems'
@@ -458,14 +472,15 @@ def findCaptureBoards():
     count = 0
     report = 2
     attempt = 0
-    while count < limit:
+    favourites = {} # { solution_length: (max_choices, avg_choices) }
+    while True or count < limit:
         attempt += 1
         if attempt >= report:
             print '.',
             report *= 2
             attempt = 0
         dominoes = Domino.create(6)
-        board = Board(4, 6)
+        board = Board(3, 4)
         board.fill(dominoes, random)
         start = board.display()
         try:
@@ -475,13 +490,142 @@ def findCaptureBoards():
             print ex
             print start
         if '' in states:
-            print
-            print start
-            count += 1
-            report = 2
-            attempt = 0
             solution = graph.get_solution()
-            print str(len(solution)) + 100 * ' ' + ', '.join(solution)
+            average_choices = graph.get_average_choices()
+            max_choices = graph.get_max_choices()
+            best = favourites.get(len(solution))
+            if best is None or (max_choices, average_choices) < best:
+                count += 1
+                report = 2
+                attempt = 0
+                print
+                print start
+                print '{} step solution, {} nodes at {}{}{}, avg {} and max {} choices {}'.format(
+                    len(solution),
+                    len(graph.graph),
+                    datetime.now().isoformat(),
+                    200 * ' ',
+                    ', '.join(solution),
+                    average_choices,
+                    max_choices,
+                    graph.get_choice_counts())
+                favourites[len(solution)] = (max_choices, average_choices)
+            
+"""
+Interesting capture boards:
+6|0 4|4
+       
+2 1|6 4
+-     -
+0 0 2 1
+  - -  
+4 0 1 1
+-     -
+0 4|3 1
+       
+5|0 2|4
+
+8 step solution, 68 nodes                                                                                                    50l, 44r, 24l, 24l, 21d, 60r, 60r, 00u, avg 2.33333333333 and max 4 choices
+
+2|3 1 4
+    - -
+3|3 2 1
+       
+0|5 4|4
+       
+5|4 4|6
+       
+2|5 6|5
+       
+6|1 5|1
+
+13 step solution, 306 nodes                                                                                                    46r, 41d, 41d, 12d, 51r, 25r, 41d, 61r, 41d, 12d, 25r, 23l, 05l, avg 3.71428571429 and max 9 choices
+
+6|3 2|4
+       
+0|6 3|3
+       
+4|4 3|5
+       
+6|4 2 1
+    - -
+3|1 2 5
+       
+1|1 5|2
+
+7 step solution, 47 nodes                                                                                                    35r, 22u, 52r, 11r, 22u, 06l, 44r, avg 3.0 and max 5 choices [5, 3, 5, 3, 2, 2, 1]
+
+4|1 1 4
+    - -
+2|4 1 4
+       
+5 2|1 4
+-     -
+1 1|6 3
+       
+3|1 5|3
+       
+0|3 2|3
+
+7 step solution, 63 nodes                                                                                                    03l, 11u, 53l, 24r, 53r, 51d, 51u, avg 2.71428571429 and max 4 choices [4, 4, 3, 3, 3, 1, 1]
+
+4 5 4|1
+- -    
+3 5 3 1
+    - -
+0|6 1 6
+       
+0 6 5|6
+- -    
+3 6 5 2
+    - -
+0|0 1 5
+
+10 step solution, 44 nodes                                                                                                    51d, 00r, 06l, 03d, 03d, 06r, 55d, 41l, 55d, 31u, avg 1.9 and max 3 choices [2, 2, 3, 3, 3, 2, 1, 1, 1, 1]
+
+2|2 3|3
+       
+5|2 4|2
+       
+3 4 0|2
+- -    
+2 4 6|4
+       
+5 1 2 3
+- - - -
+1 1 1 4
+
+11 step solution, 683 nodes                                                                                                    42r, 52l, 32u, 44u, 32u, 33l, 42l, 64l, 34u, 11d, 34u, avg 5.45454545455 and max 9 choices [5, 6, 4, 6, 8, 9, 7, 6, 4, 4, 1]
+
+0|5 6|5
+       
+6|4 1|1
+       
+0 3 5|3
+- -    
+2 1 6|3
+       
+2 4|2 2
+-     -
+2 2|3 1
+
+18 step solution, 575 nodes                                                                                                    22d, 11r, 42l, 65r, 11l, 05r, 11r, 64r, 02u, 02u, 65l, 65l, 11l, 42r, 31u, 53r, 31u, 53l, avg 4.0 and max 7 choices [3, 4, 5, 5, 5, 6, 5, 7, 6, 5, 3, 4, 3, 3, 3, 2, 2, 1]
+
+1|4 4 2
+    - -
+4|5 4 3
+       
+2|2 4|0
+       
+1|2 6|2
+       
+1 4 3|5
+- -    
+6 3 1|5
+
+22 step solution, 1334 nodes                                                                                                    22l, 45l, 40l, 23d, 22l, 40l, 12l, 45l, 14l, 44d, 12r, 62l, 62l, 23d, 15r, 35r, 44d, 44d, 62l, 45r, 62l, 45r, avg 5.18181818182 and max 10 choices [8, 8, 8, 5, 6, 4, 7, 10, 4, 5, 5, 3, 4, 5, 7, 7, 3, 2, 3, 1, 5, 4]
+
+"""
 
 if __name__ == '__main__':
     findCaptureBoards()
