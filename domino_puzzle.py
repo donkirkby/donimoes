@@ -480,7 +480,7 @@ def findCaptureBoards():
             report *= 2
             attempt = 0
         dominoes = Domino.create(6)
-        board = Board(3, 4)
+        board = Board(4, 4)
         board.fill(dominoes, random)
         start = board.display()
         try:
@@ -513,61 +513,101 @@ def findCaptureBoards():
             
 """
 Interesting capture boards:
-6|0 4|4
+4 4|3
+-    
+0 6|1
+     
+1|2 4
+    -
+6|2 2
+
+6 step solution, 8 nodes at 2015-09-30T22:24:30.029431                                                                                                                                                                                                        42d, 12r, 40d, 43l, 12r, 42u, avg 1.16666666667 and max 2 choices [1, 2, 1, 1, 1, 1]
+
+3|6 6
+    -
+2|1 0
+     
+2 4 4
+- - -
+6 1 5
+
+8 step solution, 15 nodes at 2015-10-01T13:50:23.354788                                                                                                                                                                                                        60u, 21r, 21r, 41u, 26u, 41d, 21l, 60d, avg 1.25 and max 2 choices [1, 2, 1, 2, 1, 1, 1, 1]
+
+5|3 3|1
        
-2 1|6 4
+4 5|5 3
 -     -
-0 0 2 1
+0 2 2 2
   - -  
-4 0 1 1
+6 0 2 2
 -     -
-0 4|3 1
+6 6|3 1
        
-5|0 2|4
+0|0 0|1
 
-8 step solution, 68 nodes                                                                                                    50l, 44r, 24l, 24l, 21d, 60r, 60r, 00u, avg 2.33333333333 and max 4 choices
+7 step solution, 43 nodes                                                                                                                 00l, 31r, 01l, 21u, 53r, 20u, 66d, avg 2.14285714286 and max 3 choices [2, 2, 3, 3, 2, 2, 1]
 
-2|3 1 4
-    - -
-3|3 2 1
-       
-0|5 4|4
-       
-5|4 4|6
-       
-2|5 6|5
-       
-6|1 5|1
-
-13 step solution, 306 nodes                                                                                                    46r, 41d, 41d, 12d, 51r, 25r, 41d, 61r, 41d, 12d, 25r, 23l, 05l, avg 3.71428571429 and max 9 choices
-
-6|3 2|4
-       
-0|6 3|3
-       
-4|4 3|5
-       
-6|4 2 1
-    - -
-3|1 2 5
-       
-1|1 5|2
-
-7 step solution, 47 nodes                                                                                                    35r, 22u, 52r, 11r, 22u, 06l, 44r, avg 3.0 and max 5 choices [5, 3, 5, 3, 2, 2, 1]
-
-4|1 1 4
-    - -
-2|4 1 4
-       
-5 2|1 4
+0 5|4 4
 -     -
-1 1|6 3
+5 1 5 4
+  - -  
+0 0 5 5
+-     -
+4 0|2 6
        
-3|1 5|3
-       
-0|3 2|3
+1 5|1 1
+-     -
+4 1|3 1
 
-7 step solution, 63 nodes                                                                                                    03l, 11u, 53l, 24r, 53r, 51d, 51u, avg 2.71428571429 and max 4 choices [4, 4, 3, 3, 3, 1, 1]
+8 step solution, 60 nodes                                                                                                               44u, 55u, 10u, 14d, 56u, 10u, 11u, 04d, avg 2.375 and max 3 choices [3, 3, 3, 3, 2, 2, 2, 1]
+
+4|0 0|0
+       
+4|6 3 3
+    - -
+0 1 5 4
+- -    
+5 1 5 0
+    - -
+3|1 4 1
+       
+3|6 5|1
+
+13 step solution, 689 nodes                                                                                                                   46l, 46r, 11u, 31l, 05u, 05u, 00l, 35u, 11d, 31r, 51r, 35d, 51l, avg 3.23076923077 and max 4 choices [3, 4, 4, 3, 4, 4, 4, 3, 3, 3, 3, 3, 1]
+
+1|4 4 2
+    - -
+4|5 4 3
+       
+2|2 4|0
+       
+1|2 6|2
+       
+1 4 3|5
+- -    
+6 3 1|5
+
+22 step solution, 1334 nodes                                                                                                                  22l, 45l, 40l, 23d, 22l, 40l, 12l, 45l, 14l, 44d, 12r, 62l, 62l, 23d, 15r, 35r, 44d, 44d, 62l, 45r, 62l, 45r, avg 5.18181818182 and max 10 choices [8, 8, 8, 5, 6, 4, 7, 10, 4, 5, 5, 3, 4, 5, 7, 7, 3, 2, 3, 1, 5, 4]
+
+4|4 4
+    -
+0|2 5
+     
+6 6|0
+-    
+2 4|2
+
+9 step solution, 13 nodes at 2015-10-01T05:52:38.236358                                                                                                                                                                                                        02l, 44l, 44r, 02r, 02r, 62u, 42l, 42l, 02r, avg 1.55555555556 and max 3 choices [1, 2, 2, 1, 1, 3, 1, 2, 1]
+
+3 0|1
+-    
+6 1|4
+     
+6|5 2
+    -
+1|3 1
+
+10 step solution, 21 nodes at 2015-10-01T08:10:18.129361                                                                                                                                                                                                        65l, 36u, 14l, 21u, 65r, 13r, 13r, 14r, 36d, 14r, avg 1.9 and max 3 choices [3, 3, 2, 2, 1, 2, 2, 2, 1, 1]
 
 4 5 4|1
 - -    
@@ -582,48 +622,6 @@ Interesting capture boards:
 0|0 1 5
 
 10 step solution, 44 nodes                                                                                                    51d, 00r, 06l, 03d, 03d, 06r, 55d, 41l, 55d, 31u, avg 1.9 and max 3 choices [2, 2, 3, 3, 3, 2, 1, 1, 1, 1]
-
-2|2 3|3
-       
-5|2 4|2
-       
-3 4 0|2
-- -    
-2 4 6|4
-       
-5 1 2 3
-- - - -
-1 1 1 4
-
-11 step solution, 683 nodes                                                                                                    42r, 52l, 32u, 44u, 32u, 33l, 42l, 64l, 34u, 11d, 34u, avg 5.45454545455 and max 9 choices [5, 6, 4, 6, 8, 9, 7, 6, 4, 4, 1]
-
-0|5 6|5
-       
-6|4 1|1
-       
-0 3 5|3
-- -    
-2 1 6|3
-       
-2 4|2 2
--     -
-2 2|3 1
-
-18 step solution, 575 nodes                                                                                                    22d, 11r, 42l, 65r, 11l, 05r, 11r, 64r, 02u, 02u, 65l, 65l, 11l, 42r, 31u, 53r, 31u, 53l, avg 4.0 and max 7 choices [3, 4, 5, 5, 5, 6, 5, 7, 6, 5, 3, 4, 3, 3, 3, 2, 2, 1]
-
-1|4 4 2
-    - -
-4|5 4 3
-       
-2|2 4|0
-       
-1|2 6|2
-       
-1 4 3|5
-- -    
-6 3 1|5
-
-22 step solution, 1334 nodes                                                                                                    22l, 45l, 40l, 23d, 22l, 40l, 12l, 45l, 14l, 44d, 12r, 62l, 62l, 23d, 15r, 35r, 44d, 44d, 62l, 45r, 62l, 45r, avg 5.18181818182 and max 10 choices [8, 8, 8, 5, 6, 4, 7, 10, 4, 5, 5, 3, 4, 5, 7, 7, 3, 2, 3, 1, 5, 4]
 
 """
 
