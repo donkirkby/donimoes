@@ -5,6 +5,7 @@ from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
 from datetime import datetime
 
+
 class Cell(object):
     def __init__(self, pips):
         self.pips = pips
@@ -12,10 +13,10 @@ class Cell(object):
         self.board = None
         self.x = None
         self.y = None
-    
+
     def __repr__(self):
         return 'Cell({})'.format(self.pips)
-    
+
     def findNeighbourCell(self, dx, dy):
         x = self.x + dx
         y = self.y + dy
@@ -25,7 +26,7 @@ class Cell(object):
             if neighbour is not None and neighbour.domino == self.domino:
                 neighbour = None
             return neighbour
-        
+
     def findNeighbours(self):
         neighbour_cells = set()
         neighbour_cells.add(self.findNeighbourCell(0, 1))
@@ -35,8 +36,10 @@ class Cell(object):
         neighbour_cells.remove(None)
         return neighbour_cells
 
+
 class BoardError(StandardError):
     pass
+
 
 class Board(object):
     @classmethod
@@ -65,7 +68,7 @@ class Board(object):
                         domino.rotate(degrees)
                         board.add(domino, x+border, y+border)
         return board
-    
+
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -73,7 +76,7 @@ class Board(object):
         self.cells = []
         for _ in range(width):
             self.cells.append([None] * height)
-    
+
     def add(self, item, x, y):
         try:
             dx, dy = item.direction
@@ -88,14 +91,15 @@ class Board(object):
             if item.x is not None:
                 self.cells[item.x][item.y] = None
             if not (0 <= x < self.width and 0 <= y < self.height):
-                raise BoardError('Position {}, {} is off the board.'.format(x, y))
+                raise BoardError('Position {}, {} is off the board.'.format(x,
+                                                                            y))
             if self.cells[x][y] is not None:
                 raise BoardError('Position {}, {} is occupied.'.format(x, y))
             self.cells[x][y] = item
             item.board = self
             item.x = x
             item.y = y
-    
+
     def remove(self, item):
         try:
             self.remove(item.head)
@@ -104,13 +108,13 @@ class Board(object):
         except AttributeError:
             self.cells[item.x][item.y] = None
             item.x = item.y = item.board = None
-    
+
     def __getitem__(self, x):
         return self.cells[x]
-    
+
     def __repr__(self):
         return 'Board({}, {})'.format(self.width, self.height)
-    
+
     def display(self, cropped=False):
         if not cropped:
             xmin = ymin = 0
@@ -141,7 +145,7 @@ class Board(object):
                     divider = '|' if dx else '-'
                     display[row-dy][col+dx] = divider
         return ''.join(''.join(row) + '\n' for row in display)
-    
+
     def fill(self, dominoes, random):
         for y in range(self.height):
             for x in range(self.width):
@@ -164,7 +168,7 @@ class Board(object):
                     dominoes.insert(domino_index, domino)
                     return False
         return True
-    
+
     def isConnected(self):
         visited = set()
         unvisited = set()
@@ -176,9 +180,9 @@ class Board(object):
             new_neighbours = domino.findNeighbours()
             unvisited |= new_neighbours - visited
             visited.add(domino)
-            
+
         return visited == self.dominoes
-    
+
     def hasLoner(self):
         for domino in self.dominoes:
             neighbours = domino.findNeighbours()
@@ -187,11 +191,12 @@ class Board(object):
             if not has_matching_neighbour:
                 return True
         return False
-    
+
+
 class Domino(object):
     directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
     direction_names = 'ruld'
-    
+
     @classmethod
     def create(cls, max_pips):
         dominoes = []
@@ -199,29 +204,29 @@ class Domino(object):
             for tail_pips in range(head_pips, max_pips+1):
                 dominoes.append(Domino(head_pips, tail_pips))
         return dominoes
-    
+
     def __init__(self, head_pips, tail_pips):
         self.head = Cell(head_pips)
         self.tail = Cell(tail_pips)
         self.head.domino = self
         self.tail.domino = self
-        self.degrees = 0 # 0, 90, 180, or 270
+        self.degrees = 0  # 0, 90, 180, or 270
         self.calculateDirection()
-        
+
     def __repr__(self):
         return "Domino({}, {})".format(self.head.pips, self.tail.pips)
-    
+
     def __eq__(self, other):
         return (self.head.pips == other.head.pips and
                 self.tail.pips == other.tail.pips)
-    
+
     def rotate(self, degrees):
         self.degrees = (self.degrees + degrees) % 360
         self.calculateDirection()
         if self.head.board:
             dx, dy = self.direction
             self.head.board.add(self.tail, self.head.x+dx, self.head.y+dy)
-    
+
     def move(self, dx, dy):
         x = self.head.x
         y = self.head.y
@@ -232,15 +237,15 @@ class Domino(object):
         except StandardError:
             board.add(self, x, y)
             raise
-    
+
     def describe_move(self, dx, dy):
         name = '{}{}'.format(self.head.pips, self.tail.pips)
         if 90 <= self.degrees <= 180:
-            name = name[::-1] # reverse
+            name = name[::-1]  # reverse
         direction_index = self.directions.index((dx, dy))
         direction_name = self.direction_names[direction_index]
         return name + direction_name
-    
+
     def flip(self):
         board = self.tail.board
         x, y = self.tail.x, self.tail.y
@@ -248,20 +253,22 @@ class Domino(object):
         self.rotate(180)
         board.add(self, x, y)
         pass
-        
+
     def calculateDirection(self):
         self.direction = Domino.directions[self.degrees/90]
-    
+
     def findNeighbours(self):
-        neighbour_cells = self.head.findNeighbours() | self.tail.findNeighbours()
+        neighbour_cells = (self.head.findNeighbours() |
+                           self.tail.findNeighbours())
         neighbour_dominoes = set([cell.domino for cell in neighbour_cells])
         return neighbour_dominoes
-    
+
     def isMatch(self, other):
         return (self.head.pips == other.head.pips or
                 self.tail.pips == other.tail.pips or
                 self.head.pips == other.tail.pips or
                 self.tail.pips == other.head.pips)
+
 
 class BoardGraph(object):
     def walk(self, board):
@@ -280,7 +287,7 @@ class BoardGraph(object):
                 self.try_move(state, domino, -dx, -dy, pending_nodes)
         self.last = state
         return set(self.graph.nodes())
-    
+
     def try_move(self, old_state, domino, dx, dy, pending_states):
         try:
             new_state = self.move(domino, dx, dy)
@@ -292,10 +299,10 @@ class BoardGraph(object):
             self.graph.add_edge(old_state, new_state, move=move)
         except BoardError:
             pass
-    
+
     def move(self, domino, dx, dy):
         """ Move a domino and calculate the new board state.
-        
+
         Afterward, put the board back in its original state.
         @return: the new board state
         @raise BoardError: if the move is illegal
@@ -311,10 +318,11 @@ class BoardGraph(object):
         finally:
             domino.move(-dx, -dy)
 
+
 class CaptureBoardGraph(BoardGraph):
     def move(self, domino, dx, dy):
         """ Move a domino and calculate the new board state.
-        
+
         Afterward, put the board back in its original state.
         @return: the new board state
         @raise BoardError: if the move is illegal
@@ -338,7 +346,8 @@ class CaptureBoardGraph(BoardGraph):
             if matching_dominoes:
                 matching_dominoes.add((domino, domino.head.x, domino.head.y))
             elif not complement_found:
-                raise BoardError('A legal move must have captures or complements.')
+                raise BoardError(
+                    'A legal move must have captures or complements.')
             for matching_domino, _, _ in matching_dominoes:
                 board.remove(matching_domino)
             if not board.isConnected():
@@ -350,7 +359,7 @@ class CaptureBoardGraph(BoardGraph):
             domino.move(-dx, -dy)
             end = domino.head.board.display(cropped=True)
             assert start == end
-            
+
     def get_solution(self):
         solution_nodes = shortest_path(self.graph, self.start, '')
         solution = []
@@ -358,7 +367,6 @@ class CaptureBoardGraph(BoardGraph):
             source, target = solution_nodes[i:i+2]
             solution.append(self.graph[source][target]['move'])
         return solution
-    
 
     def get_choice_counts(self):
         solution_nodes = shortest_path(self.graph, self.start, '')
@@ -371,7 +379,8 @@ class CaptureBoardGraph(BoardGraph):
     def get_max_choices(self):
         choices = self.get_choice_counts()
         return max(choices)
-    
+
+
 def findBoards():
     print 'Searching...'
     out_path = 'problems'
@@ -391,77 +400,79 @@ def findBoards():
         states = graph.walk(board)
         state_count = len(states)
         print state_count
-        filename = os.path.join(out_path, 'length{:05}.txt'.format(state_count))
+        filename = os.path.join(out_path,
+                                'length{:05}.txt'.format(state_count))
         with open(filename, 'a') as f:
             f.write(graph.last + '\n\n\n##########\n\n')
         if len(states) > max_states:
             best_last = graph.last
             max_states = state_count
-            
+
     print Board.create(best_last).display(cropped=True)
-    
+
     """ Interesting puzzles:
     length 58: (good starter)
     x x x x 0 x
-            -  
+            -
     2|5 3|5 3 x
-               
+
     4|3 4|4 x x
-               
+
     x x 6|1 1|2
-               
+
     6|0 3 x 1|4
-        -      
+        -
     x x 6 x x x
-    
+
     medium 390:
     x x x x x 5 x x
-              -    
+              -
     x x x x x 3 x x
-                   
+
     0|3 x x x 3|2 4
                   -
     x 3|6 x x x 3 0
-                -  
+                -
     x x 3|4 x x 1 4
                   -
     x x x 0|0 0|6 4
-    
+
     challenge 877:
     1|4 1|0 x x x 1
                   -
     x x 3|1 1|2 x 5
-                   
+
     x 0|4 x x 1 5|4
-              -    
+              -
     0|0 x x x 6 5|2
-    
+
     other:
-    
+
     x x x x x x x x 6 x
-                    -  
+                    -
     x x x x x x x 6 6 x
-                  -    
+                  -
     x x x x 5 4|5 2 2|4
-            -          
+            -
     x x 5|5 6 x x x 4 x
-                    -  
+                    -
     x 3|5 x x x x x 3 x
-                       
+
     5|1 x x x x x 0|3 x
-    
+
     Another:
     x x 0 x 3 x x x x x x
-        -   -            
+        -   -
     0|3 6 x 4 1|5 x x x x
-                         
+
     x x 2|3 5|3 x x x x x
-                         
+
     x x x x x 4|0 x x 3|1
-                         
-    x x x x x x 0|0 1|4 x    
+
+    x x x x x x 0|0 1|4 x
     """
-    
+
+
 def findCaptureBoards():
     print 'Searching...'
     out_path = 'problems'
@@ -472,7 +483,7 @@ def findCaptureBoards():
     count = 0
     report = 2
     attempt = 0
-    favourites = {} # { solution_length: (max_choices, avg_choices) }
+    favourites = {}  # { solution_length: (max_choices, avg_choices) }
     while True or count < limit:
         attempt += 1
         if attempt >= report:
@@ -500,7 +511,8 @@ def findCaptureBoards():
                 attempt = 0
                 print
                 print start
-                print '{} step solution, {} nodes at {}{}{}, avg {} and max {} choices {}'.format(
+                print ('{} step solution, {} nodes at {}{}{}, '
+                       'avg {} and max {} choices {}').format(
                     len(solution),
                     len(graph.graph),
                     datetime.now().isoformat(),
@@ -510,154 +522,41 @@ def findCaptureBoards():
                     max_choices,
                     graph.get_choice_counts())
                 favourites[len(solution)] = (max_choices, average_choices)
-            
-"""
-Interesting capture boards:
-4 4|3
--    
-0 6|1
-     
-1|2 4
-    -
-6|2 2
-
-6 step solution, 8 nodes at 2015-09-30T22:24:30.029431                                                                                                                                                                                                        42d, 12r, 40d, 43l, 12r, 42u, avg 1.16666666667 and max 2 choices [1, 2, 1, 1, 1, 1]
-
-3|6 6
-    -
-2|1 0
-     
-2 4 4
-- - -
-6 1 5
-
-8 step solution, 15 nodes at 2015-10-01T13:50:23.354788                                                                                                                                                                                                        60u, 21r, 21r, 41u, 26u, 41d, 21l, 60d, avg 1.25 and max 2 choices [1, 2, 1, 2, 1, 1, 1, 1]
-
-5|3 3|1
-       
-4 5|5 3
--     -
-0 2 2 2
-  - -  
-6 0 2 2
--     -
-6 6|3 1
-       
-0|0 0|1
-
-7 step solution, 43 nodes                                                                                                                 00l, 31r, 01l, 21u, 53r, 20u, 66d, avg 2.14285714286 and max 3 choices [2, 2, 3, 3, 2, 2, 1]
-
-0 5|4 4
--     -
-5 1 5 4
-  - -  
-0 0 5 5
--     -
-4 0|2 6
-       
-1 5|1 1
--     -
-4 1|3 1
-
-8 step solution, 60 nodes                                                                                                               44u, 55u, 10u, 14d, 56u, 10u, 11u, 04d, avg 2.375 and max 3 choices [3, 3, 3, 3, 2, 2, 2, 1]
-
-4|0 0|0
-       
-4|6 3 3
-    - -
-0 1 5 4
-- -    
-5 1 5 0
-    - -
-3|1 4 1
-       
-3|6 5|1
-
-13 step solution, 689 nodes                                                                                                                   46l, 46r, 11u, 31l, 05u, 05u, 00l, 35u, 11d, 31r, 51r, 35d, 51l, avg 3.23076923077 and max 4 choices [3, 4, 4, 3, 4, 4, 4, 3, 3, 3, 3, 3, 1]
-
-1|4 4 2
-    - -
-4|5 4 3
-       
-2|2 4|0
-       
-1|2 6|2
-       
-1 4 3|5
-- -    
-6 3 1|5
-
-22 step solution, 1334 nodes                                                                                                                  22l, 45l, 40l, 23d, 22l, 40l, 12l, 45l, 14l, 44d, 12r, 62l, 62l, 23d, 15r, 35r, 44d, 44d, 62l, 45r, 62l, 45r, avg 5.18181818182 and max 10 choices [8, 8, 8, 5, 6, 4, 7, 10, 4, 5, 5, 3, 4, 5, 7, 7, 3, 2, 3, 1, 5, 4]
-
-4|4 4
-    -
-0|2 5
-     
-6 6|0
--    
-2 4|2
-
-9 step solution, 13 nodes at 2015-10-01T05:52:38.236358                                                                                                                                                                                                        02l, 44l, 44r, 02r, 02r, 62u, 42l, 42l, 02r, avg 1.55555555556 and max 3 choices [1, 2, 2, 1, 1, 3, 1, 2, 1]
-
-3 0|1
--    
-6 1|4
-     
-6|5 2
-    -
-1|3 1
-
-10 step solution, 21 nodes at 2015-10-01T08:10:18.129361                                                                                                                                                                                                        65l, 36u, 14l, 21u, 65r, 13r, 13r, 14r, 36d, 14r, avg 1.9 and max 3 choices [3, 3, 2, 2, 1, 2, 2, 2, 1, 1]
-
-4 5 4|1
-- -    
-3 5 3 1
-    - -
-0|6 1 6
-       
-0 6 5|6
-- -    
-3 6 5 2
-    - -
-0|0 1 5
-
-10 step solution, 44 nodes                                                                                                    51d, 00r, 06l, 03d, 03d, 06r, 55d, 41l, 55d, 31u, avg 1.9 and max 3 choices [2, 2, 3, 3, 3, 2, 1, 1, 1, 1]
-
-"""
 
 if __name__ == '__main__':
     findCaptureBoards()
 elif __name__ == '__live_coding__':
     import unittest
+
     def testSomething(self):
         board = Board.create("""\
 3 x x
--    
+-
 2 0|2
-     
+
 0|1 x
 """)
         graph = BoardGraph()
         expected_last = """\
 3 0|2 x
--      
+-
 2 x 0|1
 """
-         
+
         graph.walk(board)
-         
+
         self.assertMultiLineEqual(expected_last, graph.last)
-        
+
     class DummyRandom(object):
         def __init__(self, randints=None):
             self.randints = randints or {}
-        
+
         def randint(self, a, b):
             results = self.randints.get((a, b), None)
-            return results.pop(0) if results else 0 
-        
+            return results.pop(0) if results else 0
+
     class DummyTest(unittest.TestCase):
-        
+
         def test_delegation(self):
             testSomething(self)
 
