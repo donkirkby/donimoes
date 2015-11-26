@@ -47,7 +47,9 @@ class Board(object):
         lines = state.splitlines(False)
         lines.reverse()
         height = (len(lines)+1) / 2
-        width = height and (len(lines[0])+1) / 2
+        line_length = height and max(map(len, lines))
+        width = height and (line_length+1) / 2
+        lines = [line + ((line_length-len(line)) * ' ') for line in lines]
         board = Board(width + 2*border, height + 2*border)
         for x in range(width):
             for y in range(height):
@@ -144,7 +146,7 @@ class Board(object):
                     dx, dy = cell.domino.direction
                     divider = '|' if dx else '-'
                     display[row-dy][col+dx] = divider
-        return ''.join(''.join(row) + '\n' for row in display)
+        return ''.join(''.join(row).rstrip() + '\n' for row in display)
 
     def fill(self, dominoes, random):
         for y in range(self.height):
