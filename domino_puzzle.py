@@ -1,9 +1,12 @@
+from datetime import datetime, timedelta
 import os
+import matplotlib.pyplot as plt
+from multiprocessing import Pool
+from Queue import Queue, Empty
 from random import Random
 
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
-from datetime import datetime
 
 
 class Cell(object):
@@ -43,14 +46,14 @@ class BoardError(StandardError):
 
 class Board(object):
     @classmethod
-    def create(cls, state, border=0):
+    def create(cls, state, border=0, max_pips=None):
         lines = state.splitlines(False)
         lines.reverse()
         height = (len(lines)+1) / 2
         line_length = height and max(map(len, lines))
         width = height and (line_length+1) / 2
         lines = [line + ((line_length-len(line)) * ' ') for line in lines]
-        board = Board(width + 2*border, height + 2*border)
+        board = Board(width + 2*border, height + 2*border, max_pips=max_pips)
         for x in range(width):
             for y in range(height):
                 head = lines[y*2][x*2]
@@ -71,10 +74,15 @@ class Board(object):
                         board.add(domino, x+border, y+border)
         return board
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, max_pips=None):
         self.width = width
         self.height = height
-        self.dominoes = set()
+        self.dominoes = []
+        self.max_pips = max_pips
+        if max_pips is None:
+            self.extra_dominoes = []
+        else:
+            self.extra_dominoes = Domino.create(max_pips)
         self.cells = []
         for _ in range(width):
             self.cells.append([None] * height)
@@ -88,7 +96,9 @@ class Board(object):
             except BoardError:
                 self.remove(item.head)
                 raise
-            self.dominoes.add(item)
+            self.dominoes.append(item)
+            if self.extra_dominoes:
+                self.extra_dominoes.remove(item)
         except AttributeError:
             if item.x is not None:
                 self.cells[item.x][item.y] = None
@@ -107,9 +117,25 @@ class Board(object):
             self.remove(item.head)
             self.remove(item.tail)
             self.dominoes.remove(item)
+            self.extra_dominoes.append(item)
         except AttributeError:
             self.cells[item.x][item.y] = None
             item.x = item.y = item.board = None
+
+    def mutate(self, random):
+        old_domino = random.choice(self.dominoes)
+        replacement_domino = random.choice(self.extra_dominoes)
+        new_board = Board(self.width, self.height, max_pips=self.max_pips)
+        for domino in self.dominoes:
+            if domino == old_domino:
+                source_domino = replacement_domino
+            else:
+                source_domino = domino
+            i = new_board.extra_dominoes.index(source_domino)
+            new_domino = new_board.extra_dominoes[i]
+            new_domino.rotate_to(domino.degrees)
+            new_board.add(new_domino, domino.head.x, domino.head.y)
+        return new_board
 
     def __getitem__(self, x):
         return self.cells[x]
@@ -183,7 +209,7 @@ class Board(object):
             unvisited |= new_neighbours - visited
             visited.add(domino)
 
-        return visited == self.dominoes
+        return visited == set(self.dominoes)
 
     def hasLoner(self):
         for domino in self.dominoes:
@@ -223,7 +249,10 @@ class Domino(object):
                 self.tail.pips == other.tail.pips)
 
     def rotate(self, degrees):
-        self.degrees = (self.degrees + degrees) % 360
+        self.rotate_to((self.degrees + degrees) % 360)
+
+    def rotate_to(self, degrees):
+        self.degrees = degrees
         self.calculateDirection()
         if self.head.board:
             dx, dy = self.direction
@@ -279,10 +308,12 @@ class BoardGraph(object):
         self.start = board.display(cropped=True)
         self.graph.add_node(self.start)
         pending_nodes.append(self.start)
+        self.min_domino_count = len(board.dominoes)
         while pending_nodes:
             state = pending_nodes.pop()
             board = Board.create(state, border=1)
             dominoes = set(board.dominoes)
+            self.min_domino_count = min(self.min_domino_count, len(dominoes))
             for domino in dominoes:
                 dx, dy = domino.direction
                 self.try_move(state, domino, dx, dy, pending_nodes)
@@ -370,6 +401,11 @@ class CaptureBoardGraph(BoardGraph):
             solution.append(self.graph[source][target]['move'])
         return solution
 
+    def get_score(self):
+        if self.min_domino_count:
+            return -self.min_domino_count
+        return len(self.get_solution())
+
     def get_choice_counts(self):
         solution_nodes = shortest_path(self.graph, self.start, '')
         return [len(self.graph[node]) for node in solution_nodes[:-1]]
@@ -383,96 +419,81 @@ class CaptureBoardGraph(BoardGraph):
         return max(choices)
 
 
-def findBoards():
-    print 'Searching...'
-    out_path = 'problems'
-    if not os.path.isdir(out_path):
-        os.mkdir(out_path)
-    random = Random()
-    max_states = 0
-    best_last = None
-    for _ in range(50):
+def plotScores(times, scores, title):
+    plt.title('{} (n={})'.format(title, len(scores)))
+    plt.plot(times, scores, 'o')
+    plt.xlabel("time (s)")
+    plt.ylabel("score")
+    plt.savefig('scores.png')
+
+
+class RandomBoardFactory(object):
+    def __init__(self):
+        self.random = Random()
+
+    def create_board(self):
+        max_pips = 6
+        dominoes = Domino.create(max_pips)
+        board = Board(6, 6, max_pips=max_pips)
+        board.fill(dominoes, self.random)
+        return board
+
+    def record_score(self, board, score):
+        pass
+
+
+class EvolutionaryBoardFactory(RandomBoardFactory):
+    def __init__(self, batch_size):
+        super(EvolutionaryBoardFactory, self).__init__()
+        self.batch_size = batch_size
+        self.boards = Queue()
+        self.best_board = None
+        self.best_score = None
+
+    def create_board(self):
         while True:
-            dominoes = Domino.create(6)
-            board = Board(5, 4)
-            board.fill(dominoes, random)
-            if not board.hasLoner():
-                break
-        graph = BoardGraph()
-        states = graph.walk(board)
-        state_count = len(states)
-        print state_count
-        filename = os.path.join(out_path,
-                                'length{:05}.txt'.format(state_count))
-        with open(filename, 'a') as f:
-            f.write(graph.last + '\n\n\n##########\n\n')
-        if len(states) > max_states:
-            best_last = graph.last
-            max_states = state_count
+            try:
+                return self.boards.get_nowait()
+            except Empty:
+                best_board = self.best_board
+                if not best_board:
+                    for _ in range(self.batch_size):
+                        self.boards.put_nowait(super(EvolutionaryBoardFactory,
+                                                     self).create_board())
+                else:
+                    for _ in range(self.batch_size):
+                        self.boards.put_nowait(best_board.mutate(self.random))
 
-    print Board.create(best_last).display(cropped=True)
+    def record_score(self, board, score):
+        if self.best_score is None or score > self.best_score:
+            self.best_score = score
+            self.best_board = board
 
-    """ Interesting puzzles:
-    length 58: (good starter)
-    x x x x 0 x
-            -
-    2|5 3|5 3 x
 
-    4|3 4|4 x x
+def iterateBoards(factory):
+    while True:
+        yield factory.create_board()
 
-    x x 6|1 1|2
 
-    6|0 3 x 1|4
-        -
-    x x 6 x x x
-
-    medium 390:
-    x x x x x 5 x x
-              -
-    x x x x x 3 x x
-
-    0|3 x x x 3|2 4
-                  -
-    x 3|6 x x x 3 0
-                -
-    x x 3|4 x x 1 4
-                  -
-    x x x 0|0 0|6 4
-
-    challenge 877:
-    1|4 1|0 x x x 1
-                  -
-    x x 3|1 1|2 x 5
-
-    x 0|4 x x 1 5|4
-              -
-    0|0 x x x 6 5|2
-
-    other:
-
-    x x x x x x x x 6 x
-                    -
-    x x x x x x x 6 6 x
-                  -
-    x x x x 5 4|5 2 2|4
-            -
-    x x 5|5 6 x x x 4 x
-                    -
-    x 3|5 x x x x x 3 x
-
-    5|1 x x x x x 0|3 x
-
-    Another:
-    x x 0 x 3 x x x x x x
-        -   -
-    0|3 6 x 4 1|5 x x x x
-
-    x x 2|3 5|3 x x x x x
-
-    x x x x x 4|0 x x 3|1
-
-    x x x x x x 0|0 1|4 x
-    """
+class BoardAnalysis(object):
+    def __init__(self, board):
+        print 'analysing...'
+        self.start = board.display()
+        try:
+            graph = CaptureBoardGraph()
+            states = graph.walk(board)
+        except StandardError as ex:
+            print ex
+            print self.start
+        self.score = graph.get_score()
+        if '' not in states:
+            self.solution = None
+        else:
+            self.solution = graph.get_solution()
+            self.average_choices = graph.get_average_choices()
+            self.max_choices = graph.get_max_choices()
+            self.graph_size = len(graph.graph)
+            self.choice_counts = graph.get_choice_counts()
 
 
 def findCaptureBoards():
@@ -480,50 +501,56 @@ def findCaptureBoards():
     out_path = 'problems'
     if not os.path.isdir(out_path):
         os.mkdir(out_path)
-    random = Random()
-    limit = 5
-    count = 0
+    if False:
+        board_factory = RandomBoardFactory()
+        title = 'Random Boards'
+    else:
+        board_factory = EvolutionaryBoardFactory(batch_size=10)
+        title = 'Evolutionary Boards'
+    start_time = datetime.now()
+    end_time = start_time + timedelta(seconds=30)
+    pool = Pool(7)
     report = 2
     attempt = 0
+    times = []
+    scores = []
     favourites = {}  # { solution_length: (max_choices, avg_choices) }
-    while True or count < limit:
+    for analysis in pool.imap_unordered(BoardAnalysis,
+                                        iterateBoards(board_factory)):
+        iteration_time = datetime.now()
+        if iteration_time >= end_time:
+            break
+        print 'looping: {}, {}'.format(iteration_time, end_time)
         attempt += 1
         if attempt >= report:
             print '.',
             report *= 2
             attempt = 0
-        dominoes = Domino.create(6)
-        board = Board(4, 4)
-        board.fill(dominoes, random)
-        start = board.display()
-        try:
-            graph = CaptureBoardGraph()
-            states = graph.walk(board)
-        except StandardError as ex:
-            print ex
-            print start
-        if '' in states:
-            solution = graph.get_solution()
-            average_choices = graph.get_average_choices()
-            max_choices = graph.get_max_choices()
-            best = favourites.get(len(solution))
-            if best is None or (max_choices, average_choices) < best:
-                count += 1
+        board = board_factory.create_board()
+        times.append((iteration_time-start_time).total_seconds())
+        scores.append(analysis.score)
+        board_factory.record_score(board, analysis.score)
+        if analysis.solution is not None:
+            best = favourites.get(len(analysis.solution))
+            if best is None or (analysis.max_choices,
+                                analysis.average_choices) < best:
                 report = 2
                 attempt = 0
                 print
-                print start
+                print analysis.start
                 print ('{} step solution, {} nodes at {}{}{}, '
                        'avg {} and max {} choices {}').format(
-                    len(solution),
-                    len(graph.graph),
-                    datetime.now().isoformat(),
+                    len(analysis.solution),
+                    analysis.graph_size,
+                    iteration_time.isoformat(),
                     200 * ' ',
-                    ', '.join(solution),
-                    average_choices,
-                    max_choices,
-                    graph.get_choice_counts())
-                favourites[len(solution)] = (max_choices, average_choices)
+                    ', '.join(analysis.solution),
+                    analysis.average_choices,
+                    analysis.max_choices,
+                    analysis.choice_counts)
+                favourites[len(analysis.solution)] = (analysis.max_choices,
+                                                      analysis.average_choices)
+    plotScores(times, scores, title)
 
 if __name__ == '__main__':
     findCaptureBoards()
@@ -531,31 +558,32 @@ elif __name__ == '__live_coding__':
     import unittest
 
     def testSomething(self):
-        board = Board.create("""\
-3 x x
--
-2 0|2
+        state = """\
+0|0 x
 
-0|1 x
-""")
-        graph = BoardGraph()
-        expected_last = """\
-3 0|2 x
--
-2 x 0|1
+1|1 x
 """
+        max_pips = 2
+        expected_extra_dominoes = [Domino(0, 1),
+                                   Domino(0, 2),
+                                   Domino(1, 2),
+                                   Domino(2, 2)]
 
-        graph.walk(board)
+        board = Board.create(state, max_pips=max_pips)
 
-        self.assertMultiLineEqual(expected_last, graph.last)
+        self.assertEqual(expected_extra_dominoes, board.extra_dominoes)
 
     class DummyRandom(object):
-        def __init__(self, randints=None):
-            self.randints = randints or {}
+        def __init__(self, randints=None, choiceDominoes=None):
+            self.randints = randints or []
+            self.choiceDominoes = choiceDominoes or []
 
         def randint(self, a, b):
             results = self.randints.get((a, b), None)
             return results.pop(0) if results else 0
+
+        def choice(self, seq):
+            return self.choiceDominoes.pop(0)
 
     class DummyTest(unittest.TestCase):
 

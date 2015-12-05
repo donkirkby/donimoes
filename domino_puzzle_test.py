@@ -5,13 +5,16 @@ from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph,\
 
 
 class DummyRandom(object):
-    def __init__(self, choiceIndexes=None, randints=None):
-        self.choiceIndexes = choiceIndexes or []
+    def __init__(self, randints=None, choiceDominoes=None):
         self.randints = randints or []
+        self.choiceDominoes = choiceDominoes or []
 
     def randint(self, a, b):
         results = self.randints.get((a, b), None)
         return results.pop(0) if results else 0
+
+    def choice(self, seq):
+        return self.choiceDominoes.pop(0)
 
 
 class CellTest(unittest.TestCase):
@@ -163,7 +166,7 @@ x x x x
 
         board.remove(domino)
 
-        self.assertEqual(set(), board.dominoes)
+        self.assertEqual([], board.dominoes)
 
     def testRemoveAndRotate(self):
         board = Board(3, 4)
@@ -313,8 +316,73 @@ x x x x
 
         self.assertMultiLineEqual(expected_display, display)
 
+    def testExtraDominoes(self):
+        state = """\
+0|0 x
+
+1|1 x
+"""
+        max_pips = 2
+        expected_extra_dominoes = [Domino(0, 1),
+                                   Domino(0, 2),
+                                   Domino(1, 2),
+                                   Domino(2, 2)]
+
+        board = Board.create(state, max_pips=max_pips)
+
+        self.assertEqual(expected_extra_dominoes, board.extra_dominoes)
+
+    def testMutate(self):
+        state = """\
+5|6 x
+
+6|6 x
+"""
+        max_pips = 6
+        expected_state = """\
+5|6 x
+
+0|1 x
+"""
+        board = Board.create(state, max_pips=max_pips)
+        old_domino = board.dominoes[0]
+        new_domino = board.extra_dominoes[1]
+        dummy_random = DummyRandom(choiceDominoes=[old_domino, new_domino])
+
+        board = board.mutate(dummy_random)
+        display = board.display()
+
+        self.assertMultiLineEqual(expected_state, display)
+
+    def testMutateTwice(self):
+        state = """\
+5|6 x
+
+6|6 x
+"""
+        max_pips = 6
+        expected_state = """\
+5|6 x
+
+0|2 x
+"""
+        board = Board.create(state, max_pips=max_pips)
+        old_domino = board.dominoes[0]
+        new_domino = board.extra_dominoes[1]
+        dummy_random = DummyRandom(choiceDominoes=[old_domino, new_domino])
+
+        board = board.mutate(dummy_random)
+        old_domino2 = board.dominoes[0]
+        new_domino2 = board.extra_dominoes[1]
+        dummy_random2 = DummyRandom(choiceDominoes=[old_domino2, new_domino2])
+
+        board = board.mutate(dummy_random2)
+        display = board.display()
+
+        self.assertMultiLineEqual(expected_state, display)
+
     def testFlip(self):
-        board = Board(3, 2)
+        board = Board(3, 2, max_pips=6)
         domino = Domino(1, 5)
         expected_display = """\
 x x x
@@ -761,3 +829,59 @@ x x 6|2 3
         states = graph.walk(board)
 
         self.assertEqual(expected_states, states)
+
+    def testScoreShortSolution(self):
+        board = Board.create("""\
+0|2
+
+6|0
+""")
+        expected_score = 1  # solution length is one move (62r)
+
+        graph = CaptureBoardGraph()
+        graph.walk(board)
+        score = graph.get_score()
+
+        self.assertEqual(expected_score, score)
+
+    def testScoreLongerSolution(self):
+        board = Board.create("""\
+6|2
+
+6|0
+""")
+        expected_score = 2  # solution length is two moves (62r, 62l)
+
+        graph = CaptureBoardGraph()
+        graph.walk(board)
+        score = graph.get_score()
+
+        self.assertEqual(expected_score, score)
+
+    def testScoreOneDominoRemains(self):
+        board = Board.create("""\
+0|2 3
+    -
+6|0 3
+""")
+        expected_score = -1
+
+        graph = CaptureBoardGraph()
+        graph.walk(board)
+        score = graph.get_score()
+
+        self.assertEqual(expected_score, score)
+
+    def testScoreTwoDominoesRemain(self):
+        board = Board.create("""\
+0|2 3 4
+    - -
+6|0 3 4
+""")
+        expected_score = -2
+
+        graph = CaptureBoardGraph()
+        graph.walk(board)
+        score = graph.get_score()
+
+        self.assertEqual(expected_score, score)
