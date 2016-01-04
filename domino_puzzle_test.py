@@ -5,16 +5,23 @@ from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph,\
 
 
 class DummyRandom(object):
-    def __init__(self, randints=None, choiceDominoes=None):
-        self.randints = randints or []
-        self.choiceDominoes = choiceDominoes or []
+    def __init__(self,
+                 randints=None,
+                 choiceDominoes=None,
+                 otherChoices=None):
+        self.randints = randints or {}  # {(min, max): [i, j, k]}
+        self.choiceDominoes = choiceDominoes
+        self.otherChoices = otherChoices  # {[choices]: [selection]}
 
     def randint(self, a, b):
         results = self.randints.get((a, b), None)
         return results.pop(0) if results else 0
 
     def choice(self, seq):
-        return self.choiceDominoes.pop(0)
+        if type(seq[0]) is Domino:
+            return self.choiceDominoes.pop(0)
+        selections = self.otherChoices[seq]
+        return selections.pop(0)
 
 
 class CellTest(unittest.TestCase):
@@ -224,57 +231,60 @@ x x x x
         self.assertMultiLineEqual(start_state, board.display())
 
     def testFill(self):
-        dummy_random = DummyRandom(randints={(0, 4): [1, 1]})  # directions
-        dominoes = Domino.create(6)
-        board = Board(2, 2)
+        dummy_random = DummyRandom(randints={(0, 4): [1, 1]},  # directions
+                                   choiceDominoes=[Domino(0, 0),
+                                                   Domino(0, 1)])
+        board = Board(2, 2, max_pips=6)
         expected_display = """\
 0 1
 - -
 0 0
 """
 
-        board.fill(dominoes, dummy_random)
+        board.fill(dummy_random)
         display = board.display()
 
         self.assertMultiLineEqual(expected_display, display)
 
     def testFillWithRandomDomino(self):
-        dummy_random = DummyRandom(randints={(0, 27): [5],
-                                             (0, 26): [2],
-                                             (0, 4): [1, 1]})  # directions
-        dominoes = Domino.create(6)
-        board = Board(2, 2)
+        dummy_random = DummyRandom(randints={(0, 4): [1, 1]},  # directions
+                                   choiceDominoes=[Domino(0, 5),
+                                                   Domino(0, 2)])
+        board = Board(2, 2, max_pips=6)
         expected_display = """\
 5 2
 - -
 0 0
 """
 
-        board.fill(dominoes, dummy_random)
+        board.fill(dummy_random)
         display = board.display()
 
         self.assertMultiLineEqual(expected_display, display)
 
     def testFillWithFlip(self):
         dummy_random = DummyRandom(randints={(0, 4): [1, 1],   # directions
-                                             (0, 1): [0, 1]})  # flips
-        dominoes = Domino.create(6)
-        board = Board(2, 2)
+                                             (0, 1): [0, 1]},  # flips
+                                   choiceDominoes=[Domino(0, 0),
+                                                   Domino(0, 1)])
+        board = Board(2, 2, max_pips=6)
         expected_display = """\
 0 0
 - -
 0 1
 """
 
-        board.fill(dominoes, dummy_random)
+        board.fill(dummy_random)
         display = board.display()
 
         self.assertMultiLineEqual(expected_display, display)
 
     def testFillWithMoreRotation(self):
-        dummy_random = DummyRandom(randints={(0, 4): [1, 1, 1]})  # directions
-        dominoes = Domino.create(6)
-        board = Board(2, 3)
+        dummy_random = DummyRandom(randints={(0, 4): [1, 1, 1]},  # directions
+                                   choiceDominoes=[Domino(0, 0),
+                                                   Domino(0, 1),
+                                                   Domino(0, 2)])
+        board = Board(2, 3, max_pips=6)
         expected_display = """\
 0|2
 
@@ -283,7 +293,7 @@ x x x x
 0 0
 """
 
-        board.fill(dominoes, dummy_random)
+        board.fill(dummy_random)
         display = board.display()
 
         self.assertMultiLineEqual(expected_display, display)
@@ -300,9 +310,16 @@ x x x x
         0 0|1 0
         """
         dummy_random = DummyRandom(
-            randints={(0, 4): [1, 0, 1, 1]})  # directions
-        dominoes = Domino.create(6)
-        board = Board(4, 3)
+            randints={(0, 4): [1, 0, 1, 1]},  # directions
+            choiceDominoes=[Domino(0, 0),
+                            Domino(0, 1),
+                            Domino(0, 2),
+                            Domino(0, 3),
+                            Domino(0, 4),
+                            Domino(0, 5),
+                            Domino(0, 4),
+                            Domino(0, 5)])
+        board = Board(4, 3, max_pips=6)
         expected_display = """\
 0|4 0|5
 
@@ -311,7 +328,7 @@ x x x x
 0 0|1 0
 """
 
-        board.fill(dominoes, dummy_random)
+        board.fill(dummy_random)
         display = board.display()
 
         self.assertMultiLineEqual(expected_display, display)
@@ -331,55 +348,6 @@ x x x x
         board = Board.create(state, max_pips=max_pips)
 
         self.assertEqual(expected_extra_dominoes, board.extra_dominoes)
-
-    def testMutate(self):
-        state = """\
-5|6 x
-
-6|6 x
-"""
-        max_pips = 6
-        expected_state = """\
-5|6 x
-
-0|1 x
-"""
-        board = Board.create(state, max_pips=max_pips)
-        old_domino = board.dominoes[0]
-        new_domino = board.extra_dominoes[1]
-        dummy_random = DummyRandom(choiceDominoes=[old_domino, new_domino])
-
-        board = board.mutate(dummy_random)
-        display = board.display()
-
-        self.assertMultiLineEqual(expected_state, display)
-
-    def testMutateTwice(self):
-        state = """\
-5|6 x
-
-6|6 x
-"""
-        max_pips = 6
-        expected_state = """\
-5|6 x
-
-0|2 x
-"""
-        board = Board.create(state, max_pips=max_pips)
-        old_domino = board.dominoes[0]
-        new_domino = board.extra_dominoes[1]
-        dummy_random = DummyRandom(choiceDominoes=[old_domino, new_domino])
-
-        board = board.mutate(dummy_random)
-        old_domino2 = board.dominoes[0]
-        new_domino2 = board.extra_dominoes[1]
-        dummy_random2 = DummyRandom(choiceDominoes=[old_domino2, new_domino2])
-
-        board = board.mutate(dummy_random2)
-        display = board.display()
-
-        self.assertMultiLineEqual(expected_state, display)
 
     def testFlip(self):
         board = Board(3, 2, max_pips=6)

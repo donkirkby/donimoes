@@ -1,12 +1,16 @@
 from datetime import datetime, timedelta
 import os
-import matplotlib.pyplot as plt
+import matplotlib
 from multiprocessing import Pool
-from Queue import Queue, Empty
+from Queue import Queue, Empty, Full
 from random import Random
 
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
+
+# Avoid loading Tkinter back end when we won't use it.
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt  # @IgnorePep8
 
 
 class Cell(object):
@@ -123,18 +127,16 @@ class Board(object):
             item.x = item.y = item.board = None
 
     def mutate(self, random):
-        old_domino = random.choice(self.dominoes)
-        replacement_domino = random.choice(self.extra_dominoes)
+        domino1 = random.choice(self.dominoes)
+        domino2 = random.choice(list(domino1.findNeighbours()))
         new_board = Board(self.width, self.height, max_pips=self.max_pips)
         for domino in self.dominoes:
-            if domino == old_domino:
-                source_domino = replacement_domino
-            else:
-                source_domino = domino
-            i = new_board.extra_dominoes.index(source_domino)
-            new_domino = new_board.extra_dominoes[i]
-            new_domino.rotate_to(domino.degrees)
-            new_board.add(new_domino, domino.head.x, domino.head.y)
+            if domino != domino1 and domino != domino2:
+                i = new_board.extra_dominoes.index(domino)
+                new_domino = new_board.extra_dominoes[i]
+                new_domino.rotate_to(domino.degrees)
+                new_board.add(new_domino, domino.head.x, domino.head.y)
+        new_board.fill(random)
         return new_board
 
     def __getitem__(self, x):
@@ -174,12 +176,11 @@ class Board(object):
                     display[row-dy][col+dx] = divider
         return ''.join(''.join(row).rstrip() + '\n' for row in display)
 
-    def fill(self, dominoes, random):
+    def fill(self, random):
         for y in range(self.height):
             for x in range(self.width):
                 if self[x][y] is None:
-                    domino_index = random.randint(0, len(dominoes)-1)
-                    domino = dominoes.pop(domino_index)
+                    domino = random.choice(self.extra_dominoes)
                     rotation = random.randint(0, 4) * 90
                     domino.rotate(rotation)
                     for _ in range(4):
@@ -187,13 +188,12 @@ class Board(object):
                             self.add(domino, x, y)
                             if random.randint(0, 1):
                                 domino.flip()
-                            if self.fill(dominoes, random):
+                            if self.fill(random):
                                 return True
                             self.remove(domino)
                         except BoardError:
                             pass
                         domino.rotate(90)
-                    dominoes.insert(domino_index, domino)
                     return False
         return True
 
@@ -245,8 +245,10 @@ class Domino(object):
         return "Domino({}, {})".format(self.head.pips, self.tail.pips)
 
     def __eq__(self, other):
-        return (self.head.pips == other.head.pips and
-                self.tail.pips == other.tail.pips)
+        return ((self.head.pips == other.head.pips and
+                 self.tail.pips == other.tail.pips) or
+                (self.head.pips == other.tail.pips and
+                 self.tail.pips == other.head.pips))
 
     def rotate(self, degrees):
         self.rotate_to((self.degrees + degrees) % 360)
@@ -404,7 +406,8 @@ class CaptureBoardGraph(BoardGraph):
     def get_score(self):
         if self.min_domino_count:
             return -self.min_domino_count
-        return len(self.get_solution())
+        choice_counts = self.get_choice_counts()
+        return float(len(self.get_solution()))/max(choice_counts)
 
     def get_choice_counts(self):
         solution_nodes = shortest_path(self.graph, self.start, '')
@@ -420,6 +423,7 @@ class CaptureBoardGraph(BoardGraph):
 
 
 def plotScores(times, scores, title):
+    plt.close()
     plt.title('{} (n={})'.format(title, len(scores)))
     plt.plot(times, scores, 'o')
     plt.xlabel("time (s)")
@@ -432,10 +436,8 @@ class RandomBoardFactory(object):
         self.random = Random()
 
     def create_board(self):
-        max_pips = 6
-        dominoes = Domino.create(max_pips)
-        board = Board(6, 6, max_pips=max_pips)
-        board.fill(dominoes, self.random)
+        board = Board(6, 6, max_pips=6)
+        board.fill(self.random)
         return board
 
     def record_score(self, board, score):
@@ -446,23 +448,25 @@ class EvolutionaryBoardFactory(RandomBoardFactory):
     def __init__(self, batch_size):
         super(EvolutionaryBoardFactory, self).__init__()
         self.batch_size = batch_size
-        self.boards = Queue()
+        self.boards = Queue(maxsize=batch_size-1)
         self.best_board = None
         self.best_score = None
 
     def create_board(self):
-        while True:
-            try:
-                return self.boards.get_nowait()
-            except Empty:
-                best_board = self.best_board
-                if not best_board:
-                    for _ in range(self.batch_size):
-                        self.boards.put_nowait(super(EvolutionaryBoardFactory,
-                                                     self).create_board())
+        try:
+            return self.boards.get_nowait()
+        except Empty:
+            best_board = self.best_board
+            while True:
+                if not best_board or self.random.randrange(10) == 0:
+                    board = super(EvolutionaryBoardFactory,
+                                  self).create_board()
                 else:
-                    for _ in range(self.batch_size):
-                        self.boards.put_nowait(best_board.mutate(self.random))
+                    board = best_board.mutate(self.random)
+                try:
+                    self.boards.put_nowait(board)
+                except Full:
+                    return board
 
     def record_score(self, board, score):
         if self.best_score is None or score > self.best_score:
@@ -477,7 +481,7 @@ def iterateBoards(factory):
 
 class BoardAnalysis(object):
     def __init__(self, board):
-        print 'analysing...'
+        self.board = board
         self.start = board.display()
         try:
             graph = CaptureBoardGraph()
@@ -505,10 +509,10 @@ def findCaptureBoards():
         board_factory = RandomBoardFactory()
         title = 'Random Boards'
     else:
-        board_factory = EvolutionaryBoardFactory(batch_size=10)
+        board_factory = EvolutionaryBoardFactory(batch_size=30)
         title = 'Evolutionary Boards'
     start_time = datetime.now()
-    end_time = start_time + timedelta(seconds=30)
+    end_time = start_time + timedelta(days=300)
     pool = Pool(7)
     report = 2
     attempt = 0
@@ -520,16 +524,15 @@ def findCaptureBoards():
         iteration_time = datetime.now()
         if iteration_time >= end_time:
             break
-        print 'looping: {}, {}'.format(iteration_time, end_time)
         attempt += 1
         if attempt >= report:
             print '.',
             report *= 2
             attempt = 0
-        board = board_factory.create_board()
+            plotScores(times, scores, title)
         times.append((iteration_time-start_time).total_seconds())
         scores.append(analysis.score)
-        board_factory.record_score(board, analysis.score)
+        board_factory.record_score(analysis.board, analysis.score)
         if analysis.solution is not None:
             best = favourites.get(len(analysis.solution))
             if best is None or (analysis.max_choices,
@@ -538,9 +541,9 @@ def findCaptureBoards():
                 attempt = 0
                 print
                 print analysis.start
-                print ('{} step solution, {} nodes at {}{}{}, '
+                print ('{} score, {} nodes at {}{}{}, '
                        'avg {} and max {} choices {}').format(
-                    len(analysis.solution),
+                    analysis.score,
                     analysis.graph_size,
                     iteration_time.isoformat(),
                     200 * ' ',
@@ -559,31 +562,45 @@ elif __name__ == '__live_coding__':
 
     def testSomething(self):
         state = """\
-0|0 x
-
-1|1 x
+5|6 1
+    -
+6|4 2
 """
-        max_pips = 2
-        expected_extra_dominoes = [Domino(0, 1),
-                                   Domino(0, 2),
-                                   Domino(1, 2),
-                                   Domino(2, 2)]
-
+        max_pips = 6
+        expected_state = """\
+6 5 1
+- - -
+4 6 2
+"""
         board = Board.create(state, max_pips=max_pips)
+        old_domino = board.dominoes[0]
+        dummy_random = DummyRandom(
+            choiceDominoes=[old_domino],
+            otherChoices={board.mutations: [board.rotate]})
 
-        self.assertEqual(expected_extra_dominoes, board.extra_dominoes)
+        board = board.mutate(dummy_random)
+        display = board.display()
+
+        self.assertMultiLineEqual(expected_state, display)
 
     class DummyRandom(object):
-        def __init__(self, randints=None, choiceDominoes=None):
-            self.randints = randints or []
-            self.choiceDominoes = choiceDominoes or []
+        def __init__(self,
+                     randints=None,
+                     choiceDominoes=None,
+                     otherChoices=None):
+            self.randints = randints or {}  # {(min, max): [i, j, k]}
+            self.choiceDominoes = choiceDominoes
+            self.otherChoices = otherChoices  # {[choices]: [selection]}
 
         def randint(self, a, b):
             results = self.randints.get((a, b), None)
             return results.pop(0) if results else 0
 
         def choice(self, seq):
-            return self.choiceDominoes.pop(0)
+            if type(seq[0]) is Domino:
+                return self.choiceDominoes.pop(0)
+            selections = self.otherChoices[seq]
+            return selections.pop(0)
 
     class DummyTest(unittest.TestCase):
 
