@@ -57,3 +57,7 @@ docs/_build/
 target/
 /problems/
 /scores.png
+/timing.txt
+/times.png
+/timing.dat
+/timing.dot

@@ -48,7 +48,7 @@ x 3|2
         cell = board[1][0]
         expected_neighbours = set([board[1][1]])
 
-        neighbours = cell.findNeighbours()
+        neighbours = set(cell.findNeighbours())
 
         self.assertEqual(expected_neighbours, neighbours)
 

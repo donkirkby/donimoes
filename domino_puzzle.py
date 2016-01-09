@@ -1,17 +1,18 @@
 from datetime import datetime, timedelta
-import os
+from itertools import chain
 from multiprocessing import Pool
+import os
 from Queue import Queue, Empty, Full
 from random import Random
+import sys
+from timeit import timeit
 
-from deap import base, creator
-from deap import tools
+from deap import base, creator, tools
+from deap.algorithms import eaSimple
+from deap.tools.support import Statistics, HallOfFame
 import matplotlib
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
-from deap.algorithms import eaSimple
-from deap.tools.support import Statistics, HallOfFame
-import multiprocessing
 
 # Avoid loading Tkinter back end when we won't use it.
 matplotlib.use('Agg')
@@ -29,24 +30,25 @@ class Cell(object):
     def __repr__(self):
         return 'Cell({})'.format(self.pips)
 
-    def findNeighbourCell(self, dx, dy):
+    def findNeighbourCells(self, dx, dy, exclude_sibling=True):
         x = self.x + dx
         y = self.y + dy
         board = self.board
         if 0 <= x < board.width and 0 <= y < board.height:
             neighbour = board[x][y]
-            if neighbour is not None and neighbour.domino == self.domino:
-                neighbour = None
-            return neighbour
+            if (exclude_sibling and
+                    neighbour is not None and
+                    neighbour.domino is self.domino):
+                pass
+            elif neighbour is not None:
+                yield neighbour
 
-    def findNeighbours(self):
-        neighbour_cells = set()
-        neighbour_cells.add(self.findNeighbourCell(0, 1))
-        neighbour_cells.add(self.findNeighbourCell(1, 0))
-        neighbour_cells.add(self.findNeighbourCell(0, -1))
-        neighbour_cells.add(self.findNeighbourCell(-1, 0))
-        neighbour_cells.remove(None)
-        return neighbour_cells
+    def findNeighbours(self, exclude_sibling=True):
+        return chain(
+            self.findNeighbourCells(0, 1, exclude_sibling=exclude_sibling),
+            self.findNeighbourCells(1, 0, exclude_sibling=exclude_sibling),
+            self.findNeighbourCells(0, -1, exclude_sibling=exclude_sibling),
+            self.findNeighbourCells(-1, 0, exclude_sibling=exclude_sibling))
 
 
 class BoardError(StandardError):
@@ -219,19 +221,27 @@ class Board(object):
                     return False
         return True
 
-    def isConnected(self):
-        visited = set()
-        unvisited = set()
+    def getCells(self):
         for domino in self.dominoes:
-            unvisited.add(domino)
-            break
-        while unvisited:
-            domino = unvisited.pop()
-            new_neighbours = domino.findNeighbours()
-            unvisited |= new_neighbours - visited
-            visited.add(domino)
+            yield domino.head
+            yield domino.tail
 
-        return visited == set(self.dominoes)
+    def isConnected(self):
+        def visitConnected(cell):
+            cell.visited = True
+            for neighbour in cell.findNeighbours(exclude_sibling=False):
+                if not neighbour.visited:
+                    visitConnected(neighbour)
+
+        cell = None
+        for cell in self.getCells():
+            cell.visited = False
+        if cell is None:
+            return True
+
+        visitConnected(cell)
+
+        return all((cell.visited for cell in self.getCells()))
 
     def hasLoner(self):
         for domino in self.dominoes:
@@ -316,9 +326,9 @@ class Domino(object):
         self.direction = Domino.directions[self.degrees/90]
 
     def findNeighbours(self):
-        neighbour_cells = (self.head.findNeighbours() |
-                           self.tail.findNeighbours())
-        neighbour_dominoes = set([cell.domino for cell in neighbour_cells])
+        neighbour_cells = chain(self.head.findNeighbours(),
+                                self.tail.findNeighbours())
+        neighbour_dominoes = set(cell.domino for cell in neighbour_cells)
         return neighbour_dominoes
 
     def isMatch(self, other):
@@ -387,7 +397,6 @@ class CaptureBoardGraph(BoardGraph):
         @return: the new board state
         @raise BoardError: if the move is illegal
         """
-        start = domino.head.board.display(cropped=True)
         matching_dominoes = set()
         complement_found = False
         domino.move(dx, dy)
@@ -417,8 +426,6 @@ class CaptureBoardGraph(BoardGraph):
             for matching_domino, x, y in matching_dominoes:
                 board.add(matching_domino, x, y)
             domino.move(-dx, -dy)
-            end = domino.head.board.display(cropped=True)
-            assert start == end
 
     def get_solution(self):
         solution_nodes = shortest_path(self.graph, self.start, '')
@@ -511,17 +518,17 @@ class BoardAnalysis(object):
         try:
             graph = CaptureBoardGraph()
             states = graph.walk(board)
-        except StandardError as ex:
-            print ex
+        except StandardError:
             print self.start
+            raise
         self.score = graph.get_score()
+        self.graph_size = len(graph.graph)
         if '' not in states:
             self.solution = None
         else:
             self.solution = graph.get_solution()
             self.average_choices = graph.get_average_choices()
             self.max_choices = graph.get_max_choices()
-            self.graph_size = len(graph.graph)
             self.choice_counts = graph.get_choice_counts()
 
 
@@ -548,7 +555,7 @@ def findCaptureBoardsWithDeap():
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
     toolbox = base.Toolbox()
-    pool = multiprocessing.Pool()
+    pool = Pool()
     toolbox.register("map", pool.map)
     toolbox.register("individual",
                      createRandomBoard,
@@ -571,10 +578,13 @@ def findCaptureBoardsWithDeap():
     verbose = True
     eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats, halloffame, verbose)
     for board in halloffame:
-        analysis = BoardAnalysis(board)
         print
-        print analysis.start
-        if analysis.solution:
+        print board.display()
+        score = board.fitness.values[0]
+        if score < 0:
+            print('{} score.'.format(score))
+        else:
+            analysis = BoardAnalysis(board)
             print ('{} score, {} nodes{}{}, '
                    'avg {} and max {} choices {}').format(
                 analysis.score,
@@ -641,6 +651,45 @@ def findCaptureBoards():
                                                       analysis.average_choices)
     plotScores(times, scores, title)
 
+
+def analyseRandomBoard(random):
+    start_time = datetime.now()
+    board = Board(4, 5, max_pips=6)
+    board.fill(random)
+    analysis = BoardAnalysis(board)
+    duration = (datetime.now() - start_time).total_seconds()
+    return analysis.graph_size, duration
+
+
+def testPerformance():
+    state = """\
+2|4 0|6
+
+6|2 0|0
+
+6|6 0|3
+
+5|0 5|2
+
+1|0 4|4
+"""
+    board = Board.create(state, max_pips=6)
+    BoardAnalysis(board)
+
+
+def plotPerformance():
+    iterations = 20
+    random = Random()
+    stats = [analyseRandomBoard(random) for _ in range(iterations)]
+    sizes, times = zip(*stats)
+    plt.title('Time vs. Graph Size (n={})'.format(iterations))
+    plt.plot(sizes, times, 'o')
+    plt.ylabel("time (s)")
+    plt.xlabel("graph size")
+    plt.savefig('times.png')
+    print('Done.')
+
+
 if __name__ == '__main__':
     findCaptureBoardsWithDeap()
 elif __name__ == '__live_coding__':
@@ -648,26 +697,13 @@ elif __name__ == '__live_coding__':
 
     def testSomething(self):
         state = """\
-5|6 1
-    -
-6|4 2
+1 0|2 x x
+-
+0 0|4 0|3
 """
-        max_pips = 6
-        expected_state = """\
-6 5 1
-- - -
-4 6 2
-"""
-        board = Board.create(state, max_pips=max_pips)
-        old_domino = board.dominoes[0]
-        dummy_random = DummyRandom(
-            choiceDominoes=[old_domino],
-            otherChoices={board.mutations: [board.rotate]})
+        board = Board.create(state)
 
-        board = board.mutate(dummy_random)
-        display = board.display()
-
-        self.assertMultiLineEqual(expected_state, display)
+        self.assertTrue(board.isConnected())
 
     class DummyRandom(object):
         def __init__(self,
