@@ -456,6 +456,81 @@ x x x x x
 
         self.assertTrue(board.hasLoner())
 
+    def testEqual(self):
+        state = """\
+0|4 0|5
+
+0 0|3 2
+-     -
+0 0|1 0
+"""
+        board1 = Board.create(state)
+        board2 = Board.create(state)
+
+        eq_result = (board1 == board2)
+        neq_result = (board1 != board2)
+        self.assertTrue(eq_result)
+        self.assertFalse(neq_result)
+
+    def testEqualWithGap(self):
+        state = """\
+0|4 0|5
+
+0 x x 2
+-     -
+0 0|1 0
+"""
+        board1 = Board.create(state)
+        board2 = Board.create(state)
+
+        eq_result = (board1 == board2)
+        neq_result = (board1 != board2)
+        self.assertTrue(eq_result)
+        self.assertFalse(neq_result)
+
+    def testDifferentPips(self):
+        state1 = """\
+0|4 0|5
+
+0 0|3 2
+-     -
+0 0|1 0
+"""
+        state2 = """\
+6|4 0|5
+
+0 0|3 2
+-     -
+0 0|1 0
+"""
+        board1 = Board.create(state1)
+        board2 = Board.create(state2)
+
+        eq_result = (board1 == board2)
+        neq_result = (board1 != board2)
+        self.assertFalse(eq_result)
+        self.assertTrue(neq_result)
+
+    def testDifferentAlignment(self):
+        state1 = """\
+0|4 0|5
+
+0 0|3 2
+-     -
+0 0|1 0
+"""
+        state2 = """\
+0|4 0|5
+
+0 0 3 2
+- - - -
+0 0 1 0
+"""
+        board1 = Board.create(state1)
+        board2 = Board.create(state2)
+
+        self.assertNotEqual(board1, board2)
+
 
 class DominoTest(unittest.TestCase):
     def testRepr(self):
@@ -482,6 +557,35 @@ class DominoTest(unittest.TestCase):
         dominoes = Domino.create(2)
 
         self.assertEqual(expected_dominoes, dominoes)
+
+    def testEqual(self):
+        domino1 = Domino(5, 3)
+        domino2 = Domino(5, 3)
+
+        eq_result = domino1 == domino2
+        neq_result = domino1 != domino2
+        self.assertTrue(eq_result)
+        self.assertFalse(neq_result)
+
+    def testDifferentPips(self):
+        domino1 = Domino(5, 3)
+        domino2 = Domino(5, 4)
+        domino3 = Domino(6, 3)
+
+        eq_result = domino1 == domino2
+        neq_result = domino1 != domino2
+        self.assertFalse(eq_result)
+        self.assertTrue(neq_result)
+        self.assertNotEqual(domino1, domino3)
+
+    def testEqualFlipped(self):
+        domino1 = Domino(5, 3)
+        domino2 = Domino(3, 5)
+
+        eq_result = domino1 == domino2
+        neq_result = domino1 != domino2
+        self.assertTrue(eq_result)
+        self.assertFalse(neq_result)
 
     def testRotateFullCircle(self):
         domino = Domino(1, 5)

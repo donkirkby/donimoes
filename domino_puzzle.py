@@ -1,12 +1,17 @@
 from datetime import datetime, timedelta
 import os
-import matplotlib
 from multiprocessing import Pool
 from Queue import Queue, Empty, Full
 from random import Random
 
+from deap import base, creator
+from deap import tools
+import matplotlib
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
+from deap.algorithms import eaSimple
+from deap.tools.support import Statistics, HallOfFame
+import multiprocessing
 
 # Avoid loading Tkinter back end when we won't use it.
 matplotlib.use('Agg')
@@ -91,6 +96,21 @@ class Board(object):
         for _ in range(width):
             self.cells.append([None] * height)
 
+    def __eq__(self, other):
+        for x in range(self.width):
+            for y in range(self.height):
+                cell1 = self[x][y]
+                cell2 = other[x][y]
+                if cell1 is None or cell2 is None:
+                    if cell1 is not cell2:
+                        return False
+                elif cell1.pips != cell2.pips or cell1.domino != cell2.domino:
+                    return False
+        return True
+
+    def __ne__(self, other):
+        return not (self == other)
+
     def add(self, item, x, y):
         try:
             dx, dy = item.direction
@@ -126,10 +146,12 @@ class Board(object):
             self.cells[item.x][item.y] = None
             item.x = item.y = item.board = None
 
-    def mutate(self, random):
+    def mutate(self, random, boardType=None):
+        boardType = boardType or Board
         domino1 = random.choice(self.dominoes)
-        domino2 = random.choice(list(domino1.findNeighbours()))
-        new_board = Board(self.width, self.height, max_pips=self.max_pips)
+        neighbours = list(domino1.findNeighbours())
+        domino2 = neighbours and random.choice(neighbours) or domino1
+        new_board = boardType(self.width, self.height, max_pips=self.max_pips)
         for domino in self.dominoes:
             if domino != domino1 and domino != domino2:
                 i = new_board.extra_dominoes.index(domino)
@@ -249,6 +271,9 @@ class Domino(object):
                  self.tail.pips == other.tail.pips) or
                 (self.head.pips == other.tail.pips and
                  self.tail.pips == other.head.pips))
+
+    def __ne__(self, other):
+        return not (self == other)
 
     def rotate(self, degrees):
         self.rotate_to((self.degrees + degrees) % 360)
@@ -500,6 +525,67 @@ class BoardAnalysis(object):
             self.choice_counts = graph.get_choice_counts()
 
 
+def createRandomBoard(boardType, random):
+    board = boardType(6, 6, max_pips=6)
+    board.fill(random)
+    return board
+
+
+def mutateBoard(boardType, random, board):
+    return board.mutate(random, boardType=boardType),
+
+
+def evaluateBoard(individual):
+    analysis = BoardAnalysis(individual)
+    return analysis.score,
+
+
+def findCaptureBoardsWithDeap():
+    random = Random()
+    creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+    creator.create("Individual",
+                   Board,
+                   fitness=creator.FitnessMax)  # @UndefinedVariable
+
+    toolbox = base.Toolbox()
+    pool = multiprocessing.Pool()
+    toolbox.register("map", pool.map)
+    toolbox.register("individual",
+                     createRandomBoard,
+                     creator.Individual,  # @UndefinedVariable
+                     random)
+    toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+
+    # toolbox.register("mate", tools.cxTwoPoint)
+    toolbox.register("mutate",
+                     mutateBoard,
+                     creator.Individual,  # @UndefinedVariable
+                     random)
+    toolbox.register("select", tools.selTournament, tournsize=3)
+    toolbox.register("evaluate", evaluateBoard)
+
+    pop = toolbox.population(n=100)
+    CXPB, MUTPB, NGEN = 0.0, 0.5, 30
+    stats = Statistics()
+    halloffame = HallOfFame(10)
+    verbose = True
+    eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats, halloffame, verbose)
+    for board in halloffame:
+        analysis = BoardAnalysis(board)
+        print
+        print analysis.start
+        if analysis.solution:
+            print ('{} score, {} nodes{}{}, '
+                   'avg {} and max {} choices {}').format(
+                analysis.score,
+                analysis.graph_size,
+                200 * ' ',
+                ', '.join(analysis.solution),
+                analysis.average_choices,
+                analysis.max_choices,
+                analysis.choice_counts)
+
+
 def findCaptureBoards():
     print 'Searching...'
     out_path = 'problems'
@@ -556,7 +642,7 @@ def findCaptureBoards():
     plotScores(times, scores, title)
 
 if __name__ == '__main__':
-    findCaptureBoards()
+    findCaptureBoardsWithDeap()
 elif __name__ == '__live_coding__':
     import unittest
 
