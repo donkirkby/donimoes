@@ -4,8 +4,6 @@ from multiprocessing import Pool
 import os
 from Queue import Queue, Empty, Full
 from random import Random
-import sys
-from timeit import timeit
 
 from deap import base, creator, tools
 from deap.algorithms import eaSimple
@@ -339,6 +337,8 @@ class Domino(object):
 
 
 class BoardGraph(object):
+    MAX_GRAPH_SIZE = 2000  # Good to 70000, try 140000 (report +score > 10000)
+
     def walk(self, board):
         pending_nodes = []
         self.graph = DiGraph()
@@ -346,7 +346,7 @@ class BoardGraph(object):
         self.graph.add_node(self.start)
         pending_nodes.append(self.start)
         self.min_domino_count = len(board.dominoes)
-        while pending_nodes:
+        while pending_nodes and len(self.graph) < BoardGraph.MAX_GRAPH_SIZE:
             state = pending_nodes.pop()
             board = Board.create(state, border=1)
             dominoes = set(board.dominoes)
@@ -544,19 +544,38 @@ def mutateBoard(boardType, random, board):
 
 def evaluateBoard(individual):
     analysis = BoardAnalysis(individual)
-    return analysis.score,
+    return analysis.score, analysis.graph_size
+
+scores = []
+graph_sizes = []
+
+
+def loggedMap(pool, function, *args):
+    results = pool.map(function, *args)
+    if function.func is evaluateBoard:
+        for score, graph_size in results:
+            graph_sizes.append(graph_size)
+            scores.append(score)
+        iterations = len(scores)
+        plt.title('Score vs. Graph Size (n={})'.format(iterations))
+        plt.plot(graph_sizes, scores, 'o', alpha=0.3)
+        plt.ylabel("score")
+        plt.xlabel("graph size")
+        plt.savefig('scores.png')
+        plt.close()
+    return results
 
 
 def findCaptureBoardsWithDeap():
     random = Random()
-    creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+    creator.create("FitnessMax", base.Fitness, weights=(1.0, 0.0000000001))
     creator.create("Individual",
                    Board,
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
     toolbox = base.Toolbox()
     pool = Pool()
-    toolbox.register("map", pool.map)
+    toolbox.register("map", loggedMap, pool)
     toolbox.register("individual",
                      createRandomBoard,
                      creator.Individual,  # @UndefinedVariable
@@ -652,15 +671,6 @@ def findCaptureBoards():
     plotScores(times, scores, title)
 
 
-def analyseRandomBoard(random):
-    start_time = datetime.now()
-    board = Board(4, 5, max_pips=6)
-    board.fill(random)
-    analysis = BoardAnalysis(board)
-    duration = (datetime.now() - start_time).total_seconds()
-    return analysis.graph_size, duration
-
-
 def testPerformance():
     state = """\
 2|4 0|6
@@ -677,20 +687,35 @@ def testPerformance():
     BoardAnalysis(board)
 
 
+def analyseRandomBoard(random):
+    # start_time = datetime.now()
+    board = Board(6, 5, max_pips=6)
+    board.fill(random)
+    analysis = BoardAnalysis(board)
+    # duration = (datetime.now() - start_time).total_seconds()
+    return analysis.graph_size, analysis.score
+
+
 def plotPerformance():
     iterations = 20
     random = Random()
-    stats = [analyseRandomBoard(random) for _ in range(iterations)]
-    sizes, times = zip(*stats)
-    plt.title('Time vs. Graph Size (n={})'.format(iterations))
-    plt.plot(sizes, times, 'o')
-    plt.ylabel("time (s)")
+    end_time = datetime.now() + timedelta(minutes=10)
+    sizes = []
+    scores = []
+    while datetime.now() < end_time:
+        size, score = analyseRandomBoard(random)
+        sizes.append(size)
+        scores.append(score)
+    plt.title('Score vs. Graph Size (n={})'.format(iterations))
+    plt.plot(sizes, scores, 'o', alpha=0.5)
+    plt.ylabel("score")
     plt.xlabel("graph size")
     plt.savefig('times.png')
     print('Done.')
 
 
 if __name__ == '__main__':
+    # plotPerformance()
     findCaptureBoardsWithDeap()
 elif __name__ == '__live_coding__':
     import unittest
