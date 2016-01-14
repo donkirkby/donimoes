@@ -88,6 +88,23 @@ def draw_domino(turtle, domino, cell_size=50.0):
     turtle.back(cell_size)
 
 
+def draw_board(turtle, board, cell_size=50.0):
+    for y in range(board.height):
+        for x in range(board.width):
+            cell = board[x][y]
+            domino = cell.domino
+            if cell is domino.head:
+                turtle.left(domino.degrees)
+                draw_domino(turtle, domino, cell_size)
+                turtle.right(domino.degrees)
+            turtle.forward(cell_size)
+        turtle.up()
+        turtle.back(cell_size*board.width)
+        turtle.left(90)
+        turtle.forward(cell_size)
+        turtle.right(90)
+
+
 def draw_position(turtle, size=10, color='red'):
     old_pen = turtle.pen()
     old_pos = turtle.pos()
@@ -113,33 +130,21 @@ def draw_position(turtle, size=10, color='red'):
     turtle.pen(old_pen)
 
 if __name__ == '__live_coding__':
-    from domino_puzzle import Domino
+    from domino_puzzle import Board
     turtle = __live_turtle__  # @UndefinedVariable
-    cell_size = 75
+    cell_size = 80
     turtle.up()
-    turtle.back(100)
-    turtle.left(90)
-    turtle.forward(100)
-    turtle.down()
-    domino1 = Domino(5, 2)
-    draw_domino(turtle, domino1, cell_size)
-
-    turtle.up()
-    turtle.right(90)
-    turtle.forward(cell_size)
-    domino2 = Domino(1, 6)
-    draw_domino(turtle, domino2, cell_size)
-
-    turtle.up()
-    turtle.left(90)
-    turtle.forward(cell_size)
-    turtle.right(90)
-    domino3 = Domino(0, 4)
-    draw_domino(turtle, domino3, cell_size)
-
-    turtle.right(90)
-    turtle.forward(cell_size*2)
-    turtle.left(90)
     turtle.back(cell_size)
+    turtle.left(90)
+    turtle.forward(cell_size)
+    turtle.right(90)
+    turtle.down()
 
+    state = """\
+2 0|4
+-
+5 1|6
+"""
+    board = Board.create(state)
+    draw_board(turtle, board, cell_size)
     draw_position(turtle)
