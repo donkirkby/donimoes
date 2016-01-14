@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta
+from functools import partial
 from itertools import chain
-from multiprocessing import Pool
-import os
-from Queue import Queue, Empty, Full
+from multiprocessing import Pool, Manager
+from Queue import Empty
 from random import Random
+from sys import maxint
 
 from deap import base, creator, tools
 from deap.algorithms import eaSimple
@@ -62,7 +63,7 @@ class Board(object):
         line_length = height and max(map(len, lines))
         width = height and (line_length+1) / 2
         lines = [line + ((line_length-len(line)) * ' ') for line in lines]
-        board = Board(width + 2*border, height + 2*border, max_pips=max_pips)
+        board = cls(width + 2*border, height + 2*border, max_pips=max_pips)
         for x in range(width):
             for y in range(height):
                 head = lines[y*2][x*2]
@@ -336,17 +337,24 @@ class Domino(object):
                 self.tail.pips == other.head.pips)
 
 
-class BoardGraph(object):
-    MAX_GRAPH_SIZE = 2000  # Good to 70000, try 140000 (report +score > 10000)
+class GraphLimitExceeded(RuntimeError):
+    def __init__(self, limit):
+        super(GraphLimitExceeded, self).__init__(
+            'Graph size limit of {} exceeded.'.format(limit))
+        self.limit = limit
 
-    def walk(self, board):
+
+class BoardGraph(object):
+    def walk(self, board, size_limit=maxint):
         pending_nodes = []
         self.graph = DiGraph()
         self.start = board.display(cropped=True)
         self.graph.add_node(self.start)
         pending_nodes.append(self.start)
         self.min_domino_count = len(board.dominoes)
-        while pending_nodes and len(self.graph) < BoardGraph.MAX_GRAPH_SIZE:
+        while pending_nodes:
+            if len(self.graph) >= size_limit:
+                raise GraphLimitExceeded(size_limit)
             state = pending_nodes.pop()
             board = Board.create(state, border=1)
             dominoes = set(board.dominoes)
@@ -435,12 +443,6 @@ class CaptureBoardGraph(BoardGraph):
             solution.append(self.graph[source][target]['move'])
         return solution
 
-    def get_score(self):
-        if self.min_domino_count:
-            return -self.min_domino_count
-        choice_counts = self.get_choice_counts()
-        return float(len(self.get_solution()))/max(choice_counts)
-
     def get_choice_counts(self):
         solution_nodes = shortest_path(self.graph, self.start, '')
         return [len(self.graph[node]) for node in solution_nodes[:-1]]
@@ -454,86 +456,73 @@ class CaptureBoardGraph(BoardGraph):
         return max(choices)
 
 
-def plotScores(times, scores, title):
-    plt.close()
-    plt.title('{} (n={})'.format(title, len(scores)))
-    plt.plot(times, scores, 'o')
-    plt.xlabel("time (s)")
-    plt.ylabel("score")
-    plt.savefig('scores.png')
-
-
-class RandomBoardFactory(object):
-    def __init__(self):
-        self.random = Random()
-
-    def create_board(self):
-        board = Board(6, 6, max_pips=6)
-        board.fill(self.random)
-        return board
-
-    def record_score(self, board, score):
-        pass
-
-
-class EvolutionaryBoardFactory(RandomBoardFactory):
-    def __init__(self, batch_size):
-        super(EvolutionaryBoardFactory, self).__init__()
-        self.batch_size = batch_size
-        self.boards = Queue(maxsize=batch_size-1)
-        self.best_board = None
-        self.best_score = None
-
-    def create_board(self):
-        try:
-            return self.boards.get_nowait()
-        except Empty:
-            best_board = self.best_board
-            while True:
-                if not best_board or self.random.randrange(10) == 0:
-                    board = super(EvolutionaryBoardFactory,
-                                  self).create_board()
-                else:
-                    board = best_board.mutate(self.random)
-                try:
-                    self.boards.put_nowait(board)
-                except Full:
-                    return board
-
-    def record_score(self, board, score):
-        if self.best_score is None or score > self.best_score:
-            self.best_score = score
-            self.best_board = board
-
-
-def iterateBoards(factory):
-    while True:
-        yield factory.create_board()
-
-
 class BoardAnalysis(object):
-    def __init__(self, board):
+    WEIGHTS = (-1, -1, 1, -1, -1)
+
+    @classmethod
+    def calculate_score(cls, values):
+        (min_dominoes,
+         max_choices,
+         solution_length,
+         avg_choices,
+         _graph_size) = values
+        if min_dominoes > 0:
+            return -min_dominoes*100
+        return max_choices * 100 - solution_length + avg_choices * 0.1
+
+    @classmethod
+    def best_score(cls, population):
+        scores = [cls.calculate_score(ind.fitness.values)
+                  for ind in population]
+        positives = [score for score in scores if score > 0]
+        if positives:
+            return min(positives)
+        return max(score for score in scores if score <= 0)
+
+    def get_values(self):
+        return (self.min_dominoes,
+                self.max_choices,
+                len(self.solution),
+                self.average_choices,
+                self.graph_size)
+
+    def __init__(self, board, size_limit=maxint):
         self.board = board
         self.start = board.display()
         try:
             graph = CaptureBoardGraph()
-            states = graph.walk(board)
+            states = graph.walk(board, size_limit)
+        except GraphLimitExceeded:
+            raise
         except StandardError:
             print self.start
             raise
-        self.score = graph.get_score()
+        self.min_dominoes = graph.min_domino_count
         self.graph_size = len(graph.graph)
         if '' not in states:
-            self.solution = None
+            self.solution = self.choice_counts = []
+            self.average_choices = self.max_choices = 0
         else:
             self.solution = graph.get_solution()
             self.average_choices = graph.get_average_choices()
             self.max_choices = graph.get_max_choices()
             self.choice_counts = graph.get_choice_counts()
 
+    def display(self):
+        score = BoardAnalysis.calculate_score(self.get_values())
+        return ('{} score, {} nodes{}{}, '
+                'avg {} and max {} choices {}').format(
+                    score,
+                    self.graph_size,
+                    200 * ' ',
+                    ', '.join(self.solution),
+                    self.average_choices,
+                    self.max_choices,
+                    self.choice_counts)
+
 
 def createRandomBoard(boardType, random):
-    board = boardType(6, 6, max_pips=6)
+    board = boardType(3, 2, max_pips=6)
     board.fill(random)
     return board
 
@@ -541,10 +530,28 @@ def createRandomBoard(boardType, random):
 def mutateBoard(boardType, random, board):
     return board.mutate(random, boardType=boardType),
 
+SLOW_BOARD_SIZE = 2000
+MAX_BOARD_SIZE = 70000  # 140000 Bad, 70000 Good
 
-def evaluateBoard(individual):
-    analysis = BoardAnalysis(individual)
-    return analysis.score, analysis.graph_size
+
+def evaluateBoard(slow_queue, individual):
+    try:
+        analysis = BoardAnalysis(individual, size_limit=SLOW_BOARD_SIZE)
+        return analysis.get_values()
+    except GraphLimitExceeded:
+        slow_queue.put(individual.display())
+        return (len(individual.dominoes) + 1), 0, 0, 0, 0
+
+
+def evaluateSlowBoards(slow_queue, results_queue):
+    while True:
+        start = slow_queue.get()
+        board = Board.create(start, max_pips=6)
+        try:
+            analysis = BoardAnalysis(board, size_limit=MAX_BOARD_SIZE)
+            results_queue.put((start, analysis.get_values()))
+        except GraphLimitExceeded:
+            pass
 
 scores = []
 graph_sizes = []
@@ -553,7 +560,9 @@ graph_sizes = []
 def loggedMap(pool, function, *args):
     results = pool.map(function, *args)
     if function.func is evaluateBoard:
-        for score, graph_size in results:
+        for fitness_values in results:
+            graph_size = fitness_values[-1]
+            score = BoardAnalysis.calculate_score(fitness_values)
             graph_sizes.append(graph_size)
             scores.append(score)
         iterations = len(scores)
@@ -566,15 +575,42 @@ def loggedMap(pool, function, *args):
     return results
 
 
+def selectBoards(selector,
+                 results_queue,
+                 hall_of_fame,
+                 boardType,
+                 population,
+                 count):
+    try:
+        while True:
+            start, fitness_values = results_queue.get_nowait()
+            board = boardType.create(start, max_pips=6)
+            board.fitness.values = fitness_values
+            graph_size = fitness_values[-1]
+            score = BoardAnalysis.calculate_score(fitness_values)
+            scores.append(score)
+            graph_sizes.append(graph_size)
+            hall_of_fame.update([board])
+            population.append(board)
+    except Empty:
+        pass
+    return selector(population, count)
+
+
 def findCaptureBoardsWithDeap():
     random = Random()
-    creator.create("FitnessMax", base.Fitness, weights=(1.0, 0.0000000001))
+    manager = Manager()
+    slow_queue = manager.Queue()
+    results_queue = manager.Queue()
+    creator.create("FitnessMax", base.Fitness, weights=BoardAnalysis.WEIGHTS)
     creator.create("Individual",
                    Board,
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
     toolbox = base.Toolbox()
     pool = Pool()
+    halloffame = HallOfFame(10)
+    pool.apply_async(evaluateSlowBoards, [slow_queue, results_queue])
     toolbox.register("map", loggedMap, pool)
     toolbox.register("individual",
                      createRandomBoard,
@@ -587,13 +623,18 @@ def findCaptureBoardsWithDeap():
                      mutateBoard,
                      creator.Individual,  # @UndefinedVariable
                      random)
-    toolbox.register("select", tools.selTournament, tournsize=3)
-    toolbox.register("evaluate", evaluateBoard)
+    toolbox.register("select",
+                     selectBoards,
+                     partial(tools.selTournament, tournsize=3),
+                     results_queue,
+                     halloffame,
+                     creator.Individual)  # @UndefinedVariable
+    toolbox.register("evaluate", evaluateBoard, slow_queue)
 
     pop = toolbox.population(n=100)
-    CXPB, MUTPB, NGEN = 0.0, 0.5, 30
+    CXPB, MUTPB, NGEN = 0.0, 0.5, 3000
     stats = Statistics()
-    halloffame = HallOfFame(10)
+    stats.register("best", BoardAnalysis.best_score)
     verbose = True
     eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats, halloffame, verbose)
     for board in halloffame:
@@ -604,87 +645,26 @@ def findCaptureBoardsWithDeap():
             print('{} score.'.format(score))
         else:
             analysis = BoardAnalysis(board)
-            print ('{} score, {} nodes{}{}, '
-                   'avg {} and max {} choices {}').format(
-                analysis.score,
-                analysis.graph_size,
-                200 * ' ',
-                ', '.join(analysis.solution),
-                analysis.average_choices,
-                analysis.max_choices,
-                analysis.choice_counts)
-
-
-def findCaptureBoards():
-    print 'Searching...'
-    out_path = 'problems'
-    if not os.path.isdir(out_path):
-        os.mkdir(out_path)
-    if False:
-        board_factory = RandomBoardFactory()
-        title = 'Random Boards'
-    else:
-        board_factory = EvolutionaryBoardFactory(batch_size=30)
-        title = 'Evolutionary Boards'
-    start_time = datetime.now()
-    end_time = start_time + timedelta(days=300)
-    pool = Pool(7)
-    report = 2
-    attempt = 0
-    times = []
-    scores = []
-    favourites = {}  # { solution_length: (max_choices, avg_choices) }
-    for analysis in pool.imap_unordered(BoardAnalysis,
-                                        iterateBoards(board_factory)):
-        iteration_time = datetime.now()
-        if iteration_time >= end_time:
-            break
-        attempt += 1
-        if attempt >= report:
-            print '.',
-            report *= 2
-            attempt = 0
-            plotScores(times, scores, title)
-        times.append((iteration_time-start_time).total_seconds())
-        scores.append(analysis.score)
-        board_factory.record_score(analysis.board, analysis.score)
-        if analysis.solution is not None:
-            best = favourites.get(len(analysis.solution))
-            if best is None or (analysis.max_choices,
-                                analysis.average_choices) < best:
-                report = 2
-                attempt = 0
-                print
-                print analysis.start
-                print ('{} score, {} nodes at {}{}{}, '
-                       'avg {} and max {} choices {}').format(
-                    analysis.score,
-                    analysis.graph_size,
-                    iteration_time.isoformat(),
-                    200 * ' ',
-                    ', '.join(analysis.solution),
-                    analysis.average_choices,
-                    analysis.max_choices,
-                    analysis.choice_counts)
-                favourites[len(analysis.solution)] = (analysis.max_choices,
-                                                      analysis.average_choices)
-    plotScores(times, scores, title)
+            print(analysis.display())
 
 
 def testPerformance():
     state = """\
-2|4 0|6
+1|2 4|5 1|1
 
-6|2 0|0
+1|4 5|3 1|0
 
-6|6 0|3
-
-5|0 5|2
-
-1|0 4|4
+4 0 2|0 6|2
+- -
+2 5 4 6|6 2
+    -     -
+6 4 4 0|4 2
+- -
+0 3 4|6 2|5
 """
     board = Board.create(state, max_pips=6)
-    BoardAnalysis(board)
+    analysis = BoardAnalysis(board)
+    print analysis.display()
 
 
 def analyseRandomBoard(random):
@@ -717,6 +697,7 @@ def plotPerformance():
 if __name__ == '__main__':
     # plotPerformance()
     findCaptureBoardsWithDeap()
+    # testPerformance()
 elif __name__ == '__live_coding__':
     import unittest
 

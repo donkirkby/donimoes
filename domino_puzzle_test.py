@@ -111,9 +111,9 @@ x x x x
 
     def testRotate(self):
         board = Board(4, 3)
-        domino = Domino(5, 6)
-        board.add(domino, 1, 2)
-        domino.rotate(-90)
+        domino1 = Domino(5, 6)
+        board.add(domino1, 1, 2)
+        domino1.rotate(-90)
         expected_display = """\
 x 5 x x
   -
@@ -128,9 +128,9 @@ x x x x
 
     def testMoveRight(self):
         board = Board(4, 3)
-        domino = Domino(5, 6)
-        board.add(domino, 1, 2)
-        domino.move(1, 0)
+        domino1 = Domino(5, 6)
+        board.add(domino1, 1, 2)
+        domino1.move(1, 0)
         expected_display = """\
 x x 5|6
 
@@ -145,9 +145,9 @@ x x x x
 
     def testMoveLeft(self):
         board = Board(4, 3)
-        domino = Domino(5, 6)
-        board.add(domino, 1, 2)
-        domino.move(-1, 0)
+        domino1 = Domino(5, 6)
+        board.add(domino1, 1, 2)
+        domino1.move(-1, 0)
         expected_display = """\
 5|6 x x
 
@@ -161,35 +161,35 @@ x x x x
         self.assertMultiLineEqual(expected_display, display)
 
     def testRotateWithoutBoard(self):
-        domino = Domino(5, 6)
-        domino.rotate(90)
+        domino1 = Domino(5, 6)
+        domino1.rotate(90)
 
-        self.assertEqual(90, domino.degrees)
+        self.assertEqual(90, domino1.degrees)
 
     def testRemove(self):
         board = Board(3, 4)
-        domino = Domino(1, 5)
-        board.add(domino, 0, 0)
+        domino1 = Domino(1, 5)
+        board.add(domino1, 0, 0)
 
-        board.remove(domino)
+        board.remove(domino1)
 
         self.assertEqual([], board.dominoes)
 
     def testRemoveAndRotate(self):
         board = Board(3, 4)
-        domino = Domino(1, 5)
-        board.add(domino, 0, 0)
+        domino1 = Domino(1, 5)
+        board.add(domino1, 0, 0)
 
-        board.remove(domino)
-        domino.rotate(270)
+        board.remove(domino1)
+        domino1.rotate(270)
 
-        self.assertEqual(270, domino.degrees)
+        self.assertEqual(270, domino1.degrees)
 
     def testRotateAndAdd(self):
         board = Board(4, 3)
-        domino = Domino(5, 6)
-        domino.rotate(-90)
-        board.add(domino, 1, 2)
+        domino1 = Domino(5, 6)
+        domino1.rotate(-90)
+        board.add(domino1, 1, 2)
         expected_display = """\
 x 5 x x
   -
@@ -223,10 +223,10 @@ x x x x
 0|1 x
 """
         board = Board.create(start_state)
-        domino = board[0][0].domino
+        domino1 = board[0][0].domino
 
         with self.assertRaises(BoardError):
-            domino.move(-1, 0)
+            domino1.move(-1, 0)
 
         self.assertMultiLineEqual(start_state, board.display())
 
@@ -351,15 +351,15 @@ x x x x
 
     def testFlip(self):
         board = Board(3, 2, max_pips=6)
-        domino = Domino(1, 5)
+        domino1 = Domino(1, 5)
         expected_display = """\
 x x x
 
 5|1 x
 """
 
-        board.add(domino, 0, 0)
-        domino.flip()
+        board.add(domino1, 0, 0)
+        domino1.flip()
 
         self.assertMultiLineEqual(expected_display, board.display())
 
@@ -534,16 +534,16 @@ x x x x x
 
 class DominoTest(unittest.TestCase):
     def testRepr(self):
-        domino = Domino(5, 3)
+        domino1 = Domino(5, 3)
 
-        s = repr(domino)
+        s = repr(domino1)
 
         self.assertEqual("Domino(5, 3)", s)
 
     def testInit(self):
-        domino = Domino(5, 3)
+        domino1 = Domino(5, 3)
 
-        pips = domino.head.pips
+        pips = domino1.head.pips
 
         self.assertEqual(5, pips)
 
@@ -588,19 +588,19 @@ class DominoTest(unittest.TestCase):
         self.assertFalse(neq_result)
 
     def testRotateFullCircle(self):
-        domino = Domino(1, 5)
+        domino1 = Domino(1, 5)
 
-        domino.rotate(180)
-        domino.rotate(180)
+        domino1.rotate(180)
+        domino1.rotate(180)
 
-        self.assertEqual(0, domino.degrees)
+        self.assertEqual(0, domino1.degrees)
 
     def testRotateNegative(self):
-        domino = Domino(1, 5)
+        domino1 = Domino(1, 5)
 
-        domino.rotate(-90)
+        domino1.rotate(-90)
 
-        self.assertEqual(270, domino.degrees)
+        self.assertEqual(270, domino1.degrees)
 
     def testFindNeighbours(self):
         state = """\
@@ -609,48 +609,48 @@ class DominoTest(unittest.TestCase):
 0 0|4 0|3
 """
         board = Board.create(state)
-        domino = board[1][1].domino
+        domino1 = board[1][1].domino
         expected_neighbours = set([board[0][1].domino, board[1][0].domino])
 
-        neighbours = domino.findNeighbours()
+        neighbours = domino1.findNeighbours()
 
         self.assertEqual(expected_neighbours, neighbours)
 
     def testIsMatch(self):
-        domino = Domino(0, 1)
+        domino1 = Domino(0, 1)
 
-        self.assertFalse(domino.isMatch(Domino(2, 2)))
-        self.assertTrue(domino.isMatch(Domino(0, 2)))
-        self.assertTrue(domino.isMatch(Domino(2, 1)))
-        self.assertTrue(domino.isMatch(Domino(2, 0)))
-        self.assertTrue(domino.isMatch(Domino(1, 2)))
+        self.assertFalse(domino1.isMatch(Domino(2, 2)))
+        self.assertTrue(domino1.isMatch(Domino(0, 2)))
+        self.assertTrue(domino1.isMatch(Domino(2, 1)))
+        self.assertTrue(domino1.isMatch(Domino(2, 0)))
+        self.assertTrue(domino1.isMatch(Domino(1, 2)))
 
     def testDescribeMove(self):
-        domino = Domino(1, 2)
+        domino1 = Domino(1, 2)
         dx, dy = 1, 0
         expected_move = '12r'
 
-        move = domino.describe_move(dx, dy)
+        move = domino1.describe_move(dx, dy)
 
         self.assertEqual(expected_move, move)
 
     def testDescribeMoveReversed(self):
-        domino = Domino(1, 2)
-        domino.rotate(180)
+        domino1 = Domino(1, 2)
+        domino1.rotate(180)
         dx, dy = 1, 0
         expected_move = '21r'
 
-        move = domino.describe_move(dx, dy)
+        move = domino1.describe_move(dx, dy)
 
         self.assertEqual(expected_move, move)
 
     def testDescribeMoveUpReversed(self):
-        domino = Domino(1, 2)
-        domino.rotate(90)
+        domino1 = Domino(1, 2)
+        domino1.rotate(90)
         dx, dy = 0, 1
         expected_move = '21u'
 
-        move = domino.describe_move(dx, dy)
+        move = domino1.describe_move(dx, dy)
 
         self.assertEqual(expected_move, move)
 
@@ -901,59 +901,3 @@ x x 6|2 3
         states = graph.walk(board)
 
         self.assertEqual(expected_states, states)
-
-    def testScoreShortSolution(self):
-        board = Board.create("""\
-0|2
-
-6|0
-""")
-        expected_score = 1  # solution length is one move (62r)
-
-        graph = CaptureBoardGraph()
-        graph.walk(board)
-        score = graph.get_score()
-
-        self.assertEqual(expected_score, score)
-
-    def testScoreLongerSolution(self):
-        board = Board.create("""\
-6|2
-
-6|0
-""")
-        expected_score = 2  # solution length is two moves (62r, 62l)
-
-        graph = CaptureBoardGraph()
-        graph.walk(board)
-        score = graph.get_score()
-
-        self.assertEqual(expected_score, score)
-
-    def testScoreOneDominoRemains(self):
-        board = Board.create("""\
-0|2 3
-    -
-6|0 3
-""")
-        expected_score = -1
-
-        graph = CaptureBoardGraph()
-        graph.walk(board)
-        score = graph.get_score()
-
-        self.assertEqual(expected_score, score)
-
-    def testScoreTwoDominoesRemain(self):
-        board = Board.create("""\
-0|2 3 4
-    - -
-6|0 3 4
-""")
-        expected_score = -2
-
-        graph = CaptureBoardGraph()
-        graph.walk(board)
-        score = graph.get_score()
-
-        self.assertEqual(expected_score, score)
