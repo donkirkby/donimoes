@@ -32,9 +32,13 @@ OOO|
 ---+
 """
     pip_pattern = PIP_PATTERNS.splitlines()[pips*4+1:pips*4+4]
-    pip_radius = cell_size*0.1
+    pip_radius = cell_size*0.09
     turtle.up()
     pos = turtle.pos()
+    turtle.back(pip_radius*5)
+    turtle.left(90)
+    turtle.forward(pip_radius*5)
+    turtle.right(90)
     for i in range(3):
         turtle.forward(pip_radius*2)
         turtle.right(90)
@@ -57,27 +61,31 @@ OOO|
 
 def draw_domino(turtle, domino, cell_size=50.0):
     turtle.up()
-    turtle.back(cell_size*0.5)
+    turtle.back(cell_size*0.45)
     turtle.left(90)
-    turtle.forward(cell_size*0.5)
+    turtle.forward(cell_size*0.45)
     turtle.right(90)
-    turtle.forward(cell_size)
     turtle.down()
-    for _ in range(4):
-        turtle.forward(cell_size)
+    for _ in range(2):
+        turtle.forward(cell_size*1.9)
         turtle.right(90)
-    draw_pips(turtle, domino.head.pips, cell_size)
-    turtle.left(180)
+        turtle.forward(cell_size*.9)
+        turtle.right(90)
+
+    turtle.up()
+    turtle.forward(cell_size*.95)
+    turtle.right(90)
+    turtle.forward(cell_size*.1)
     turtle.down()
-    for _ in range(3):
-        turtle.forward(cell_size)
-        turtle.left(90)
+    turtle.forward(cell_size*.7)
+    turtle.up()
+    turtle.back(cell_size*.35)
     turtle.left(90)
+    turtle.back(cell_size*.5)
+    draw_pips(turtle, domino.head.pips, cell_size)
+    turtle.forward(cell_size)
     draw_pips(turtle, domino.tail.pips, cell_size)
-    turtle.forward(cell_size*0.5)
-    turtle.right(90)
-    turtle.forward(cell_size*0.5)
-    turtle.right(90)
+    turtle.back(cell_size)
 
 
 def draw_position(turtle, size=10, color='red'):
@@ -110,6 +118,8 @@ if __name__ == '__live_coding__':
     cell_size = 75
     turtle.up()
     turtle.back(100)
+    turtle.left(90)
+    turtle.forward(100)
     turtle.down()
     domino1 = Domino(5, 2)
     draw_domino(turtle, domino1, cell_size)
@@ -126,3 +136,10 @@ if __name__ == '__live_coding__':
     turtle.right(90)
     domino3 = Domino(0, 4)
     draw_domino(turtle, domino3, cell_size)
+
+    turtle.right(90)
+    turtle.forward(cell_size*2)
+    turtle.left(90)
+    turtle.back(cell_size)
+
+    draw_position(turtle)
