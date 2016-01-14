@@ -1,3 +1,5 @@
+from functools import partial
+
 
 def draw_pips(turtle, pips, cell_size):
     PIP_PATTERNS = """\
@@ -89,20 +91,76 @@ def draw_domino(turtle, domino, cell_size=50.0):
 
 
 def draw_board(turtle, board, cell_size=50.0):
+    pos = turtle.pos()
     for y in range(board.height):
         for x in range(board.width):
             cell = board[x][y]
-            domino = cell.domino
-            if cell is domino.head:
-                turtle.left(domino.degrees)
-                draw_domino(turtle, domino, cell_size)
-                turtle.right(domino.degrees)
+            if cell is not None:
+                domino = cell.domino
+                if cell is domino.head:
+                    turtle.left(domino.degrees)
+                    draw_domino(turtle, domino, cell_size)
+                    turtle.right(domino.degrees)
             turtle.forward(cell_size)
         turtle.up()
         turtle.back(cell_size*board.width)
         turtle.left(90)
         turtle.forward(cell_size)
         turtle.right(90)
+    turtle.setpos(pos)
+
+
+def draw_arrow(turtle, cell_size, rotation=0):
+    pos = turtle.pos()
+    turtle.left(rotation)
+    turtle.back(cell_size*.2)
+    turtle.down()
+    turtle.left(90)
+    turtle.begin_fill()
+    turtle.forward(cell_size*.05)
+    turtle.right(90)
+    turtle.forward(cell_size*.3)
+    turtle.left(90)
+    turtle.forward(cell_size*.1)
+    turtle.right(120)
+    turtle.forward(cell_size*.3)
+    turtle.right(120)
+    turtle.forward(cell_size*.3)
+    turtle.right(120)
+    turtle.forward(cell_size*.1)
+    turtle.left(90)
+    turtle.forward(cell_size*.3)
+    turtle.right(90)
+    turtle.forward(cell_size*.05)
+    turtle.right(90)
+    turtle.forward(cell_size*.2)
+    turtle.end_fill()
+    turtle.up()
+    turtle.setpos(pos)
+    turtle.right(rotation)
+
+
+def draw_diagram(turtle, state, cell_size):
+    marks = {'>': partial(draw_arrow, turtle, cell_size),
+             '^': partial(draw_arrow, turtle, cell_size, 90),
+             '<': partial(draw_arrow, turtle, cell_size, 180),
+             'v': partial(draw_arrow, turtle, cell_size, 270)}
+    pos = turtle.pos()
+    board = Board.create(state)
+    draw_board(turtle, board, cell_size)
+    lines = state.splitlines()
+    for y, line in enumerate(reversed(lines)):
+        for x, c in enumerate(line.strip()):
+            if (x+y) % 2:
+                mark = marks.get(c)
+                if mark is not None:
+                    mark()
+            turtle.forward(cell_size*.5)
+        turtle.back(cell_size*len(line)*.5)
+        turtle.left(90)
+        turtle.forward(cell_size*.5)
+        turtle.right(90)
+    turtle.setpos(pos)
 
 
 def draw_position(turtle, size=10, color='red'):
@@ -132,19 +190,27 @@ def draw_position(turtle, size=10, color='red'):
 if __name__ == '__live_coding__':
     from domino_puzzle import Board
     turtle = __live_turtle__  # @UndefinedVariable
-    cell_size = 80
+    cell_size = 60
     turtle.up()
     turtle.back(cell_size)
-    turtle.left(90)
-    turtle.forward(cell_size)
     turtle.right(90)
+    turtle.forward(cell_size*3)
+    turtle.left(90)
     turtle.down()
 
-    state = """\
+    state1 = """\
 2 0|4
 -
 5 1|6
 """
-    board = Board.create(state)
-    draw_board(turtle, board, cell_size)
-    draw_position(turtle)
+    draw_diagram(turtle, state1, cell_size)
+    turtle.left(90)
+    turtle.forward(cell_size*2)
+    turtle.right(90)
+
+    state2 = """\
+2 0<4
+^
+5   1>6
+"""
+    draw_diagram(turtle, state2, cell_size)

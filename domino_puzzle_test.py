@@ -397,6 +397,22 @@ x 0|2
 
         self.assertMultiLineEqual(state, board.display())
 
+    def testCreateWithOtherMarkers(self):
+        state = """\
+1 0?2
+*
+0 x x
+"""
+        expected_display = """\
+1 0|2
+-
+0 x x
+"""
+
+        board = Board.create(state)
+
+        self.assertMultiLineEqual(expected_display, board.display())
+
     def testCreateWithBorder(self):
         state = """\
 3 x x

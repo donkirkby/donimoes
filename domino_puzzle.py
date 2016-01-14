@@ -68,12 +68,12 @@ class Board(object):
             for y in range(height):
                 head = lines[y*2][x*2]
                 if head != 'x':
-                    right_joint = x+1 < width and lines[y*2][x*2+1]
-                    upper_joint = y+1 < height and lines[y*2+1][x*2]
-                    if right_joint == '|':
+                    right_joint = x+1 < width and lines[y*2][x*2+1] or ' '
+                    upper_joint = y+1 < height and lines[y*2+1][x*2] or ' '
+                    if right_joint != ' ':
                         tail = lines[y*2][x*2+2]
                         degrees = 0
-                    elif upper_joint == '-':
+                    elif upper_joint != ' ':
                         tail = lines[y*2+2][x*2]
                         degrees = 90
                     else:
