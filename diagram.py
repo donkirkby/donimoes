@@ -140,21 +140,54 @@ def draw_arrow(turtle, cell_size, rotation=0):
     turtle.right(rotation)
 
 
+def draw_capture(turtle, cell_size):
+    pos = turtle.pos()
+
+    thickness = cell_size*.1
+    length = cell_size*.175
+    turtle.up()
+    turtle.right(45)
+    turtle.forward(thickness*.5)
+    turtle.left(90)
+    turtle.forward(thickness*.5)
+    turtle.down()
+    turtle.begin_fill()
+    for _ in range(4):
+        turtle.forward(length)
+        turtle.left(90)
+        turtle.forward(thickness)
+        turtle.left(90)
+        turtle.forward(length)
+        turtle.right(90)
+    turtle.end_fill()
+    turtle.right(45)
+    turtle.up()
+
+    turtle.setpos(pos)
+
+
 def draw_diagram(turtle, state, cell_size):
     marks = {'>': partial(draw_arrow, turtle, cell_size),
              '^': partial(draw_arrow, turtle, cell_size, 90),
              '<': partial(draw_arrow, turtle, cell_size, 180),
-             'v': partial(draw_arrow, turtle, cell_size, 270)}
+             'v': partial(draw_arrow, turtle, cell_size, 270),
+             '*': partial(draw_capture, turtle, cell_size)}
     pos = turtle.pos()
+    lines = state.splitlines()
+    turtle.up()
+    turtle.right(90)
+    turtle.forward(cell_size*len(lines)/2)
+    turtle.left(90)
     board = Board.create(state)
     draw_board(turtle, board, cell_size)
-    lines = state.splitlines()
+    turtle.up()
     for y, line in enumerate(reversed(lines)):
-        for x, c in enumerate(line.strip()):
+        for x, c in enumerate(line):
             if (x+y) % 2:
                 mark = marks.get(c)
                 if mark is not None:
                     mark()
+                    turtle.up()
             turtle.forward(cell_size*.5)
         turtle.back(cell_size*len(line)*.5)
         turtle.left(90)
@@ -193,24 +226,30 @@ if __name__ == '__live_coding__':
     cell_size = 60
     turtle.up()
     turtle.back(cell_size)
-    turtle.right(90)
-    turtle.forward(cell_size*3)
     turtle.left(90)
+    turtle.forward(cell_size*3)
+    turtle.right(90)
     turtle.down()
 
     state1 = """\
-2 0|4
+6 0|1
 -
-5 1|6
+5 5|1
 """
     draw_diagram(turtle, state1, cell_size)
-    turtle.left(90)
-    turtle.forward(cell_size*2)
     turtle.right(90)
+    turtle.forward(cell_size*3)
+    turtle.left(90)
 
     state2 = """\
-2 0<4
-^
-5   1>6
+6 0|1
+-
+5   5>1
+
+
+
+6 0*1
+*
+5 5<1
 """
     draw_diagram(turtle, state2, cell_size)
