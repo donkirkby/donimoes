@@ -12,6 +12,7 @@ from deap.tools.support import Statistics, HallOfFame
 import matplotlib
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
+from operator import eq
 
 # Avoid loading Tkinter back end when we won't use it.
 matplotlib.use('Agg')
@@ -159,7 +160,8 @@ class Board(object):
                 new_domino = new_board.extra_dominoes[i]
                 new_domino.rotate_to(domino.degrees)
                 new_board.add(new_domino, domino.head.x, domino.head.y)
-        new_board.fill(random)
+        is_filled = new_board.fill(random)
+        assert is_filled
         return new_board
 
     def __getitem__(self, x):
@@ -209,9 +211,9 @@ class Board(object):
                     for _ in range(4):
                         try:
                             self.add(domino, x, y)
-                            if random.randint(0, 1):
-                                domino.flip()
                             if self.fill(random):
+                                if random.randint(0, 1):
+                                    domino.flip()
                                 return True
                             self.remove(domino)
                         except BoardError:
@@ -521,9 +523,10 @@ class BoardAnalysis(object):
                     self.choice_counts)
 
 
-def createRandomBoard(boardType, random):
-    board = boardType(3, 2, max_pips=6)
-    board.fill(random)
+def createRandomBoard(boardType, random, width, height):
+    board = boardType(width, height, max_pips=6)
+    is_filled = board.fill(random)
+    assert is_filled
     return board
 
 
@@ -597,6 +600,26 @@ def selectBoards(selector,
     return selector(population, count)
 
 
+class LoggingHallOfFame(HallOfFame):
+    def __init__(self, maxsize, similar=eq, filename="leader.log"):
+        super(LoggingHallOfFame, self).__init__(maxsize, similar)
+        self.filename = filename
+        with open(self.filename, 'w'):
+            pass  # erase file
+
+    def update(self, population):
+        old_leader = self and self[0]
+        HallOfFame.update(self, population)
+        new_leader = self and self[0]
+        if new_leader is not old_leader:
+            display = new_leader.display()
+            assert len(new_leader.dominoes) == (new_leader.width *
+                                                new_leader.height)/2, display
+            assert 'x' not in display, display
+            with open(self.filename, 'a') as f:
+                f.write(display)
+
+
 def findCaptureBoardsWithDeap():
     random = Random()
     manager = Manager()
@@ -607,15 +630,18 @@ def findCaptureBoardsWithDeap():
                    Board,
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
+    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 4, 4
     toolbox = base.Toolbox()
     pool = Pool()
-    halloffame = HallOfFame(10)
+    halloffame = LoggingHallOfFame(10)
     pool.apply_async(evaluateSlowBoards, [slow_queue, results_queue])
     toolbox.register("map", loggedMap, pool)
     toolbox.register("individual",
                      createRandomBoard,
                      creator.Individual,  # @UndefinedVariable
-                     random)
+                     random,
+                     WIDTH,
+                     HEIGHT)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
     # toolbox.register("mate", tools.cxTwoPoint)
@@ -631,8 +657,7 @@ def findCaptureBoardsWithDeap():
                      creator.Individual)  # @UndefinedVariable
     toolbox.register("evaluate", evaluateBoard, slow_queue)
 
-    pop = toolbox.population(n=100)
-    CXPB, MUTPB, NGEN = 0.0, 0.5, 3000
+    pop = toolbox.population(n=NPOP)
     stats = Statistics()
     stats.register("best", BoardAnalysis.best_score)
     verbose = True

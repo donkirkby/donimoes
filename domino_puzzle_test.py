@@ -264,7 +264,7 @@ x x x x
 
     def testFillWithFlip(self):
         dummy_random = DummyRandom(randints={(0, 4): [1, 1],   # directions
-                                             (0, 1): [0, 1]},  # flips
+                                             (0, 1): [1, 0]},  # flips
                                    choiceDominoes=[Domino(0, 0),
                                                    Domino(0, 1)])
         board = Board(2, 2, max_pips=6)
