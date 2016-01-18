@@ -1,5 +1,4 @@
 from subprocess import call
-import re
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.platypus.flowables import Flowable, Spacer, KeepTogether,\
@@ -10,14 +9,14 @@ from reportlab.rl_config import defaultPageSize  # @UnresolvedImport
 
 from diagram import draw_diagram
 from pdf_turtle import PdfTurtle
-from book_parser import parse, Styles, BulletedState
+from book_parser import parse, Styles
 
 PAGE_HEIGHT = defaultPageSize[1]
 PAGE_WIDTH = defaultPageSize[0]
 
 
 class Diagram(Flowable):
-    MAX_COLUMN_COUNT = 15
+    MAX_COLUMN_COUNT = 16
 
     def __init__(self, board_state):
         self.board_state = board_state
@@ -47,12 +46,12 @@ def firstPage(canvas, doc):
     canvas.setFont('Times-Roman', 9)
     canvas.drawCentredString(PAGE_WIDTH/2,
                              0.75 * inch,
-                             "donkirkby.github.com/domiculture")
+                             "donkirkby.github.com/moonside")
     canvas.restoreState()
 
 
 def go():
-    doc = SimpleDocTemplate("domiculture.pdf")
+    doc = SimpleDocTemplate("moonside.pdf")
     styles = getSampleStyleSheet()
     paragraph_style = styles[Styles.Normal]
     list_style = ListStyle('default_list',
@@ -99,4 +98,4 @@ def go():
 if __name__ == '__main__':
     go()
 
-    call(["evince", "domiculture.pdf"])
+    call(["evince", "moonside.pdf"])

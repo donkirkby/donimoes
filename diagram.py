@@ -146,7 +146,7 @@ def draw_capture(turtle, cell_size):
     pos = turtle.pos()
 
     thickness = cell_size*.1
-    length = cell_size*.175
+    length = cell_size*.15
     turtle.up()
     turtle.right(45)
     turtle.forward(thickness*.5)

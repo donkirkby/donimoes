@@ -1,30 +1,37 @@
-# Domiculture #
-Domino puzzles where you weed explosive plants out of your garden.
+# Moonside: Mining Puzzles with Dominoes #
+Domino puzzles where you collect explosive moonstones.
 
-Each puzzle is a pattern of dominoes for you to start from. The goal is to
-remove all the dominoes by sliding matching numbers next to each other. There
-are two ways a domino can move:
+Each puzzle is a pattern of dominoes for you to start from. The different
+numbers on the dominoes are different kinds of moonstones, and the goal is to
+collect all the dominoes by sliding matching numbers next to each other. There
+are two safe ways a domino can move.
 
-1. **Harvest** - move a domino one space along its long axis so that it ends
-    up matching at least one of its numbers to an adjacent number on another
-    domino. Then remove the moved domino and any dominoes with a number that
-    matches an adjacent number on the moved domino.
+### Matching ###
+Move a domino one space along its long axis so that it ends up with at least
+one of its numbers matching an adjacent number on a neighbouring domino. Then
+collect the domino you moved and any dominoes that match it, by removing them
+from the pattern. In this example, the threes match, so you collect both
+dominoes and solve the puzzle.
 
     2|3     2|3       2*3
     
     3|4       3>4       3*4
 
-2. **Replant** - move a domino one space along its long axis so that it ends
-    up with at least one of its numbers next to an adjacent number that adds
-    up to six. For example, a two can end up next to a four. No dominoes are
-    removed.
+### Adding ###
+Move a domino one space along its long axis so that it ends up with at least
+one of its numbers next to an adjacent number that adds up to six. With an
+adding move, no dominoes are removed. In this example, the two adds up with the
+four above it to make six. After the second move, the twos match, so you
+collect both dominoes and solve the puzzle.
 
     2|4     2|4       2|4     2*4
     
     2|6       2>6     2<6     2*6
 
-Sometimes, you can harvest more than two dominoes at once. Here are two
-examples:
+Sometimes, you can collect more than two dominoes at once. In the first
+example, the two matches twos on both of the other dominoes, and you collect
+all three dominoes. In the second example, the two matches the two to the left,
+and the four matches the four above it. You collect all three dominoes.
 
     5 2|4   5 2|4     5 2|4   5 2*4
     -       -         -       *
@@ -36,17 +43,19 @@ examples:
     -       -         -       *
     2 2|4   2   2>4   2 2<4   2 2*4
 
-There are two restrictions on domino movement:
+There are two restrictions on domino movement to keep your moonstone mine safe:
 
-1. All the dominoes must be in one connected group, you can't split the group
-    after moving or after removing the matching dominoes.
-2. The only way to move a domino is with a harvest or a replant. If the moved
-    domino matches any neighbouring numbers, you must harvest it, as well as
+1. Keep the mine connected so it doesn't collapse. All the dominoes must be in
+    one connected group, you can't split the group after moving or after
+    removing the matching dominoes.
+2. Use small explosions to avoid a chain reaction. The only way to move a
+    domino is by matching numbers or adding to six. Matching numbers create a
+    small explosion, and adding to six stabilizes the unmatched numbers. Any
+    other type of movement will blow up your mine. If the moved domino matches
+    any neighbouring numbers, you must collect it, as well as
     any neighbours that matched it. If there are no matching numbers, there
     must be at least one pair of neighbouring numbers that add up to six, but
     you don't have to make all the pairs of neighbouring numbers add up.
-
-Domiculture is an original puzzle designed by Don Kirkby.
 
 ## Problems ##
 Here are the starting positions for several Domiculture problems. The solutions
@@ -150,3 +159,6 @@ or down. Then make captures for any matching numbers.
 6. 14U, 24U, 35R, 35L, 15U, 25L, 20D, 15D, 60L, 21D, 60R
 7. 15L, 15R, 25L, 25R, 06L, 06R, 14R, 10R, 10L, 63L, 50L, 42D, 20R
 8. 52R, 52L, 06R, 56R, 31R, 31L, 56L, 05R, 54D, 54U, 04L, 04L, 15D, 44D, 06L
+
+Moonside is an original puzzle designed by Don Kirkby, and an anagram of
+"dominoes".
