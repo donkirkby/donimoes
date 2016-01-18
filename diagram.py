@@ -1,5 +1,7 @@
 from functools import partial
 
+from domino_puzzle import Board
+
 
 def draw_pips(turtle, pips, cell_size):
     PIP_PATTERNS = """\
@@ -175,8 +177,9 @@ def draw_diagram(turtle, state, cell_size):
     pos = turtle.pos()
     lines = state.splitlines()
     turtle.up()
+    turtle.forward(cell_size*0.5)
     turtle.right(90)
-    turtle.forward(cell_size*len(lines)/2)
+    turtle.forward(cell_size*len(lines)*0.5)
     turtle.left(90)
     board = Board.create(state)
     draw_board(turtle, board, cell_size)
@@ -220,14 +223,15 @@ def draw_position(turtle, size=10, color='red'):
     turtle.setpos(old_pos)
     turtle.pen(old_pen)
 
-if __name__ == '__live_coding__':
-    from domino_puzzle import Board
-    turtle = __live_turtle__  # @UndefinedVariable
-    cell_size = 60
+
+def draw_demo(turtle):
+    width = turtle.window_width()
+    height = turtle.window_height()
+    cell_size = min(width/4, height/8)
     turtle.up()
-    turtle.back(cell_size)
+    turtle.back(width/2)
     turtle.left(90)
-    turtle.forward(cell_size*3)
+    turtle.forward(height/2)
     turtle.right(90)
     turtle.down()
 
@@ -253,3 +257,7 @@ if __name__ == '__live_coding__':
 5 5<1
 """
     draw_diagram(turtle, state2, cell_size)
+
+if __name__ == '__live_coding__':
+    turtle = __live_turtle__  # @UndefinedVariable
+    draw_demo(turtle)
