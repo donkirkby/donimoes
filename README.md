@@ -140,12 +140,11 @@ Solitaire. You are provided a grid of numbers, and you have to lay the dominoes
 on them. It was invented by O.S. Adler in 1874. There's an
 [interesting proof][proof] that this puzzle is NP-hard.
 
-Reiner Knizia published some puzzles called Domino Knobelspass on his web site
-that are very similar to Dominosa. They've been taken down, but are still
-available from the [Internet Archive][knizia].
+Reiner Knizia published some puzzles called [Domino Knobelspass][knizia]
+that are very similar to Dominosa.
 
 [proof]: http://cs.stackexchange.com/q/16850/40884
-[knizia]: https://web.archive.org/web/20140902223452/http://www.convivium.org.uk/kgcoolstuff.htm
+[knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
 
 ## Solutions ##
 Here are the solutions. For each step, move the listed domino left, right, up,
