@@ -1,5 +1,5 @@
 ## Contributing ##
-If you like Domiculture and want to make it better, help out. It could be as
+If you like Moonside and want to make it better, help out. It could be as
 simple as sending Don a nice note on [Google+][g+], you could report a bug,
 or pitch in with some development work.
 
@@ -9,12 +9,13 @@ did you expect to happen? Are you planning to submit your own fix in a pull
 request?
 
 ### New Domino Puzzles ###
-Do you have an idea for another type of puzzle to include in Domiculture? Create
+Do you have an idea for another type of puzzle to include in Moonside? Create
 an issue, and describe how it would work.
 
 ### Development ###
-Domiculture is written in Python. It also depends on the [NetworkX library][nx],
-so that needs to be installed via pip or your package manager.
+Moonside's software to generate puzzles is written in Python. It also depends
+on the [NetworkX library][nx], so that needs to be installed via pip or your
+package manager.
 
 ### Building a Release ###
 No releases yet, but steps will be something like this:
@@ -27,17 +28,12 @@ Before publishing a release, check the following:
 
 To publish a release:
 
-* Run the script to generate the PDF and HTML versions.
-* Deploy them in the gh-pages branch.
-* Run the `deploy.sh` script to copy all the files to the gh-pages project. If
-    you checked out the master branch as `~/git/domiculture`, then the script
-    assumes that you have checked out the `gh-pages` branch as
-    `~/git/domiculture-gh-pages`.
+* Run the script to generate the PDF version.
+* Copy it to the gh-pages branch.
 * Commit the `gh-pages` branch and check that the new version works on the web
     site.
-* Check if the `master` branch has anything to commit. It usually doesn't.
 * Go to the GitHub [releases page][releases], create a new release using a tag
-    like `v0.x.0-alpha`. Attach the APK file.
+    like `v0.x.0-alpha`.
 * Close the milestone.
 
 [g+]: http://google.com/+donkirkby
