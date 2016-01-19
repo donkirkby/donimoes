@@ -1,10 +1,14 @@
 # Moonside: Mining Puzzles with Dominoes #
 Domino puzzles where you collect explosive moonstones.
 
+Download [the PDF][pdf] if you want to print out pretty diagrams of the puzzles.
+
 Each puzzle is a pattern of dominoes for you to start from. The different
 numbers on the dominoes are different kinds of moonstones, and the goal is to
 collect all the dominoes by sliding matching numbers next to each other. There
 are two safe ways a domino can move.
+
+[pdf]: http://donkirkby.github.com/moonside.pdf
 
 ### Matching ###
 Move a domino one space along its long axis so that it ends up with at least
