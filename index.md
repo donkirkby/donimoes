@@ -11,11 +11,20 @@ are two safe ways a domino can move.
 
 To try the puzzles, get a set of dominoes. Then either [read the rules][rules],
 or download [the PDF][pdf]. Choose the PDF if you want to print out pretty
-diagrams of the puzzles, like this one:
+diagrams of the puzzles, like these:
 
-![Example puzzle and solution][example]
+![Example puzzle][example1]
 
-On the rules web page, the same diagram looks like this:
+![Example puzzle and solution][example2]
+
+On the rules web page, the same diagrams look like this:
+
+    0|5 0 1
+        - -
+    4|6 4 5
+    
+    4|2 4|1
+
 
     5 2|4   5 2|4     5 2|4   5 2*4
     -       -         -       *
@@ -25,7 +34,8 @@ Moonside is an original puzzle designed by Don Kirkby, and an anagram of
 "dominoes".
 
 [rules]: http://donkirkby.github.com/moonside/rules.html
-[example]: http://donkirkby.github.com/moonside/example.png
+[example1]: http://donkirkby.github.com/moonside/example1.png
+[example2]: http://donkirkby.github.com/moonside/example2.png
 [pdf]: http://donkirkby.github.com/moonside/moonside.pdf
 
 ## Other Domino Puzzles ##
