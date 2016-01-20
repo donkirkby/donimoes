@@ -261,3 +261,10 @@ def draw_demo(turtle):
 if __name__ == '__live_coding__':
     turtle = __live_turtle__  # @UndefinedVariable
     draw_demo(turtle)
+elif __name__ == '__main__':
+    import turtle
+    from Tkinter import mainloop
+
+    turtle.tracer(10000, 0)  # @UndefinedVariable
+    draw_demo(turtle)
+    mainloop()

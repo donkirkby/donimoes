@@ -14,8 +14,9 @@ an issue, and describe how it would work.
 
 ### Development ###
 Moonside's software to generate puzzles is written in Python. It also depends
-on the [NetworkX library][nx], so that needs to be installed via pip or your
-package manager.
+on the [NetworkX library][nx] and the
+[Distributed Evolutionary Algorithms in Python library (DEAP)][deap], so those
+need to be installed via pip or your package manager.
 
 ### Building a Release ###
 No releases yet, but steps will be something like this:
@@ -38,4 +39,5 @@ To publish a release:
 
 [g+]: http://google.com/+donkirkby
 [nx]: http://networkx.github.io/
+[deap]: https://pypi.python.org/pypi/deap
 [releases]: https://github.com/donkirkby/domiculture/releases
