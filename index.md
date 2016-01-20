@@ -18,8 +18,8 @@ diagrams of the puzzles, like this one:
 Moonside is an original puzzle designed by Don Kirkby, and an anagram of
 "dominoes".
 
-[rules]: http://donkirkby.github.com/rules.html
-[example]: http://donkirkby.github.com/example.png
+[rules]: http://donkirkby.github.com/moonside/rules.html
+[example]: http://donkirkby.github.com/moonside/example.png
 [pdf]: http://donkirkby.github.com/moonside/moonside.pdf
 
 ## Other Domino Puzzles ##
