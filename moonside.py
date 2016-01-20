@@ -58,7 +58,7 @@ def go():
                            bulletFontSize=paragraph_style.fontSize,
                            bulletFormat='%s.')
     story = []
-    f = open('README.md')
+    f = open('rules.md')
     group = []
     bulleted = []
     first_bullet = None
