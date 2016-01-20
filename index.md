@@ -15,6 +15,12 @@ diagrams of the puzzles, like this one:
 
 ![Example puzzle and solution][example]
 
+On the rules web page, the same diagram looks like this:
+
+    5 2|4   5 2|4     5 2|4   5 2*4
+    -       -         -       *
+    2 2|6   2   2>6   2 2<6   2 2*6
+
 Moonside is an original puzzle designed by Don Kirkby, and an anagram of
 "dominoes".
 
