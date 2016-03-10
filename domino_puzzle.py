@@ -170,7 +170,14 @@ class Board(object):
     def __repr__(self):
         return 'Board({}, {})'.format(self.width, self.height)
 
-    def display(self, cropped=False):
+    def display(self, cropped=False, cropping_bounds=None):
+        """ Build a display string for the board's current state.
+
+        @param cropped: True if blank rows and columns around the outside
+        should be cropped out of the display.
+        @param cropping_bounds: a list that will be cleared and then have
+        [xmin, ymin, xmax, ymax] appended to it. Ignored if it is None.
+        """
         if not cropped:
             xmin = ymin = 0
             xmax, ymax = self.width-1, self.height-1
@@ -184,6 +191,8 @@ class Board(object):
                     xmax = max(xmax, cell.x)
                     ymin = min(ymin, cell.y)
                     ymax = max(ymax, cell.y)
+        if cropping_bounds is not None:
+            cropping_bounds[:] = [xmin, ymin, xmax, ymax]
         width = xmax-xmin+1
         height = ymax-ymin+1
         display = [[' '] * (width*2-1) for _ in range(height*2-1)]
@@ -266,6 +275,15 @@ class Domino(object):
                 dominoes.append(Domino(head_pips, tail_pips))
         return dominoes
 
+    @classmethod
+    def get_direction(self, name):
+        """ Get a direction by name.
+
+        @return: dx, dy
+        """
+        index = Domino.direction_names.find(name)
+        return Domino.directions[index]
+
     def __init__(self, head_pips, tail_pips):
         self.head = Cell(head_pips)
         self.tail = Cell(tail_pips)
@@ -308,12 +326,15 @@ class Domino(object):
             raise
 
     def describe_move(self, dx, dy):
+        direction_index = self.directions.index((dx, dy))
+        direction_name = self.direction_names[direction_index]
+        return self.get_name() + direction_name
+
+    def get_name(self):
         name = '{}{}'.format(self.head.pips, self.tail.pips)
         if 90 <= self.degrees <= 180:
             name = name[::-1]  # reverse
-        direction_index = self.directions.index((dx, dy))
-        direction_name = self.direction_names[direction_index]
-        return name + direction_name
+        return name
 
     def flip(self):
         board = self.tail.board
@@ -400,10 +421,17 @@ class BoardGraph(object):
 
 
 class CaptureBoardGraph(BoardGraph):
-    def move(self, domino, dx, dy):
+    def move(self, domino, dx, dy, offset=None):
         """ Move a domino and calculate the new board state.
 
         Afterward, put the board back in its original state.
+        @param domino: the domino to move
+        @param dx: the direction to move horizontally
+        @param dy: the direction to move vertically
+        @param offset: [x, y] position to update after the move, or None.
+            The input position is updated to show where that position would
+            be on the new board. The numbers are reduced if the border gets
+            cropped away.
         @return: the new board state
         @raise BoardError: if the move is illegal
         """
@@ -431,7 +459,13 @@ class CaptureBoardGraph(BoardGraph):
                 board.remove(matching_domino)
             if not board.isConnected():
                 raise BoardError('Board is not connected after capture.')
-            return board.display(cropped=True)
+            cropping_bounds = [] if offset is not None else None
+            new_state = board.display(cropped=True,
+                                      cropping_bounds=cropping_bounds)
+            if offset is not None:
+                offset[0] -= cropping_bounds[0]
+                offset[1] -= cropping_bounds[1]
+            return new_state
         finally:
             for matching_domino, x, y in matching_dominoes:
                 board.add(matching_domino, x, y)
@@ -497,7 +531,6 @@ class BoardAnalysis(object):
         except GraphLimitExceeded:
             raise
         except StandardError:
-            print self.start
             raise
         self.min_dominoes = graph.min_domino_count
         self.graph_size = len(graph.graph)
@@ -534,7 +567,7 @@ def mutateBoard(boardType, random, board):
     return board.mutate(random, boardType=boardType),
 
 SLOW_BOARD_SIZE = 2000
-MAX_BOARD_SIZE = 70000  # 140000 Bad, 70000 Good
+MAX_BOARD_SIZE = 35000  # 140000 Bad, 70000 Mostly Good
 
 
 def evaluateBoard(slow_queue, individual):
@@ -630,7 +663,7 @@ def findCaptureBoardsWithDeap():
                    Board,
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
-    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 4, 4
+    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 5
     toolbox = base.Toolbox()
     pool = Pool()
     halloffame = LoggingHallOfFame(10)

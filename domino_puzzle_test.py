@@ -109,6 +109,27 @@ x x x x
         self.assertMultiLineEqual(expected_display,
                                   board.display(cropped=True))
 
+    def testDisplayCroppingBounds(self):
+        board = Board.create("""\
+3 x x x
+-
+2 0|2 x
+
+x x x x
+""")
+        expected_display = """\
+3 x x
+-
+2 0|2
+"""
+        bounds = ['garbage', 'to', 'be', 'removed']
+        expected_bounds = [0, 1, 2, 2]
+
+        display = board.display(cropped=True, cropping_bounds=bounds)
+
+        self.assertMultiLineEqual(expected_display, display)
+        self.assertEqual(expected_bounds, bounds)
+
     def testRotate(self):
         board = Board(4, 3)
         domino1 = Domino(5, 6)
@@ -159,6 +180,11 @@ x x x x
         display = board.display()
 
         self.assertMultiLineEqual(expected_display, display)
+
+    def testGetDirection(self):
+        dx, dy = Domino.get_direction('l')
+
+        self.assertEqual((-1, 0), (dx, dy))
 
     def testRotateWithoutBoard(self):
         domino1 = Domino(5, 6)
@@ -641,6 +667,12 @@ class DominoTest(unittest.TestCase):
         self.assertTrue(domino1.isMatch(Domino(2, 0)))
         self.assertTrue(domino1.isMatch(Domino(1, 2)))
 
+    def testName(self):
+        domino = Domino(1, 2)
+        name = domino.get_name()
+
+        self.assertEqual("12", name)
+
     def testDescribeMove(self):
         domino1 = Domino(1, 2)
         dx, dy = 1, 0
@@ -877,6 +909,28 @@ x 4|3
         states = graph.walk(board)
 
         self.assertEqual(expected_states, states)
+
+    def testMoveLeftUpdatesOffset(self):
+        start_state = """\
+4|3
+
+1|2
+"""
+        board = Board.create(start_state, border=1)
+        graph = CaptureBoardGraph()
+        expected_state = """\
+x 4|3
+
+1|2 x
+"""
+        graph.walk(board)
+        offset = [1, 1]  # position of bottom left corner (within border)
+        expected_offset = [1, 0]  # equivalent position after move and cropping
+
+        state = graph.move(board[1][1].domino, -1, 0, offset)
+
+        self.assertEqual(expected_state, state)
+        self.assertEqual(expected_offset, offset)
 
     def testSolution(self):
         graph = CaptureBoardGraph()
