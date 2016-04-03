@@ -2,6 +2,7 @@ import unittest
 
 from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph,\
     CaptureBoardGraph
+from networkx.exception import NetworkXNoPath
 
 
 class DummyRandom(object):
@@ -629,6 +630,15 @@ class DominoTest(unittest.TestCase):
         self.assertTrue(eq_result)
         self.assertFalse(neq_result)
 
+    def testHashFlipped(self):
+        domino1 = Domino(5, 3)
+        domino2 = Domino(3, 5)
+
+        hash1 = hash(domino1)
+        hash2 = hash(domino2)
+
+        self.assertEqual(hash1, hash2)
+
     def testRotateFullCircle(self):
         domino1 = Domino(1, 5)
 
@@ -942,6 +952,31 @@ x 4|3
 """)
         graph.walk(board)
         solution = graph.get_solution()
+
+        self.assertEqual(expected_solution, solution)
+
+    def testNoSolution(self):
+        graph = CaptureBoardGraph()
+        board = Board.create("""\
+6|2 3
+    -
+2|4 5
+""")
+        graph.walk(board)
+
+        self.assertRaises(NetworkXNoPath, graph.get_solution)
+
+    def testPartialSolution(self):
+        graph = CaptureBoardGraph()
+        expected_solution = ['62l']
+        board = Board.create("""\
+6|2 3
+    -
+2|4 5
+""")
+        graph.walk(board)
+
+        solution = graph.get_solution(partial=True)
 
         self.assertEqual(expected_solution, solution)
 

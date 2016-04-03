@@ -149,13 +149,28 @@ class Board(object):
             item.x = item.y = item.board = None
 
     def mutate(self, random, boardType=None):
+        # Choose number of mutations: 1 is most common, n is least common
+        domino_count = len(self.dominoes)
+        n = random.randint(1, (domino_count+1)*domino_count/2)
+        mutation_count = 0
+        dn = domino_count
+        while n > 0:
+            mutation_count += 1
+            n -= dn
+            dn -= 1
         boardType = boardType or Board
-        domino1 = random.choice(self.dominoes)
-        neighbours = list(domino1.findNeighbours())
-        domino2 = neighbours and random.choice(neighbours) or domino1
+        neighbours = []
+        removed = set()
+        for _ in range(mutation_count):
+            if neighbours:
+                domino = random.choice(neighbours)
+            else:
+                domino = random.choice(self.dominoes)
+            removed.add(domino)
+            neighbours = list(domino.findNeighbours())
         new_board = boardType(self.width, self.height, max_pips=self.max_pips)
         for domino in self.dominoes:
-            if domino != domino1 and domino != domino2:
+            if domino not in removed:
                 i = new_board.extra_dominoes.index(domino)
                 new_domino = new_board.extra_dominoes[i]
                 new_domino.rotate_to(domino.degrees)
@@ -304,6 +319,9 @@ class Domino(object):
     def __ne__(self, other):
         return not (self == other)
 
+    def __hash__(self):
+        return hash(self.head.pips) ^ hash(self.tail.pips)
+
     def rotate(self, degrees):
         self.rotate_to((self.degrees + degrees) % 360)
 
@@ -421,6 +439,10 @@ class BoardGraph(object):
 
 
 class CaptureBoardGraph(BoardGraph):
+    def __init__(self):
+        super(CaptureBoardGraph, self).__init__()
+        self.closest = None
+
     def move(self, domino, dx, dy, offset=None):
         """ Move a domino and calculate the new board state.
 
@@ -465,15 +487,26 @@ class CaptureBoardGraph(BoardGraph):
             if offset is not None:
                 offset[0] -= cropping_bounds[0]
                 offset[1] -= cropping_bounds[1]
+            if self.closest is None or len(new_state) < len(self.closest):
+                self.closest = new_state
             return new_state
         finally:
             for matching_domino, x, y in matching_dominoes:
                 board.add(matching_domino, x, y)
             domino.move(-dx, -dy)
 
-    def get_solution(self):
-        solution_nodes = shortest_path(self.graph, self.start, '')
+    def get_solution(self, partial=False):
+        """ Find a solution from the graph of moves.
+
+        @param partial: If True, a partial solution will be returned if no
+        solution exists.
+        @return: a list of strings describing each move. Each string is two
+        digits describing the domino that moved plus a letter to show the
+        direction.
+        """
         solution = []
+        goal = self.closest if partial else ''
+        solution_nodes = shortest_path(self.graph, self.start, goal)
         for i in range(len(solution_nodes)-1):
             source, target = solution_nodes[i:i+2]
             solution.append(self.graph[source][target]['move'])
@@ -663,7 +696,7 @@ def findCaptureBoardsWithDeap():
                    Board,
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
-    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 5
+    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 6
     toolbox = base.Toolbox()
     pool = Pool()
     halloffame = LoggingHallOfFame(10)

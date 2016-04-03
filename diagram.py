@@ -170,6 +170,67 @@ def draw_capture(turtle, cell_size):
     turtle.setpos(pos)
 
 
+def draw_move(turtle, cell_size, offset, domino, dx, dy, move_num, step_count):
+    shade = (move_num-1) * 1.0/step_count
+    rgb = (0, 1-shade, shade)
+    turtle.forward((domino.head.x-offset[0]) * cell_size)
+    turtle.left(90)
+    turtle.forward((domino.head.y-offset[1]) * cell_size)
+    turtle.right(90)
+    turtle.setheading(domino.degrees)
+    turtle.forward(cell_size*.5)
+    turtle.setheading(math.atan2(dy, dx) * 180/math.pi)
+    pen = turtle.pen()
+    turtle.pencolor(rgb)
+    circle_pos = turtle.pos()
+    turtle.width(4)
+    turtle.forward(cell_size*0.05)
+    turtle.down()
+    turtle.forward(cell_size*0.4)
+    turtle.up()
+    turtle.pen(pen)
+    turtle.setpos(circle_pos)
+    turtle.forward(8)
+    turtle.setheading(270)
+    turtle.forward(8)
+    turtle.left(90)
+    turtle.down()
+    turtle.pencolor(rgb)
+    turtle.fillcolor('white')
+    turtle.begin_fill()
+    turtle.circle(8)
+    turtle.end_fill()
+    turtle.pen(pen)
+    turtle.write(move_num, align='center')
+    turtle.up()
+
+
+def draw_capture_circle(turtle,
+                        cell_size,
+                        offset,
+                        domino,
+                        move_num=None):
+    x = (domino.head.x + domino.tail.x) * 0.5 - offset[0]
+    y = (domino.head.y + domino.tail.y) * 0.5 - offset[1]
+    pen = turtle.pen()
+    turtle.forward(x*cell_size)
+    turtle.left(90)
+    turtle.forward(y*cell_size)
+    turtle.right(90)
+    turtle.setheading(270)
+    turtle.forward(8)
+    turtle.left(90)
+    turtle.down()
+    turtle.pencolor('red')
+    turtle.fillcolor('red' if move_num is None else 'white')
+    turtle.begin_fill()
+    turtle.circle(8)
+    turtle.end_fill()
+    turtle.pen(pen)
+    if move_num is not None:
+        turtle.write(move_num, align='center')
+
+
 def draw_diagram(turtle, state, cell_size, solution=False):
     marks = {'>': partial(draw_arrow, turtle, cell_size),
              '^': partial(draw_arrow, turtle, cell_size, 90),
@@ -206,52 +267,43 @@ def draw_diagram(turtle, state, cell_size, solution=False):
         board = Board.create(state, border=border)
         graph = CaptureBoardGraph()
         graph.walk(board)
-        solution = graph.get_solution()
+        solution = graph.get_solution(partial=True)
+        step_count = max(len(solution)-1, 1)
         for move_num, move in enumerate(solution, 1):
             domino_name = move[:2]
             for domino in board.dominoes:
                 if domino.get_name() == domino_name:
-                    shade = (move_num-1) * 1.0/(len(solution)-1)
-                    rgb = (0, 1-shade, shade)
-                    turtle.setpos(origin)
-                    turtle.forward((domino.head.x-offset[0]) * cell_size)
-                    turtle.left(90)
-                    turtle.forward((domino.head.y-offset[1]) * cell_size)
-                    turtle.right(90)
-                    turtle.setheading(domino.degrees)
-                    turtle.forward(cell_size*.5)
                     dx, dy = Domino.get_direction(move[-1])
-                    turtle.setheading(math.atan2(dy, dx) * 180/math.pi)
-                    pen = turtle.pen()
-                    turtle.pencolor(rgb)
-                    circle_pos = turtle.pos()
-                    turtle.width(4)
-                    turtle.forward(cell_size*0.05)
-                    turtle.down()
-                    turtle.forward(cell_size*0.4)
-                    turtle.up()
-                    turtle.pen(pen)
-                    turtle.setpos(circle_pos)
-                    turtle.forward(8)
-                    turtle.setheading(0)
-                    turtle.right(90)
-                    turtle.forward(8)
-                    turtle.left(90)
-                    turtle.down()
-                    turtle.down()
-                    turtle.pencolor(rgb)
-                    turtle.fillcolor('white')
-                    turtle.begin_fill()
-                    turtle.circle(8)
-                    turtle.end_fill()
-                    turtle.pen(pen)
-                    turtle.write(move_num, align='center')
-                    turtle.up()
+                    turtle.setpos(origin)
+                    draw_move(turtle,
+                              cell_size,
+                              offset,
+                              domino,
+                              dx,
+                              dy,
+                              move_num,
+                              step_count)
+                    old_offset = offset[:]
                     state = graph.move(domino, dx, dy, offset)
+                    new_board = Board.create(state, border=border)
+                    captures = set(board.dominoes)
+                    captures.difference_update(new_board.dominoes)
+                    captures.discard(domino)
+                    for capture in captures:
+                        turtle.setpos(origin)
+                        draw_capture_circle(turtle,
+                                            cell_size,
+                                            old_offset,
+                                            capture,
+                                            move_num)
                     offset[0] += border
                     offset[1] += border
-                    board = Board.create(state, border=border)
+                    board = new_board
                     break
+        # Mark uncaptured dominoes
+        for domino in board.dominoes:
+            turtle.setpos(origin)
+            draw_capture_circle(turtle, cell_size, offset, domino)
         turtle.setpos(pos)
 
 
@@ -292,18 +344,55 @@ def draw_demo(turtle):
     turtle.down()
 
     state1 = """\
-3 2|1 1|4 2
--         -
-3 2|5 5|1 4
+0|4 0 0|5 6
+    -     -
+6|4 2 4|3 1
 
-6|1 0|6 2|2
-
-3|1 6|2 4|4
+3|2 2|4 0 1
+        - -
+3|6 2|6 6 0
 """
-    draw_diagram(turtle, state1, cell_size, solution=True)
+    state1 = """\
+6 2 1|3 5|0 0|0
+- -
+5 5 5|4 3|5 3|0
+
+0|4 1 1|5 6 1 1
+    -     - - -
+6|4 2 4|3 1 1 4
+
+3|2 2|4 0 1 2|2
+        - -
+3|6 2|6 6 0 2|0
+"""
+    state1 = """\
+6|1 3 0|4 2|3 3
+    -         -
+0|1 1 0 0|2 6 6
+      -     -
+6|6 4 3 4 5 4 0
+    -   - -   -
+0|5 4 4 2 4 6 6
+      -     -
+4 0|0 3 3|3 5 1
+-             -
+1 2|5 3|5 2|2 2
+
+1|1 2|6 5|1 5|5
+"""
+    state1x = """\
+1|1 1
+    -
+5|5 0
+
+1 3 4
+- - -
+5 2 2
+"""
+    draw_diagram(turtle, state1, cell_size, solution=False)
 
     turtle.right(90)
-    turtle.forward(cell_size*5)
+    turtle.forward(cell_size*7)
     turtle.left(90)
 
     state2 = """\

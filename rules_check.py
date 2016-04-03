@@ -1,0 +1,24 @@
+from book_parser import parse, Styles
+from domino_puzzle import BoardAnalysis, Board
+
+
+def main():
+    with open('rules.md', 'rU') as f:
+        rules_text = f.read()
+
+    states = parse(rules_text)
+    scores = ''
+    heading = ''
+    for state in states:
+        if state.style == Styles.Diagram and heading.startswith('Problem'):
+            n = heading.split(' ')[-1]
+            board = Board.create(state.text)
+            analysis = BoardAnalysis(board)
+            print(n + '. ' + ', '.join(analysis.solution).upper())
+            score = BoardAnalysis.calculate_score(analysis.get_values())
+            scores += n + '. ' + str(score) + '\n'
+        if state.style.startswith(Styles.Heading):
+            heading = state.text
+    print(scores)
+
+main()
