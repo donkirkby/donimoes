@@ -791,43 +791,10 @@ if __name__ == '__main__':
     # testPerformance()
 elif __name__ == '__live_coding__':
     import unittest
-
-    def testSomething(self):
-        state = """\
-1 0|2 x x
--
-0 0|4 0|3
-"""
-        board = Board.create(state)
-
-        self.assertTrue(board.isConnected())
-
-    class DummyRandom(object):
-        def __init__(self,
-                     randints=None,
-                     choiceDominoes=None,
-                     otherChoices=None):
-            self.randints = randints or {}  # {(min, max): [i, j, k]}
-            self.choiceDominoes = choiceDominoes
-            self.otherChoices = otherChoices  # {[choices]: [selection]}
-
-        def randint(self, a, b):
-            results = self.randints.get((a, b), None)
-            return results.pop(0) if results else 0
-
-        def choice(self, seq):
-            if type(seq[0]) is Domino:
-                return self.choiceDominoes.pop(0)
-            selections = self.otherChoices[seq]
-            return selections.pop(0)
-
-    class DummyTest(unittest.TestCase):
-
-        def test_delegation(self):
-            testSomething(self)
+    from domino_puzzle_test import DominoTest
 
     suite = unittest.TestSuite()
-    suite.addTest(DummyTest("test_delegation"))
+    suite.addTest(DominoTest("testDescribeMoveReversed"))
     test_results = unittest.TextTestRunner().run(suite)
 
     print(test_results.errors)
