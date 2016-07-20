@@ -14,9 +14,14 @@ def main():
             n = heading.split(' ')[-1]
             board = Board.create(state.text)
             analysis = BoardAnalysis(board)
+            if board.hasMatch():
+                n += '(matches)'
             print(n + '. ' + ', '.join(analysis.solution).upper())
             score = BoardAnalysis.calculate_score(analysis.get_values())
-            scores += n + '. ' + str(score) + '\n'
+            scores += '{}. {}x{} {}\n'.format(n,
+                                              board.width,
+                                              board.height,
+                                              score)
         if state.style.startswith(Styles.Heading):
             heading = state.text
     print(scores)

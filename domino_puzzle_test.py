@@ -1,28 +1,20 @@
 import unittest
 
+from mock import patch
+from networkx.exception import NetworkXNoPath
+
 from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph,\
     CaptureBoardGraph
-from networkx.exception import NetworkXNoPath
+from random import Random
 
 
 class DummyRandom(object):
-    def __init__(self,
-                 randints=None,
-                 choiceDominoes=None,
-                 otherChoices=None):
+    def __init__(self, randints=None):
         self.randints = randints or {}  # {(min, max): [i, j, k]}
-        self.choiceDominoes = choiceDominoes
-        self.otherChoices = otherChoices  # {[choices]: [selection]}
 
     def randint(self, a, b):
         results = self.randints.get((a, b), None)
         return results.pop(0) if results else 0
-
-    def choice(self, seq):
-        if type(seq[0]) is Domino:
-            return self.choiceDominoes.pop(0)
-        selections = self.otherChoices[seq]
-        return selections.pop(0)
 
 
 class CellTest(unittest.TestCase):
@@ -257,10 +249,11 @@ x x x x
 
         self.assertMultiLineEqual(start_state, board.display())
 
-    def testFill(self):
-        dummy_random = DummyRandom(randints={(0, 4): [1, 1]},  # directions
-                                   choiceDominoes=[Domino(0, 0),
-                                                   Domino(0, 1)])
+    @patch('domino_puzzle.Board.choose_extra_dominoes')
+    def testFill(self, mock_choose):
+        mock_choose.side_effect = [[Domino(0, 0)],
+                                   [Domino(0, 1)]]
+        dummy_random = DummyRandom(randints={(0, 3): [1, 1]})  # directions
         board = Board(2, 2, max_pips=6)
         expected_display = """\
 0 1
@@ -273,10 +266,11 @@ x x x x
 
         self.assertMultiLineEqual(expected_display, display)
 
-    def testFillWithRandomDomino(self):
-        dummy_random = DummyRandom(randints={(0, 4): [1, 1]},  # directions
-                                   choiceDominoes=[Domino(0, 5),
-                                                   Domino(0, 2)])
+    @patch('domino_puzzle.Board.choose_extra_dominoes')
+    def testFillWithRandomDomino(self, mock_choose):
+        mock_choose.side_effect = [[Domino(0, 5)],
+                                   [Domino(0, 2)]]
+        dummy_random = DummyRandom(randints={(0, 3): [1, 1]})  # directions
         board = Board(2, 2, max_pips=6)
         expected_display = """\
 5 2
@@ -289,11 +283,47 @@ x x x x
 
         self.assertMultiLineEqual(expected_display, display)
 
-    def testFillWithFlip(self):
-        dummy_random = DummyRandom(randints={(0, 4): [1, 1],   # directions
-                                             (0, 1): [1, 0]},  # flips
-                                   choiceDominoes=[Domino(0, 0),
-                                                   Domino(0, 1)])
+    @patch('domino_puzzle.Board.choose_extra_dominoes')
+    def testFillWithNoMatchesFlip(self, mock_choose):
+        mock_choose.side_effect = [[Domino(0, 5)],
+                                   [Domino(0, 2)]]
+        dummy_random = DummyRandom(randints={(0, 3): [1, 1],  # directions
+                                             (0, 1): [0, 0]})
+        board = Board(2, 2, max_pips=6)
+        expected_display = """\
+5 0
+- -
+0 2
+"""
+
+        board.fill(dummy_random, matches_allowed=False)
+        display = board.display()
+
+        self.assertMultiLineEqual(expected_display, display)
+
+    @patch('domino_puzzle.Board.choose_extra_dominoes')
+    def testFillWithNoMatchesNext(self, mock_choose):
+        mock_choose.side_effect = [[Domino(0, 5)],
+                                   [Domino(0, 0), Domino(0, 1)]]
+        dummy_random = DummyRandom(randints={(0, 3): [1, 1]})  # directions
+        board = Board(2, 2, max_pips=6)
+        expected_display = """\
+5 0
+- -
+0 1
+"""
+
+        board.fill(dummy_random, matches_allowed=False)
+        display = board.display()
+
+        self.assertMultiLineEqual(expected_display, display)
+
+    @patch('domino_puzzle.Board.choose_extra_dominoes')
+    def testFillWithFlip(self, mock_choose):
+        mock_choose.side_effect = [[Domino(0, 0)],
+                                   [Domino(0, 1)]]
+        dummy_random = DummyRandom(randints={(0, 3): [1, 1],   # directions
+                                             (0, 1): [1, 1]})  # flips
         board = Board(2, 2, max_pips=6)
         expected_display = """\
 0 0
@@ -306,11 +336,15 @@ x x x x
 
         self.assertMultiLineEqual(expected_display, display)
 
-    def testFillWithMoreRotation(self):
-        dummy_random = DummyRandom(randints={(0, 4): [1, 1, 1]},  # directions
-                                   choiceDominoes=[Domino(0, 0),
-                                                   Domino(0, 1),
-                                                   Domino(0, 2)])
+    @patch('domino_puzzle.Board.choose_extra_dominoes')
+    def testFillWithMoreRotation(self, mock_choose):
+        mock_choose.side_effect = [[Domino(0, 0)],
+                                   [Domino(0, 1)],
+                                   [Domino(0, 2)],
+                                   [Domino(0, 2)],
+                                   [Domino(0, 2)],
+                                   [Domino(0, 2)]]
+        dummy_random = DummyRandom(randints={(0, 3): [1, 1, 1]})  # directions
         board = Board(2, 3, max_pips=6)
         expected_display = """\
 0|2
@@ -325,7 +359,8 @@ x x x x
 
         self.assertMultiLineEqual(expected_display, display)
 
-    def testFillWithBacktrack(self):
+    @patch('domino_puzzle.Board.choose_extra_dominoes')
+    def testFillWithBacktrack(self, mock_choose):
         """ Force a backtrack.
 
         This scenario will get to the following grid and then be forced to
@@ -336,16 +371,25 @@ x x x x
         -     -
         0 0|1 0
         """
+        mock_choose.side_effect = [[Domino(0, 0)],
+                                   [Domino(0, 1)],
+                                   [Domino(0, 2)],
+                                   [Domino(0, 3)],
+                                   [Domino(0, 4)],
+                                   [Domino(0, 5)],
+                                   [Domino(0, 5)],
+                                   [Domino(0, 5)],
+                                   [Domino(0, 5)],
+                                   [Domino(0, 4)],
+                                   [Domino(0, 4)],
+                                   [Domino(0, 4)],
+                                   [Domino(0, 3)],
+                                   [Domino(0, 3)],
+                                   [Domino(0, 3)],
+                                   [Domino(0, 4)],
+                                   [Domino(0, 5)]]
         dummy_random = DummyRandom(
-            randints={(0, 4): [1, 0, 1, 1]},  # directions
-            choiceDominoes=[Domino(0, 0),
-                            Domino(0, 1),
-                            Domino(0, 2),
-                            Domino(0, 3),
-                            Domino(0, 4),
-                            Domino(0, 5),
-                            Domino(0, 4),
-                            Domino(0, 5)])
+            randints={(0, 3): [1, 0, 1, 1, 1]})  # directions
         board = Board(4, 3, max_pips=6)
         expected_display = """\
 0|4 0|5
@@ -359,6 +403,44 @@ x x x x
         display = board.display()
 
         self.assertMultiLineEqual(expected_display, display)
+
+    def testFillFailForMatching(self):
+        """ Fail because all of the remaining dominoes have matches.
+        """
+        random = Random()
+        start = """\
+0 x x
+-
+0 1|1
+"""
+        board = Board.create(start, max_pips=1)
+
+        result = board.fill(random, matches_allowed=False)
+
+        self.assertFalse(result)
+        self.assertMultiLineEqual(start, board.display())
+
+    def testFillFailForBadFit(self):
+        """ Fail because a domino won't fit in the hole.
+
+        Don't bother trying other dominoes.
+        """
+        random = Random()
+        start = """\
+x 3 4 x
+  - -
+0 1 0 2
+-     -
+5 0|1 0
+"""
+        board = Board.create(start, max_pips=6)
+
+        with self.assertRaises(BoardError) as ex:
+            board.fill(random, matches_allowed=False)
+
+        self.assertEqual(ex.exception.message,
+                         'Hole is too small for a domino.')
+        self.assertMultiLineEqual(start, board.display())
 
     def testExtraDominoes(self):
         state = """\
@@ -498,6 +580,51 @@ x x x x x
         board = Board.create(state)
 
         self.assertTrue(board.hasLoner())
+
+    def testHasNoMatch(self):
+        state = """\
+1 0
+- -
+0 2
+"""
+        board = Board.create(state)
+
+        self.assertFalse(board.hasMatch())
+
+    def testHasMatch(self):
+        state = """\
+1 2
+- -
+0 0
+"""
+        board = Board.create(state)
+
+        self.assertTrue(board.hasMatch())
+
+    def testFindNoMatch(self):
+        state = """\
+1 0
+- -
+0 2
+"""
+        board = Board.create(state)
+        matches = board.findMatches()
+        expected_matches = []
+
+        self.assertEqual(expected_matches, matches)
+
+    def testFindMatch(self):
+        state = """\
+1 2
+- -
+0 0
+"""
+        board = Board.create(state)
+        matches = board.findMatches()
+        coordinates = [(cell.x, cell.y) for cell in matches]
+        expected_coordinates = [(0, 0), (1, 0)]
+
+        self.assertEqual(expected_coordinates, coordinates)
 
     def testEqual(self):
         state = """\
@@ -667,6 +794,55 @@ class DominoTest(unittest.TestCase):
         neighbours = domino1.findNeighbours()
 
         self.assertEqual(expected_neighbours, neighbours)
+
+    def testHasNoMatch(self):
+        state = """\
+1 0
+- -
+0 2
+"""
+        board = Board.create(state)
+        domino = board[1][1].domino
+
+        self.assertFalse(domino.hasMatch())
+
+    def testHasMatch(self):
+        state = """\
+1 2
+- -
+0 0
+"""
+        board = Board.create(state)
+        domino = board[1][1].domino
+
+        self.assertTrue(domino.hasMatch())
+
+    def testFindNoMatch(self):
+        state = """\
+1 0
+- -
+0 2
+"""
+        board = Board.create(state)
+        domino = board[1][1].domino
+        matches = domino.findMatches()
+        expected_matches = []
+
+        self.assertEqual(expected_matches, matches)
+
+    def testFindMatch(self):
+        state = """\
+1 2
+- -
+0 0
+"""
+        board = Board.create(state)
+        domino = board[1][1].domino
+        matches = domino.findMatches()
+        coordinates = [(cell.x, cell.y) for cell in matches]
+        expected_coordinates = [(0, 0), (1, 0)]
+
+        self.assertEqual(expected_coordinates, coordinates)
 
     def testIsMatch(self):
         domino1 = Domino(0, 1)

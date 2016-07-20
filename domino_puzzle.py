@@ -13,6 +13,7 @@ import matplotlib
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
 from operator import eq
+from threading import Thread
 
 # Avoid loading Tkinter back end when we won't use it.
 matplotlib.use('Agg')
@@ -148,7 +149,7 @@ class Board(object):
             self.cells[item.x][item.y] = None
             item.x = item.y = item.board = None
 
-    def mutate(self, random, boardType=None):
+    def mutate(self, random, boardType=None, matches_allowed=True):
         # Choose number of mutations: 1 is most common, n is least common
         domino_count = len(self.dominoes)
         n = random.randint(1, (domino_count+1)*domino_count/2)
@@ -175,7 +176,7 @@ class Board(object):
                 new_domino = new_board.extra_dominoes[i]
                 new_domino.rotate_to(domino.degrees)
                 new_board.add(new_domino, domino.head.x, domino.head.y)
-        is_filled = new_board.fill(random)
+        is_filled = new_board.fill(random, matches_allowed=matches_allowed)
         assert is_filled
         return new_board
 
@@ -225,48 +226,68 @@ class Board(object):
                     display[row-dy][col+dx] = divider
         return ''.join(''.join(row).rstrip() + '\n' for row in display)
 
-    def fill(self, random):
+    def choose_extra_dominoes(self, random):
+        """ Iterate through self.extra_dominoes, start at random position. """
+        count = len(self.extra_dominoes)
+        start = random.randrange(count)
+        for i in range(count):
+            yield self.extra_dominoes[(i+start) % count]
+
+    def fill(self, random, matches_allowed=True):
         for y in range(self.height):
             for x in range(self.width):
                 if self[x][y] is None:
-                    domino = random.choice(self.extra_dominoes)
-                    rotation = random.randint(0, 4) * 90
-                    domino.rotate(rotation)
+                    rotation = random.randint(0, 3) * 90
                     for _ in range(4):
                         try:
-                            self.add(domino, x, y)
-                            if self.fill(random):
+                            for domino in self.choose_extra_dominoes(random):
+                                domino.rotate_to(rotation)
+                                self.add(domino, x, y)
                                 if random.randint(0, 1):
                                     domino.flip()
-                                return True
-                            self.remove(domino)
+                                if not matches_allowed and domino.hasMatch():
+                                    domino.flip()
+                                if not matches_allowed and domino.hasMatch():
+                                    pass
+                                else:
+                                    try:
+                                        if self.fill(random, matches_allowed):
+                                            return True
+                                    except BoardError:
+                                        self.remove(domino)
+                                        raise
+                                self.remove(domino)
+                            # None of the dominoes fit without matching.
+                            return False
                         except BoardError:
                             pass
-                        domino.rotate(90)
-                    return False
+                        rotation = (rotation + 90) % 360
+                    # Didn't have room for a domino.
+                    raise BoardError('Hole is too small for a domino.')
         return True
 
-    def getCells(self):
-        for domino in self.dominoes:
-            yield domino.head
-            yield domino.tail
+    def visitConnected(self, cell):
+        cell.visited = True
+        for dx, dy in Domino.directions:
+            x = cell.x + dx
+            y = cell.y + dy
+            if 0 <= x < self.width and 0 <= y < self.height:
+                neighbour = self[x][y]
+                if neighbour is not None and not neighbour.visited:
+                    self.visitConnected(neighbour)
 
     def isConnected(self):
-        def visitConnected(cell):
-            cell.visited = True
-            for neighbour in cell.findNeighbours(exclude_sibling=False):
-                if not neighbour.visited:
-                    visitConnected(neighbour)
-
-        cell = None
-        for cell in self.getCells():
-            cell.visited = False
-        if cell is None:
+        domino = None
+        for domino in self.dominoes:
+            domino.head.visited = False
+            domino.tail.visited = False
+        if domino is None:
             return True
 
-        visitConnected(cell)
+        self.visitConnected(domino.head)
 
-        return all((cell.visited for cell in self.getCells()))
+        return all(domino.head.visited and domino.tail.visited
+                   for domino in self.dominoes)
 
     def hasLoner(self):
         for domino in self.dominoes:
@@ -276,6 +297,23 @@ class Board(object):
             if not has_matching_neighbour:
                 return True
         return False
+
+    def hasMatch(self):
+        for domino in self.dominoes:
+            for cell in (domino.head, domino.tail):
+                for neighbour in cell.findNeighbours():
+                    if neighbour.pips == cell.pips:
+                        return True
+        return False
+
+    def findMatches(self):
+        matches = {}
+        for domino in self.dominoes:
+            for match in domino.findMatches():
+                matches[(match.x, match.y)] = match
+        match_coordinates = matches.keys()
+        match_coordinates.sort()
+        return [matches[coord] for coord in match_coordinates]
 
 
 class Domino(object):
@@ -344,8 +382,8 @@ class Domino(object):
             raise
 
     def describe_move(self, dx, dy):
-        direction_index = self.directions.index((dx, dy))
-        direction_name = self.direction_names[direction_index]
+        direction_index = Domino.directions.index((dx, dy))
+        direction_name = Domino.direction_names[direction_index]
         return self.get_name() + direction_name
 
     def get_name(self):
@@ -376,6 +414,29 @@ class Domino(object):
                 self.tail.pips == other.tail.pips or
                 self.head.pips == other.tail.pips or
                 self.tail.pips == other.head.pips)
+
+    def hasMatch(self):
+        """ True if either cell matches one of its neighbours.
+
+        Slightly different type of matching from isMatch().
+        """
+        for cell in (self.head, self.tail):
+            for neighbour in cell.findNeighbours():
+                if neighbour.pips == cell.pips:
+                    return True
+        return False
+
+    def findMatches(self):
+        matches = []
+        for cell in (self.head, self.tail):
+            is_match = False
+            for neighbour in cell.findNeighbours():
+                if neighbour.pips == cell.pips:
+                    is_match = True
+                    matches.append(neighbour)
+            if is_match:
+                matches.append(cell)
+        return matches
 
 
 class GraphLimitExceeded(RuntimeError):
@@ -591,13 +652,13 @@ class BoardAnalysis(object):
 
 def createRandomBoard(boardType, random, width, height):
     board = boardType(width, height, max_pips=6)
-    is_filled = board.fill(random)
+    is_filled = board.fill(random, matches_allowed=False)
     assert is_filled
     return board
 
 
 def mutateBoard(boardType, random, board):
-    return board.mutate(random, boardType=boardType),
+    return board.mutate(random, boardType=boardType, matches_allowed=False),
 
 SLOW_BOARD_SIZE = 2000
 MAX_BOARD_SIZE = 35000  # 140000 Bad, 70000 Mostly Good
@@ -685,6 +746,24 @@ class LoggingHallOfFame(HallOfFame):
             with open(self.filename, 'a') as f:
                 f.write(display)
 
+    def display(self):
+        for board in self:
+            print
+            print board.display()
+            score = board.fitness.values[0]
+            if score < 0:
+                print('{} score.'.format(score))
+            else:
+                analysis = BoardAnalysis(board)
+                print(analysis.display())
+
+
+def monitor(hall_of_fame):
+    while True:
+        cmd = raw_input("Enter 'p' to print report.\n")
+        if cmd == 'p':
+            hall_of_fame.display()
+
 
 def findCaptureBoardsWithDeap():
     random = Random()
@@ -696,7 +775,7 @@ def findCaptureBoardsWithDeap():
                    Board,
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
-    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 6
+    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 5
     toolbox = base.Toolbox()
     pool = Pool()
     halloffame = LoggingHallOfFame(10)
@@ -727,16 +806,11 @@ def findCaptureBoardsWithDeap():
     stats = Statistics()
     stats.register("best", BoardAnalysis.best_score)
     verbose = True
+    bg = Thread(target=monitor, args=(halloffame, ))
+    bg.daemon = True
+    bg.start()
     eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats, halloffame, verbose)
-    for board in halloffame:
-        print
-        print board.display()
-        score = board.fitness.values[0]
-        if score < 0:
-            print('{} score.'.format(score))
-        else:
-            analysis = BoardAnalysis(board)
-            print(analysis.display())
+    halloffame.display()
 
 
 def testPerformance():

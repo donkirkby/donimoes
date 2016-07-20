@@ -206,6 +206,27 @@ def draw_move(turtle, cell_size, offset, domino, dx, dy, move_num, step_count):
     turtle.up()
 
 
+def draw_match(turtle, cell_size, offset, cell):
+    turtle.forward((cell.x-offset[0]) * cell_size)
+    turtle.left(90)
+    turtle.forward((cell.y-offset[1]) * cell_size)
+    turtle.right(90)
+    pen = turtle.pen()
+    turtle.color('red')
+    turtle.up()
+    turtle.back(10)
+    turtle.right(90)
+    turtle.begin_fill()
+    turtle.circle(10)
+    turtle.left(90)
+    turtle.forward(5)
+    turtle.right(90)
+    turtle.circle(5)
+    turtle.left(90)
+    turtle.end_fill()
+    turtle.pen(pen)
+
+
 def draw_capture_circle(turtle,
                         cell_size,
                         offset,
@@ -266,6 +287,12 @@ def draw_diagram(turtle, state, cell_size, solution=False):
         border = 1
         offset = [border, border]
         board = Board.create(state, border=border)
+        for cell in board.findMatches():
+            turtle.setpos(origin)
+            draw_match(turtle,
+                       cell_size,
+                       offset,
+                       cell)
         graph = CaptureBoardGraph()
         graph.walk(board)
         solution = graph.get_solution(partial=True)
@@ -336,73 +363,30 @@ def draw_position(turtle, size=10, color='red'):
 def draw_demo(turtle):
     width = turtle.window_width()
     height = turtle.window_height()
-    cell_size = min(width/4, height/8)
+    cell_size = min(width/8.5, height/7)
     turtle.up()
-    turtle.back(width*.45)
+    turtle.back(width*.475)
     turtle.left(90)
-    turtle.forward(height*0.45)
+    turtle.forward(height*0.4)
     turtle.right(90)
     turtle.down()
 
     state1 = """\
-0|4 0 0|5 6
-    -     -
-6|4 2 4|3 1
-
-3|2 2|4 0 1
-        - -
-3|6 2|6 6 0
-"""
-    state1 = """\
-6 2 1|3 5|0 0|0
+3|6 2|0 2
+        -
+5 3 1|2 3
 - -
-5 5 5|4 3|5 3|0
-
-0|4 1 1|5 6 1 1
-    -     - - -
-6|4 2 4|3 1 1 4
-
-3|2 2|4 0 1 2|2
-        - -
-3|6 2|6 6 0 2|0
+3 1 4|3 6
+        -
+5|5 6|6 1
 """
-    state1 = """\
-6|1 3 0|4 2|3 3
-    -         -
-0|1 1 0 0|2 6 6
-      -     -
-6|6 4 3 4 5 4 0
-    -   - -   -
-0|5 4 4 2 4 6 6
-      -     -
-4 0|0 3 3|3 5 1
--             -
-1 2|5 3|5 2|2 2
-
-1|1 2|6 5|1 5|5
-"""
-    state1x = """\
-1|1 1
-    -
-5|5 0
-
-1 3 4
-- - -
-5 2 2
-"""
-    draw_diagram(turtle, state1, cell_size, solution=False)
+    draw_diagram(turtle, state1, cell_size, solution=True)
 
     turtle.right(90)
     turtle.forward(cell_size*7)
     turtle.left(90)
 
-    state2 = """\
-6 0*1
-*
-5 5<1
-"""
-    draw_diagram(turtle, state2, cell_size)
-
-turtle.tracer(10000, 0)
+turtle.tracer(0)
 draw_demo(turtle)
+turtle.update()
 mainloop()
