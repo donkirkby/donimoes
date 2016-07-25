@@ -2,9 +2,11 @@ from datetime import datetime, timedelta
 from functools import partial
 from itertools import chain
 from multiprocessing import Pool, Manager
+from operator import eq
 from Queue import Empty
 from random import Random
 from sys import maxint
+from threading import Thread
 
 from deap import base, creator, tools
 from deap.algorithms import eaSimple
@@ -12,8 +14,6 @@ from deap.tools.support import Statistics, HallOfFame
 import matplotlib
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
-from operator import eq
-from threading import Thread
 
 # Avoid loading Tkinter back end when we won't use it.
 matplotlib.use('Agg')
@@ -56,6 +56,10 @@ class BoardError(StandardError):
     pass
 
 
+class BadPositionError(BoardError):
+    pass
+
+
 class Board(object):
     @classmethod
     def create(cls, state, border=0, max_pips=None):
@@ -91,6 +95,8 @@ class Board(object):
         self.height = height
         self.dominoes = []
         self.max_pips = max_pips
+        self.add_count = 0
+        self.is_displaying = False
         if max_pips is None:
             self.extra_dominoes = []
         else:
@@ -120,7 +126,7 @@ class Board(object):
             self.add(item.head, x, y)
             try:
                 self.add(item.tail, x+dx, y+dy)
-            except BoardError:
+            except BadPositionError:
                 self.remove(item.head)
                 raise
             self.dominoes.append(item)
@@ -130,10 +136,11 @@ class Board(object):
             if item.x is not None:
                 self.cells[item.x][item.y] = None
             if not (0 <= x < self.width and 0 <= y < self.height):
-                raise BoardError('Position {}, {} is off the board.'.format(x,
-                                                                            y))
+                raise BadPositionError(
+                    'Position {}, {} is off the board.'.format(x, y))
             if self.cells[x][y] is not None:
-                raise BoardError('Position {}, {} is occupied.'.format(x, y))
+                raise BadPositionError(
+                    'Position {}, {} is occupied.'.format(x, y))
             self.cells[x][y] = item
             item.board = self
             item.x = x
@@ -159,25 +166,30 @@ class Board(object):
             mutation_count += 1
             n -= dn
             dn -= 1
-        boardType = boardType or Board
-        neighbours = []
-        removed = set()
-        for _ in range(mutation_count):
-            if neighbours:
-                domino = random.choice(neighbours)
-            else:
-                domino = random.choice(self.dominoes)
-            removed.add(domino)
-            neighbours = list(domino.findNeighbours())
-        new_board = boardType(self.width, self.height, max_pips=self.max_pips)
-        for domino in self.dominoes:
-            if domino not in removed:
-                i = new_board.extra_dominoes.index(domino)
-                new_domino = new_board.extra_dominoes[i]
-                new_domino.rotate_to(domino.degrees)
-                new_board.add(new_domino, domino.head.x, domino.head.y)
-        is_filled = new_board.fill(random, matches_allowed=matches_allowed)
-        assert is_filled
+        is_successful = False
+        while not is_successful:
+            # mutation_count = min(mutation_count, 3)
+            boardType = boardType or Board
+            neighbours = []
+            removed = set()
+            for _ in range(mutation_count):
+                if neighbours:
+                    domino = random.choice(neighbours)
+                else:
+                    domino = random.choice(self.dominoes)
+                removed.add(domino)
+                neighbours = list(domino.findNeighbours())
+            new_board = boardType(self.width,
+                                  self.height,
+                                  max_pips=self.max_pips)
+            for domino in self.dominoes:
+                if domino not in removed:
+                    i = new_board.extra_dominoes.index(domino)
+                    new_domino = new_board.extra_dominoes[i]
+                    new_domino.rotate_to(domino.degrees)
+                    new_board.add(new_domino, domino.head.x, domino.head.y)
+            is_successful = new_board.fill(random,
+                                           matches_allowed=matches_allowed)
         return new_board
 
     def __getitem__(self, x):
@@ -227,44 +239,94 @@ class Board(object):
         return ''.join(''.join(row).rstrip() + '\n' for row in display)
 
     def choose_extra_dominoes(self, random):
-        """ Iterate through self.extra_dominoes, start at random position. """
-        count = len(self.extra_dominoes)
+        """ Iterate through self.extra_dominoes, start at random position.
+
+        @return a generator of (domino, is_flipped) pairs. Each domino
+            is returned twice, with True or False in random order.
+        """
+        dominoes = self.extra_dominoes[:]
+        count = len(dominoes)
         start = random.randrange(count)
         for i in range(count):
-            yield self.extra_dominoes[(i+start) % count]
+            yield dominoes[(i + start) % count]
 
-    def fill(self, random, matches_allowed=True):
+    def choose_and_flip_extra_dominoes(self, random):
+        """ Iterate through self.extra_dominoes, start at random position.
+
+        @return a generator of (domino, is_flipped) pairs. Each domino
+            is returned twice, with True or False in random order.
+        """
+        for domino in self.choose_extra_dominoes(random):
+            if domino.head.pips == domino.tail.pips:
+                yield domino, False
+            else:
+                flip_first = random.randint(0, 1)
+                for j in range(2):
+                    yield domino, flip_first + j == 1
+
+    def fill(self, random, matches_allowed=True, reset_cycles=True):
+        """ Fill any remaining holes in a board with random dominoes.
+
+        @param random: random number generator for choosing dominoes
+        @param matches_allowed: True if neighbouring dominoes can match
+        @return: True if the board is now filled.
+        """
+        if reset_cycles:
+            self.cycles_remaining = 10000
         for y in range(self.height):
             for x in range(self.width):
                 if self[x][y] is None:
-                    rotation = random.randint(0, 3) * 90
-                    for _ in range(4):
-                        try:
-                            for domino in self.choose_extra_dominoes(random):
-                                domino.rotate_to(rotation)
-                                self.add(domino, x, y)
-                                if random.randint(0, 1):
-                                    domino.flip()
-                                if not matches_allowed and domino.hasMatch():
-                                    domino.flip()
-                                if not matches_allowed and domino.hasMatch():
-                                    pass
-                                else:
-                                    try:
-                                        if self.fill(random, matches_allowed):
-                                            return True
-                                    except BoardError:
-                                        self.remove(domino)
-                                        raise
-                                self.remove(domino)
-                            # None of the dominoes fit without matching.
-                            return False
-                        except BoardError:
-                            pass
-                        rotation = (rotation + 90) % 360
-                    # Didn't have room for a domino.
-                    raise BoardError('Hole is too small for a domino.')
+                    return self.fillSpace(x,
+                                          y,
+                                          random,
+                                          matches_allowed)
         return True
+
+    def fillSpace(self, x, y, random, matches_allowed):
+        """ Try all possible dominoes and positions starting at x, y. """
+        is_displaying = self.is_displaying
+        rotation = random.randint(0, 3) * 90
+        for _ in range(4):
+            try:
+                choices = self.choose_and_flip_extra_dominoes(
+                    random)
+                for domino, is_flipped in choices:
+                    if self.cycles_remaining <= 0:
+                        return False
+                    self.cycles_remaining -= 1
+                    domino.rotate_to(rotation)
+                    self.add(domino, x, y)
+                    self.add_count += 1
+                    has_even_gaps = self.hasEvenGaps()
+                    if not has_even_gaps:
+                        self.remove(domino)
+                        break
+                    else:
+                        if is_flipped:
+                            domino.flip()
+                        if is_displaying:
+                            print('{}: added {!r} at {}, {}'.format(
+                                self.add_count,
+                                domino,
+                                x,
+                                y))
+                            print(self.display())
+                        if not matches_allowed and domino.hasMatch():
+                            pass
+                        else:
+                            if self.fill(random,
+                                         matches_allowed,
+                                         reset_cycles=False):
+                                return True
+                    self.remove(domino)
+                    if is_displaying:
+                        print('removed {!r}'.format(
+                            domino))
+                        print(self.display())
+            except BadPositionError:
+                pass
+            rotation = (rotation + 90) % 360
+        return False
 
     def visitConnected(self, cell):
         cell.visited = True
@@ -314,6 +376,28 @@ class Board(object):
         match_coordinates = matches.keys()
         match_coordinates.sort()
         return [matches[coord] for coord in match_coordinates]
+
+    def hasEvenGaps(self):
+        empty_spaces = set()
+        to_visit = set()
+        for y in range(self.height):
+            for x in range(self.width):
+                if self[x][y] is None:
+                    empty_spaces.add((x, y))
+        while empty_spaces:
+            if len(empty_spaces) % 2 != 0:
+                return False
+            to_visit.add(empty_spaces.pop())
+            while to_visit:
+                x, y = to_visit.pop()
+                for dx, dy in Domino.directions:
+                    neighbour = (x+dx, y+dy)
+                    try:
+                        empty_spaces.remove(neighbour)
+                        to_visit.add(neighbour)
+                    except KeyError:
+                        pass
+        return True
 
 
 class Domino(object):
@@ -477,7 +561,7 @@ class BoardGraph(object):
                 self.graph.add_node(new_state)
                 pending_states.append(new_state)
             self.graph.add_edge(old_state, new_state, move=move)
-        except BoardError:
+        except BadPositionError:
             pass
 
     def move(self, domino, dx, dy):
@@ -485,15 +569,15 @@ class BoardGraph(object):
 
         Afterward, put the board back in its original state.
         @return: the new board state
-        @raise BoardError: if the move is illegal
+        @raise BadPositionError: if the move is illegal
         """
         domino.move(dx, dy)
         try:
             board = domino.head.board
             if not board.isConnected():
-                raise BoardError('Board is not connected.')
+                raise BadPositionError('Board is not connected.')
             if board.hasLoner():
-                raise BoardError('Board has a lonely domino.')
+                raise BadPositionError('Board has a lonely domino.')
             return board.display(cropped=True)
         finally:
             domino.move(-dx, -dy)
@@ -516,7 +600,7 @@ class CaptureBoardGraph(BoardGraph):
             be on the new board. The numbers are reduced if the border gets
             cropped away.
         @return: the new board state
-        @raise BoardError: if the move is illegal
+        @raise BadPositionError: if the move is illegal
         """
         matching_dominoes = set()
         complement_found = False
@@ -524,7 +608,7 @@ class CaptureBoardGraph(BoardGraph):
         try:
             board = domino.head.board
             if not board.isConnected():
-                raise BoardError('Board is not connected after move.')
+                raise BadPositionError('Board is not connected after move.')
             for cell in (domino.head, domino.tail):
                 for neighbour in cell.findNeighbours():
                     if neighbour.pips == cell.pips:
@@ -536,12 +620,12 @@ class CaptureBoardGraph(BoardGraph):
             if matching_dominoes:
                 matching_dominoes.add((domino, domino.head.x, domino.head.y))
             elif not complement_found:
-                raise BoardError(
+                raise BadPositionError(
                     'A legal move must have captures or complements.')
             for matching_domino, _, _ in matching_dominoes:
                 board.remove(matching_domino)
             if not board.isConnected():
-                raise BoardError('Board is not connected after capture.')
+                raise BadPositionError('Board is not connected after capture.')
             cropping_bounds = [] if offset is not None else None
             new_state = board.display(cropped=True,
                                       cropping_bounds=cropping_bounds)
@@ -651,9 +735,10 @@ class BoardAnalysis(object):
 
 
 def createRandomBoard(boardType, random, width, height):
-    board = boardType(width, height, max_pips=6)
-    is_filled = board.fill(random, matches_allowed=False)
-    assert is_filled
+    is_successful = False
+    while not is_successful:
+        board = boardType(width, height, max_pips=6)
+        is_successful = board.fill(random, matches_allowed=False)
     return board
 
 
@@ -661,7 +746,7 @@ def mutateBoard(boardType, random, board):
     return board.mutate(random, boardType=boardType, matches_allowed=False),
 
 SLOW_BOARD_SIZE = 2000
-MAX_BOARD_SIZE = 35000  # 140000 Bad, 70000 Mostly Good
+MAX_BOARD_SIZE = 10000  # 140000 Bad, 70000 Mostly Good
 
 
 def evaluateBoard(slow_queue, individual):
@@ -775,7 +860,7 @@ def findCaptureBoardsWithDeap():
                    Board,
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
-    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 5
+    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 8, 7
     toolbox = base.Toolbox()
     pool = Pool()
     halloffame = LoggingHallOfFame(10)
@@ -865,10 +950,10 @@ if __name__ == '__main__':
     # testPerformance()
 elif __name__ == '__live_coding__':
     import unittest
-    from domino_puzzle_test import DominoTest
+    from domino_puzzle_test import BoardTest
 
     suite = unittest.TestSuite()
-    suite.addTest(DominoTest("testDescribeMoveReversed"))
+    suite.addTest(BoardTest("testFillWithBacktrack"))
     test_results = unittest.TextTestRunner().run(suite)
 
     print(test_results.errors)

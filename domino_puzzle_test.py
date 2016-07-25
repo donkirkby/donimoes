@@ -364,10 +364,10 @@ x x x x
         """ Force a backtrack.
 
         This scenario will get to the following grid and then be forced to
-        backtrack.
-        x 3 4 x
-          - -
-        0 0 0 2
+        backtrack, because the gaps are size 1 and 3: odd.
+        x 3 x x
+          -
+        0 0 x 2
         -     -
         0 0|1 0
         """
@@ -375,21 +375,13 @@ x x x x
                                    [Domino(0, 1)],
                                    [Domino(0, 2)],
                                    [Domino(0, 3)],
-                                   [Domino(0, 4)],
-                                   [Domino(0, 5)],
-                                   [Domino(0, 5)],
-                                   [Domino(0, 5)],
-                                   [Domino(0, 5)],
-                                   [Domino(0, 4)],
-                                   [Domino(0, 4)],
-                                   [Domino(0, 4)],
                                    [Domino(0, 3)],
                                    [Domino(0, 3)],
                                    [Domino(0, 3)],
                                    [Domino(0, 4)],
                                    [Domino(0, 5)]]
         dummy_random = DummyRandom(
-            randints={(0, 3): [1, 0, 1, 1, 1]})  # directions
+            randints={(0, 3): [1, 0, 1, 1]})  # directions
         board = Board(4, 3, max_pips=6)
         expected_display = """\
 0|4 0|5
@@ -435,11 +427,9 @@ x 3 4 x
 """
         board = Board.create(start, max_pips=6)
 
-        with self.assertRaises(BoardError) as ex:
-            board.fill(random, matches_allowed=False)
+        result = board.fill(random, matches_allowed=False)
 
-        self.assertEqual(ex.exception.message,
-                         'Hole is too small for a domino.')
+        self.assertFalse(result)
         self.assertMultiLineEqual(start, board.display())
 
     def testExtraDominoes(self):
@@ -625,6 +615,45 @@ x x x x x
         expected_coordinates = [(0, 0), (1, 0)]
 
         self.assertEqual(expected_coordinates, coordinates)
+
+    def testHasEvenGapsNoGaps(self):
+        state = """\
+4|5 6 0
+    - -
+1 2 1 5
+- -
+0 3 2|4
+"""
+        board = Board.create(state)
+        has_even_gaps = board.hasEvenGaps()
+
+        self.assertTrue(has_even_gaps)
+
+    def testHasEvenGapsTwoUnevenGaps(self):
+        state = """\
+4|5 x 0
+      -
+1 2 6 5
+- - -
+0 3 1 x
+"""
+        board = Board.create(state)
+        has_even_gaps = board.hasEvenGaps()
+
+        self.assertFalse(has_even_gaps)
+
+    def testHasEvenGapsOneEvenGap(self):
+        state = """\
+4|5 6 0
+    - -
+1 2 1 5
+- -
+0 3 x x
+"""
+        board = Board.create(state)
+        has_even_gaps = board.hasEvenGaps()
+
+        self.assertTrue(has_even_gaps)
 
     def testEqual(self):
         state = """\

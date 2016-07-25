@@ -386,7 +386,8 @@ def draw_demo(turtle):
     turtle.forward(cell_size*7)
     turtle.left(90)
 
-turtle.tracer(0)
-draw_demo(turtle)
-turtle.update()
-mainloop()
+if __name__ in ('__main__', '__live_coding__'):
+    turtle.tracer(0)
+    draw_demo(turtle)
+    turtle.update()
+    mainloop()
