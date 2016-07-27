@@ -230,8 +230,36 @@ are listed at the end.
     4 5|6 2|2 4|6 4
 
 ### Problem 18 ###
+    0 1|0 2 5 3|2 3
+    -     - -     -
+    4 6|5 4 1 2|0 6
+    
+    0 5 2|6 4 5 4|1
+    - -     - -
+    3 4 5|5 4 0 2 6
+                - -
+    6 0|0 3|1 3 2 6
+    -         -
+    1 6|4 6|0 4 1|2
+
+### Problem 19 ###
 This problem uses all the dominoes.
 
+    4|2 5|6 3|3 5|4
+    
+    6 3|4 5|5 6|4 0
+    -             -
+    6 1|5 3 1|1 0 1
+          -     -
+    2|3 2 5 6|3 6 0
+        -         -
+    1|2 6 2|2 1|3 0
+    
+    6 5|2 0|4 0|5 4
+    -             -
+    1 2|0 3|0 4|4 1
+
+### Problem 20 ###
     4|1 5|3 6 5|5 2
             -     -
     3|4 0 5 2 6|6 5
@@ -274,7 +302,11 @@ or down. Then make captures for any matching numbers.
 16. 21L, 61L, 04L, 04L, 20D, 15D, 52R, 01R, 32U, 46D, 65L, 41U, 34U, 01R, 35R
 17. 54D, 60L, 60L, 25D, 02L, 02L, 01L, 01L, 55L, 62L, 11U, 11U, 40R, 44U, 46R,
     22R, 46R, 22R, 16L
-18. 25U, 40D, 10D, 63D, 60R, 60R, 32D, 20R, 31D, 65R, 62D, 21R, 51R, 34L, 53R,
+18. 61D, 60L, 60L, 31L, 31L, 03D, 04D, 10L, 54D, 26L, 10L, 26L, 24D, 51D, 51D,
+    41L, 36D, 41R, 34U, 34U, 12L, 20R, 34U
+19. 41D, 30R, 12L, 61U, 61U, 20R, 26D, 13L, 34L, 06D, 34L, 55L, 35U, 35U, 11R,
+    64R
+20. 25U, 40D, 10D, 63D, 60R, 60R, 32D, 20R, 31D, 65R, 62D, 21R, 51R, 34L, 53R,
     51R
 
 Moonside is an original puzzle designed by Don Kirkby, and an anagram of

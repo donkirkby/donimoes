@@ -18,10 +18,11 @@ def main():
                 n += '(matches)'
             print(n + '. ' + ', '.join(analysis.solution).upper())
             score = BoardAnalysis.calculate_score(analysis.get_values())
-            scores += '{}. {}x{} {}\n'.format(n,
-                                              board.width,
-                                              board.height,
-                                              score)
+            scores += '{}. {}x{} {} ({} nodes)\n'.format(n,
+                                                         board.width,
+                                                         board.height,
+                                                         score,
+                                                         analysis.graph_size)
         if state.style.startswith(Styles.Heading):
             heading = state.text
     print(scores)
