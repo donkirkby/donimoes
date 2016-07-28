@@ -1,6 +1,6 @@
 ## Contributing ##
-If you like Moonside and want to make it better, help out. It could be as
-simple as sending Don a nice note on [Google+][g+], you could report a bug,
+If you like Donimoes and want to make it better, help out. It could be as
+simple as sending [@donkirkby][] a nice note on Twitter, you could report a bug,
 or pitch in with some development work.
 
 ### Bug Reports and Enhancement Requests ###
@@ -9,18 +9,16 @@ did you expect to happen? Are you planning to submit your own fix in a pull
 request?
 
 ### New Domino Puzzles ###
-Do you have an idea for another type of puzzle to include in Moonside? Create
+Do you have an idea for another type of puzzle to include in Donimoes? Create
 an issue, and describe how it would work.
 
 ### Development ###
-Moonside's software to generate puzzles is written in Python. It also depends
+Donimoes's software to generate puzzles is written in Python. It also depends
 on the [NetworkX library][nx] and the
 [Distributed Evolutionary Algorithms in Python library (DEAP)][deap], so those
 need to be installed via pip or your package manager.
 
 ### Building a Release ###
-No releases yet, but steps will be something like this:
-
 Before publishing a release, check the following:
 
 * The unit tests pass.
@@ -37,7 +35,7 @@ To publish a release:
     like `v0.x.0-alpha`.
 * Close the milestone.
 
-[g+]: http://google.com/+donkirkby
+[@donkirkby]: http://twitter.com/donkirkby
 [nx]: http://networkx.github.io/
 [deap]: https://pypi.python.org/pypi/deap
-[releases]: https://github.com/donkirkby/domiculture/releases
+[releases]: https://github.com/donkirkby/donimoes/releases
