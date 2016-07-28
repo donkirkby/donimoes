@@ -240,8 +240,6 @@ are listed at the end.
     1 6|4 6|0 4 1|2
 
 ### Problem 19 ###
-This problem uses all the dominoes.
-
     4|2 5|6 3|3 5|4
     
     6 3|4 5|5 6|4 0

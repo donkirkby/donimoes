@@ -46,12 +46,12 @@ def firstPage(canvas, doc):
     canvas.setFont('Times-Roman', 9)
     canvas.drawCentredString(PAGE_WIDTH/2,
                              0.75 * inch,
-                             "donkirkby.github.com/moonside")
+                             "donkirkby.github.com/donimoes")
     canvas.restoreState()
 
 
 def go():
-    doc = SimpleDocTemplate("moonside.pdf")
+    doc = SimpleDocTemplate("donimoes.pdf")
     styles = getSampleStyleSheet()
     paragraph_style = styles[Styles.Normal]
     list_style = ListStyle('default_list',
@@ -98,4 +98,4 @@ def go():
 if __name__ == '__main__':
     go()
 
-    call(["evince", "moonside.pdf"])
+    call(["evince", "donimoes.pdf"])
