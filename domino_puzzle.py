@@ -3,9 +3,9 @@ from functools import partial
 from itertools import chain
 from multiprocessing import Pool, Manager
 from operator import eq
-from Queue import Empty
+from queue import Empty
 from random import Random
-from sys import maxint
+from sys import maxsize
 from threading import Thread
 
 from deap import base, creator, tools
@@ -52,7 +52,7 @@ class Cell(object):
             self.findNeighbourCells(-1, 0, exclude_sibling=exclude_sibling))
 
 
-class BoardError(StandardError):
+class BoardError(Exception):
     pass
 
 
@@ -65,9 +65,9 @@ class Board(object):
     def create(cls, state, border=0, max_pips=None):
         lines = state.splitlines(False)
         lines.reverse()
-        height = (len(lines)+1) / 2
+        height = (len(lines)+1) // 2
         line_length = height and max(map(len, lines))
-        width = height and (line_length+1) / 2
+        width = height and (line_length+1) // 2
         lines = [line + ((line_length-len(line)) * ' ') for line in lines]
         board = cls(width + 2*border, height + 2*border, max_pips=max_pips)
         for x in range(width):
@@ -373,8 +373,7 @@ class Board(object):
         for domino in self.dominoes:
             for match in domino.findMatches():
                 matches[(match.x, match.y)] = match
-        match_coordinates = matches.keys()
-        match_coordinates.sort()
+        match_coordinates = sorted(matches.keys())
         return [matches[coord] for coord in match_coordinates]
 
     def hasEvenGaps(self):
@@ -461,7 +460,7 @@ class Domino(object):
         board.remove(self)
         try:
             board.add(self, x+dx, y+dy)
-        except StandardError:
+        except Exception:
             board.add(self, x, y)
             raise
 
@@ -485,7 +484,7 @@ class Domino(object):
         pass
 
     def calculateDirection(self):
-        self.direction = Domino.directions[self.degrees/90]
+        self.direction = Domino.directions[self.degrees//90]
 
     def findNeighbours(self):
         neighbour_cells = chain(self.head.findNeighbours(),
@@ -531,7 +530,7 @@ class GraphLimitExceeded(RuntimeError):
 
 
 class BoardGraph(object):
-    def walk(self, board, size_limit=maxint):
+    def walk(self, board, size_limit=maxsize):
         pending_nodes = []
         self.graph = DiGraph()
         self.start = board.display(cropped=True)
@@ -700,7 +699,7 @@ class BoardAnalysis(object):
                 self.average_choices,
                 self.graph_size)
 
-    def __init__(self, board, size_limit=maxint):
+    def __init__(self, board, size_limit=maxsize):
         self.board = board
         self.start = board.display()
         try:
@@ -708,7 +707,7 @@ class BoardAnalysis(object):
             states = graph.walk(board, size_limit)
         except GraphLimitExceeded:
             raise
-        except StandardError:
+        except Exception:
             raise
         self.min_dominoes = graph.min_domino_count
         self.graph_size = len(graph.graph)
@@ -833,8 +832,8 @@ class LoggingHallOfFame(HallOfFame):
 
     def display(self):
         for board in self:
-            print
-            print board.display()
+            print()
+            print(board.display())
             score = board.fitness.values[0]
             if score < 0:
                 print('{} score.'.format(score))
@@ -845,12 +844,13 @@ class LoggingHallOfFame(HallOfFame):
 
 def monitor(hall_of_fame):
     while True:
-        cmd = raw_input("Enter 'p' to print report.\n")
+        cmd = input("Enter 'p' to print report.\n")
         if cmd == 'p':
             hall_of_fame.display()
 
 
 def findCaptureBoardsWithDeap():
+    print('Starting.')
     random = Random()
     manager = Manager()
     slow_queue = manager.Queue()
@@ -860,7 +860,7 @@ def findCaptureBoardsWithDeap():
                    Board,
                    fitness=creator.FitnessMax)  # @UndefinedVariable
 
-    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 8, 7
+    CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 4, 3
     toolbox = base.Toolbox()
     pool = Pool()
     halloffame = LoggingHallOfFame(10)
@@ -914,7 +914,7 @@ def testPerformance():
 """
     board = Board.create(state, max_pips=6)
     analysis = BoardAnalysis(board)
-    print analysis.display()
+    print(analysis.display())
 
 
 def analyseRandomBoard(random):
