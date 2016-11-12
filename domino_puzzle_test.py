@@ -39,7 +39,7 @@ x 3|2
 1|0 x
 """)
         cell = board[1][0]
-        expected_neighbours = set([board[1][1]])
+        expected_neighbours = {board[1][1]}
 
         neighbours = set(cell.findNeighbours())
 
@@ -687,6 +687,29 @@ x x x x x
         self.assertTrue(eq_result)
         self.assertFalse(neq_result)
 
+    def testDifferentGap(self):
+        state1 = """\
+0|4 0|5
+
+0 x x 2
+-     -
+0 0|1 0
+"""
+        state2 = """\
+0|4 0|5
+
+0 x 0 2
+-   - -
+0 x 1 0
+"""
+        board1 = Board.create(state1)
+        board2 = Board.create(state2)
+
+        eq_result = (board1 == board2)
+        neq_result = (board1 != board2)
+        self.assertFalse(eq_result)
+        self.assertTrue(neq_result)
+
     def testDifferentPips(self):
         state1 = """\
 0|4 0|5
@@ -818,7 +841,7 @@ class DominoTest(unittest.TestCase):
 """
         board = Board.create(state)
         domino1 = board[1][1].domino
-        expected_neighbours = set([board[0][1].domino, board[1][0].domino])
+        expected_neighbours = {board[0][1].domino, board[1][0].domino}
 
         neighbours = domino1.findNeighbours()
 

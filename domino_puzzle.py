@@ -96,7 +96,6 @@ class Board(object):
         self.dominoes = []
         self.max_pips = max_pips
         self.add_count = 0
-        self.is_displaying = False
         if max_pips is None:
             self.extra_dominoes = []
         else:
@@ -284,7 +283,6 @@ class Board(object):
 
     def fillSpace(self, x, y, random, matches_allowed):
         """ Try all possible dominoes and positions starting at x, y. """
-        is_displaying = self.is_displaying
         rotation = random.randint(0, 3) * 90
         for _ in range(4):
             try:
@@ -304,13 +302,6 @@ class Board(object):
                     else:
                         if is_flipped:
                             domino.flip()
-                        if is_displaying:
-                            print('{}: added {!r} at {}, {}'.format(
-                                self.add_count,
-                                domino,
-                                x,
-                                y))
-                            print(self.display())
                         if not matches_allowed and domino.hasMatch():
                             pass
                         else:
@@ -319,10 +310,6 @@ class Board(object):
                                          reset_cycles=False):
                                 return True
                     self.remove(domino)
-                    if is_displaying:
-                        print('removed {!r}'.format(
-                            domino))
-                        print(self.display())
             except BadPositionError:
                 pass
             rotation = (rotation + 90) % 360
