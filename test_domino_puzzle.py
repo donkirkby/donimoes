@@ -1173,6 +1173,7 @@ x 4|3
     def testSolution(self):
         graph = CaptureBoardGraph()
         expected_solution = ['34u', '24r']
+        expected_closest = ''
         board = Board.create("""\
 6|2 3
     -
@@ -1182,6 +1183,7 @@ x 4|3
         solution = graph.get_solution()
 
         self.assertEqual(expected_solution, solution)
+        self.assertEqual(expected_closest, graph.closest)
 
     def testNoSolution(self):
         graph = CaptureBoardGraph()
@@ -1190,8 +1192,14 @@ x 4|3
     -
 2|4 5
 """)
+        expected_closest = """\
+3
+-
+5
+"""
         graph.walk(board)
 
+        self.assertEqual(expected_closest, graph.closest)
         self.assertRaises(NetworkXNoPath, graph.get_solution)
 
     def testPartialSolution(self):

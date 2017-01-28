@@ -524,18 +524,21 @@ class BoardGraph(object):
         self.graph.add_node(self.start)
         pending_nodes.append(self.start)
         self.min_domino_count = len(board.dominoes)
+        self.last = self.start
         while pending_nodes:
             if len(self.graph) >= size_limit:
                 raise GraphLimitExceeded(size_limit)
             state = pending_nodes.pop()
             board = Board.create(state, border=1)
             dominoes = set(board.dominoes)
-            self.min_domino_count = min(self.min_domino_count, len(dominoes))
+            domino_count = len(dominoes)
+            if domino_count < self.min_domino_count:
+                self.min_domino_count = domino_count
+                self.last = state
             for domino in dominoes:
                 dx, dy = domino.direction
                 self.try_move(state, domino, dx, dy, pending_nodes)
                 self.try_move(state, domino, -dx, -dy, pending_nodes)
-        self.last = state
         return set(self.graph.nodes())
 
     def try_move(self, old_state, domino, dx, dy, pending_states):
@@ -568,11 +571,47 @@ class BoardGraph(object):
         finally:
             domino.move(-dx, -dy)
 
+    def get_solution(self, partial=False):
+        """ Find a solution from the graph of moves.
+
+        @param partial: If True, a partial solution will be returned if no
+        solution exists.
+        @return: a list of strings describing each move. Each string is two
+        digits describing the domino that moved plus a letter to show the
+        direction.
+        """
+        solution = []
+        goal = self.closest if partial else self.last or ''
+        solution_nodes = shortest_path(self.graph, self.start, goal)
+        for i in range(len(solution_nodes)-1):
+            source, target = solution_nodes[i:i+2]
+            solution.append(self.graph[source][target]['move'])
+        return solution
+
+    def get_choice_counts(self):
+        solution_nodes = shortest_path(self.graph, self.start, self.last)
+        return [len(self.graph[node]) for node in solution_nodes[:-1]]
+
+    def get_average_choices(self):
+        choices = self.get_choice_counts()
+        return sum(choices) / float(len(choices))
+
+    def get_max_choices(self):
+        choices = self.get_choice_counts()
+        return max(choices)
+
 
 class CaptureBoardGraph(BoardGraph):
     def __init__(self):
         super(CaptureBoardGraph, self).__init__()
         self.closest = None
+
+    def walk(self, board, size_limit=maxsize):
+        states = super(CaptureBoardGraph, self).walk(board, size_limit)
+        self.closest = self.last
+        if self.last != '':
+            self.last = None
+        return states
 
     def move(self, domino, dx, dy, offset=None):
         """ Move a domino and calculate the new board state.
@@ -625,35 +664,6 @@ class CaptureBoardGraph(BoardGraph):
             for matching_domino, x, y in matching_dominoes:
                 board.add(matching_domino, x, y)
             domino.move(-dx, -dy)
-
-    def get_solution(self, partial=False):
-        """ Find a solution from the graph of moves.
-
-        @param partial: If True, a partial solution will be returned if no
-        solution exists.
-        @return: a list of strings describing each move. Each string is two
-        digits describing the domino that moved plus a letter to show the
-        direction.
-        """
-        solution = []
-        goal = self.closest if partial else ''
-        solution_nodes = shortest_path(self.graph, self.start, goal)
-        for i in range(len(solution_nodes)-1):
-            source, target = solution_nodes[i:i+2]
-            solution.append(self.graph[source][target]['move'])
-        return solution
-
-    def get_choice_counts(self):
-        solution_nodes = shortest_path(self.graph, self.start, '')
-        return [len(self.graph[node]) for node in solution_nodes[:-1]]
-
-    def get_average_choices(self):
-        choices = self.get_choice_counts()
-        return sum(choices) / float(len(choices))
-
-    def get_max_choices(self):
-        choices = self.get_choice_counts()
-        return max(choices)
 
 
 class BoardAnalysis(object):
@@ -935,13 +945,3 @@ if __name__ == '__main__':
     # plotPerformance()
     findCaptureBoardsWithDeap()
     # testPerformance()
-elif __name__ == '__live_coding__':
-    import unittest
-    from domino_puzzle_test import BoardTest
-
-    suite = unittest.TestSuite()
-    suite.addTest(BoardTest("testFillWithBacktrack"))
-    test_results = unittest.TextTestRunner().run(suite)
-
-    print(test_results.errors)
-    print(test_results.failures)

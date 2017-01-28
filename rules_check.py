@@ -27,4 +27,5 @@ def main():
             heading = state.text
     print(scores)
 
-main()
+if __name__ == '__main__':
+    main()
