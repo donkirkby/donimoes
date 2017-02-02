@@ -1,7 +1,80 @@
-# Donimoes: A Puzzle with Dominoes #
-A puzzle where you collect matching dominoes.
+# Donimoes: Puzzles with Dominoes #
+There are two kinds of puzzles: blocking and capturing.
 
-## Goal ##
+## The Blocking Puzzle's Goal ##
+The goal is to slide all the dominoes into a rectangle, without sliding any
+matching numbers next to each other.
+
+## Moves ##
+Move a domino one space along its long axis so that none of its numbers match
+an adjacent number on a neighbouring domino. In this example, the lower domino
+can move to the right, because the three doesn't match the two, and the four
+doesn't match the 3. You couldn't move it another space to the right, because
+then the threes would be right next to each other.
+
+      2|3     2|3
+    
+    3|4       3>4
+
+## Stay Connected ##
+All the dominoes in the puzzle have to be connected in one solid group, diagonal
+connections don't count. When you move a domino, it can be disconnected during
+the move, as long as it is connected at the start and the end of the move.
+Remember that it can only move one space at a time, though.
+
+## Problems ##
+Here are the starting positions for several Blocking Donimoes problems. The
+solutions are listed at the end.
+
+### Problem 1 ###
+      2    
+      -
+      3 1|2
+    
+    2|4    
+
+### Problem 2 ###
+      3|0     5|3
+    
+        3 6 2|4  
+        - -
+    4|6 4 3      
+
+### Problem 3 ###
+    1           0|6
+    -
+    0     4   5|4
+          -
+    6     3 4|6
+    -
+    3 6|5 1
+          -
+          6
+
+### Problem 4 ###
+      5
+      -
+      4   6|3 6|0
+    
+    1|2     6   1|6
+            -
+      6 5|5 2 1
+      -       -
+      5 6|6   0
+
+### Problem 5 ###
+      6         2
+      -         -
+      1 5|0 4|0 2
+    
+      2 0 2|0 6 1
+      - -     - -
+      3 1 3|1 3 1
+    
+    2|1     3|5
+
+
+## The Capturing Puzzle's Goal ##
 The goal is to collect all the dominoes by sliding matching numbers next to
 each other.
 
@@ -49,8 +122,8 @@ All the dominoes must stay in one connected group, you can't split the group
 after moving or after removing the matching dominoes.
 
 ## Problems ##
-Here are the starting positions for several Donimoes problems. The solutions
-are listed at the end.
+Here are the starting positions for several Capturing Donimoes problems. The
+solutions are listed at the end.
 
 ### Problem 1 ###
     2 1|4 1
@@ -275,9 +348,22 @@ Found some interesting problems to solve? Ideas to share? Get in touch at
 
 [github]: http://donkirkby.github.com/donimoes
 
-## Solutions ##
-Here are the solutions. For each step, move the listed domino left, right, up,
-or down. Then make captures for any matching numbers.
+## Blocking Solutions ##
+Here are the solutions to the Blocking Donimoes problems. For each step, move
+the listed domino left, right, up, or down. 
+
+1. 24R, 24R, 23D
+2. 53L, 53L, 63D, 24L, 34D, 24L, 24L, 24L, 34U, 63U, 30L, 53L
+3. 06L, 54L, 06L, 06L, 06L, 06L, 43U, 46L, 43U, 54L, 46L, 46L, 16U, 54L, 54L, 43D
+4. 12R, 66R, 10D, 16L, 63L, 12R, 54D, 63R, 16R, 10U, 66L, 62D, 10D, 16L, 12R, 63L,
+   60L, 12L, 16L, 10U
+5. 11D, 22D, 11D, 22D, 40R, 40R, 63U, 63U, 20R, 50R, 01U, 21R, 21R, 01D, 50L, 23D,
+   61D, 20L, 63D, 63D, 40L, 40L, 22U, 11U
+
+## Capturing Solutions ##
+Here are the solutions to Capturing Donimoes problems. For each step, move the
+listed domino left, right, up, or down. Then make captures for any matching
+numbers.
 
 1. 10D, 14R, 23D, 14R
 2. 60R, 10R, 12D, 12D, 53R
