@@ -41,6 +41,13 @@ solutions are listed at the end.
     4|6 4 3      
 
 ### Problem 3 ###
+    0|4 0 5      
+        - -
+        5 4   2|0
+    
+          6|3 6|2
+    
+### Problem 4 ###
     1           0|6
     -
     0     4   5|4
@@ -51,7 +58,20 @@ solutions are listed at the end.
           -
           6
 
-### Problem 4 ###
+### Problem 5 ###
+              0  
+              -
+    1|6 0|6   3  
+    
+        2|1   1  
+              -
+        6|2   3  
+    
+      6 2|4 0 1|1
+      -     -
+      4     4
+
+### Problem 6 ###
       5
       -
       4   6|3 6|0
@@ -62,7 +82,37 @@ solutions are listed at the end.
       -       -
       5 6|6   0
 
-### Problem 5 ###
+### Problem 7 ###
+        0 1|0 4|5 6|0
+        -
+        5   4|0 4|1  
+    
+        2|3     6|4  
+    
+    3|4 1|2 5|2   6  
+                  -
+                  5  
+
+### Problem 8 ###
+      2|6 3 4|0
+          -
+      6   6    
+      -
+      1        
+    
+    0|0 3|0    
+    
+        5      
+        -
+        3 2    
+          -
+          5 3  
+            -
+            1 4
+              -
+              3
+
+### Problem 9 ###
       6         2
       -         -
       1 5|0 4|0 2
@@ -73,6 +123,18 @@ solutions are listed at the end.
     
     2|1     3|5
 
+### Problem 10 ###
+                4  
+                -
+    3|1   4|6 4 1  
+              -
+      2 4     4 2|5
+      - -
+      3 2   4|0 5  
+                -
+      5 0|0 1|1 4  
+      -
+      6 5|5 3|3 6|3
 
 ## The Capturing Puzzle's Goal ##
 The goal is to collect all the dominoes by sliding matching numbers next to
@@ -354,11 +416,19 @@ the listed domino left, right, up, or down.
 
 1. 24R, 24R, 23D
 2. 53L, 53L, 63D, 24L, 34D, 24L, 24L, 24L, 34U, 63U, 30L, 53L
-3. 06L, 54L, 06L, 06L, 06L, 06L, 43U, 46L, 43U, 54L, 46L, 46L, 16U, 54L, 54L, 43D
-4. 12R, 66R, 10D, 16L, 63L, 12R, 54D, 63R, 16R, 10U, 66L, 62D, 10D, 16L, 12R, 63L,
+3. 20L, 63L, 62L, 54U, 20L, 63L, 62L, 05U, 20L, 20L, 20L, 05D, 54D, 63L, 62L
+4. 06L, 54L, 06L, 06L, 06L, 06L, 43U, 46L, 43U, 54L, 46L, 46L, 16U, 54L, 54L, 43D
+5. 21L, 06R, 16R, 21R, 62R, 64U, 64U, 24L, 62L, 04U, 04U, 11L, 11L, 13D, 03D
+6. 43U, 31U, 43U, 31U, 43U, 31U, 43U, 31U, 43U, 31U, 43U, 25U, 30R, 53U, 30R, 25U,
+   53U, 53U, 00R, 25U
+7. 23L, 52R, 12R, 34R, 23R, 23R, 05D, 10L, 40L, 45L, 60L, 41L, 64L, 65U, 65U, 52R,
+   12R, 34R
+8. 12R, 66R, 10D, 16L, 63L, 12R, 54D, 63R, 16R, 10U, 66L, 62D, 10D, 16L, 12R, 63L,
    60L, 12L, 16L, 10U
-5. 11D, 22D, 11D, 22D, 40R, 40R, 63U, 63U, 20R, 50R, 01U, 21R, 21R, 01D, 50L, 23D,
+9. 11D, 22D, 11D, 22D, 40R, 40R, 63U, 63U, 20R, 50R, 01U, 21R, 21R, 01D, 50L, 23D,
    61D, 20L, 63D, 63D, 40L, 40L, 22U, 11U
+10. 31R, 40L, 44D, 46R, 31R, 23U, 56U, 55L, 55L, 33L, 33L, 63L, 63L, 54D, 54D, 11R,
+    11R, 44D, 25L, 25L, 41D, 25L, 44U, 11L, 11L, 54U, 54U, 63R, 33R, 55R
 
 ## Capturing Solutions ##
 Here are the solutions to Capturing Donimoes problems. For each step, move the
