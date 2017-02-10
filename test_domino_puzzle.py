@@ -1,6 +1,6 @@
 import unittest
 
-from mock import patch
+from unittest.mock import patch
 from networkx.exception import NetworkXNoPath
 
 from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph,\
@@ -122,6 +122,38 @@ x x x x
 
         self.assertMultiLineEqual(expected_display, display)
         self.assertEqual(expected_bounds, bounds)
+
+    def testCreateWithSpaces(self):
+        board = Board.create("""\
+            4
+            -
+3|1   4|6 4 1
+          -
+  2 4     4 2|5
+  - -
+  3 2   4|0 5
+            -
+  5 0|0 1|1 4
+  -
+  6 5|5 3|3 6|3
+""")
+        expected_display = """\
+x x x x x x 4 x
+            -
+3|1 x 4|6 4 1 x
+          -
+x 2 4 x x 4 2|5
+  - -
+x 3 2 x 4|0 5 x
+            -
+x 5 0|0 1|1 4 x
+  -
+x 6 5|5 3|3 6|3
+"""
+
+        display = board.display()
+
+        self.assertMultiLineEqual(expected_display, display)
 
     def testRotate(self):
         board = Board(4, 3)

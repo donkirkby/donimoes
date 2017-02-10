@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from functools import partial
 from itertools import chain
 from multiprocessing import Pool, Manager
-from operator import eq
 from queue import Empty
 from random import Random
 from sys import maxsize
@@ -10,11 +9,12 @@ from threading import Thread
 
 from deap import base, creator, tools
 from deap.algorithms import eaSimple
-from deap.tools.support import Statistics, HallOfFame
+from deap.tools.support import Statistics
 import matplotlib
 from networkx.classes.digraph import DiGraph
 from networkx.algorithms.shortest_paths.generic import shortest_path
 import numpy as np
+import hall_of_fame
 
 # Avoid loading Tkinter back end when we won't use it.
 matplotlib.use('Agg')
@@ -74,7 +74,7 @@ class Board(object):
         for x in range(width):
             for y in range(height):
                 head = lines[y*2][x*2]
-                if head != 'x':
+                if head not in ' x':
                     right_joint = x+1 < width and lines[y*2][x*2+1] or ' '
                     upper_joint = y+1 < height and lines[y*2+1][x*2] or ' '
                     if right_joint != ' ':
@@ -719,6 +719,7 @@ class BoardAnalysis(object):
             self.average_choices = graph.get_average_choices()
             self.max_choices = graph.get_max_choices()
             self.choice_counts = graph.get_choice_counts()
+        board.solution_length = len(self.solution)
 
     def display(self):
         score = BoardAnalysis.calculate_score(self.get_values())
@@ -816,49 +817,13 @@ class SearchManager(object):
         return selector(population, count)
 
 
-class LoggingHallOfFame(HallOfFame):
-    def __init__(self,
-                 maxsize,
-                 similar=eq,
-                 filename="leader.log",
-                 graph_class=CaptureBoardGraph):
-        super(LoggingHallOfFame, self).__init__(maxsize, similar)
-        self.filename = filename
-        self.graph_class = graph_class
-        with open(self.filename, 'w'):
-            pass  # erase file
-
-    def update(self, population):
-        old_leader = self and self[0]
-        HallOfFame.update(self, population)
-        new_leader = self and self[0]
-        if new_leader is not old_leader:
-            display = new_leader.display()
-            assert len(new_leader.dominoes) == (new_leader.width *
-                                                new_leader.height)/2, display
-            assert 'x' not in display, display
-            with open(self.filename, 'a') as f:
-                f.write(display)
-
-    def display(self):
-        for board in self:
-            analysis = BoardAnalysis(board, self.graph_class())
-            print()
-            print(analysis.start.replace('x', ' '))
-            score = board.fitness.values[0]
-            if score < 0:
-                print('{} score.'.format(score))
-            else:
-                print(analysis.display())
-
-
-def monitor(hall_of_fame):
+def monitor(hall_of_fame, graph_class):
     while True:
         cmd = input("Enter 'p' to print report.\n")
         if cmd == 'p':
-            hall_of_fame.display()
+            hall_of_fame.display(graph_class)
 
-CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 5, 4
+CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 6
 OPTIMUM_SOLUTION_LENGTH = WIDTH*HEIGHT
 
 
@@ -876,7 +841,7 @@ def findBoardsWithDeap(graph_class=CaptureBoardGraph):
 
     toolbox = base.Toolbox()
     pool = Pool()
-    halloffame = LoggingHallOfFame(10, graph_class=graph_class)
+    halloffame = hall_of_fame.MappedHallOfFame(10, solution_length_index=2)
     pool.apply_async(search_manager.evaluateSlowBoards,
                      [slow_queue, results_queue])
     toolbox.register("map", search_manager.loggedMap, pool)
@@ -905,11 +870,11 @@ def findBoardsWithDeap(graph_class=CaptureBoardGraph):
     stats = Statistics()
     stats.register("best", BoardAnalysis.best_score)
     verbose = True
-    bg = Thread(target=monitor, args=(halloffame, ))
+    bg = Thread(target=monitor, args=(halloffame, graph_class))
     bg.daemon = True
     bg.start()
     eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats, halloffame, verbose)
-    halloffame.display()
+    halloffame.display(graph_class)
 
 
 def testPerformance():

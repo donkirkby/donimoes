@@ -38,7 +38,11 @@ class Diagram(Flowable):
         t.forward(self.height/2)
         t.right(90)
         t.down()
-        draw_diagram(t, self.board_state, self.cell_size)
+        try:
+            draw_diagram(t, self.board_state, self.cell_size)
+        except:
+            print(self.board_state)
+            raise
 
 
 def firstPage(canvas, doc):
