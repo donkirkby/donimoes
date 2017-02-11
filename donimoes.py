@@ -55,14 +55,14 @@ def firstPage(canvas, doc):
 
 
 def go():
-    doc = SimpleDocTemplate("donimoes.pdf")
+    doc = SimpleDocTemplate("docs/donimoes.pdf")
     styles = getSampleStyleSheet()
     paragraph_style = styles[Styles.Normal]
     list_style = ListStyle('default_list',
                            bulletFontSize=paragraph_style.fontSize,
                            bulletFormat='%s.')
     story = []
-    f = open('rules.md')
+    f = open('docs/rules.md')
     group = []
     bulleted = []
     first_bullet = None
@@ -102,4 +102,4 @@ def go():
 if __name__ == '__main__':
     go()
 
-    call(["evince", "donimoes.pdf"])
+    call(["evince", "docs/donimoes.pdf"])
