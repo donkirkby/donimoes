@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/moonside.iml" filepath="$PROJECT_DIR$/.idea/moonside.iml" />
-      <module fileurl="file://$USER_HOME$/workspace/mutest/.idea/mutest.iml" filepath="$USER_HOME$/workspace/mutest/.idea/mutest.iml" />
     </modules>
   </component>
 </project>

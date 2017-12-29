@@ -1,13 +1,10 @@
 from functools import partial
 import math
-import turtle
-from turtle import mainloop
+from turtle import done, Turtle
 
 from domino_puzzle import Board, CaptureBoardGraph, Domino
 
-
-def draw_pips(turtle, pips, cell_size):
-    PIP_PATTERNS = """\
+PIP_PATTERNS = """\
 ---+
    |
    |
@@ -38,6 +35,9 @@ OOO|
 OOO|
 ---+
 """
+
+
+def draw_pips(turtle, pips, cell_size):
     pip_pattern = PIP_PATTERNS.splitlines()[pips*4+1:pips*4+4]
     pip_radius = cell_size*0.09
     turtle.up()
@@ -361,8 +361,8 @@ def draw_position(turtle, size=10, color='red'):
 
 
 def draw_demo(turtle):
-    width = turtle.window_width()
-    height = turtle.window_height()
+    width = turtle.screen.window_width()
+    height = turtle.screen.window_height()
     cell_size = min(width/8.5, height/7)
     turtle.up()
     turtle.back(width*.475)
@@ -386,8 +386,16 @@ def draw_demo(turtle):
     turtle.forward(cell_size*7)
     turtle.left(90)
 
+
 if __name__ in ('__main__', '__live_coding__'):
-    turtle.tracer(0)
-    draw_demo(turtle)
-    turtle.update()
-    mainloop()
+    t = Turtle()
+    try:
+        t.screen.tracer(0)
+    except AttributeError:
+        pass
+    draw_demo(t)
+    try:
+        t.screen.update()
+    except AttributeError:
+        pass
+    done()

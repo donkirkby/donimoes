@@ -7,8 +7,12 @@ from domino_puzzle import BoardGraph, BadPositionError, findBoardsWithDeap
 
 
 class BlockingBoardGraph(BoardGraph):
+    def __init__(self):
+        self.start = None
+        self.last = None
+
     def walk(self, board, size_limit=maxsize):
-        states = BoardGraph.walk(self, board, size_limit=size_limit)
+        states = super().walk(board, size_limit=size_limit)
         _preds, distances = dijkstra_predecessor_and_distance(self.graph,
                                                               board.display())
         _dist, state = max((d, s) for s, d in distances.items())
@@ -37,6 +41,7 @@ class BlockingBoardGraph(BoardGraph):
 
 def main():
     findBoardsWithDeap(graph_class=BlockingBoardGraph)
+
 
 if __name__ == '__main__':
     main()
