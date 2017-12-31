@@ -32,7 +32,7 @@ class Cell(object):
     def __repr__(self):
         return 'Cell({})'.format(self.pips)
 
-    def findNeighbourCells(self, dx, dy, exclude_sibling=True):
+    def find_neighbour_cells(self, dx, dy, exclude_sibling=True):
         x = self.x + dx
         y = self.y + dy
         board = self.board
@@ -45,12 +45,16 @@ class Cell(object):
             elif neighbour is not None:
                 yield neighbour
 
-    def findNeighbours(self, exclude_sibling=True):
+    def find_neighbours(self, exclude_sibling=True):
         return chain(
-            self.findNeighbourCells(0, 1, exclude_sibling=exclude_sibling),
-            self.findNeighbourCells(1, 0, exclude_sibling=exclude_sibling),
-            self.findNeighbourCells(0, -1, exclude_sibling=exclude_sibling),
-            self.findNeighbourCells(-1, 0, exclude_sibling=exclude_sibling))
+            self.find_neighbour_cells(0, 1, exclude_sibling=exclude_sibling),
+            self.find_neighbour_cells(1, 0, exclude_sibling=exclude_sibling),
+            self.find_neighbour_cells(0, -1, exclude_sibling=exclude_sibling),
+            self.find_neighbour_cells(-1, 0, exclude_sibling=exclude_sibling))
+
+    def dominates_neighbours(self):
+        return all(self.pips >= neighbour.pips
+                   for neighbour in self.find_neighbours())
 
 
 class BoardError(Exception):
@@ -178,7 +182,7 @@ class Board(object):
                 else:
                     domino = random.choice(self.dominoes)
                 removed.add(domino)
-                neighbours = list(domino.findNeighbours())
+                neighbours = list(domino.find_neighbours())
             new_board = boardType(self.width,
                                   self.height,
                                   max_pips=self.max_pips)
@@ -341,7 +345,7 @@ class Board(object):
 
     def hasLoner(self):
         for domino in self.dominoes:
-            neighbours = domino.findNeighbours()
+            neighbours = domino.find_neighbours()
             has_matching_neighbour = any(domino.isMatch(neighbour)
                                          for neighbour in neighbours)
             if not has_matching_neighbour:
@@ -351,7 +355,7 @@ class Board(object):
     def hasMatch(self):
         for domino in self.dominoes:
             for cell in (domino.head, domino.tail):
-                for neighbour in cell.findNeighbours():
+                for neighbour in cell.find_neighbours():
                     if neighbour.pips == cell.pips:
                         return True
         return False
@@ -390,6 +394,7 @@ class Board(object):
 class Domino(object):
     directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
     direction_names = 'ruld'
+    alignment_names = 'hvhv'
 
     @classmethod
     def create(cls, max_pips):
@@ -431,6 +436,9 @@ class Domino(object):
     def __hash__(self):
         return hash(self.head.pips) ^ hash(self.tail.pips)
 
+    def display(self):
+        return '{}|{}'.format(self.head.pips, self.tail.pips)
+
     def rotate(self, degrees):
         self.rotate_to((self.degrees + degrees) % 360)
 
@@ -457,11 +465,21 @@ class Domino(object):
         direction_name = Domino.direction_names[direction_index]
         return self.get_name() + direction_name
 
+    def describe_remove(self):
+        dx, dy = self.direction
+        direction_index = Domino.directions.index((dx, dy))
+        alignment_name = Domino.alignment_names[direction_index]
+        return self.get_name() + alignment_name
+
     def get_name(self):
         name = '{}{}'.format(self.head.pips, self.tail.pips)
         if 90 <= self.degrees <= 180:
             name = name[::-1]  # reverse
         return name
+
+    def dominates_neighbours(self):
+        return (self.head.dominates_neighbours() and
+                self.tail.dominates_neighbours())
 
     def flip(self):
         board = self.tail.board
@@ -474,11 +492,14 @@ class Domino(object):
     def calculateDirection(self):
         self.direction = Domino.directions[self.degrees//90]
 
-    def findNeighbours(self):
-        neighbour_cells = chain(self.head.findNeighbours(),
-                                self.tail.findNeighbours())
+    def find_neighbours(self):
+        neighbour_cells = self.find_neighbour_cells()
         neighbour_dominoes = set(cell.domino for cell in neighbour_cells)
         return neighbour_dominoes
+
+    def find_neighbour_cells(self):
+        return chain(self.head.find_neighbours(),
+                     self.tail.find_neighbours())
 
     def isMatch(self, other):
         return (self.head.pips == other.head.pips or
@@ -492,7 +513,7 @@ class Domino(object):
         Slightly different type of matching from isMatch().
         """
         for cell in (self.head, self.tail):
-            for neighbour in cell.findNeighbours():
+            for neighbour in cell.find_neighbours():
                 if neighbour.pips == cell.pips:
                     return True
         return False
@@ -501,7 +522,7 @@ class Domino(object):
         matches = []
         for cell in (self.head, self.tail):
             is_match = False
-            for neighbour in cell.findNeighbours():
+            for neighbour in cell.find_neighbours():
                 if neighbour.pips == cell.pips:
                     is_match = True
                     matches.append(neighbour)
@@ -518,39 +539,52 @@ class GraphLimitExceeded(RuntimeError):
 
 
 class BoardGraph(object):
+    def __init__(self, board_class=Board):
+        self.graph = self.start = self.last = self.closest = None
+        self.min_domino_count = None
+        self.board_class = board_class
+
     def walk(self, board, size_limit=maxsize):
         pending_nodes = []
         self.graph = DiGraph()
         self.start = board.display(cropped=True)
         self.graph.add_node(self.start)
         pending_nodes.append(self.start)
-        self.min_domino_count = len(board.dominoes)
         self.last = self.start
         while pending_nodes:
             if len(self.graph) >= size_limit:
                 raise GraphLimitExceeded(size_limit)
             state = pending_nodes.pop()
-            board = Board.create(state, border=1)
-            dominoes = set(board.dominoes)
-            domino_count = len(dominoes)
-            if domino_count < self.min_domino_count:
-                self.min_domino_count = domino_count
-                self.last = state
-            for domino in dominoes:
-                dx, dy = domino.direction
-                self.try_move(state, domino, dx, dy, pending_nodes)
-                self.try_move(state, domino, -dx, -dy, pending_nodes)
+            board = self.board_class.create(state, border=1)
+            for move, new_state in self.generate_moves(board):
+                if not self.graph.has_node(new_state):
+                    # new node
+                    self.graph.add_node(new_state)
+                    pending_nodes.append(new_state)
+                self.graph.add_edge(state, new_state, move=move)
         return set(self.graph.nodes())
 
-    def try_move(self, old_state, domino, dx, dy, pending_states):
+    def generate_moves(self, board):
+        """ Generate all moves from the board's current state.
+
+        :param Board board: the current state
+        :return: a generator of (state, move_description) tuples
+        """
+        dominoes = set(board.dominoes)
+        domino_count = len(dominoes)
+        if self.min_domino_count is None or domino_count < self.min_domino_count:
+            self.min_domino_count = domino_count
+            self.last = board.display(cropped=True)
+        for domino in dominoes:
+            dx, dy = domino.direction
+            yield from self.try_move(domino, dx, dy)
+            yield from self.try_move(domino, -dx, -dy)
+
+    def try_move(self, domino, dx, dy):
         try:
             new_state = self.move(domino, dx, dy)
             move = domino.describe_move(dx, dy)
-            if not self.graph.has_node(new_state):
-                # new node
-                self.graph.add_node(new_state)
-                pending_states.append(new_state)
-            self.graph.add_edge(old_state, new_state, move=move)
+            yield move, new_state
         except BadPositionError:
             pass
 
@@ -572,17 +606,17 @@ class BoardGraph(object):
         finally:
             domino.move(-dx, -dy)
 
-    def get_solution(self, partial=False):
+    def get_solution(self, return_partial=False):
         """ Find a solution from the graph of moves.
 
-        @param partial: If True, a partial solution will be returned if no
+        @param return_partial: If True, a partial solution will be returned if no
         solution exists.
         @return: a list of strings describing each move. Each string is two
         digits describing the domino that moved plus a letter to show the
         direction.
         """
         solution = []
-        goal = self.closest if partial else self.last or ''
+        goal = self.closest if return_partial else self.last or ''
         solution_nodes = shortest_path(self.graph, self.start, goal)
         for i in range(len(solution_nodes)-1):
             source, target = solution_nodes[i:i+2]
@@ -636,7 +670,7 @@ class CaptureBoardGraph(BoardGraph):
             if not board.isConnected():
                 raise BadPositionError('Board is not connected after move.')
             for cell in (domino.head, domino.tail):
-                for neighbour in cell.findNeighbours():
+                for neighbour in cell.find_neighbours():
                     if neighbour.pips == cell.pips:
                         matching_dominoes.add((neighbour.domino,
                                                neighbour.domino.head.x,

@@ -295,7 +295,7 @@ def draw_diagram(turtle, state, cell_size, solution=False):
                        cell)
         graph = CaptureBoardGraph()
         graph.walk(board)
-        solution = graph.get_solution(partial=True)
+        solution = graph.get_solution(return_partial=True)
         step_count = max(len(solution)-1, 1)
         for move_num, move in enumerate(solution, 1):
             domino_name = move[:2]

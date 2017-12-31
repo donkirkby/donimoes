@@ -41,7 +41,7 @@ x 3|2
         cell = board[1][0]
         expected_neighbours = {board[1][1]}
 
-        neighbours = set(cell.findNeighbours())
+        neighbours = set(cell.find_neighbours())
 
         self.assertEqual(expected_neighbours, neighbours)
 
@@ -257,14 +257,14 @@ x x x x
         board = Board(4, 3)
         board.add(Domino(2, 3), 1, 0)
 
-        with self.assertRaisesRegexp(BoardError, 'Position 1, 0 is occupied.'):
+        with self.assertRaisesRegex(BoardError, 'Position 1, 0 is occupied.'):
             board.add(Domino(1, 2), 0, 0)
 
     def testOffBoard(self):
         board = Board(4, 3)
 
-        with self.assertRaisesRegexp(BoardError,
-                                     'Position 4, 0 is off the board.'):
+        with self.assertRaisesRegex(BoardError,
+                                    'Position 4, 0 is off the board.'):
             board.add(Domino(1, 2), 3, 0)
 
     def testBadMove(self):
@@ -875,7 +875,7 @@ class DominoTest(unittest.TestCase):
         domino1 = board[1][1].domino
         expected_neighbours = {board[0][1].domino, board[1][0].domino}
 
-        neighbours = domino1.findNeighbours()
+        neighbours = domino1.find_neighbours()
 
         self.assertEqual(expected_neighbours, neighbours)
 
@@ -1244,7 +1244,7 @@ x 4|3
 """)
         graph.walk(board)
 
-        solution = graph.get_solution(partial=True)
+        solution = graph.get_solution(return_partial=True)
 
         self.assertEqual(expected_solution, solution)
 
