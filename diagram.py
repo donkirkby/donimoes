@@ -38,6 +38,7 @@ OOO|
 
 
 def draw_pips(turtle, pips, cell_size):
+    turtle.fillcolor('black')
     pip_pattern = PIP_PATTERNS.splitlines()[pips*4+1:pips*4+4]
     pip_radius = cell_size*0.09
     turtle.up()
@@ -73,11 +74,14 @@ def draw_domino(turtle, domino, cell_size=50.0):
     turtle.forward(cell_size*0.45)
     turtle.right(90)
     turtle.down()
+    turtle.fillcolor('white')
+    turtle.begin_fill()
     for _ in range(2):
         turtle.forward(cell_size*1.9)
         turtle.right(90)
         turtle.forward(cell_size*.9)
         turtle.right(90)
+    turtle.end_fill()
 
     turtle.up()
     turtle.forward(cell_size*.95)
@@ -370,6 +374,14 @@ def draw_demo(turtle):
     turtle.forward(height*0.4)
     turtle.right(90)
     turtle.down()
+    turtle.fillcolor('ivory')
+    turtle.begin_fill()
+    for _ in range(2):
+        turtle.forward(width*0.95)
+        turtle.right(90)
+        turtle.forward(height*0.8)
+        turtle.right(90)
+    turtle.end_fill()
 
     state1 = """\
 3|6 2|0 2

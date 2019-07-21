@@ -62,6 +62,7 @@ target/
 /timing.dat
 /timing.dot
 /donimoes.pdf
+/diagram.svg
 
 # virtual environment
 /venv
