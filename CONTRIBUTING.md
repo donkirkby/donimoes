@@ -27,10 +27,9 @@ Before publishing a release, check the following:
 
 To publish a release:
 
-* Run the script to generate the PDF version.
-* Copy it to the gh-pages branch.
-* Commit the `gh-pages` branch and check that the new version works on the web
-    site.
+* Run the `donimoes.py` script to generate the PDF version.
+* Copy it to the `docs` folder.
+* Commit the changes and check that the new version works on the web site.
 * Go to the GitHub [releases page][releases], create a new release using a tag
     like `v0.x.0-alpha`.
 * Close the milestone.

@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+matplotlib = "==2.0.0"
+deap = "==1.2.2"
+networkx = "==1.11"
+reportlab = "==3.4.0"
+numpy = "==1.13.3"
+svgwrite = "*"
+
+[requires]
+python_version = "3.6"

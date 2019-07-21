@@ -1,26 +1,38 @@
-# Donimoes: A Puzzle with Dominoes #
-A puzzle where you collect matching dominoes.
+# Donimoes: Puzzles with Dominoes
+There are two kinds of puzzles: blocking and capturing. The goal of the
+blocking puzzle is to slide all the dominoes into a rectangle, without sliding
+any matching numbers next to each other. Each problem to solve is a pattern of
+dominoes for you to start from, like this:
 
-Each problem to solve is a pattern of dominoes for you to start from. The goal
-is to collect all the dominoes by sliding matching numbers next to each other.
+![Blocking example]
 
-![Beginner problem][example1]
+The goal of the capturing puzzle is to collect all the dominoes by sliding
+matching numbers next to each other. You can only move dominoes that either
+make a capture or add up to six. Here's an example:
+
+![Capturing example]
 
 To try the puzzle, get a set of dominoes. Then either [read the rules][rules],
 or download [the PDF][pdf]. Choose the PDF if you want to print out pretty
 diagrams of the problems, like these:
 
-![Example problem and solution][example2]
+![Example problem and solution][solution example]
 
-On the rules web page, the beginner problem above looks like this:
+On the rules web page, the example problems above look like this:
 
-    0|5 0 1
-        - -
-    4|6 4 5
+      2    
+      -
+      3 1|2
     
-    4|2 4|1
+    2|4    
 
-The example problem and solution look like this:
+and this:
+
+    5 2|4
+    -
+    2 2|6
+
+The example problem and solution looks like this:
 
     5 2|4   5 2|4     5 2|4   5 2*4
     -       -         -       *
@@ -28,12 +40,13 @@ The example problem and solution look like this:
 
 Donimoes is an original puzzle designed by Don Kirkby.
 
-[rules]: http://donkirkby.github.com/donimoes/rules.html
-[example1]: http://donkirkby.github.com/donimoes/example1.png
-[example2]: http://donkirkby.github.com/donimoes/example2.png
-[pdf]: http://donkirkby.github.com/donimoes/donimoes.pdf
+[rules]: https://donkirkby.github.com/donimoes/rules.html
+[Blocking example]: https://donkirkby.github.com/donimoes/blocking_example.png
+[Capturing example]: https://donkirkby.github.com/donimoes/capturing_example.png
+[solution example]: http://donkirkby.github.com/donimoes/solution_example.png
+[pdf]: https://donkirkby.github.com/donimoes/donimoes.pdf
 
-## Other Domino Puzzles ##
+## Other Domino Puzzles
 The only other domino puzzle I could find is called either Dominosa or Domino
 Solitaire. You start with a grid of numbers, and you have to lay the dominoes
 on them. It was invented by O.S. Adler in 1874. There's an

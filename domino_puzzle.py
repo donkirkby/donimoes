@@ -425,6 +425,8 @@ class Domino(object):
         return "Domino({}, {})".format(self.head.pips, self.tail.pips)
 
     def __eq__(self, other):
+        if not isinstance(other, Domino):
+            return False
         return ((self.head.pips == other.head.pips and
                  self.tail.pips == other.tail.pips) or
                 (self.head.pips == other.tail.pips and
@@ -857,11 +859,12 @@ def monitor(hall_of_fame, graph_class):
         if cmd == 'p':
             hall_of_fame.display(graph_class)
 
-CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 6
+
+CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 4
 OPTIMUM_SOLUTION_LENGTH = WIDTH*HEIGHT
 
 
-def findBoardsWithDeap(graph_class=CaptureBoardGraph):
+def find_boards_with_deap(graph_class=CaptureBoardGraph):
     print('Starting.')
     random = Random()
     manager = Manager()
@@ -869,9 +872,10 @@ def findBoardsWithDeap(graph_class=CaptureBoardGraph):
     slow_queue = manager.Queue()
     results_queue = manager.Queue()
     creator.create("FitnessMax", base.Fitness, weights=BoardAnalysis.WEIGHTS)
+    # noinspection PyUnresolvedReferences
     creator.create("Individual",
                    Board,
-                   fitness=creator.FitnessMax)  # @UndefinedVariable
+                   fitness=creator.FitnessMax)
 
     toolbox = base.Toolbox()
     pool = Pool()
@@ -972,7 +976,7 @@ def live_main():
 
 if __name__ == '__main__':
     # plotPerformance()
-    findBoardsWithDeap()
+    find_boards_with_deap()
     # testPerformance()
 elif __name__ == '__live_coding__':
     live_main()

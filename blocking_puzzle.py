@@ -3,7 +3,7 @@ from sys import maxsize
 from networkx.algorithms.shortest_paths.weighted \
     import dijkstra_predecessor_and_distance
 
-from domino_puzzle import BoardGraph, BadPositionError, findBoardsWithDeap
+from domino_puzzle import BoardGraph, BadPositionError, find_boards_with_deap
 
 
 class BlockingBoardGraph(BoardGraph):
@@ -36,7 +36,7 @@ class BlockingBoardGraph(BoardGraph):
 
 
 def main():
-    findBoardsWithDeap(graph_class=BlockingBoardGraph)
+    find_boards_with_deap(graph_class=BlockingBoardGraph)
 
 
 if __name__ == '__main__':
