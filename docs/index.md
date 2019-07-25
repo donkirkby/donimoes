@@ -41,13 +41,15 @@ The example problem and solution looks like this:
     -       -         -       *
     2 2|6   2   2>6   2 2<6   2 2*6
 
-Donimoes is an original puzzle designed by Don Kirkby.
+Donimoes is an original puzzle designed by Don Kirkby. If you're interested,
+you can read about [making donimoes].
 
 [rules]: https://donkirkby.github.com/donimoes/rules.html
 [Blocking example]: https://donkirkby.github.com/donimoes/blocking_example.png
 [Capturing example]: https://donkirkby.github.com/donimoes/capturing_example.png
 [solution example]: http://donkirkby.github.com/donimoes/solution_example.png
 [pdf]: https://donkirkby.github.com/donimoes/donimoes.pdf
+[making donimoes]: https://donkirkby.github.com/donimoes/making_donimoes.html
 
 ## Other Domino Puzzles
 The only other domino puzzle I could find is called either Dominosa or Domino

@@ -1,3 +1,7 @@
+---
+title: The Rules of Donimoes
+---
+
 # Donimoes: Puzzles with Dominoes #
 There are two kinds of puzzles: blocking and capturing.
 
