@@ -162,14 +162,8 @@ class Board(object):
 
     def mutate(self, random, boardType=None, matches_allowed=True):
         # Choose number of mutations: 1 is most common, n is least common
-        domino_count = len(self.dominoes)
-        n = random.randint(1, (domino_count+1)*domino_count/2)
-        mutation_count = 0
-        dn = domino_count
-        while n > 0:
-            mutation_count += 1
-            n -= dn
-            dn -= 1
+        max_mutations = len(self.dominoes)
+        mutation_count = self.pick_mutation_count(max_mutations, random)
         is_successful = False
         while not is_successful:
             # mutation_count = min(mutation_count, 3)
@@ -196,6 +190,17 @@ class Board(object):
                                            matches_allowed=matches_allowed)
         return new_board
 
+    @staticmethod
+    def pick_mutation_count(max_mutations, random):
+        n = random.randint(1, (max_mutations + 1) * max_mutations / 2)
+        mutation_count = 0
+        dn = max_mutations
+        while n > 0:
+            mutation_count += 1
+            n -= dn
+            dn -= 1
+        return mutation_count
+
     def __getitem__(self, x):
         return self.cells[x]
 
@@ -210,19 +215,7 @@ class Board(object):
         @param cropping_bounds: a list that will be cleared and then have
         [xmin, ymin, xmax, ymax] appended to it. Ignored if it is None.
         """
-        if not cropped:
-            xmin = ymin = 0
-            xmax, ymax = self.width-1, self.height-1
-        else:
-            xmin = self.width
-            ymin = self.height
-            xmax = ymax = 0
-            for domino in self.dominoes:
-                for cell in (domino.head, domino.tail):
-                    xmin = min(xmin, cell.x)
-                    xmax = max(xmax, cell.x)
-                    ymin = min(ymin, cell.y)
-                    ymax = max(ymax, cell.y)
+        xmin, xmax, ymin, ymax = self.get_bounds(cropped)
         if cropping_bounds is not None:
             cropping_bounds[:] = [xmin, ymin, xmax, ymax]
         width = xmax-xmin+1
@@ -242,11 +235,26 @@ class Board(object):
                     display[row-dy][col+dx] = divider
         return ''.join(''.join(row).rstrip() + '\n' for row in display)
 
+    def get_bounds(self, cropped):
+        if not cropped:
+            xmin = ymin = 0
+            xmax, ymax = self.width - 1, self.height - 1
+        else:
+            xmin = self.width + 1
+            ymin = self.height + 1
+            xmax = ymax = 0
+            for domino in self.dominoes:
+                for cell in (domino.head, domino.tail):
+                    xmin = min(xmin, cell.x)
+                    xmax = max(xmax, cell.x)
+                    ymin = min(ymin, cell.y)
+                    ymax = max(ymax, cell.y)
+        return xmin, xmax, ymin, ymax
+
     def choose_extra_dominoes(self, random):
         """ Iterate through self.extra_dominoes, start at random position.
 
-        @return a generator of (domino, is_flipped) pairs. Each domino
-            is returned twice, with True or False in random order.
+        @return a generator of dominoes.
         """
         dominoes = self.extra_dominoes[:]
         count = len(dominoes)
@@ -467,6 +475,20 @@ class Domino(object):
         direction_name = Domino.direction_names[direction_index]
         return self.get_name() + direction_name
 
+    def describe_add(self, x, y):
+        head, tail = self.head, self.tail
+        if self.direction[0]:
+            direction_name = 'h'
+            if self.direction[0] < 0:
+                head, tail = tail, head
+                x -= 1
+        else:
+            direction_name = 'v'
+            if self.direction[1] > 0:
+                head, tail = tail, head
+                y += 1
+        return f'{head.pips}{tail.pips}{direction_name}{x+1}{y+1}'
+
     def describe_remove(self):
         dx, dy = self.direction
         direction_index = Domino.directions.index((dx, dy))
@@ -552,7 +574,6 @@ class BoardGraph(object):
         self.start = board.display(cropped=True)
         self.graph.add_node(self.start)
         pending_nodes.append(self.start)
-        self.last = self.start
         while pending_nodes:
             if len(self.graph) >= size_limit:
                 raise GraphLimitExceeded(size_limit)
@@ -572,15 +593,20 @@ class BoardGraph(object):
         :param Board board: the current state
         :return: a generator of (state, move_description) tuples
         """
+        self.check_progress(board)
+        dominoes = set(board.dominoes)
+        for domino in dominoes:
+            dx, dy = domino.direction
+            yield from self.try_move(domino, dx, dy)
+            yield from self.try_move(domino, -dx, -dy)
+
+    def check_progress(self, board):
+        """ Keep track of which board state was the closest to a solution. """
         dominoes = set(board.dominoes)
         domino_count = len(dominoes)
         if self.min_domino_count is None or domino_count < self.min_domino_count:
             self.min_domino_count = domino_count
             self.last = board.display(cropped=True)
-        for domino in dominoes:
-            dx, dy = domino.direction
-            yield from self.try_move(domino, dx, dy)
-            yield from self.try_move(domino, -dx, -dy)
 
     def try_move(self, domino, dx, dy):
         try:
@@ -796,7 +822,8 @@ class SearchManager(object):
             analysis = BoardAnalysis(individual,
                                      self.graph_class(),
                                      size_limit=SLOW_BOARD_SIZE)
-            return analysis.get_values()
+            values = analysis.get_values()
+            return values
         except GraphLimitExceeded:
             slow_queue.put(individual.display())
             return (len(individual.dominoes) + 1), 0, 0, 0, 0
@@ -860,11 +887,12 @@ def monitor(hall_of_fame, graph_class):
             hall_of_fame.display(graph_class)
 
 
-CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 6, 4
+CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 4, 3
 OPTIMUM_SOLUTION_LENGTH = WIDTH*HEIGHT
 
 
-def find_boards_with_deap(graph_class=CaptureBoardGraph):
+def find_boards_with_deap(graph_class=CaptureBoardGraph,
+                          board_class=Board):
     print('Starting.')
     random = Random()
     manager = Manager()
@@ -874,7 +902,7 @@ def find_boards_with_deap(graph_class=CaptureBoardGraph):
     creator.create("FitnessMax", base.Fitness, weights=BoardAnalysis.WEIGHTS)
     # noinspection PyUnresolvedReferences
     creator.create("Individual",
-                   Board,
+                   board_class,
                    fitness=creator.FitnessMax)
 
     toolbox = base.Toolbox()

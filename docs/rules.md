@@ -558,7 +558,7 @@ solutions are listed at the end.
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [donkirkby.github.com/donimoes][github].
 
-[github]: http://donkirkby.github.com/donimoes
+[github]: https://donkirkby.github.com/donimoes
 
 ## Blocking Solutions ##
 Here are the solutions to the Blocking Donimoes problems. For each step, move

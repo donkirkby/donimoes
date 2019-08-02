@@ -149,12 +149,13 @@ def draw_arrow(turtle, cell_size, rotation=0):
     turtle.right(rotation)
 
 
-def draw_capture(turtle, cell_size):
+def draw_cross(turtle, cell_size, rotation=0):
     pos = turtle.pos()
 
     thickness = cell_size*.1
     length = cell_size*.15
     turtle.up()
+    turtle.right(rotation-45)
     turtle.right(45)
     turtle.forward(thickness*.5)
     turtle.left(90)
@@ -170,6 +171,7 @@ def draw_capture(turtle, cell_size):
         turtle.right(90)
     turtle.end_fill()
     turtle.right(45)
+    turtle.left(rotation-45)
     turtle.up()
 
     turtle.setpos(pos)
@@ -262,7 +264,8 @@ def draw_diagram(turtle, state, cell_size, solution=False):
              '^': partial(draw_arrow, turtle, cell_size, 90),
              '<': partial(draw_arrow, turtle, cell_size, 180),
              'v': partial(draw_arrow, turtle, cell_size, 270),
-             '*': partial(draw_capture, turtle, cell_size)}
+             '+': partial(draw_cross, turtle, cell_size, 0),
+             '*': partial(draw_cross, turtle, cell_size, 45)}
     pos = turtle.pos()
     lines = state.splitlines()
     turtle.up()
@@ -384,15 +387,11 @@ def draw_demo(turtle):
     turtle.end_fill()
 
     state1 = """\
-3|6 2|0 2
-        -
-5 3 1|2 3
-- -
-3 1 4|3 6
-        -
-5|5 6|6 1
+1|2 3     1
+    v     *
+    4 5+6 6
 """
-    draw_diagram(turtle, state1, cell_size, solution=True)
+    draw_diagram(turtle, state1, cell_size, solution=False)
 
     turtle.right(90)
     turtle.forward(cell_size*7)

@@ -1,3 +1,5 @@
+from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
+from pathlib import Path
 from subprocess import call
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph
@@ -5,9 +7,11 @@ from reportlab.platypus.flowables import Flowable, Spacer, KeepTogether,\
     ListFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ListStyle
 from reportlab.lib.units import inch
-from reportlab.rl_config import defaultPageSize  # @UnresolvedImport
+# noinspection PyUnresolvedReferences
+from reportlab.rl_config import defaultPageSize
 
 from diagram import draw_diagram
+from domino_puzzle import BoardError
 from pdf_turtle import PdfTurtle
 from book_parser import parse, Styles
 
@@ -15,22 +19,37 @@ PAGE_HEIGHT = defaultPageSize[1]
 PAGE_WIDTH = defaultPageSize[0]
 
 
+def parse_args():
+    default_markdown = str(Path(__file__).parent / 'docs' / 'rules.md')
+    parser = ArgumentParser(description='Convert rules markdown into a PDF.',
+                            formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument('markdown',
+                        type=FileType(),
+                        nargs='?',
+                        default=default_markdown,
+                        help='markdown source file to convert')
+    return parser.parse_args()
+
+
 class Diagram(Flowable):
     MAX_COLUMN_COUNT = 16
 
     def __init__(self, board_state):
+        super().__init__()
         self.board_state = board_state
         lines = board_state.splitlines(True)
         self.row_count = (len(lines) + 1)/2
         self.col_count = max(map(len, lines))/2
+        self.cell_size = None
 
-    def wrap(self, availWidth, availHeight):
-        self.cell_size = availWidth / Diagram.MAX_COLUMN_COUNT
+    def wrap(self, avail_width, avail_height):
+        self.cell_size = avail_width / Diagram.MAX_COLUMN_COUNT
         self.width = self.cell_size * self.col_count
         self.height = self.cell_size * self.row_count
-        return (self.width, self.height)
+        return self.width, self.height
 
     def draw(self):
+        # noinspection PyUnresolvedReferences
         t = PdfTurtle(self.canv, self._frame, self.width, self.height)
         t.up()
         t.back(self.width/2)
@@ -40,12 +59,13 @@ class Diagram(Flowable):
         t.down()
         try:
             draw_diagram(t, self.board_state, self.cell_size)
-        except:
+        except BoardError:
             print(self.board_state)
             raise
 
 
-def firstPage(canvas, doc):
+# noinspection PyUnusedLocal
+def first_page(canvas, doc):
     canvas.saveState()
     canvas.setFont('Times-Roman', 9)
     canvas.drawCentredString(PAGE_WIDTH/2,
@@ -54,19 +74,26 @@ def firstPage(canvas, doc):
     canvas.restoreState()
 
 
-def go():
-    doc = SimpleDocTemplate("docs/donimoes.pdf")
+def main():
+    args = parse_args()
+    markdown_path = Path(args.markdown.name)
+    pdf_stem = markdown_path.stem
+    if pdf_stem == 'rules':
+        pdf_stem = 'donimoes'
+    pdf_path = markdown_path.parent / (pdf_stem + '.pdf')
+    with args.markdown:
+        states = parse(args.markdown.read())
+
+    doc = SimpleDocTemplate(str(pdf_path))
     styles = getSampleStyleSheet()
     paragraph_style = styles[Styles.Normal]
     list_style = ListStyle('default_list',
                            bulletFontSize=paragraph_style.fontSize,
                            bulletFormat='%s.')
     story = []
-    f = open('docs/rules.md')
     group = []
     bulleted = []
     first_bullet = None
-    states = parse(f.read())
     for state in states:
         if state.style == Styles.Diagram:
             flowable = Diagram(state.text)
@@ -97,9 +124,10 @@ def go():
         story.append(ListFlowable(bulleted,
                                   style=list_style,
                                   start=first_bullet))
-    doc.build(story, onFirstPage=firstPage)
+    doc.build(story, onFirstPage=first_page)
+
+    call(["evince", pdf_path])
+
 
 if __name__ == '__main__':
-    go()
-
-    call(["evince", "docs/donimoes.pdf"])
+    main()

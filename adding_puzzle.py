@@ -1,16 +1,22 @@
-from blocking_puzzle import BlockingBoardGraph
-from domino_puzzle import BadPositionError
+import typing
+from sys import maxsize
+
+from domino_puzzle import BadPositionError, find_boards_with_deap, Domino, BoardGraph
 from queued_board import QueuedBoard
 
 
-class AddingBoardGraph(BlockingBoardGraph):
+class AddingBoardGraph(BoardGraph):
     def __init__(self, board_class=QueuedBoard):
         super().__init__(board_class)
 
-    def generate_moves(self, board):
-        yield from super().generate_moves(board)
-        for domino in board.dominoes[:]:
-            yield from self.try_remove(domino)
+    def generate_moves(self, board: QueuedBoard):
+        start_display = board.display(cropped=bool(board.dominoes))
+        start_board = QueuedBoard.create(start_display, border=1)
+        if not start_board.dominoes:
+            start_board.add(start_board.get_from_queue(), 1, 2)
+            start_board.add(start_board.get_from_queue(), 2, 2)
+        yield from super().generate_moves(start_board)
+        yield from self.try_add(start_board)
 
     def move(self, domino, dx, dy):
         """ Move a domino and calculate the new board state.
@@ -19,12 +25,9 @@ class AddingBoardGraph(BlockingBoardGraph):
         @return: the new board state
         @raise BadPositionError: if the move is illegal
         """
-        if not domino.dominates_neighbours():
-            raise BadPositionError("Domino doesn't dominate before move.")
         domino.move(dx, dy)
         try:
-            if not domino.dominates_neighbours():
-                raise BadPositionError("Domino doesn't dominate after move.")
+            self.check_matches(domino, is_complement_allowed=True)
             board = domino.head.board
             if not board.isConnected():
                 raise BadPositionError('Board is not connected.')
@@ -32,37 +35,85 @@ class AddingBoardGraph(BlockingBoardGraph):
         finally:
             domino.move(-dx, -dy)
 
-    def try_remove(self, domino):
-        try:
-            new_state = self.remove(domino)
-            move = domino.describe_remove()
-            yield move, new_state
-        except BadPositionError:
-            pass
+    def try_add(self, board: QueuedBoard):
+        if not board.queue:
+            return
+        added_domino: Domino = board.get_from_queue()
+        for x in range(board.width):
+            for y in range(board.height):
+                for angle_index in range(4):
+                    try:
+                        added_domino.rotate_to(angle_index * 90)
+                        new_display = self.add(added_domino, board, x, y)
+                        move = added_domino.describe_add(x, board.height-y-1)
+                        yield move, new_display
+                    except BadPositionError:
+                        pass
 
-    @staticmethod
-    def remove(domino):
-        """ Remove a domino and calculate the new board state.
+    def add(self, domino: Domino, board: QueuedBoard, x: int, y: int) -> str:
+        """ Add a domino and calculate the new board state.
 
         Afterward, put the board back in its original state.
         @return: the new board state
         @raise BadPositionError: if the move is illegal
         """
-        if not (domino.head.pips or domino.tail.pips):
-            raise BadPositionError("Cannot remove 0|0.")
-        if sum(1 for _ in domino.find_neighbour_cells()) < 2:
-            raise BadPositionError("Domino doesn't have two neighbours.")
-        if not domino.dominates_neighbours():
-            raise BadPositionError("Domino doesn't dominate before removing.")
-        x = domino.head.x
-        y = domino.head.y
-        board = domino.head.board
-        try:
-            board.remove(domino)
-            board.add_to_queue(domino)
-            if not board.isConnected():
-                raise BadPositionError('Board is not connected.')
-            return board.display(cropped=True)
-        finally:
-            board.get_from_queue()
-            board.add(domino, x, y)
+        board.add(domino, x, y)
+        self.check_matches(domino)
+
+        new_display = board.display(cropped=True)
+        board.remove(domino)
+        return new_display
+
+    @staticmethod
+    def check_matches(domino: Domino, is_complement_allowed=False):
+        match_count = 0
+        complement_count = 0
+        for cell in (domino.head, domino.tail):
+            for neighbour in cell.find_neighbours():
+                if neighbour.pips == cell.pips:
+                    match_count += 1
+                if neighbour.pips + cell.pips == 6:
+                    complement_count += 1
+        if is_complement_allowed:
+            if match_count < 2 and complement_count < 1:
+                raise BadPositionError(
+                    "Domino doesn't have two matching neighbours or one "
+                    "neighbour that adds up to six.")
+        else:
+            if match_count < 2:
+                raise BadPositionError(
+                    "Domino doesn't have two matching neighbours.")
+
+    def walk(self, board: QueuedBoard, size_limit=maxsize) -> typing.Set[str]:
+        start = board.display(cropped=True)
+        states = super().walk(board, size_limit)
+        self.start = start
+        return states
+
+    def check_progress(self, board: QueuedBoard):
+        """ Keep track of which board state was the closest to a solution. """
+        if len(board.dominoes) <= 2:
+            # Only added the first two dominoes. No real progress
+            domino_count = len(board.dominoes) + len(board.queue)
+        elif board.queue:
+            domino_count = len(board.queue)
+        else:
+            # The last domino count is for progress toward a rectangular shape.
+            xmin, xmax, ymin, ymax = board.get_bounds(cropped=True)
+            width = xmax-xmin+1
+            height = ymax-ymin+1
+            domino_count = 1 - 2*len(board.dominoes)/(width*height)
+        if self.min_domino_count is None or domino_count < self.min_domino_count:
+            self.min_domino_count = domino_count
+        if self.last is None and not domino_count:
+            self.last = board.display(cropped=True)
+        return domino_count
+
+
+def main():
+    find_boards_with_deap(graph_class=AddingBoardGraph,
+                          board_class=QueuedBoard)
+
+
+if __name__ == '__main__':
+    main()

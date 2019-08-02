@@ -7,6 +7,7 @@ class Styles(object):
     Heading1 = 'Heading1'
     Heading2 = 'Heading2'
     Diagram = 'Diagram'
+    Metadata = 'Metadata'
 
 
 def parse(source):
@@ -66,6 +67,8 @@ class ParsingState(object):
     def add(self, line):
         if line.startswith('    '):
             return DiagramState('').add(line)
+        if line == '---':
+            return MetadataState()
         match = re.match(r'^\[([^\]]+)\]:\s*(.*)$', line)
         if match:
             link_name = match.group(1)
@@ -105,6 +108,19 @@ class StartState(ParsingState):
 
     def __repr__(self):
         return 'StartState()'
+
+
+class MetadataState(ParsingState):
+    def is_printed(self):
+        return False
+
+    def __repr__(self):
+        return 'MetadataState()'
+
+    def add(self, line):
+        if line == '---':
+            return StartState()
+        return self
 
 
 class ParagraphState(ParsingState):

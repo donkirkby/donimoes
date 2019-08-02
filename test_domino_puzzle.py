@@ -9,12 +9,20 @@ from random import Random
 
 
 class DummyRandom(object):
-    def __init__(self, randints=None):
+    def __init__(self, randints=None, samples=None):
         self.randints = randints or {}  # {(min, max): [i, j, k]}
+        self.samples = samples or []  # [[choice]]
 
     def randint(self, a, b):
         results = self.randints.get((a, b), None)
         return results.pop(0) if results else 0
+
+    def sample(self, population, k):
+        result = self.samples.pop(0)
+        assert len(result) == k
+        for x in result:
+            assert x in population
+        return result
 
 
 class CellTest(unittest.TestCase):

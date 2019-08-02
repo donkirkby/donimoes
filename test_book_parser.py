@@ -1,6 +1,6 @@
 import unittest
 
-from book_parser import parse, Styles, ParagraphState, BulletedState,\
+from book_parser import parse, Styles, ParagraphState, BulletedState, \
     ParsingState, DiagramState
 
 
@@ -45,6 +45,19 @@ This is another.
 """
         expected_tree = [ParagraphState('This is a paragraph.'),
                          ParagraphState('This is another.')]
+        tree = parse(source)
+
+        self.assertEqual(expected_tree, tree)
+
+    def test_metadata(self):
+        source = """\
+---
+title: Some Title
+subtitle: Something else
+---
+This is a paragraph.
+"""
+        expected_tree = [ParagraphState('This is a paragraph.')]
         tree = parse(source)
 
         self.assertEqual(expected_tree, tree)

@@ -39,7 +39,8 @@ The example problem and solution looks like this:
     2 2|6   2   2>6   2 2<6   2 2*6
 
 Donimoes is an original puzzle designed by Don Kirkby. If you're interested,
-you can read about [making donimoes].
+you can read about [making donimoes]. If you're brave, you can read about
+[experiments] in progress ([PDF][new pdf]).
 
 [rules]: https://donkirkby.github.com/donimoes/rules.html
 [Blocking example]: https://donkirkby.github.com/donimoes/blocking_example.png
@@ -47,6 +48,8 @@ you can read about [making donimoes].
 [solution example]: http://donkirkby.github.com/donimoes/solution_example.png
 [pdf]: https://donkirkby.github.com/donimoes/donimoes.pdf
 [making donimoes]: https://donkirkby.github.com/donimoes/making_donimoes.html
+[experiments]: https://donkirkby.github.com/donimoes/new_rules.html
+[new pdf]: https://donkirkby.github.com/donimoes/new_rules.pdf
 
 ## Other Domino Puzzles
 The only other domino puzzle I could find is called either Dominosa or Domino
