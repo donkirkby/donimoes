@@ -1,7 +1,7 @@
 import unittest
 
 from book_parser import parse, Styles, ParagraphState, BulletedState, \
-    ParsingState, DiagramState
+    ParsingState, DiagramState, MetadataState
 
 
 class BookParserTest(unittest.TestCase):
@@ -57,7 +57,8 @@ subtitle: Something else
 ---
 This is a paragraph.
 """
-        expected_tree = [ParagraphState('This is a paragraph.')]
+        expected_tree = [MetadataState('Some Title'),
+                         ParagraphState('This is a paragraph.')]
         tree = parse(source)
 
         self.assertEqual(expected_tree, tree)

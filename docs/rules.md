@@ -554,6 +554,68 @@ solutions are listed at the end.
             -     -
     6|0 4|6 3 4|4 0
 
+## Domino Puzzles By Other Designers ##
+### Dominosa ###
+The domino puzzle I often see is called either Dominosa or Domino Solitaire. You
+start with a grid of numbers, and you have to lay the dominoes on them. It was
+invented by O.S. Adler in 1874. There's an [interesting proof][proof] that this
+puzzle is NP-hard.
+
+Reiner Knizia published some puzzles called [Domino Knobelspass][knizia] that
+are very similar to Dominosa.
+
+[proof]: http://cs.stackexchange.com/q/16850/40884
+[knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
+
+### Mountains and Valleys ###
+Sid Sackson included this in his [Beyond Solitaire][solitaire] book, and I adapted it from
+paper, pencil, and dice to use dominoes.
+
+To start, shuffle a set of double-six dominoes face down, then turn 18 of them
+face up. The remaining 10 aren't used.
+
+Then arrange the dominoes into a 6x6 square of numbers that represents a map of
+mountains and valleys, where blanks are at sea level, and sixes are the highest
+peaks. The goal is to make a map where you can walk to every square. You can
+walk from one square to its neighbour if the two heights are the same or differ
+by one. (You can't climb cliffs.)
+
+For example, this set of 18 dominoes:
+
+    4 1 3   2 5 2
+    - - -   - - -
+    2 0 1   0 4 2
+    
+    3 6 5   5 6 4
+    - - -   - - -
+    0 0 5   1 3 4
+    
+    6 1 3   0 1 1
+    - - -   - - -
+    5 4 3   4 6 2
+
+Can be arranged into this solution:
+
+    0|1 2|1 0|4
+    
+    2 1|5 4|1 4
+    -         -
+    0 0|6 4|2 4
+    
+    0|3 3|3 4|5
+    
+    1 2 3|6 5|5
+    - -
+    3 2 1|6 5|6
+
+I like this solitaire, because it can almost always be solved, though finding a
+solution can be very difficult. There's usually more than one solution. For
+example, you can flip the 56 domino, above. There is a trivially unsolvable
+situation whenever one of the numbers from 1 to 5 is completely missing, but
+I haven't found any other unsolvable combinations.
+
+[solitaire]: https://boardgamegeek.com/game/3940
+
 ## Contributing ##
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [donkirkby.github.com/donimoes][github].

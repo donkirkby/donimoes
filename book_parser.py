@@ -25,7 +25,7 @@ def parse(source):
     for s in states:
         try:
             name, address = s.get_link()
-        except:
+        except AttributeError:
             unlinked_states.append(s)
             continue
         links[name] = address
@@ -111,15 +111,21 @@ class StartState(ParsingState):
 
 
 class MetadataState(ParsingState):
+    def __init__(self, text=None):
+        super().__init__(text, Styles.Metadata)
+
     def is_printed(self):
-        return False
+        return True
 
     def __repr__(self):
-        return 'MetadataState()'
+        return f'MetadataState({self.text!r})'
 
     def add(self, line):
         if line == '---':
             return StartState()
+        match = re.match('title: *', line)
+        if match is not None:
+            self.text = line[match.end():]
         return self
 
 
@@ -148,6 +154,7 @@ class BulletedState(ParsingState):
 
 class LinkState(ParsingState):
     def __init__(self, name, address):
+        super().__init__()
         self.name = name
         self.address = address
 

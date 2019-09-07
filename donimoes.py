@@ -2,6 +2,7 @@ from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
 from pathlib import Path
 from subprocess import call
 
+from reportlab.lib import pagesizes
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.platypus.flowables import Flowable, Spacer, KeepTogether,\
     ListFlowable
@@ -84,7 +85,11 @@ def main():
     with args.markdown:
         states = parse(args.markdown.read())
 
-    doc = SimpleDocTemplate(str(pdf_path))
+    doc = SimpleDocTemplate(str(pdf_path),
+                            author='Don Kirkby',
+                            pagesize=pagesizes.letter,
+                            topMargin=0.625*inch,
+                            bottomMargin=0.625*inch)
     styles = getSampleStyleSheet()
     paragraph_style = styles[Styles.Normal]
     list_style = ListStyle('default_list',
@@ -95,7 +100,10 @@ def main():
     bulleted = []
     first_bullet = None
     for state in states:
-        if state.style == Styles.Diagram:
+        if state.style == Styles.Metadata:
+            doc.title = state.text
+            continue
+        elif state.style == Styles.Diagram:
             flowable = Diagram(state.text)
         else:
             flowable = Paragraph(state.text,
