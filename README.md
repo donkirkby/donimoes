@@ -13,7 +13,8 @@ make a capture or add up to six. Here's an example:
 ![Capturing example]
 
 To try the puzzle, get a set of dominoes. Then either [read the rules][rules],
-or download [the PDF][pdf]. Choose the PDF if you want to print out pretty
+or download [the PDF][pdf]. Along with the rules for my puzzles, I've included
+some puzzles and games by other designers. Choose the PDF if you want to print out pretty
 diagrams of the problems, like these:
 
 ![Example problem and solution][solution example]

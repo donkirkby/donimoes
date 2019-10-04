@@ -109,6 +109,13 @@ def main():
             flowable = Paragraph(state.text,
                                  styles[state.style])
         if state.style.startswith(Styles.Heading):
+            if bulleted:
+                group.append(ListFlowable(bulleted,
+                                          style=list_style,
+                                          start=first_bullet))
+                story.append(KeepTogether(group))
+                group = []
+                bulleted = []
             group.append(flowable)
         elif state.bullet:
             bulleted.append(flowable)

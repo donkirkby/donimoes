@@ -16,7 +16,8 @@ make a capture or add up to six. Here's an example:
 ![Capturing example]
 
 To try the puzzle, get a set of dominoes. Then either [read the rules][rules],
-or download [the PDF][pdf]. Choose the PDF if you want to print out pretty
+or download [the PDF][pdf]. Along with the rules for my puzzles, I've included
+some puzzles and games by other designers. Choose the PDF if you want to print out pretty
 diagrams of the problems, like these:
 
 ![Example problem and solution][solution example]
@@ -53,15 +54,3 @@ you can read about [making donimoes]. If you're brave, you can read about
 [making donimoes]: https://donkirkby.github.com/donimoes/making_donimoes.html
 [experiments]: https://donkirkby.github.com/donimoes/new_rules.html
 [new pdf]: https://donkirkby.github.com/donimoes/new_rules.pdf
-
-## Other Domino Puzzles
-The only other domino puzzle I could find is called either Dominosa or Domino
-Solitaire. You start with a grid of numbers, and you have to lay the dominoes
-on them. It was invented by O.S. Adler in 1874. There's an
-[interesting proof][proof] that this puzzle is NP-hard.
-
-Reiner Knizia published some puzzles called [Domino Knobelspass][knizia]
-that are very similar to Dominosa.
-
-[proof]: http://cs.stackexchange.com/q/16850/40884
-[knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass

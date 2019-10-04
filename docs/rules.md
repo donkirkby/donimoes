@@ -568,17 +568,16 @@ are very similar to Dominosa.
 [knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
 
 ### Mountains and Valleys ###
-Sid Sackson included this in his [Beyond Solitaire][solitaire] book, and I adapted it from
-paper, pencil, and dice to use dominoes.
+Sid Sackson included this in his [Beyond Solitaire][solitaire] book, and I
+adapted it from paper, pencil, and dice to use dominoes.
 
 To start, shuffle a set of double-six dominoes face down, then turn 18 of them
-face up. The remaining 10 aren't used.
-
-Then arrange the dominoes into a 6x6 square of numbers that represents a map of
-mountains and valleys, where blanks are at sea level, and sixes are the highest
-peaks. The goal is to make a map where you can walk to every square. You can
-walk from one square to its neighbour if the two heights are the same or differ
-by one. (You can't climb cliffs.)
+face up. The remaining 10 aren't used. Then arrange the dominoes into a 6x6
+square of numbers that represents a map of mountains and valleys, where blanks
+are at sea level, and sixes are the highest peaks. The goal is to make a map
+where you can walk to every square. You can walk from one square to its
+neighbour if the two heights are the same or differ by one. (You can't climb
+cliffs.)
 
 For example, this set of 18 dominoes:
 
@@ -612,9 +611,65 @@ I like this solitaire, because it can almost always be solved, though finding a
 solution can be very difficult. There's usually more than one solution. For
 example, you can flip the 56 domino, above. There is a trivially unsolvable
 situation whenever one of the numbers from 1 to 5 is completely missing, but
-I haven't found any other unsolvable combinations.
+that can be quickly checked, and I haven't found any other unsolvable
+combinations.
 
 [solitaire]: https://boardgamegeek.com/game/3940
+
+### Fujisan ###
+James Droscha designed this for the piecepack game system, and then adapted it
+for dominoes and pawns in a paper on
+[using entangled components in solitaire games][droscha].
+
+Four Shinto Priests have traveled from their various prefectures in pilgrimage
+to the top of Mount Fuji. You must find pathways for them to move up and down
+the mountain until they can all achieve the peak. Often, this will require you
+to guide them into positions from which they can assist each other.
+
+#### Setup ####
+Remove all dominoes with the number six and all doubles from a standard set of
+double-six dominoes. Shuffle the remaining 15 dominoes face down, then place
+twelve face-up dominoes side by side. Leave the three remaining dominoes face
+down, and use them to lift up the two middle dominoes as the peak of Mount Fuji.
+Here's an example layout:
+
+    5 5 4 3 5 1 2 1 1 2 4 0
+    - - - - - - - - - - - -
+    3 0 1 4 2 2 0 0 3 4 5 3
+
+Place a Priest (pawn) beside each number at both ends of the mountain.
+
+#### Moving a Priest ####
+1. A Priest may move onto a space if the number matches the number of unoccupied
+  spaces the Priest must move in a straight line to get there (including the
+  destination space itself, but not including the space the Priest's starting
+  space). For example, a Priest may move onto a space containing a value 4 coin
+  if there are 3 unoccupied spaces between it and the Priest.
+2. Occupied spaces (containing intervening Priests) are not counted when
+  determining if a Priest may move onto a particular space. For example, a
+  Priest may move onto a space containing a value 2 coin if there are 3 occupied
+  spaces and one unoccupied space between it and the Priest.
+3. A Priest may move freely between the two spaces on a domino. This is the only
+  manner in which a Priest may move onto a blank space.
+4. Once a Priest lands on the peak of the mountain, he will refuse to leave it,
+  but he can move back and forth (in the same domino) or to and fro (between the
+  two dominoes). Clarification: A Priest may pass over the peak dominoes as part
+  of a move.
+5. A Priest must enter the mountain from his own starting row; that is, he
+  cannot move back or forth while he remains on the ground.
+
+#### Goal ####
+The Priests will be content when they all reach the top of the mountain.
+
+#### Variant ####
+Country Road: Once all four Priests have reached the peak, move the dominoes
+at the peak to the Priests' original setup positions at the two ends of the
+mountain and continue until all four Priests have left the mountain.
+
+Treat the spaces at the peak as blanks. Once a Priest leaves the mountain, he
+will not step back on.
+
+[droscha]: https://arxiv.org/abs/1810.01926
 
 ## Contributing ##
 Found some interesting problems to solve? Ideas to share? Get in touch at
