@@ -763,9 +763,9 @@ problems for you to try. The solutions are listed at the end.
     5 3 2 2 1 5 4 2 4 3 0 1
 
 ### Problem 18 ###
-    0 0 4 1 0 1 0 3 2 2 4 2
+    2 4 2 5 3 5 1 2 4 2 3 4
     - - - - - - - - - - - -
-    5 4 3 4 2 5 1 0 5 1 5 4
+    5 5 1 0 1 1 0 0 1 4 0 0
 
 ### Problem 19 ###
     2 4 1 0 0 5 1 2 4 2 4 0
@@ -777,14 +777,8 @@ problems for you to try. The solutions are listed at the end.
     - - - - - - - - - - - -
     1 3 3 4 2 4 2 1 3 2 0 5
 
-# Contributing #
-Found some interesting problems to solve? Ideas to share? Get in touch at
-[donkirkby.github.com/donimoes][github].
-
-[github]: https://donkirkby.github.com/donimoes
-
 # Solutions #
-## Blocking Solutions ##
+## Blocking Donimoes Solutions ##
 Here are the solutions to the Blocking Donimoes problems. For each step, move
 the listed domino left, right, up, or down. 
 
@@ -827,7 +821,7 @@ the listed domino left, right, up, or down.
     40U, 41U, 16U, 20L, 40U, 41U, 16U, 64R, 63R, 65R, 55R, 54D, 01R, 11D, 52D, 51D,
     66R, 66R, 33D, 33D, 42L, 50L, 44L, 60L
 
-## Capturing Solutions ##
+## Capturing Donimoes Solutions ##
 Here are the solutions to Capturing Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Then make captures for any matching
 numbers.
@@ -918,11 +912,11 @@ right is a (B)ishop, and the bottom right is a (R)ook.
     ND, RD, RL2(+2), RU, RL5, RR1, RD, NL2(+1), NU, NL5, ND, BL2, BL5(+2), BU, NU,
     RR1, RL3, RU, PR1(+3), PD, PR1, PU, ND, NR4, NL, NU, PR1(+1), BD, BR5, RD,
     RR4(+1)
-18. NR4, NR5, NR1, NU, NR2, BL2(+1), NL2(+1), BR2, BL3(+1), BD, ND, NL4(+1), NU,
-    BU, BL4(+1), ND, NR5, NR1, BD, BR2, BR5(+1), NU, NR2, ND, RL1(+2), BU, NU,
-    NL2(+1), ND, BL3, BD, RL4(+2), RU, BU, NU, NL4(+2), ND, NR2, BL4(+1), BD, NU,
-    RR3(+1), ND, RD, RL4(+2), NU, NR3, ND, NL5(+2), NU, BU, RU, PR1(+3), ND, NR5,
-    PD, RD, RR2(+1), PR1(+2), PU, BR1, BR3(+1), BL1(+1), RR1(+1)
+18. BL4, BL5, BD, BL1, BU, BL2, PR2(+1), BR3(+1), BR4, BL5, PL2, PR3(+1), BR4(+1),
+    BD, PD, PR4(+1), PU, PL2, PD, BU, BL5, BD, PL5(+1), BL1, BU, BL2, BD, NR1(+2),
+    PU, BU, BR3(+1), BR4, BD, PR3, PD, PR4(+1), PU, PL2, PD, BU, BL5, BD, NR1(+1),
+    BR4(+2), BU, BL2, BR3, BD, NR4(+1), PU, PR4, PD, RL1(+3), RU, PU, PL5(+1), BU,
+    BL2(+1), NU, NL1(+2), ND, RL1(+1), BD, BL1(+1)
 19. BL4, BD, BL5, BU, BL1, BL2, BD, NR2(+1), BR3(+1), BU, BR4, BD, BL5, NU, NL2,
     ND, NR3(+1), NU, BU, BR4(+1), BD, ND, NR4(+1), NU, NL2, BL5, ND, NL5(+1), NU,
     BU, BL2(+1), PR1(+2), ND, BD, BR3(+1), BU, BR4, BD, PL2, PD, PR3(+1), PU, NR3,
@@ -936,6 +930,12 @@ right is a (B)ishop, and the bottom right is a (R)ook.
     PR5(+1), PD, ND, NR5(+2), NU, PU, RU, BL1(+3), BD, PD, PL2(+1), PU, BL2, RD,
     ND, NL4(+2), NU, RL4(+1)
 
-Donimoes is an original puzzle designed by [Don Kirkby][don].
+# Contributing #
+Found some interesting problems to solve? Ideas to share? Get in touch at
+[donkirkby.github.com/donimoes][github].
 
+Capturing and Blocking Donimoes are original puzzles designed by
+[Don Kirkby][don].
+
+[github]: https://donkirkby.github.com/donimoes
 [don]: https://donkirkby.github.com/
