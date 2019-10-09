@@ -554,8 +554,8 @@ solutions are listed at the end.
             -     -
     6|0 4|6 3 4|4 0
 
-## Domino Puzzles By Other Designers ##
-### Dominosa ###
+# Domino Puzzles By Other Designers #
+## Dominosa ##
 The domino puzzle I often see is called either Dominosa or Domino Solitaire. You
 start with a grid of numbers, and you have to lay the dominoes on them. It was
 invented by O.S. Adler in 1874. There's an [interesting proof][proof] that this
@@ -567,7 +567,7 @@ are very similar to Dominosa.
 [proof]: http://cs.stackexchange.com/q/16850/40884
 [knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
 
-### Mountains and Valleys ###
+## Mountains and Valleys ##
 Sid Sackson included this in his [Beyond Solitaire][solitaire] book, and I
 adapted it from paper, pencil, and dice to use dominoes.
 
@@ -616,7 +616,7 @@ combinations.
 
 [solitaire]: https://boardgamegeek.com/game/3940
 
-### Fujisan ###
+## Fujisan ##
 James Droscha designed this for the piecepack game system, and then adapted it
 for dominoes and pawns in a paper on
 [using entangled components in solitaire games][droscha].
@@ -626,7 +626,7 @@ to the top of Mount Fuji. You must find pathways for them to move up and down
 the mountain until they can all achieve the peak. Often, this will require you
 to guide them into positions from which they can assist each other.
 
-#### Setup ####
+### Setup ###
 Remove all dominoes with the number six and all doubles from a standard set of
 double-six dominoes. Shuffle the remaining 15 dominoes face down, then place
 twelve face-up dominoes side by side. Leave the three remaining dominoes face
@@ -639,7 +639,7 @@ Here's an example layout:
 
 Place a Priest (pawn) beside each number at both ends of the mountain.
 
-#### Moving a Priest ####
+### Moving a Priest ###
 1. A Priest may move onto a space if the number matches the number of unoccupied
   spaces the Priest must move in a straight line to get there (including the
   destination space itself, but not including the space the Priest's starting
@@ -658,10 +658,10 @@ Place a Priest (pawn) beside each number at both ends of the mountain.
 5. A Priest must enter the mountain from his own starting row; that is, he
   cannot move back or forth while he remains on the ground.
 
-#### Goal ####
+### Goal ###
 The Priests will be content when they all reach the top of the mountain.
 
-#### Variant ####
+### Variant ###
 Country Road: Once all four Priests have reached the peak, move the dominoes
 at the peak to the Priests' original setup positions at the two ends of the
 mountain and continue until all four Priests have left the mountain.
@@ -671,12 +671,119 @@ will not step back on.
 
 [droscha]: https://arxiv.org/abs/1810.01926
 
-## Contributing ##
+## Problems ##
+Shuffling the dominoes generates a nice set of problems. In 1000 randomly
+generated problems, 92% were solvable. Of those, the median solution length
+was 14, with half of them between 12 and 16. Here are some more challenging
+problems for you to try. The solutions are listed at the end.
+
+### Problem 1 ###
+    3 2 1 0 0 1 0 3 1 2 3 1
+    - - - - - - - - - - - -
+    4 0 0 4 5 2 3 2 5 5 1 4
+
+### Problem 2 ###
+    2 5 5 1 0 2 3 3 1 4 5 1
+    - - - - - - - - - - - -
+    1 1 2 4 5 0 2 4 3 0 4 0
+
+### Problem 3 ###
+    5 1 0 3 1 1 2 2 0 4 0 0
+    - - - - - - - - - - - -
+    2 2 5 5 5 3 0 4 4 3 1 3
+
+### Problem 4 ###
+    3 1 2 3 4 2 0 1 0 1 5 0
+    - - - - - - - - - - - -
+    4 3 1 5 2 0 5 0 4 4 2 3
+
+### Problem 5 ###
+    5 5 0 1 3 1 1 0 1 1 4 4
+    - - - - - - - - - - - -
+    2 0 2 2 5 4 5 3 0 3 0 2
+
+### Problem 6 ###
+    5 5 2 0 1 1 3 2 0 0 3 4
+    - - - - - - - - - - - -
+    2 1 4 4 2 4 2 0 1 5 1 5
+
+### Problem 7 ###
+    3 2 5 4 3 1 4 0 1 2 2 1
+    - - - - - - - - - - - -
+    4 5 0 1 0 0 0 2 2 4 3 3
+
+### Problem 8 ###
+    4 3 1 5 2 2 0 1 1 0 3 3
+    - - - - - - - - - - - -
+    0 1 0 4 0 3 5 4 2 3 5 4
+
+### Problem 9 ###
+    5 0 4 2 4 5 4 1 2 4 3 5
+    - - - - - - - - - - - -
+    3 3 5 1 0 0 1 0 5 2 1 1
+
+### Problem 10 ###
+    5 3 1 1 0 2 0 0 1 0 5 2
+    - - - - - - - - - - - -
+    4 5 5 3 2 3 1 4 2 3 0 5
+
+### Problem 11 ###
+    2 3 1 0 2 0 0 2 1 0 4 0
+    - - - - - - - - - - - -
+    3 4 4 2 5 5 4 4 3 1 5 3
+
+### Problem 12 ###
+    5 3 1 1 0 0 0 1 1 0 4 3
+    - - - - - - - - - - - -
+    4 4 5 3 2 5 1 4 2 3 0 5
+
+### Problem 13 ###
+    1 0 0 2 3 5 5 2 0 0 1 1
+    - - - - - - - - - - - -
+    4 3 4 0 2 2 3 1 5 1 3 5
+
+### Problem 14 ###
+    4 3 1 5 0 2 4 1 0 1 1 2
+    - - - - - - - - - - - -
+    1 4 3 2 2 3 0 2 5 0 5 4
+
+### Problem 15 ###
+    2 4 3 3 3 0 0 2 0 5 4 3
+    - - - - - - - - - - - -
+    5 5 0 2 1 5 4 1 1 1 1 5
+
+### Problem 16 ###
+    4 3 3 2 0 4 3 3 5 1 1 5
+    - - - - - - - - - - - -
+    5 4 1 5 2 0 0 2 0 4 0 3
+
+### Problem 17 ###
+    4 4 5 1 0 0 1 0 0 1 3 5
+    - - - - - - - - - - - -
+    5 3 2 2 1 5 4 2 4 3 0 1
+
+### Problem 18 ###
+    0 0 4 1 0 1 0 3 2 2 4 2
+    - - - - - - - - - - - -
+    5 4 3 4 2 5 1 0 5 1 5 4
+
+### Problem 19 ###
+    2 4 1 0 0 5 1 2 4 2 4 0
+    - - - - - - - - - - - -
+    5 5 2 5 3 1 0 0 1 4 3 4
+
+### Problem 20 ###
+    5 5 0 2 0 1 1 0 1 5 4 0
+    - - - - - - - - - - - -
+    1 3 3 4 2 4 2 1 3 2 0 5
+
+# Contributing #
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [donkirkby.github.com/donimoes][github].
 
 [github]: https://donkirkby.github.com/donimoes
 
+# Solutions #
 ## Blocking Solutions ##
 Here are the solutions to the Blocking Donimoes problems. For each step, move
 the listed domino left, right, up, or down. 
@@ -749,6 +856,85 @@ numbers.
     64R
 20. 25U, 40D, 10D, 63D, 60R, 60R, 32D, 20R, 31D, 65R, 62D, 21R, 51R, 34L, 53R,
     51R
+
+## Fujisan Solutions ##
+Here are the solutions to Fujisan problems. To distinguish the four different
+pawns, the top left is labelled as a (P)awn, the bottom is a k(N)ight, the top
+right is a (B)ishop, and the bottom right is a (R)ook.
+
+1. NR4, NR2, PR2, PR1, PD, PR3(+1), BL1, BL2, BD, RL5(+3), RU, RR1, PU, BL3
+2. NR1, NU, BL1, BD, BL3, RL4(+1), RU, BU, BL5(+1), RL5(+1), PR1(+3), NR2(+3),
+   ND, PR2, RR3(+2), RD, BR3(+1)
+3. NR5, NR4, RL4(+1), NL5(+1), NU, PR3(+1), NR1(+1), PD, PR4(+1), RR3(+1), RU,
+   PU, NR4(+1), BL2(+3), RL2(+3), PL1(+2), PD, RD, NL2(+1), BL1(+1)
+4. RL4, RL5, RU, PR4(+1), PD, RD, NR5(+2), NU, RR4(+1), RR3, RU, PU, PR5(+1),
+   BL1(+2), PL4(+2), PD, PR4, PU, BL2(+2), BD, PL2(+1), RD, RL5
+5. NR5, NL2, NL2, NU, RL3, RL5, RU, RL1, PR3(+2), PD, PR3, PU, NR3(+1), RR1(+1),
+   NR4(+2), ND, PR4, NU, BL1(+2), NL1(+1), NL3(+1), NR1(+1), BD, BL4, PD, PL5
+6. NR4, NU, NR1, NL2, ND, NL1, NU, PR2(+1), PD, ND, NR2(+1), NR5, NU, NL2, NR4,
+   ND, PR2, PR5, PU, PL2, RL1(+1), RU, NU, BL3(+3), BD, NL3(+2), PL1(+1), RD,
+   RL4(+1)
+7. BL1, BL2, BD, BL2, PR2, PR3, PD, PR4(+1), BR3(+1), RL2(+2), BL2(+2), BU, BL3,
+   RU, RL5(+1), BL3(+1), BD, RD, PL2, PL5(+1), NR1(+3), RU, PU, PR4(+1), PD, RR4,
+   NU, BU, BR3(+1), NR1(+1), ND, BR1
+8. RL3, RU, RL1, RL5, RL1, RR2, RL4, RD, NR1(+1), NU, RU, PR1(+2), RR2(+2), RD,
+   NR2(+1), PD, PR4(+1), RR5(+1), RL2, ND, NR3(+2), RU, RR3, PU, PR3, NU,
+   BL1(+3), PL1(+2), PL2, PR, NL2(+2), ND, BL2(+1), RD, RL5
+9. RL1, RL1, RU, RL2, RL4, RD, RL1, RU, PR4(+1), RD, RR5, RU, PR4(+1), PD, RL1,
+   RR3, PU, BL2(+2), PL1(+1), RL4(+2), BL4(+2), PL5(+2), PD, RD, RL3, BD,
+   NR1(+3), PU, PR5, PD, BU, RU, RR4(+1), RD, BR4, NL3, NU, NR5
+10. RL3, RU, RR2, RD, RL4, RL5, NR3(+1), NR4, NL5(+1), NU, RR2, RL4, RU, PR1(+2),
+    PD, ND, RD, RR2(+2), NR4(+2), NU, NR1, ND, PR4(+1), RR3(+2), RU, NU, NR2(+1),
+    PL5, PR2, PU, PR5(+1), BL1(+3), ND, NL4, NL1, RD, PD, PL3(+2), PU, PR,
+    BL2(+1), RL3(+1)
+11. NR5, NU, NL3, ND, NR2, NR4, NU, NR1, ND, NR1, RL4(+1), RR3(+1), NL5, RL4,
+    RL4(+1), RU, RL2, NU, NL3, PR1(+2), RR2(+2), RD, NR2(+1), PD, PR4(+1),
+    RR3(+1), PR1(+1), PU, RU, NR4(+2), BL2(+3), ND, NL4, BD, RD, PD, PL4(+3), NU,
+    BR3(+1), BL5(+1), BU, PR4, RR3, RL5(+1)
+12. RL3, RU, RL1, RL1, RD, RL5, RR2, RL4, NR3(+1), NR4, NL5, NR2, NU, NL3, RU,
+    PR1(+2), PD, ND, RD, RR2(+2), NR4(+2), NU, NR1, ND, PR4(+1), RR3(+2), RU,
+    NL5(+1), PU, NR2, NU, NR4(+2), ND, PR3(+1), NU, BL1(+3), ND, PD, PL5(+1), PU,
+    NL5, RL1(+1), RD, BD, BL1(+1), BU, RL1
+13. BL1, BL1, BD, BL1, BU, BL2, BL3, BD, BL3, BU, PR1, PR2(+1), PD, PR5, PL1, PR3,
+    PU, PR1, PD, BR2, BD, BR5, BL1, BR3, RL1(+2), RU, BU, PU, PL2(+2), PL3, PD,
+    PL4, BL2(+1), BL3, BD, RL2, RD, RL4(+1), RU, BL3, RD, NR2(+3), PR2(+3), PU,
+    BR3(+2), RR2(+1), NL4, NU, NR5(+1)
+14. NR3, NR2, NU, NL3, ND, NR2, NR5, NU, NR1, NR2, BL1(+1), NL1(+1), ND, NL2, NU,
+    BL1, BL5(+1), BL1, BD, BR2, BU, ND, NR4, NU, NL1, NL1, NL5(+1), NL1, ND, NR2,
+    BL4, NU, NL3, PR1(+2), PD, ND, BD, BR2(+2), NR5(+2), NU, PR5(+1), BR5(+1),
+    NR1, ND, RL2(+3), RU, RL2, PL3, PR, NL3(+1), BU, BL4
+15. PR3, PL2, PR3, PD, PR1, PU, PR5, PD, PL1, PU, PR3, PD, RL1(+1), PL1(+1), PL1,
+    PU, RU, RL2(+1), PL3(+1), RL3(+1), RD, PR5, PL2, PD, PL5(+1), PU, RU, RL2(+1),
+    RD, PD, NR2(+2), PU, PR3, PR5, PD, PL1, NU, RU, RR3(+1), NR5(+1), PU, RR4(+2),
+    BL2(+3), ND, NR1, NL4, NU, RD, RL5, BD, PD, PL5(+2), PR4(+1), BL5(+2), RU,
+    BR5
+16. PR3, PD, PR2, PU, PL3, PR2, PR5, PD, PR3, PU, BL1(+1), PL1(+1), PD, BL3, BD,
+    PL5(+1), PU, PR5, BU, BR1(+1), PD, BD, BL5(+1), BL1, BR2, BU, BL4, BD, PL5,
+    PL1, PR2, PU, PL3, PD, NR1(+2), PR2(+1), NU, BU, BR2(+1), NR5(+1), ND, NR3,
+    BR5, BD, PR4(+1), RL2(+3), PU, PL3, PD, BU, RU, RR1(+1), NU, NL4(+2), ND,
+    BR1(+1), BL4(+1), RL3
+17. RL3, RL2, RU, RL5, RR1, RD, RR1, RL3, NR2(+1), NU, RR2, ND, NR1(+1), NR4, NU,
+    NR1, ND, NL2, RR4(+1), NU, NR3, ND, RU, RR1, RD, RR1(+1), RU, NU, BL1(+2), BD,
+    ND, RD, RL2(+2), RU, RL5, RR1, RD, NL2(+1), NU, NL5, ND, BL2, BL5(+2), BU, NU,
+    RR1, RL3, RU, PR1(+3), PD, PR1, PU, ND, NR4, NL, NU, PR1(+1), BD, BR5, RD,
+    RR4(+1)
+18. NR4, NR5, NR1, NU, NR2, BL2(+1), NL2(+1), BR2, BL3(+1), BD, ND, NL4(+1), NU,
+    BU, BL4(+1), ND, NR5, NR1, BD, BR2, BR5(+1), NU, NR2, ND, RL1(+2), BU, NU,
+    NL2(+1), ND, BL3, BD, RL4(+2), RU, BU, NU, NL4(+2), ND, NR2, BL4(+1), BD, NU,
+    RR3(+1), ND, RD, RL4(+2), NU, NR3, ND, NL5(+2), NU, BU, RU, PR1(+3), ND, NR5,
+    PD, RD, RR2(+1), PR1(+2), PU, BR1, BR3(+1), BL1(+1), RR1(+1)
+19. BL4, BD, BL5, BU, BL1, BL2, BD, NR2(+1), BR3(+1), BU, BR4, BD, BL5, NU, NL2,
+    ND, NR3(+1), NU, BU, BR4(+1), BD, ND, NR4(+1), NU, NL2, BL5, ND, NL5(+1), NU,
+    BU, BL2(+1), PR1(+2), ND, BD, BR3(+1), BU, BR4, BD, PL2, PD, PR3(+1), PU, NR3,
+    NR4(+1), NU, NL2, ND, BL3(+1), BR4(+1), BU, NU, PR4(+2), ND, NR4, PD, BD,
+    RL1(+3), BU, NU, NL5(+1), BL2, BL1, BD, RL3(+1), PL5(+2), PR1(+1), RU,
+    RR1(+1)
+20. NR3, NR2, NU, NR5, ND, RL3(+1), NL1(+1), RL4(+1), RU, NU, NL5(+1), ND, RD,
+    NR2(+1), NU, RU, RR5(+1), RL1, RD, RL1, RU, RL5(+1), ND, NL3, NL1, NU,
+    PR2(+2), PD, NR2(+1), RD, RR2(+1), RU, NR5(+1), NL1, ND, PU, PR5(+1), PL1,
+    NL1, NU, RR4(+2), RD, PD, PL1, PL4, PU, NL5(+1), PD, ND, NR2(+1), NU, PU,
+    PR5(+1), PD, ND, NR5(+2), NU, PU, RU, BL1(+3), BD, PD, PL2(+1), PU, BL2, RD,
+    ND, NL4(+2), NU, RL4(+1)
 
 Donimoes is an original puzzle designed by [Don Kirkby][don].
 
