@@ -822,7 +822,7 @@ the listed domino left, right, up, or down.
     66R, 66R, 33D, 33D, 42L, 50L, 44L, 60L
 
 ## Capturing Donimoes Solutions ##
-Here are the solutions to Capturing Donimoes problems. For each step, move the
+Here are the solutions to the Capturing Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Then make captures for any matching
 numbers.
 
@@ -852,7 +852,7 @@ numbers.
     51R
 
 ## Fujisan Solutions ##
-Here are the solutions to Fujisan problems. To distinguish the four different
+Here are the solutions to the Fujisan problems. To distinguish the four different
 pawns, the top left is labelled as a (P)awn, the bottom is a k(N)ight, the top
 right is a (B)ishop, and the bottom right is a (R)ook.
 

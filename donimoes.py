@@ -110,12 +110,19 @@ def main():
                                  styles[state.style])
         if state.style.startswith(Styles.Heading):
             if bulleted:
-                group.append(ListFlowable(bulleted,
+                group.append(ListFlowable(bulleted[:1],
                                           style=list_style,
                                           start=first_bullet))
                 story.append(KeepTogether(group))
+                bulleted = bulleted[1:]
+                if bulleted:
+                    next_bullet = int(first_bullet) + 1
+                    story.append(ListFlowable(bulleted,
+                                              style=list_style,
+                                              start=next_bullet))
                 group = []
                 bulleted = []
+                first_bullet = None
             group.append(flowable)
         elif state.bullet:
             bulleted.append(flowable)

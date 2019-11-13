@@ -95,8 +95,8 @@ solutions are listed at the end.
     - - - - - -
     1 5 1 5 5 4
 
-## Capturing Solutions ##
-Here are the solutions to Adding Donimoes problems. For each step, move the
+## Adding Solutions ##
+Here are the solutions to the Adding Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Adding moves contain the domino
 numbers, (H)orizontal or (V)ertical direction, and the position to place it.
 The top left corner is 11, one space to the right is 21, and one space below is 12.
