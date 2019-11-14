@@ -614,6 +614,33 @@ situation whenever one of the numbers from 1 to 5 is completely missing, but
 that can be quickly checked, and I haven't found any other unsolvable
 combinations.
 
+### Cooperative Version
+You can play Mountains and Valleys cooperatively with other players. Shuffle the
+dominoes face down, then draw 9, 6, or 5 dominoes each when there are 2, 3, or 4
+players, respectively. Keep your dominoes hidden from the other players.
+
+Randomly choose a player to go first. That player chooses one of their dominoes
+and passes it to the player on their left. The player receiving the domino plays
+it on the table, then chooses one of their dominoes and passes it to the player
+on their left. Play continues in the same pattern until a 6x6 square is
+complete. After the first domino, all dominoes must be played so they have at
+least one neighbour, and they can't be moved after they are added.
+
+When the 6x6 square is complete, see if the whole map is connected as described
+in the solitaire game. If you need a step of more than one level to get from one
+section of the map to another, you get a penalty of the number of levels. For
+example, if a map is completely connected except that you need to go from a 3
+to a 5, then you would have a 2 point penalty. A perfect game is zero, and
+anything under 5 is a good game.
+
+With four players, the last two players will each have an extra domino left at
+the end of the game.
+
+For a harder solitaire version, draw 18 dominoes, but only turn five of them
+face up. Each time you play a domino, turn another one face up, until you've
+turned up all 18. Then play the last five. Use the same placement and scoring
+rules as the cooperative version.
+
 [solitaire]: https://boardgamegeek.com/game/3940
 
 ## Fujisan ##
