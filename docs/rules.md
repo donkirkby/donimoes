@@ -26,7 +26,7 @@ connections don't count. When you move a domino, it can be disconnected during
 the move, as long as it is connected at the start and the end of the move.
 Remember that it can only move one space at a time, though.
 
-## Problems ##
+## Blocking Donimoes Problems ##
 Here are the starting positions for several Blocking Donimoes problems. The
 solutions are listed at the end.
 
@@ -333,7 +333,7 @@ and the four matches the four above it. You collect all three dominoes.
 All the dominoes must stay in one connected group, you can't split the group
 after moving or after removing the matching dominoes.
 
-## Problems ##
+## Capturing Donimoes Problems ##
 Here are the starting positions for several Capturing Donimoes problems. The
 solutions are listed at the end.
 
@@ -698,7 +698,7 @@ will not step back on.
 
 [droscha]: https://arxiv.org/abs/1810.01926
 
-## Problems ##
+## Fujisan Problems ##
 Shuffling the dominoes generates a nice set of problems. In 1000 randomly
 generated problems, 92% were solvable. Of those, the median solution length
 was 14, with half of them between 12 and 16. Here are some more challenging

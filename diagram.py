@@ -69,19 +69,12 @@ def draw_pips(turtle, pips, cell_size):
 
 def draw_domino(turtle, domino, cell_size=50.0):
     turtle.up()
-    turtle.back(cell_size*0.45)
+    turtle.back(cell_size * 0.45)
     turtle.left(90)
-    turtle.forward(cell_size*0.45)
+    turtle.forward(cell_size * 0.45)
     turtle.right(90)
     turtle.down()
-    turtle.fillcolor('white')
-    turtle.begin_fill()
-    for _ in range(2):
-        turtle.forward(cell_size*1.9)
-        turtle.right(90)
-        turtle.forward(cell_size*.9)
-        turtle.right(90)
-    turtle.end_fill()
+    draw_domino_outline(cell_size, turtle)
 
     turtle.up()
     turtle.forward(cell_size*.95)
@@ -97,6 +90,17 @@ def draw_domino(turtle, domino, cell_size=50.0):
     turtle.forward(cell_size)
     draw_pips(turtle, domino.tail.pips, cell_size)
     turtle.back(cell_size)
+
+
+def draw_domino_outline(cell_size, turtle):
+    turtle.fillcolor('white')
+    turtle.begin_fill()
+    for _ in range(2):
+        turtle.forward(cell_size * 1.9)
+        turtle.right(90)
+        turtle.forward(cell_size * .9)
+        turtle.right(90)
+    turtle.end_fill()
 
 
 def draw_board(turtle, board, cell_size=50.0):
@@ -259,6 +263,28 @@ def draw_capture_circle(turtle,
         turtle.write(move_num, align='center')
 
 
+def draw_fuji(turtle, num_dominoes, cell_size):
+    turtle.up()
+    offset = (num_dominoes // 2 - 0.95) * cell_size
+    turtle.forward(offset)
+    turtle.right(90)
+    turtle.forward(cell_size*0.05)
+    turtle.left(90)
+    turtle.down()
+    for _ in range(3):
+        draw_domino_outline(cell_size, turtle)
+        turtle.up()
+        turtle.right(90)
+        turtle.forward(cell_size)
+        turtle.left(90)
+        turtle.down()
+    turtle.up()
+    turtle.back(offset)
+    turtle.right(90)
+    turtle.back(2.55*cell_size)
+    turtle.left(90)
+
+
 def draw_diagram(turtle, state, cell_size, solution=False):
     marks = {'>': partial(draw_arrow, turtle, cell_size),
              '^': partial(draw_arrow, turtle, cell_size, 90),
@@ -387,10 +413,17 @@ def draw_demo(turtle):
     turtle.end_fill()
 
     state1 = """\
-1|2 3     1
+5 5 5 5 6 6 6 6
+- - - - - - - -
+1 2 3 4 4 3 2 1
+
+1|2 3     0
     v     *
     4 5+6 6
+
+2|2
 """
+    draw_fuji(turtle, 8, cell_size)
     draw_diagram(turtle, state1, cell_size, solution=False)
 
     turtle.right(90)

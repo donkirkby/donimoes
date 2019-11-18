@@ -11,7 +11,7 @@ from reportlab.lib.units import inch
 # noinspection PyUnresolvedReferences
 from reportlab.rl_config import defaultPageSize
 
-from diagram import draw_diagram
+from diagram import draw_diagram, draw_fuji
 from domino_puzzle import BoardError
 from pdf_turtle import PdfTurtle
 from book_parser import parse, Styles
@@ -58,11 +58,26 @@ class Diagram(Flowable):
         t.forward(self.height/2)
         t.right(90)
         t.down()
+        self.draw_background(t)
         try:
             draw_diagram(t, self.board_state, self.cell_size)
         except BoardError:
             print(self.board_state)
             raise
+
+    def draw_background(self, t):
+        """ Draw background items to appear behind the regular dominoes. """
+        pass
+
+
+class FujisanDiagram(Diagram):
+    def draw_background(self, t):
+        draw_fuji(t, self.col_count, self.cell_size)
+
+    def wrap(self, avail_width, avail_height):
+        super().wrap(avail_width, avail_height)
+        self.height += self.cell_size
+        return self.width, self.height
 
 
 # noinspection PyUnusedLocal
@@ -98,13 +113,17 @@ def main():
     story = []
     group = []
     bulleted = []
+    headings = []
     first_bullet = None
     for state in states:
         if state.style == Styles.Metadata:
             doc.title = state.text
             continue
         elif state.style == Styles.Diagram:
-            flowable = Diagram(state.text)
+            if 'Fujisan' in headings or 'Fujisan Problems' in headings:
+                flowable = FujisanDiagram(state.text)
+            else:
+                flowable = Diagram(state.text)
         else:
             flowable = Paragraph(state.text,
                                  styles[state.style])
@@ -124,6 +143,11 @@ def main():
                 bulleted = []
                 first_bullet = None
             group.append(flowable)
+            heading_level = int(state.style[-1])
+            headings = headings[:heading_level]
+            while len(headings) < heading_level:
+                headings.append(None)
+            headings[heading_level - 1] = state.text
         elif state.bullet:
             bulleted.append(flowable)
             first_bullet = first_bullet or state.bullet
