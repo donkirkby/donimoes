@@ -2,7 +2,7 @@ from functools import partial
 import math
 from turtle import done, Turtle
 
-from domino_puzzle import Board, CaptureBoardGraph, Domino
+from domino_puzzle import Board, CaptureBoardGraph, Domino, Cell
 
 PIP_PATTERNS = """\
 ---+
@@ -101,6 +101,44 @@ def draw_domino_outline(cell_size, turtle):
         turtle.forward(cell_size * .9)
         turtle.right(90)
     turtle.end_fill()
+
+
+def draw_paths(turtle, board: Board, cell_size=50.0):
+    pos = turtle.pos()
+    old_colour = turtle.color()
+    old_width = turtle.width()
+    turtle.width(2)
+    turtle.color('grey')
+    turtle.up()
+    turtle.forward(cell_size/2)
+    turtle.left(90)
+    turtle.back(cell_size*(board.height-0.5))
+    for y in range(board.height):
+        for x in range(board.width):
+            cell: Cell = board[x][y]
+            if y < board.height-1:
+                lower_neighbour = board[x][y + 1]
+                draw_neighbour_path(turtle, cell, lower_neighbour, cell_size)
+            turtle.right(90)
+            if x < board.width-1:
+                draw_neighbour_path(turtle, cell, board[x+1][y], cell_size)
+            turtle.forward(cell_size)
+            turtle.left(90)
+        turtle.forward(cell_size)
+        turtle.left(90)
+        turtle.forward(cell_size*board.width)
+        turtle.right(90)
+    turtle.setpos(pos)
+    turtle.color(old_colour)
+    turtle.width(old_width)
+
+
+def draw_neighbour_path(turtle, cell, neighbour, cell_size):
+    if abs(neighbour.pips - cell.pips) <= 1:
+        turtle.down()
+        turtle.forward(cell_size)
+        turtle.up()
+        turtle.back(cell_size)
 
 
 def draw_board(turtle, board, cell_size=50.0):
@@ -285,7 +323,7 @@ def draw_fuji(turtle, num_dominoes, cell_size):
     turtle.left(90)
 
 
-def draw_diagram(turtle, state, cell_size, solution=False):
+def draw_diagram(turtle, state, cell_size, solution=False, show_path=False):
     marks = {'>': partial(draw_arrow, turtle, cell_size),
              '^': partial(draw_arrow, turtle, cell_size, 90),
              '<': partial(draw_arrow, turtle, cell_size, 180),
@@ -316,6 +354,8 @@ def draw_diagram(turtle, state, cell_size, solution=False):
         turtle.forward(cell_size*.5)
         turtle.right(90)
     turtle.setpos(pos)
+    if show_path:
+        draw_paths(turtle, board, cell_size)
     if solution:
         border = 1
         offset = [border, border]
@@ -396,19 +436,19 @@ def draw_position(turtle, size=10, color='red'):
 def draw_demo(turtle):
     width = turtle.screen.window_width()
     height = turtle.screen.window_height()
-    cell_size = min(width/8.5, height/7)
+    cell_size = min(width/8.2, height/7.2)
     turtle.up()
-    turtle.back(width*.475)
+    turtle.back(cell_size*4)
     turtle.left(90)
-    turtle.forward(height*0.4)
+    turtle.forward(cell_size*3.5)
     turtle.right(90)
     turtle.down()
     turtle.fillcolor('ivory')
     turtle.begin_fill()
     for _ in range(2):
-        turtle.forward(width*0.95)
+        turtle.forward(cell_size*8)
         turtle.right(90)
-        turtle.forward(height*0.8)
+        turtle.forward(cell_size*7)
         turtle.right(90)
     turtle.end_fill()
 
@@ -423,8 +463,26 @@ def draw_demo(turtle):
 
 2|2
 """
-    draw_fuji(turtle, 8, cell_size)
-    draw_diagram(turtle, state1, cell_size, solution=False)
+    mountain_state = """\
+0|1 2|1 0|4
+
+2 1|5 4|1 4
+-         -
+0 0|6 4|2 4
+
+0|3 3|3 4|5
+
+1 2 3|6 5|5
+- -
+3 2 1|6 5|6
+"""
+
+    demo_type = 'mountains'
+    if demo_type == 'mountains':
+        draw_diagram(turtle, mountain_state, cell_size, show_path=True)
+    else:
+        draw_fuji(turtle, 8, cell_size)
+        draw_diagram(turtle, state1, cell_size, solution=False)
 
     turtle.right(90)
     turtle.forward(cell_size*7)

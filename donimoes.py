@@ -35,9 +35,10 @@ def parse_args():
 class Diagram(Flowable):
     MAX_COLUMN_COUNT = 16
 
-    def __init__(self, board_state):
+    def __init__(self, board_state, show_path=False):
         super().__init__()
         self.board_state = board_state
+        self.show_path = show_path
         lines = board_state.splitlines(True)
         self.row_count = (len(lines) + 1)/2
         self.col_count = max(map(len, lines))/2
@@ -60,7 +61,10 @@ class Diagram(Flowable):
         t.down()
         self.draw_background(t)
         try:
-            draw_diagram(t, self.board_state, self.cell_size)
+            draw_diagram(t,
+                         self.board_state,
+                         self.cell_size,
+                         show_path=self.show_path)
         except BoardError:
             print(self.board_state)
             raise
@@ -123,7 +127,17 @@ def main():
             if 'Fujisan' in headings or 'Fujisan Problems' in headings:
                 flowable = FujisanDiagram(state.text)
             else:
-                flowable = Diagram(state.text)
+                if 'Mountains and Valleys' in headings:
+                    diagram_width = (len(state.text.splitlines()[0]) + 1)//2
+                    show_path = diagram_width == 6
+                else:
+                    show_path = False
+                flowable = Diagram(state.text, show_path)
+                if show_path:
+                    group.append(flowable)
+                    flowable = Paragraph(
+                        'The grey lines show the paths you can walk along.',
+                        styles[Styles.Normal])
         else:
             flowable = Paragraph(state.text,
                                  styles[state.style])
