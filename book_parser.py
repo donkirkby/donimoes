@@ -79,10 +79,10 @@ class ParsingState(object):
             level = len(match.group(1))
             heading_text = match.group(2)
             return ParsingState(heading_text, Styles.Heading + str(level))
-        match = re.match(r'^(\d+)\.\s+(.*)$', line)
+        match = re.match(r'^((\*)|(\d+)\.)\s+(.*)$', line)
         if match:
-            bullet = match.group(1)
-            text = match.group(2)
+            bullet = match.group(2) or match.group(3)
+            text = match.group(4)
             return BulletedState(text, bullet=bullet)
         if line:
             return ParagraphState(line)
@@ -180,28 +180,3 @@ class DiagramState(ParsingState):
 
     def __repr__(self):
         return 'DiagramState({!r})'.format(self.text)
-
-if __name__ == '__live_coding__':
-    import unittest
-
-    def testSomething(self):
-        source = """\
-Paragraph with **emphasized text**.
-"""
-        expected_tree = [
-            ParagraphState('Paragaph with <b>emphasized text</b>.')]
-        tree = parse(source)
-
-        self.assertEqual(expected_tree, tree)
-
-    class DummyTest(unittest.TestCase):
-
-        def test_delegation(self):
-            testSomething(self)
-
-    suite = unittest.TestSuite()
-    suite.addTest(DummyTest("test_delegation"))
-    test_results = unittest.TextTestRunner().run(suite)
-
-    print(test_results.errors)
-    print(test_results.failures)

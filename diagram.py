@@ -408,6 +408,61 @@ def draw_diagram(turtle, state, cell_size, solution=False, show_path=False):
         turtle.setpos(pos)
 
 
+def draw_blocks(turtle: Turtle, state: str, cell_size: float):
+    turtle.up()
+    margin = cell_size / 20
+    old_pos = turtle.pos()
+    old_colour = turtle.color()
+    turtle.color('black')
+    turtle.forward(margin)
+    turtle.right(90)
+    turtle.forward(margin)
+    turtle.left(90)
+    lines = state.splitlines()
+    lines.append('')
+    for i, line in enumerate(lines[:-1]):
+        below_line = lines[i + 1]
+        for j, c in enumerate(line):
+            right_neighbour = line[j+1:j+2]
+            below_neighbour = below_line[j:j+1]
+            diagonal_neighbour = below_line[j+1:j+2]
+            if c == '#' and right_neighbour == '#':
+                draw_joined_block(turtle,
+                                  2 * (cell_size-margin),
+                                  cell_size - 2*margin)
+            if c == '#' and below_neighbour == '#':
+                draw_joined_block(turtle,
+                                  cell_size - 2 * margin,
+                                  2 * (cell_size - margin))
+            if ''.join((c,
+                        right_neighbour,
+                        below_neighbour,
+                        diagonal_neighbour)) == '####':
+                draw_joined_block(turtle,
+                                  2 * (cell_size - margin),
+                                  2 * (cell_size - margin))
+            turtle.forward(cell_size)
+        turtle.back(cell_size*len(line))
+        turtle.right(90)
+        turtle.forward(cell_size)
+        turtle.left(90)
+
+    turtle.color(old_colour)
+    turtle.setpos(old_pos)
+
+
+def draw_joined_block(turtle, width, height):
+    turtle.down()
+    turtle.begin_fill()
+    for _ in range(2):
+        turtle.forward(width)
+        turtle.right(90)
+        turtle.forward(height)
+        turtle.right(90)
+    turtle.end_fill()
+    turtle.up()
+
+
 def draw_position(turtle, size=10, color='red'):
     old_pen = turtle.pen()
     old_pos = turtle.pos()
@@ -452,7 +507,7 @@ def draw_demo(turtle):
         turtle.right(90)
     turtle.end_fill()
 
-    state1 = """\
+    demo_state = """\
 5 5 5 5 6 6 6 6
 - - - - - - - -
 1 2 3 4 4 3 2 1
@@ -476,17 +531,22 @@ def draw_demo(turtle):
 - -
 3 2 1|6 5|6
 """
+    blocks_state = """\
+### ###
+  #  #
 
-    demo_type = 'mountains'
+##  ##
+ ## ##
+"""
+
+    demo_type = 'blocks'
     if demo_type == 'mountains':
         draw_diagram(turtle, mountain_state, cell_size, show_path=True)
+    elif demo_type == 'blocks':
+        draw_blocks(turtle, blocks_state, cell_size)
     else:
         draw_fuji(turtle, 8, cell_size)
-        draw_diagram(turtle, state1, cell_size, solution=False)
-
-    turtle.right(90)
-    turtle.forward(cell_size*7)
-    turtle.left(90)
+        draw_diagram(turtle, demo_state, cell_size, solution=False)
 
 
 if __name__ in ('__main__', '__live_coding__'):

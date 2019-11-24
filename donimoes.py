@@ -1,3 +1,4 @@
+import re
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
 from pathlib import Path
 from subprocess import call
@@ -11,7 +12,7 @@ from reportlab.lib.units import inch
 # noinspection PyUnresolvedReferences
 from reportlab.rl_config import defaultPageSize
 
-from diagram import draw_diagram, draw_fuji
+from diagram import draw_diagram, draw_fuji, draw_blocks
 from domino_puzzle import BoardError
 from pdf_turtle import PdfTurtle
 from book_parser import parse, Styles
@@ -60,6 +61,9 @@ class Diagram(Flowable):
         t.right(90)
         t.down()
         self.draw_background(t)
+        self.draw_foreground(t)
+
+    def draw_foreground(self, t):
         try:
             draw_diagram(t,
                          self.board_state,
@@ -82,6 +86,17 @@ class FujisanDiagram(Diagram):
         super().wrap(avail_width, avail_height)
         self.height += self.cell_size
         return self.width, self.height
+
+
+class TetrominoDiagram(Diagram):
+    def __init__(self, board_state):
+        super().__init__(board_state)
+        lines = board_state.splitlines()
+        self.row_count = len(lines)
+        self.col_count = max(len(line) for line in lines)
+
+    def draw_foreground(self, t):
+        draw_blocks(t, self.board_state, self.cell_size)
 
 
 # noinspection PyUnusedLocal
@@ -111,9 +126,11 @@ def main():
                             bottomMargin=0.625*inch)
     styles = getSampleStyleSheet()
     paragraph_style = styles[Styles.Normal]
-    list_style = ListStyle('default_list',
-                           bulletFontSize=paragraph_style.fontSize,
-                           bulletFormat='%s.')
+    numbered_list_style = ListStyle('default_list',
+                                    bulletFontSize=paragraph_style.fontSize,
+                                    bulletFormat='%s.')
+    bulleted_list_style = ListStyle('default_list',
+                                    bulletFontSize=paragraph_style.fontSize)
     story = []
     group = []
     bulleted = []
@@ -126,6 +143,8 @@ def main():
         elif state.style == Styles.Diagram:
             if 'Fujisan' in headings or 'Fujisan Problems' in headings:
                 flowable = FujisanDiagram(state.text)
+            elif re.fullmatch(r'[#\s]*', state.text):
+                flowable = TetrominoDiagram(state.text)
             else:
                 if 'Mountains and Valleys' in headings:
                     diagram_width = (len(state.text.splitlines()[0]) + 1)//2
@@ -143,16 +162,12 @@ def main():
                                  styles[state.style])
         if state.style.startswith(Styles.Heading):
             if bulleted:
-                group.append(ListFlowable(bulleted[:1],
-                                          style=list_style,
-                                          start=first_bullet))
-                story.append(KeepTogether(group))
-                bulleted = bulleted[1:]
-                if bulleted:
-                    next_bullet = int(first_bullet) + 1
-                    story.append(ListFlowable(bulleted,
-                                              style=list_style,
-                                              start=next_bullet))
+                create_list_flowable(bulleted,
+                                     group,
+                                     story,
+                                     first_bullet,
+                                     bulleted_list_style,
+                                     numbered_list_style)
                 group = []
                 bulleted = []
                 first_bullet = None
@@ -167,9 +182,13 @@ def main():
             first_bullet = first_bullet or state.bullet
         else:
             if bulleted:
-                story.append(ListFlowable(bulleted,
-                                          style=list_style,
-                                          start=first_bullet))
+                create_list_flowable(bulleted,
+                                     group,
+                                     story,
+                                     first_bullet,
+                                     bulleted_list_style,
+                                     numbered_list_style)
+                group = []
                 bulleted = []
                 first_bullet = None
                 story.append(Spacer(1, 0.055*inch))
@@ -181,12 +200,45 @@ def main():
                 group = []
             story.append(Spacer(1, 0.055*inch))
     if bulleted:
-        story.append(ListFlowable(bulleted,
-                                  style=list_style,
-                                  start=first_bullet))
+        create_list_flowable(bulleted,
+                             group,
+                             story,
+                             first_bullet,
+                             bulleted_list_style,
+                             numbered_list_style)
     doc.build(story, onFirstPage=first_page)
 
     call(["evince", pdf_path])
+
+
+def create_list_flowable(bulleted,
+                         group,
+                         story,
+                         first_bullet,
+                         bulleted_list_style,
+                         numbered_list_style):
+    if first_bullet == '*':
+        bullet_type = 'bullet'
+        first_bullet = None
+        list_style = bulleted_list_style
+    else:
+        bullet_type = '1'
+        list_style = numbered_list_style
+    group.append(ListFlowable(bulleted[:1],
+                              style=list_style,
+                              bulletType=bullet_type,
+                              start=first_bullet))
+    story.append(KeepTogether(group))
+    bulleted = bulleted[1:]
+    if bulleted:
+        if first_bullet is not None:
+            next_bullet = int(first_bullet) + 1
+        else:
+            next_bullet = first_bullet
+        group.append(ListFlowable(bulleted,
+                                  style=list_style,
+                                  bulletType=bullet_type,
+                                  start=next_bullet))
 
 
 if __name__ == '__main__':
