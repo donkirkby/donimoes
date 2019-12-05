@@ -9,13 +9,12 @@ know what you think.
 The game of life, the universe, and everything, for 2, 3, or 4 players.
 
 ### Equipment
-* a set of double-six dominoes
-* for 3 players, a set of 3 tokens in each of 3 colours
-* for 2 or 4 players, a set of 2 or 4 tokens, half light and half dark
+* a set of dominoes from double blank to double six
+* a set of tokens (small chips or cubes that are small enough to fit on top of a
+    domino) - 2 players need 1 light token and 1 dark token, 3 players need 3
+    tokens in each of 3 colours (9 in total), and 4 players need 2 light tokens
+    and 2 dark tokens
 * seven cardboard tetrominoes (white on one side, black on the other)
-
-The tokens are only needed when playing with three players, and they should be
-small enough to fit on top of a domino.
 
 To make your own set of tetrominoes, draw these seven shapes on a piece of
 plain cardboard, and cut them out. Use a marker to colour one side of each
@@ -29,22 +28,15 @@ small gap around the outside.
     ###  ##  # ##
 
 ### Object
-Play the most tetrominoes, or block your opponents from playing.
+Play the most tetrominoes.
 
 ### Setup
-Shuffle the dominoes face down, and each player flip one face up. Add the
-numbers, and check if there are any ties. Continue flipping and adding until
-there are no ties, then sit around the table from highest total down to lowest
-total, in a clockwise direction. The player with the highest total will play
-first.
-
-In a 2-player game, the player with the highest total takes the light token and
-plays first. The other player takes the dark token. In a 3-player game, the
-player with the highest total plays first, and each player takes all the tokens
-of one colour. In a 4-player game, the player with the highest total takes a
-light token and plays first. The other players take a dark token, a light token,
-and a dark token, alternating around the table. Players with the same colour
-tokens will play as partners.
+Choose a player to go first through any convenient method. In a 2-player game,
+the first player takes the light token. The other player takes the dark token.
+In a 3-player game, each player takes all the tokens of one colour. In a
+4-player game, the first player and the player opposite each take a light token
+and the other players take a dark token. Players with the same colour tokens
+will play as partners.
  
 Shuffle the dominoes face down, and draw four for each player, keeping them
 hidden from the other players. Put the remaining dominoes and the tetrominoes
@@ -53,40 +45,78 @@ within reach.
 ### Playing Dominoes
 On the first turn, play any domino you like. On each turn after that, you must
 play a domino so that at least one of its numbers is adjacent to a matching
-number on a domino that was already played, and isn't covered. If there are no
-numbers uncovered at the start of your turn, you lose. If none of your dominoes
-match the available numbers, reveal two of your hidden dominoes, and draw one
-more, keeping it hidden from the other players. If you still can't play, repeat
-until you can. If you still can't play when there are no more dominoes to draw
-or when you don't have two hidden dominoes, you lose. Leave any revealed
-dominoes face up.
+number on a domino that was already played, and isn't covered. For example,
+the 36 domino can be added as shown, because the 3 matches its neighbour.
+
+    2|3 3
+        +
+    2 4 6
+    - -
+    5 5
+
+In this example, the 46 cannot be added in this position, but it could be
+flipped to make the 4 match its neighbour.
+
+    2|3 4
+        *
+    2 4 6
+    - -
+    5 5
+
+You don't have to match along the long side, you could also play it like this.
+
+    2|3
+       
+    2 4 4+6
+    - -
+    5 5
+
+If there are no numbers uncovered at the start of your turn, play a domino so
+that at least one of its numbers is adjacent to a covered number (they don't
+have to match). If none of your dominoes match the available numbers, reveal two
+of your hidden dominoes, and draw one more, keeping it hidden from the other
+players. If you still can't play, repeat until you can. If you still can't play
+when there are no more dominoes to draw or when you don't have two hidden
+dominoes, reveal all of your hidden dominoes, and pass your turn. Leave any
+revealed dominoes face up until you play them.
+
+If you have fewer than four dominoes, draw a domino and keep it hidden from the
+other players.
 
 ### Playing Tetrominoes
-After playing a domino, see if you can play a tetromino. It must cover at least
-one number on the domino you just played, and the rest of it must cover numbers
-that match one of the numbers on the domino you just played. Also, two of your
-tetrominoes can't be right next to each other. (Diagonal is OK.)
+After playing a domino, see if you can play a tetromino. It must cover one or
+both numbers on the domino you just played, it can't hang off the edge of the
+dominoes, and it can't cover any numbers different from the ones on the domino
+you just played. Also, two tetrominoes of the same colour can't be right next to
+each other. (Diagonal is allowed.)
+
+For example, if you just played the 46 domino, you could play an L-shaped
+tetromino on the 4, 4, 4, and 6 numbers.
+
+    2|4
+    
+      4 4+6
+      -
+      5
 
 With 2 or 4 players, if you have a light token, you must play tetrominoes with
 the light side up. If you have a dark token, you must play with the dark side
 up. With three players, all players play tetrominoes with the light side up, and
 then place one of their tokens on the tetromino.
 
+With 4 players, after a tetromino is played, the two opposing players can each
+take a domino from their hand, and give it to their partner. This is useful if
+you have two dominoes that will work well together. However, you can't tell your
+partner how to play it. 
+
 ### Game End
 With 2 or 4 players, the game ends when one player or team plays four
 tetrominoes and wins. With 3 players, the game ends when one player plays three
 tetrominoes and wins.
 
-Otherwise, a player can lose by being unable to play, either because there are
-no numbers to match or because none of the dominoes match the available numbers.
-
-With 3 players, a player who leaves no numbers uncovered wins the game. If a
-player doesn't have any matching numbers and can't draw any, they are eliminated
-and the other two players continue without them.
-
 ### Variant
 Tournament play is a series of games until one player wins seven points. One
-point for each tetromino, plus a bonus point if your opponent is unable to play.
+point for each tetromino.
 
 
 ## The Adding Puzzle's Goal ##
