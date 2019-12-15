@@ -1,5 +1,6 @@
 import re
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
+from functools import partial
 from pathlib import Path
 from subprocess import call
 
@@ -14,6 +15,7 @@ from reportlab.rl_config import defaultPageSize
 
 from diagram import draw_diagram, draw_fuji, draw_blocks
 from domino_puzzle import BoardError
+from footer import FooterCanvas
 from pdf_turtle import PdfTurtle
 from book_parser import parse, Styles
 
@@ -25,6 +27,9 @@ def parse_args():
     default_markdown = str(Path(__file__).parent / 'docs' / 'rules.md')
     parser = ArgumentParser(description='Convert rules markdown into a PDF.',
                             formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--booklet',
+                        action='store_true',
+                        help='Reorder pages for printing as a folded booklet.')
     parser.add_argument('markdown',
                         type=FileType(),
                         nargs='?',
@@ -99,16 +104,6 @@ class TetrominoDiagram(Diagram):
         draw_blocks(t, self.board_state, self.cell_size)
 
 
-# noinspection PyUnusedLocal
-def first_page(canvas, doc):
-    canvas.saveState()
-    canvas.setFont('Times-Roman', 9)
-    canvas.drawCentredString(PAGE_WIDTH/2,
-                             0.75 * inch,
-                             "donkirkby.github.com/donimoes")
-    canvas.restoreState()
-
-
 def main():
     args = parse_args()
     markdown_path = Path(args.markdown.name)
@@ -125,6 +120,11 @@ def main():
                             topMargin=0.625*inch,
                             bottomMargin=0.625*inch)
     styles = getSampleStyleSheet()
+    if args.booklet:
+        for style in styles.byName.values():
+            if hasattr(style, 'fontSize'):
+                style.fontSize *= 1.5
+                style.leading *= 1.5
     paragraph_style = styles[Styles.Normal]
     numbered_list_style = ListStyle('default_list',
                                     bulletFontSize=paragraph_style.fontSize,
@@ -206,7 +206,7 @@ def main():
                              first_bullet,
                              bulleted_list_style,
                              numbered_list_style)
-    doc.build(story, onFirstPage=first_page)
+    doc.build(story, canvasmaker=partial(FooterCanvas, is_booklet=args.booklet))
 
     call(["evince", pdf_path])
 
