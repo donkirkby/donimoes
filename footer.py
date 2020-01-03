@@ -17,19 +17,14 @@ class FooterCanvas(canvas.Canvas):
         if not self.is_booklet:
             reordered_pages = self.pages
         else:
-            while len(self.pages) % 8 != 0:
+            page_offsets = (1, -2, 2, -3, -1, 0, -1, 0)
+            while len(self.pages) % len(page_offsets) != 0:
                 self.showPage()
             original_pages = self.pages[:]
             reordered_pages = []
             while original_pages:
-                reordered_pages.append(original_pages.pop(1))
-                reordered_pages.append(original_pages.pop(-2))
-                reordered_pages.append(original_pages.pop(2))
-                reordered_pages.append(original_pages.pop(-3))
-                reordered_pages.append(original_pages.pop(-1))
-                reordered_pages.append(original_pages.pop(0))
-                reordered_pages.append(original_pages.pop(-1))
-                reordered_pages.append(original_pages.pop(0))
+                for page_offset in page_offsets:
+                    reordered_pages.append(original_pages.pop(page_offset))
         for page in reordered_pages:
             self.__dict__.update(page)
             self.draw_canvas()

@@ -2,8 +2,29 @@
 title: The Rules of Donimoes
 ---
 
-# Donimoes: Puzzles with Dominoes #
-There are two kinds of puzzles: blocking and capturing.
+# Donimoes: New Games and Puzzles #
+When I tell people that I like domino games, they are often surprised to hear
+that you can do more than just match the numbers. If you look in a book of
+games, often with Mr. Hoyle's name on the cover, you might also find All Fives.
+If you're lucky, you'll even find Chickenfoot and Mexican Train.
+
+This book is a collection of new games and puzzles for dominoes that will
+broaden your horizons beyond a chain of dominoes with matching numbers:
+
+* **Blocking Donimoes** is a puzzle I designed where you have to slide all the
+    dominoes into a rectangular shape, without sliding any matching numbers next
+    to each other.
+* **Capturing Donimoes** is a puzzle I designed where you have to collect all the
+    dominoes by sliding matching numbers next to each other.
+* **Tetradominoes** is a game I designed for two to four players where you play
+    matching dominoes in a grid, then try to play the tetromino shapes on top.
+* **Mountains and Valleys** is a solitaire game by Sid Sackson where you have to
+    lay out a map that you can hike on. I adapted it from paper, pencil, and
+    dice to use dominoes.
+* **Fujisan** is a solitaire game by James Droscha designed for the piecepack
+    game system where you have to help four Shinto priests climb to the peak of
+    Mount Fuji. He then adapted it for dominoes and pawns, and I found
+    20 layouts that are much more challenging than usual.
 
 ## The Blocking Puzzle's Goal ##
 The goal is to slide all the dominoes into a rectangle, without sliding any
@@ -562,7 +583,7 @@ able to design a domino game that felt more like a grid than a chain.
 Tetradominoes is my attempt to do that.
 
 ## Tetradominoes
-The game of life, the universe, and everything, for 2, 3, or 4 players.
+Play matching dominoes in a grid, then try to play the tetromino shapes on top.
 
 ### Equipment
 * a set of dominoes from double blank to double six
@@ -1082,8 +1103,8 @@ right is a (B)ishop, and the bottom right is a (R)ook.
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [donkirkby.github.com/donimoes][github].
 
-Capturing and Blocking Donimoes are original puzzles designed by
-[Don Kirkby][don].
+Capturing and Blocking Donimoes, as well as Tetradominoes are original puzzles
+and games designed by [Don Kirkby][don].
 
 [github]: https://donkirkby.github.com/donimoes
 [don]: https://donkirkby.github.com/

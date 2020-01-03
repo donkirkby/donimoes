@@ -39,7 +39,7 @@ def parse_args():
 
 
 class Diagram(Flowable):
-    MAX_COLUMN_COUNT = 16
+    MAX_COLUMN_COUNT = 14
 
     def __init__(self, board_state, show_path=False):
         super().__init__()
@@ -123,14 +123,20 @@ def main():
     if args.booklet:
         for style in styles.byName.values():
             if hasattr(style, 'fontSize'):
-                style.fontSize *= 1.5
-                style.leading *= 1.5
+                if style.name.startswith('Heading'):
+                    scale = 1.5
+                else:
+                    scale = 2
+                style.fontSize *= scale
+                style.leading *= scale
     paragraph_style = styles[Styles.Normal]
     numbered_list_style = ListStyle('default_list',
                                     bulletFontSize=paragraph_style.fontSize,
+                                    leftIndent=paragraph_style.fontSize*1.5,
                                     bulletFormat='%s.')
     bulleted_list_style = ListStyle('default_list',
-                                    bulletFontSize=paragraph_style.fontSize)
+                                    bulletFontSize=paragraph_style.fontSize,
+                                    leftIndent=paragraph_style.fontSize*1.5)
     story = []
     group = []
     bulleted = []
@@ -235,7 +241,7 @@ def create_list_flowable(bulleted,
             next_bullet = int(first_bullet) + 1
         else:
             next_bullet = first_bullet
-        group.append(ListFlowable(bulleted,
+        story.append(ListFlowable(bulleted,
                                   style=list_style,
                                   bulletType=bullet_type,
                                   start=next_bullet))
