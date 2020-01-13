@@ -1,3 +1,4 @@
+import typing
 from datetime import datetime, timedelta
 from functools import partial
 from itertools import chain
@@ -75,12 +76,15 @@ class Board(object):
         width = height and (line_length+1) // 2
         lines = [line + ((line_length-len(line)) * ' ') for line in lines]
         board = cls(width + 2*border, height + 2*border, max_pips=max_pips)
+        degrees = None
         for x in range(width):
             for y in range(height):
                 head = lines[y*2][x*2]
                 if head not in ' x':
                     right_joint = x+1 < width and lines[y*2][x*2+1] or ' '
+                    left_joint = 0 < x and lines[y*2][x*2-1] or ' '
                     upper_joint = y+1 < height and lines[y*2+1][x*2] or ' '
+                    lower_joint = 0 < y and lines[y*2-1][x*2] or ' '
                     if right_joint != ' ':
                         tail = lines[y*2][x*2+2]
                         degrees = 0
@@ -93,6 +97,9 @@ class Board(object):
                         domino = Domino(int(head), int(tail))
                         domino.rotate(degrees)
                         board.add(domino, x+border, y+border)
+                    elif left_joint == ' ' and lower_joint == ' ':
+                        cell = Cell(int(head))
+                        board.add(cell, x+border, y+border)
         return board
 
     def __init__(self, width, height, max_pips=None):
@@ -105,7 +112,7 @@ class Board(object):
             self.extra_dominoes = []
         else:
             self.extra_dominoes = Domino.create(max_pips)
-        self.cells = []
+        self.cells: typing.List[typing.List[Cell]] = []
         for _ in range(width):
             self.cells.append([None] * height)
 
@@ -124,13 +131,14 @@ class Board(object):
     def __ne__(self, other):
         return not (self == other)
 
-    def add(self, item, x, y):
+    def add(self, item: typing.Union['Domino', Cell], x: int, y: int):
         try:
             dx, dy = item.direction
             self.add(item.head, x, y)
             try:
                 self.add(item.tail, x+dx, y+dy)
             except BadPositionError:
+                # noinspection PyTypeChecker
                 self.remove(item.head)
                 raise
             self.dominoes.append(item)
@@ -138,6 +146,7 @@ class Board(object):
                 self.extra_dominoes.remove(item)
         except AttributeError:
             if item.x is not None:
+                # noinspection PyTypeChecker
                 self.cells[item.x][item.y] = None
             if not (0 <= x < self.width and 0 <= y < self.height):
                 raise BadPositionError(
@@ -229,7 +238,9 @@ class Board(object):
                 cell = self[x+xmin][y+ymin]
                 cell_display = 'x' if cell is None else str(cell.pips)
                 display[row][col] = cell_display
-                if cell is not None and cell.domino.head == cell:
+                if (cell is not None and
+                        cell.domino is not None and
+                        cell.domino.head == cell):
                     dx, dy = cell.domino.direction
                     divider = '|' if dx else '-'
                     display[row-dy][col+dx] = divider

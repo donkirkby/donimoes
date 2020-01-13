@@ -92,15 +92,48 @@ def draw_domino(turtle, domino, cell_size=50.0):
     turtle.back(cell_size)
 
 
-def draw_domino_outline(cell_size, turtle):
+def draw_cell(turtle, cell, cell_size=50.0):
+    turtle.up()
+    turtle.back(cell_size * 0.45)
+    turtle.left(90)
+    turtle.forward(cell_size * 0.45)
+    turtle.right(90)
+    r = cell_size * 0.05
+    turtle.forward(r)
+    turtle.down()
     turtle.fillcolor('white')
     turtle.begin_fill()
-    for _ in range(2):
-        turtle.forward(cell_size * 1.9)
-        turtle.right(90)
-        turtle.forward(cell_size * .9)
-        turtle.right(90)
+    for _ in range(4):
+        turtle.forward(cell_size * 0.8)
+        turtle.circle(-r, 90)
+
     turtle.end_fill()
+
+    turtle.up()
+    turtle.back(r)
+    turtle.forward(cell_size * 0.45)
+    turtle.right(90)
+    turtle.forward(cell_size * 0.45)
+    turtle.left(90)
+    draw_pips(turtle, cell.pips, cell_size)
+
+
+def draw_domino_outline(cell_size, turtle):
+    turtle.fillcolor('white')
+    turtle.up()
+    r = cell_size * 0.05
+    turtle.forward(r)
+    turtle.down()
+    turtle.begin_fill()
+    for _ in range(2):
+        turtle.forward(cell_size * 1.8)
+        turtle.circle(-r, 90)
+        turtle.forward(cell_size * .8)
+        turtle.circle(-r, 90)
+    turtle.end_fill()
+
+    turtle.up()
+    turtle.back(r)
 
 
 def draw_paths(turtle, board: Board, cell_size=50.0):
@@ -148,7 +181,9 @@ def draw_board(turtle, board, cell_size=50.0):
             cell = board[x][y]
             if cell is not None:
                 domino = cell.domino
-                if cell is domino.head:
+                if domino is None:
+                    draw_cell(turtle, cell, cell_size)
+                elif cell is domino.head:
                     turtle.left(domino.degrees)
                     draw_domino(turtle, domino, cell_size)
                     turtle.right(domino.degrees)
@@ -538,12 +573,21 @@ def draw_demo(turtle):
 ##  ##
  ## ##
 """
+    dominosa_state = """\
+0 1 2 3
+  -
+4 5 6 0
 
-    demo_type = 'blocks'
+1|2 3 4
+"""
+
+    demo_type = 'dominosa'
     if demo_type == 'mountains':
         draw_diagram(turtle, mountain_state, cell_size, show_path=True)
     elif demo_type == 'blocks':
         draw_blocks(turtle, blocks_state, cell_size)
+    elif demo_type == 'dominosa':
+        draw_diagram(turtle, dominosa_state, cell_size)
     else:
         draw_fuji(turtle, 8, cell_size)
         draw_diagram(turtle, demo_state, cell_size, solution=False)

@@ -793,6 +793,28 @@ x x x x x
 
         self.assertNotEqual(board1, board2)
 
+    def testParseCellsAndDominoes(self):
+        state = """\
+0 1
+-
+2 3
+"""
+        board = Board.create(state)
+
+        self.assertIsInstance(board[0][1].domino, Domino)
+        self.assertIsNone(board[1][0].domino)
+
+    def testDisplayCellsAndDominoes(self):
+        state = """\
+0 1
+-
+2 3
+"""
+        board = Board.create(state)
+        display = board.display()
+
+        self.assertEqual(display, state)
+
 
 class DominoTest(unittest.TestCase):
     def testRepr(self):
