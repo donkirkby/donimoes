@@ -438,6 +438,7 @@ class Domino(object):
         self.head.domino = self
         self.tail.domino = self
         self.degrees = 0  # 0, 90, 180, or 270
+        self.direction = None
         self.calculateDirection()
 
     def __repr__(self):
