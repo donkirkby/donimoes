@@ -41,8 +41,8 @@ class QueuedBoard(Board):
         return True
 
     # noinspection PyPep8Naming
-    def mutate(self, random, boardType=None, matches_allowed=True):
-        new_board = boardType.create(self.display(), max_pips=self.max_pips)
+    def mutate(self, random, board_type=None, matches_allowed=True):
+        new_board = board_type.create(self.display(), max_pips=self.max_pips)
         mutation_count = new_board.pick_mutation_count(len(new_board.queue),
                                                        random)
         for _ in range(mutation_count):

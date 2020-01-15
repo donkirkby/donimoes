@@ -815,6 +815,162 @@ x x x x x
 
         self.assertEqual(display, state)
 
+    def testJoinCellsRight(self):
+        state = """\
+0 1 1
+-
+2 3 2
+"""
+        expected_state = """\
+0 1|1
+-
+2 3 2
+"""
+        board = Board.create(state)
+        cell1 = board[1][1]
+        cell2 = board[2][1]
+
+        board.join(cell1, cell2)
+
+        display = board.display()
+
+        self.assertEqual(display, expected_state)
+        self.assertEqual(cell1.domino.degrees, 0)
+        self.assertEqual(len(board.dominoes), 2)
+
+    def testJoinCellsUp(self):
+        state = """\
+0 1 1
+-
+2 3 2
+"""
+        expected_state = """\
+0 1 1
+- -
+2 3 2
+"""
+        board = Board.create(state)
+        cell1 = board[1][0]
+        cell2 = board[1][1]
+
+        board.join(cell1, cell2)
+
+        display = board.display()
+
+        self.assertEqual(display, expected_state)
+        self.assertEqual(cell1.domino.degrees, 90)
+
+    def testJoinCellsLeft(self):
+        state = """\
+0 1 1
+-
+2 3 2
+"""
+        expected_state = """\
+0 1|1
+-
+2 3 2
+"""
+        board = Board.create(state)
+        cell1 = board[2][1]
+        cell2 = board[1][1]
+
+        board.join(cell1, cell2)
+
+        display = board.display()
+
+        self.assertEqual(display, expected_state)
+        self.assertEqual(cell1.domino.degrees, 180)
+
+    def testJoinCellsDown(self):
+        state = """\
+0 1 1
+-
+2 3 2
+"""
+        expected_state = """\
+0 1 1
+- -
+2 3 2
+"""
+        board = Board.create(state)
+        cell1 = board[1][1]
+        cell2 = board[1][0]
+
+        board.join(cell1, cell2)
+
+        display = board.display()
+
+        self.assertEqual(display, expected_state)
+        self.assertEqual(cell1.domino.degrees, 270)
+
+    def testJoinCellsNotNeighbours(self):
+        state = """\
+0 1 1
+-
+2 3 2
+"""
+        board = Board.create(state)
+        cell1 = board[2][1]
+        cell2 = board[1][0]
+
+        with self.assertRaisesRegex(ValueError,
+                                    r"Cells are not neighbours: 2,1 and 1,0."):
+            board.join(cell1, cell2)
+
+    def testJoinCellsNotAvailable(self):
+        state = """\
+0 1 1
+-
+2 3 2
+"""
+        board = Board.create(state)
+        cell1 = board[0][0]
+        cell2 = board[1][0]
+
+        with self.assertRaisesRegex(ValueError,
+                                    r"Cell is not available: 0,0."):
+            board.join(cell1, cell2)
+
+    def testSplitDomino(self):
+        state = """\
+0 1|1
+-
+2 3 2
+"""
+        expected_display = """\
+0 1|1
+
+2 3 2
+"""
+        board = Board.create(state)
+        domino = board[0][0].domino
+
+        board.split(domino)
+
+        display = board.display()
+        self.assertEqual(display, expected_display)
+        self.assertEqual(board.dominoes, [Domino(1, 1)])
+
+    def testSplitAll(self):
+        state = """\
+0 1|1
+-
+2 3 2
+"""
+        expected_display = """\
+0 1 1
+
+2 3 2
+"""
+        board = Board.create(state)
+
+        board.split_all()
+
+        display = board.display()
+        self.assertEqual(display, expected_display)
+        self.assertEqual(board.dominoes, [])
+
 
 class DominoTest(unittest.TestCase):
     def testRepr(self):

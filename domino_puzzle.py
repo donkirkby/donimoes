@@ -166,17 +166,33 @@ class Board(object):
             self.dominoes.remove(item)
             self.extra_dominoes.append(item)
         except AttributeError:
+            # noinspection PyTypeChecker
             self.cells[item.x][item.y] = None
             item.x = item.y = item.board = None
 
-    def mutate(self, random, boardType=None, matches_allowed=True):
+    def join(self, cell1, cell2):
+        domino = Domino(cell1, cell2)
+        self.dominoes.append(domino)
+
+    def split(self, domino):
+        self.dominoes.remove(domino)
+        domino.head.domino = None
+        domino.tail.domino = None
+
+    def split_all(self):
+        for domino in self.dominoes:
+            domino.head.domino = None
+            domino.tail.domino = None
+        self.dominoes.clear()
+
+    def mutate(self, random, board_type=None, matches_allowed=True):
         # Choose number of mutations: 1 is most common, n is least common
         max_mutations = len(self.dominoes)
         mutation_count = self.pick_mutation_count(max_mutations, random)
         is_successful = False
         while not is_successful:
             # mutation_count = min(mutation_count, 3)
-            boardType = boardType or Board
+            board_type = board_type or Board
             neighbours = []
             removed = set()
             for _ in range(mutation_count):
@@ -186,9 +202,9 @@ class Board(object):
                     domino = random.choice(self.dominoes)
                 removed.add(domino)
                 neighbours = list(domino.find_neighbours())
-            new_board = boardType(self.width,
-                                  self.height,
-                                  max_pips=self.max_pips)
+            new_board = board_type(self.width,
+                                   self.height,
+                                   max_pips=self.max_pips)
             for domino in self.dominoes:
                 if domino not in removed:
                     i = new_board.extra_dominoes.index(domino)
@@ -432,14 +448,33 @@ class Domino(object):
         index = Domino.direction_names.find(name)
         return Domino.directions[index]
 
-    def __init__(self, head_pips, tail_pips):
-        self.head = Cell(head_pips)
-        self.tail = Cell(tail_pips)
+    def __init__(self, head, tail):
+        if hasattr(head, 'domino'):
+            self.check_available(head)
+            self.check_available(tail)
+            self.head = head
+            self.tail = tail
+            self.direction = (tail.x - head.x, tail.y - head.y)
+            try:
+                direction_index = self.directions.index(self.direction)
+            except ValueError:
+                msg = (f'Cells are not neighbours: {head.x},{head.y} and '
+                       f'{tail.x},{tail.y}.')
+                raise ValueError(msg) from None
+            self.degrees = direction_index*90
+        else:
+            self.head = Cell(head)
+            self.tail = Cell(tail)
+            self.degrees = 0  # 0, 90, 180, or 270
+            self.direction = None
+            self.calculateDirection()
         self.head.domino = self
         self.tail.domino = self
-        self.degrees = 0  # 0, 90, 180, or 270
-        self.direction = None
-        self.calculateDirection()
+
+    @staticmethod
+    def check_available(cell):
+        if cell.domino is not None:
+            raise ValueError(f'Cell is not available: {cell.x},{cell.y}.')
 
     def __repr__(self):
         return "Domino({}, {})".format(self.head.pips, self.tail.pips)
@@ -826,7 +861,7 @@ class SearchManager(object):
 
     def mutateBoard(self, boardType, random, board):
         return board.mutate(random,
-                            boardType=boardType,
+                            board_type=boardType,
                             matches_allowed=False),
 
     def evaluateBoard(self, slow_queue, individual):

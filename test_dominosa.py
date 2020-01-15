@@ -1,5 +1,6 @@
 from domino_puzzle import Board
-from dominosa import place_unique_pairs, find_unique_pairs, join_pairs, find_one_neighbour_pairs
+from dominosa import place_unique_pairs, find_unique_pairs, join_pairs, find_one_neighbour_pairs, find_unjoined_pairs, \
+    find_solutions
 
 
 def test_find_unique_pairs_vertical():
@@ -94,21 +95,44 @@ def test_unique_pairs_check_joined():
     assert display == expected_display
 
 
+def test_unique_pairs_conflict():
+    board = Board.create("""\
+1 1 0 1
+-
+0 0|2 1
+
+0 2|2 2
+""")
+    expected_display = """\
+1 1 0 1
+-
+0 0|2 1
+      -
+0 2|2 2
+"""
+
+    pairs = find_unique_pairs(board)
+    join_pairs(board, pairs)
+    display = board.display()
+
+    assert display == expected_display
+
+
 def test_place_only_neighbours():
     board = Board.create("""\
-2 2 2 0
-
-0|0 2 1
-
 1 1 0 1
+
+0|0 2 0
+
+1 2 2 2
 """)
 
     expected_display = """\
-2|2 2 0
-
-0|0 2 1
-
 1|1 0 1
+
+0|0 2 0
+
+1|2 2 2
 """
 
     pairs = find_one_neighbour_pairs(board)
@@ -116,3 +140,134 @@ def test_place_only_neighbours():
     display = board.display()
 
     assert display == expected_display
+
+
+def test_place_only_neighbours_conflict():
+    board = Board.create("""\
+2 3 2|2 3
+
+0 1|2 2 3
+
+1 1 0 3 3
+    - - -
+0 1 0 0 1
+""")
+
+    expected_display = """\
+2|3 2|2 3
+        -
+0 1|2 2 3
+
+1 1 0 3 3
+    - - -
+0 1 0 0 1
+"""
+
+    pairs = find_one_neighbour_pairs(board)
+    join_pairs(board, pairs)
+    display = board.display()
+
+    assert display == expected_display
+
+
+def test_place_only_neighbours_existing_duplicate():
+    board = Board.create("""\
+0|0 0 1
+    -
+0 2 2 1
+
+1|1 2|2
+""")
+
+    expected_display = """\
+0|0 0 1
+    -
+0 2 2 1
+
+1|1 2|2
+"""
+
+    pairs = find_one_neighbour_pairs(board)
+    join_pairs(board, pairs)
+    display = board.display()
+
+    assert display == expected_display
+
+
+def test_place_only_neighbours_new_duplicate():
+    board = Board.create("""\
+0 0 0 1
+-   -
+0 2 2 1
+
+1 1 2|2
+""")
+
+    expected_display = """\
+0 0 0 1
+-   -
+0 2 2 1
+
+1|1 2|2
+"""
+
+    pairs = find_one_neighbour_pairs(board)
+    join_pairs(board, pairs)
+    display = board.display()
+
+    assert display == expected_display
+
+
+def test_find_unjoined_pairs():
+    board = Board.create("""\
+1 0 1
+-
+1 0 0
+""")
+    expected_pairs = [(1, 0, 1, 1), (1, 0, 2, 0), (1, 1, 2, 1), (2, 0, 2, 1)]
+
+    pairs = find_unjoined_pairs(board)
+
+    assert pairs == expected_pairs
+
+
+def test_find_solutions():
+    board = Board.create("""\
+1 0 1
+-
+1 0 0
+""")
+    expected_solutions = set("""\
+1 0 1
+- - -
+1 0 0
+=====
+1 0|1
+-
+1 0|0
+""".split('=====\n'))
+
+    solutions = find_solutions(board)
+
+    assert solutions == expected_solutions
+
+
+def test_find_solutions_no_duplicates():
+    board = Board.create("""\
+2|2 1 2
+
+1|1 0 2
+
+0|0 0 1
+""")
+    expected_solutions = {"""\
+2|2 1|2
+
+1|1 0|2
+
+0|0 0|1
+"""}
+
+    solutions = find_solutions(board)
+
+    assert solutions == expected_solutions

@@ -1,5 +1,7 @@
+import random
 import typing
-from collections import defaultdict
+from collections import defaultdict, Counter
+from itertools import chain
 
 from domino_puzzle import Board, Cell, Domino
 
@@ -16,6 +18,30 @@ def join_pairs(board: Board, pairs: typing.List[typing.Tuple[int]]):
 
 
 def find_unique_pairs(board: Board) -> typing.List[typing.Tuple[int]]:
+    pair_locations = find_pair_locations(board)
+    used_cells = set()
+
+    all_locations = []  # [(x1, x2, y1, y2)]
+    for location_list in pair_locations.values():
+        if location_list is not None and len(location_list) == 1:
+            x1, y1, x2, y2 = location_list[0]
+            cell1 = board[x1][y1]
+            cell2 = board[x2][y2]
+            if cell1 not in used_cells and cell2 not in used_cells:
+                all_locations.extend(location_list)
+                used_cells.add(cell1)
+                used_cells.add(cell2)
+
+    return all_locations
+
+
+def find_pair_locations(board: Board) -> dict:
+    """ Find how many times each pair of numbers appears in the unjoined cells.
+
+    :param board: board to search
+    :return: {(small_pips, large_pips): [(x1, y1, x2, y2)]}, but values are
+        None if a matching domino has already been placed.
+    """
     pair_locations = defaultdict(list)
     for x in range(board.width):
         for y in range(board.height):
@@ -24,20 +50,13 @@ def find_unique_pairs(board: Board) -> typing.List[typing.Tuple[int]]:
                 record_pair(board[x - 1][y], cell, pair_locations)
             if 0 < y:
                 record_pair(board[x][y - 1], cell, pair_locations)
-
-    return [location_list[0]
-            for location_list in pair_locations.values()
-            if location_list is not None and len(location_list) == 1]
+    return pair_locations
 
 
 def join_pair(board: Board, x1: int, y1: int, x2: int, y2: int):
-    pips1 = board[x1][y1].pips
-    pips2 = board[x2][y2].pips
-    domino = Domino(pips1, pips2)
-    if x1 == x2:
-        domino.rotate(90)
-    board[x1][y1] = domino.head
-    board[x2][y2] = domino.tail
+    cell1 = board[x1][y1]
+    cell2 = board[x2][y2]
+    board.join(cell1, cell2)
 
 
 def record_pair(cell1: Cell, cell2: Cell, pair_locations: dict):
@@ -72,35 +91,80 @@ def get_pair_key(cell1, cell2):
 
 
 def find_one_neighbour_pairs(board: Board) -> typing.List[typing.Tuple[int]]:
+    used_keys = {get_pair_key(domino.head, domino.tail)
+                 for domino in board.dominoes}
     pairs = set()
-    for x in range(board.width):
-        for y in range(board.height):
-            cell = board[x][y]
-            if cell.domino is not None:
-                continue
-            neighbours = []
-            for dx, dy in Domino.directions:
-                x2 = x+dx
-                y2 = y+dy
-                if 0 <= x2 < board.width and 0 <= y2 < board.height:
-                    cell2 = board[x2][y2]
-                    if cell2.domino is None:
-                        neighbours.append(sorted(((x, y), (x2, y2))))
-            if len(neighbours) == 1:
-                (x1, y1), (x2, y2) = neighbours[0]
-                pairs.add((x1, y1, x2, y2))
+    used_cells = set()
+    for cell in find_unjoined_cells(board):
+        x = cell.x
+        y = cell.y
+        if cell in used_cells:
+            continue
+        neighbours = []
+        for dx, dy in Domino.directions:
+            x2 = x+dx
+            y2 = y+dy
+            if 0 <= x2 < board.width and 0 <= y2 < board.height:
+                cell2 = board[x2][y2]
+                pair_key = get_pair_key(cell, cell2)
+                if (cell2.domino is None and
+                        cell2 not in used_cells and
+                        pair_key not in used_keys):
+                    neighbours.append(sorted(((x, y), (x2, y2))))
+        if len(neighbours) == 1:
+            (x1, y1), (x2, y2) = neighbours[0]
+            pairs.add((x1, y1, x2, y2))
+            used_cell1 = board[x1][y1]
+            used_cells.add(used_cell1)
+            used_cell2 = board[x2][y2]
+            used_cells.add(used_cell2)
+            used_key = get_pair_key(used_cell1, used_cell2)
+            used_keys.add(used_key)
     # noinspection PyTypeChecker
     return sorted(pairs)
 
 
-def main():
-    board = Board.create('''\
-2 2 2 0
+def find_unjoined_pairs(board: Board) -> typing.List[typing.Tuple[int]]:
+    pairs = set()
+    for cell in find_unjoined_cells(board):
+        x = cell.x
+        y = cell.y
+        for dx, dy in Domino.directions:
+            x2 = x+dx
+            y2 = y+dy
+            if 0 <= x2 < board.width and 0 <= y2 < board.height:
+                cell2 = board[x2][y2]
+                if cell2.domino is None:
+                    sorted_pair = sorted(((x, y), (x2, y2)))
+                    (x1, y1), (x2, y2) = sorted_pair
+                    pairs.add((x1, y1, x2, y2))
+    # noinspection PyTypeChecker
+    return sorted(pairs)
 
-0 0 2 1
 
-1 1 0 1
-''')
+def find_unjoined_cells(board: Board) -> typing.Iterator[Cell]:
+    for x in range(board.width):
+        for y in range(board.height):
+            cell = board[x][y]
+            if cell.domino is None:
+                yield cell
+
+
+def check_for_duplicates(board: Board):
+    domino_counts = Counter()
+    for x in range(board.width):
+        for y in range(board.height):
+            cell = board[x][y]
+            domino = cell.domino
+            if domino is not None:
+                domino_counts[get_pair_key(domino.head, domino.tail)] += 1
+    for key, count in domino_counts.items():
+        assert count == 2, (key, count)
+
+
+def find_solutions(board: Board,
+                   depth: int = 1,
+                   verbose: bool = False) -> typing.Set[str]:
     while True:
         rule = 'one neighbour'
         pairs = find_one_neighbour_pairs(board)
@@ -108,10 +172,57 @@ def main():
             rule = 'unique pair'
             pairs = find_unique_pairs(board)
         if not pairs:
+            unjoined_cells = list(find_unjoined_cells(board))
+            is_solved = not unjoined_cells
+            if is_solved:
+                if verbose:
+                    print('Solved!')
+                return {board.display()}
             break
         join_pairs(board, pairs)
-        print(rule)
-        print(board.display())
+        if verbose:
+            print(rule)
+            print(board.display())
+        check_for_duplicates(board)
+    solutions = set()
+    pairs = list(chain(*(location_list
+                         for location_list in find_pair_locations(board).values()
+                         if location_list is not None)))
+    start_state = board.display()
+    if not pairs:
+        for _ in find_unjoined_cells(board):
+            break
+        else:
+            # No unjoined cells, it's a solution!
+            solutions.add(start_state)
+    while pairs:
+        board = Board.create(start_state)
+        pair = pairs.pop()
+        join_pair(board, *pair)
+        if verbose:
+            print('pick level', depth)
+            if depth <= 3:
+                print(start_state)
+                new_state = board.display()
+                print('pick ->')
+                print(new_state)
+        check_for_duplicates(board)
+        solutions.update(find_solutions(board, depth+1, verbose))
+
+    return solutions
+
+
+def main():
+    board = Board(5, 4, max_pips=3)
+    board.fill(random)
+    board.split_all()
+    solutions = find_solutions(board, verbose=True)
+    print(f'Found {len(solutions)} solution{"s" if len(solutions) != 1 else ""}.')
+    print('=====\n'.join(sorted(solutions)))
+    print('\n'*2)
+    print(f'Find {len(solutions)}.')
+    board.split_all()
+    print(board.display())
 
 
 if __name__ == '__main__':
