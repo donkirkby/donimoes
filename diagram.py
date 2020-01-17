@@ -98,16 +98,21 @@ def draw_cell(turtle, cell, cell_size=50.0):
     turtle.left(90)
     turtle.forward(cell_size * 0.45)
     turtle.right(90)
-    r = cell_size * 0.05
+    r = cell_size * 0.1
     turtle.forward(r)
     turtle.down()
     turtle.fillcolor('white')
+    old_colour = turtle.pencolor()
+    turtle.pencolor('light grey')
     turtle.begin_fill()
     for _ in range(4):
-        turtle.forward(cell_size * 0.8)
+        turtle.forward(cell_size * 0.7)
+        turtle.up()
         turtle.circle(-r, 90)
+        turtle.down()
 
     turtle.end_fill()
+    turtle.pencolor(old_colour)
 
     turtle.up()
     turtle.back(r)
@@ -533,7 +538,7 @@ def draw_demo(turtle):
     turtle.forward(cell_size*3.5)
     turtle.right(90)
     turtle.down()
-    turtle.fillcolor('ivory')
+    turtle.fillcolor('white')
     turtle.begin_fill()
     for _ in range(2):
         turtle.forward(cell_size*8)

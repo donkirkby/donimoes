@@ -140,7 +140,7 @@ class SvgTurtle(TNavigator, TPen):
             return color_map.get(color.lower(), color)
         try:
             r, g, b = color
-        except ValueError:
+        except (ValueError, TypeError):
             return '#000000'
         r, g, b = [round(255.0*x) for x in (r, g, b)]
         if not ((0 <= r <= 255) and (0 <= g <= 255) and (0 <= b <= 255)):

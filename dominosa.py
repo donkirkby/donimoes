@@ -164,7 +164,8 @@ def check_for_duplicates(board: Board):
 
 def find_solutions(board: Board,
                    depth: int = 1,
-                   verbose: bool = False) -> typing.Set[str]:
+                   verbose: bool = False,
+                   max_solutions: typing.Optional[int] = None) -> typing.Set[str]:
     while True:
         rule = 'one neighbour'
         pairs = find_one_neighbour_pairs(board)
@@ -207,20 +208,24 @@ def find_solutions(board: Board,
                 print('pick ->')
                 print(new_state)
         check_for_duplicates(board)
-        solutions.update(find_solutions(board, depth+1, verbose))
+        solutions.update(find_solutions(board, depth+1, verbose, max_solutions))
+        if max_solutions is not None and len(solutions) > max_solutions:
+            return solutions
 
     return solutions
 
 
 def main():
-    board = Board(5, 4, max_pips=3)
-    board.fill(random)
-    board.split_all()
-    solutions = find_solutions(board, verbose=True)
-    print(f'Found {len(solutions)} solution{"s" if len(solutions) != 1 else ""}.')
-    print('=====\n'.join(sorted(solutions)))
-    print('\n'*2)
-    print(f'Find {len(solutions)}.')
+    while True:
+        board = Board(6, 5, max_pips=4)
+        board.fill(random)
+        board.split_all()
+        solutions = find_solutions(board, verbose=False, max_solutions=1)
+        if len(solutions) == 1:
+            break
+        else:
+            print(f'Found multiple solutions.')
+    print(f'Find the solution.')
     board.split_all()
     print(board.display())
 
