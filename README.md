@@ -12,7 +12,7 @@ broaden your horizons beyond a chain of dominoes with matching numbers:
     to each other.
 * **Capturing Donimoes** is a puzzle I designed where you have to collect all the
     dominoes by sliding matching numbers next to each other.
-* **Tetradominoes** is a game I designed for two to four players where you play
+* **Tetradominoes** is a game I designed for one to four players where you play
     matching dominoes in a grid, then try to play the tetromino shapes on top.
 * **Mountains and Valleys** is a solitaire game by Sid Sackson where you have to
     lay out a map that you can hike on. I adapted it from paper, pencil, and
@@ -63,7 +63,7 @@ can read about [experiments] in progress ([PDF][new pdf]).
 [rules]: https://donkirkby.github.com/donimoes/rules.html
 [Blocking example]: https://donkirkby.github.com/donimoes/blocking_example.png
 [Capturing example]: https://donkirkby.github.com/donimoes/capturing_example.png
-[solution example]: http://donkirkby.github.com/donimoes/solution_example.png
+[solution example]: https://donkirkby.github.com/donimoes/solution_example.png
 [pdf]: https://donkirkby.github.com/donimoes/donimoes.pdf
 [making donimoes]: https://donkirkby.github.com/donimoes/making_donimoes.html
 [experiments]: https://donkirkby.github.com/donimoes/new_rules.html

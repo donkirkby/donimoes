@@ -2,7 +2,7 @@
 title: The Rules of Donimoes
 ---
 
-# Donimoes: New Games and Puzzles #
+# Donimoes: New Games and Puzzles
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of
 games, often with Mr. Hoyle's name on the cover, you might also find All Fives.
@@ -16,7 +16,7 @@ broaden your horizons beyond a chain of dominoes with matching numbers:
     to each other.
 * **Capturing Donimoes** is a puzzle I designed where you have to collect all the
     dominoes by sliding matching numbers next to each other.
-* **Tetradominoes** is a game I designed for two to four players where you play
+* **Tetradominoes** is a game I designed for one to four players where you play
     matching dominoes in a grid, then try to play the tetromino shapes on top.
 * **Mountains and Valleys** is a solitaire game by Sid Sackson where you have to
     lay out a map that you can hike on. I adapted it from paper, pencil, and
@@ -585,6 +585,9 @@ Tetradominoes is my attempt to do that.
 ## Tetradominoes
 Play matching dominoes in a grid, then try to play the tetromino shapes on top.
 
+### Players
+1 to 4 (See the solitaire rules at the end.)
+
 ### Equipment
 * a set of dominoes from double blank to double six
 * a set of tokens (small chips or cubes that are small enough to fit on top of a
@@ -681,17 +684,35 @@ the light side up. If you have a dark token, you must play with the dark side
 up. With three players, all players play tetrominoes with the light side up, and
 then place one of their tokens on the tetromino.
 
-With 4 players, after a tetromino is played, the two opposing players can each
-take a domino from their hand, and give it to their partner. This is useful if
-you have two dominoes that will work well together. However, you can't tell your
-partner how to play it. 
+With 4 players, after a tetromino is played, the two opposing players may each
+take a domino from their hand, and trade with their partner. This is useful if
+your partner is about to play and you have a domino that matches something on
+the board. It can also be useful when you have two dominoes that will work well
+together. However, you can't tell your partner how to play what you give them. 
 
 ### Game End
 With 2 or 4 players, the game ends when one player or team plays four
 tetrominoes and wins. With 3 players, the game ends when one player plays three
 tetrominoes and wins.
 
-### Variant
+### Solitaire
+All the rules about playing dominoes and tetrominoes stay the same, but you're
+trying to fit all of the tetrominoes into a small space. You can play the
+tetrominoes either side up, but you get more points if they are mostly the same
+colour. If you play a domino that can have a tetromino played on it, you must
+play that tetromino. If you can't play any dominoes, discard one tetromino to
+count as unplayed, and draw up to four dominoes. Then put the same number of
+dominoes back in the pile, and shuffle the pile face down.
+
+**Level 1** - At the end of the game, count the number of black tetrominoes `B`,
+the number of white tetrominoes `W`, and the number of unplayed tetrominoes `X`.
+Calculate your score as `BxW + 7xX`. You win if your score is less than 10.
+
+**Level 2** - At the end of the game, imagine a rectangle surrounding the
+dominoes you played. Count the numbers along the longest side, and add that to
+the level 1 score. You win if your total score is less than 15. Good luck!
+
+### Tournament
 Tournament play is a series of games until one player wins seven points. One
 point for each tetromino.
 

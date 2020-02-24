@@ -66,7 +66,7 @@ can read about [experiments] in progress ([PDF][new pdf]).
 [rules]: https://donkirkby.github.com/donimoes/rules.html
 [Blocking example]: https://donkirkby.github.com/donimoes/blocking_example.png
 [Capturing example]: https://donkirkby.github.com/donimoes/capturing_example.png
-[solution example]: http://donkirkby.github.com/donimoes/solution_example.png
+[solution example]: https://donkirkby.github.com/donimoes/solution_example.png
 [pdf]: https://donkirkby.github.com/donimoes/donimoes.pdf
 [making donimoes]: https://donkirkby.github.com/donimoes/making_donimoes.html
 [experiments]: https://donkirkby.github.com/donimoes/new_rules.html
