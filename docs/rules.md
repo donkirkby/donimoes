@@ -1127,5 +1127,5 @@ Found some interesting problems to solve? Ideas to share? Get in touch at
 Capturing and Blocking Donimoes, as well as Tetradominoes are original puzzles
 and games designed by [Don Kirkby][don].
 
-[github]: https://donkirkby.github.com/donimoes
-[don]: https://donkirkby.github.com/
+[github]: https://donkirkby.github.io/donimoes
+[don]: https://donkirkby.github.io/
