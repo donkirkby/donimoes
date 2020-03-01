@@ -5,32 +5,41 @@ title: The Rules of Donimoes
 # Donimoes: New Games and Puzzles
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of
-games, often with Mr. Hoyle's name on the cover, you might also find All Fives.
-If you're lucky, you'll even find Chickenfoot and Mexican Train.
+games, often with Mr. Hoyle's name on the cover, you might find the basic game
+and maybe All Fives. If you're lucky, you'll find Chickenfoot and Mexican Train.
 
-This book is a collection of new games and puzzles for dominoes that will
-broaden your horizons beyond a chain of dominoes with matching numbers:
+This book is a collection of domino games and puzzles that will broaden your
+horizons beyond a chain of dominoes with matching numbers. You'll find new games
+and puzzles that I designed, as well as some of my favourite domino games and
+puzzles by other designers:
 
-* **Blocking Donimoes** is a puzzle I designed where you have to slide all the
+* **Unmatched Donimoes** is a puzzle I designed where you have to slide all the
     dominoes into a rectangular shape, without sliding any matching numbers next
     to each other.
 * **Capturing Donimoes** is a puzzle I designed where you have to collect all the
     dominoes by sliding matching numbers next to each other.
 * **Tetradominoes** is a game I designed for one to four players where you play
     matching dominoes in a grid, then try to play the tetromino shapes on top.
+    (1-4 players, double-six dominoes, 7 cardboard tetrominoes, and some beads,
+    buttons, or coins)
 * **Mountains and Valleys** is a solitaire game by Sid Sackson where you have to
     lay out a map that you can hike on. I adapted it from paper, pencil, and
     dice to use dominoes.
 * **Fujisan** is a solitaire game by James Droscha designed for the piecepack
     game system where you have to help four Shinto priests climb to the peak of
     Mount Fuji. He then adapted it for dominoes and pawns, and I found
-    20 layouts that are much more challenging than usual.
+    20 layouts that are much more challenging than usual. (1 player, double-six
+    dominoes, and four pawns)
 
-## The Blocking Puzzle's Goal ##
+## Unmatched Donimoes
+A puzzle I designed that's the opposite of traditional dominoes: matches are
+forbidden.
+
+### Goal
 The goal is to slide all the dominoes into a rectangle, without sliding any
 matching numbers next to each other.
 
-## Moves ##
+### Moves
 Move a domino one space along its long axis so that none of its numbers match
 an adjacent number on a neighbouring domino. In this example, the lower domino
 can move to the right, because the three doesn't match the two, and the four
@@ -41,45 +50,45 @@ then the threes would be right next to each other.
     
     3|4       3>4
 
-## Stay Connected ##
+### Stay Connected
 All the dominoes in the puzzle have to be connected in one solid group, diagonal
 connections don't count. When you move a domino, it can be disconnected during
 the move, as long as it is connected at the start and the end of the move.
 Remember that it can only move one space at a time, though.
 
-## Blocking Donimoes Problems ##
-Here are the starting positions for several Blocking Donimoes problems. The
+### Problems
+Here are the starting positions for several Unmatched Donimoes problems. The
 solutions are listed at the end.
 
-### Problem 1 ###
+#### Problem 1
       2    
       -
       3 1|2
     
     2|4    
 
-### Problem 2 ###
+#### Problem 2
           4  
           -
     2|3 2 6  
         -
         4 0|2
 
-### Problem 3 ###
+#### Problem 3
       3|0     5|3
     
         3 6 2|4  
         - -
     4|6 4 3      
 
-### Problem 4 ###
+#### Problem 4
     0|4 0 5      
         - -
         5 4   2|0
     
           6|3 6|2
 
-### Problem 5 ###
+#### Problem 5
             1  
             -
     0|4 3 5 4  
@@ -92,7 +101,7 @@ solutions are listed at the end.
       -
       0        
 
-### Problem 6 ###
+#### Problem 6
         0      
         -
     4|3 4      
@@ -105,7 +114,7 @@ solutions are listed at the end.
       -     -
       1     0  
 
-### Problem 7 ###
+#### Problem 7
     1           0|6
     -
     0     4   5|4
@@ -116,7 +125,7 @@ solutions are listed at the end.
           -
           6
 
-### Problem 8 ###
+#### Problem 8
           5     2
           -     -
           0 3|3 5
@@ -127,7 +136,7 @@ solutions are listed at the end.
                 -
     2|2         0
 
-### Problem 9 ###
+#### Problem 9
               0  
               -
     1|6 0|6   3  
@@ -140,7 +149,7 @@ solutions are listed at the end.
       -     -
       4     4
 
-### Problem 10 ###
+#### Problem 10
       5
       -
       4   6|3 6|0
@@ -151,7 +160,7 @@ solutions are listed at the end.
       -       -
       5 6|6   0
 
-### Problem 11 ###
+#### Problem 11
         0 1|0 4|5 6|0
         -
         5   4|0 4|1  
@@ -162,7 +171,7 @@ solutions are listed at the end.
                   -
                   5  
 
-### Problem 12 ###
+#### Problem 12
       2|6 3 4|0
           -
       6   6    
@@ -181,7 +190,7 @@ solutions are listed at the end.
               -
               3
 
-### Problem 13 ###
+#### Problem 13
       6         2
       -         -
       1 5|0 4|0 2
@@ -192,7 +201,7 @@ solutions are listed at the end.
     
     2|1     3|5
 
-### Problem 14 ###
+#### Problem 14
                 4  
                 -
     3|1   4|6 4 1  
@@ -205,7 +214,7 @@ solutions are listed at the end.
       -
       6 5|5 3|3 6|3
 
-### Problem 15 ###
+#### Problem 15
         6          
         -
     3|3 5   2|2 0|5
@@ -222,7 +231,7 @@ solutions are listed at the end.
                 -
                 1  
 
-### Problem 16 ###
+#### Problem 16
       4|2 4|6 5|0  
     
         1|2 5|6 5  
@@ -237,7 +246,7 @@ solutions are listed at the end.
       -
       6            
 
-### Problem 17 ###
+#### Problem 17
       6            
       -
       4 1|1 5|1 6|6
@@ -254,7 +263,7 @@ solutions are listed at the end.
         -
         5          
 
-### Problem 18 ###
+#### Problem 18
     6|0   1|5 4|3
     
       4 2|5 2|6  
@@ -269,7 +278,7 @@ solutions are listed at the end.
                 -
                 3
 
-### Problem 19 ###
+#### Problem 19
                       4  
                       -
           1|0 6|2 6|0 3  
@@ -286,7 +295,7 @@ solutions are listed at the end.
                     -
                     5    
 
-### Problem 20 ###
+#### Problem 20
                     2  
                     -
     4|2 5|0 4|4 6|0 2  
@@ -307,14 +316,17 @@ solutions are listed at the end.
                     -
                     1  
 
-## The Capturing Puzzle's Goal ##
+## Capturing Donimoes
+A puzzle I designed to feel like a safari in heavy traffic.
+
+### Goal
 The goal is to collect all the dominoes by sliding matching numbers next to
 each other.
 
-## Moves ##
-There are only two ways a domino can move.
+### Moves
+There are only two ways a domino can move: matching and adding.
 
-### Matching ###
+#### Matching
 Move a domino one space along its long axis so that it ends up with at least
 one of its numbers matching an adjacent number on a neighbouring domino. Then
 collect the domino you moved and any dominoes that match it, by removing them
@@ -325,7 +337,7 @@ dominoes: solution found!
     
     3|4       3>4       3*4
 
-### Adding ###
+#### Adding
 Move a domino one space along its long axis so that it ends up with at least
 one of its numbers next to an adjacent number that adds up to six. With an
 adding move, no dominoes are removed. In this example, the two adds up with the
@@ -350,20 +362,20 @@ and the four matches the four above it. You collect all three dominoes.
     -         -       *
     2   2|4   2 2<4   2 2*4
 
-### Stay Connected ###
+#### Stay Connected
 All the dominoes must stay in one connected group, you can't split the group
 after moving or after removing the matching dominoes.
 
-## Capturing Donimoes Problems ##
+### Problems
 Here are the starting positions for several Capturing Donimoes problems. The
 solutions are listed at the end.
 
-### Problem 1 ###
+#### Problem 1
     2 1|4 1
     -     -
     3 2|5 0
 
-### Problem 2 ###
+#### Problem 2
     1 0|5 3
     -     -
     2 5|3 6
@@ -371,7 +383,7 @@ solutions are listed at the end.
     1|0 6|0
 
 
-### Problem 3 ###
+#### Problem 3
     3|3 2|1
     
     1 6 0|2
@@ -380,7 +392,7 @@ solutions are listed at the end.
         - -
     4|5 4 5
 
-### Problem 4 ###
+#### Problem 4
     0|3 4|6
     
     3 6 0|5
@@ -389,7 +401,7 @@ solutions are listed at the end.
         - -
     4|5 4 6
 
-### Problem 5 ###
+#### Problem 5
     4 3|6 5|4
     -
     6 4 3 6 5
@@ -398,7 +410,7 @@ solutions are listed at the end.
     -
     0 2|6 0|6
 
-### Problem 6 ###
+#### Problem 6
     3|4 6|4 6
             -
     4 6 1|6 0
@@ -407,7 +419,7 @@ solutions are listed at the end.
             -
     5|0 1|3 5
 
-### Problem 7 ###
+#### Problem 7
     3|6 2|0 2
             -
     5 3 1|2 3
@@ -416,7 +428,7 @@ solutions are listed at the end.
             -
     5|5 6|6 1
 
-### Problem 8 ###
+#### Problem 8
     0|2 0|0 2|6
     
     6 0|1 5 0 2
@@ -425,7 +437,7 @@ solutions are listed at the end.
     
     2|4 6|5 3|0
 
-### Problem 9 ###
+#### Problem 9
     2 3|5 6 5|4
     -     -
     3 2|2 5 0 3
@@ -434,7 +446,7 @@ solutions are listed at the end.
         - -
     4|3 6 0 4|4
 
-### Problem 10 ###
+#### Problem 10
     2|5 3 6|4 1
         -     -
     6 2 0 5|6 5
@@ -445,7 +457,7 @@ solutions are listed at the end.
     
     0|0 2|4 1|2
 
-### Problem 11 ###
+#### Problem 11
     2|1 3|0 6|4
     
     1 0|1 4|2 3
@@ -456,7 +468,7 @@ solutions are listed at the end.
     
     0|0 5|1 4|3
 
-### Problem 12 ###
+#### Problem 12
     5|3 1|2 4|2
     
     6 1|5 1 2|5
@@ -467,7 +479,7 @@ solutions are listed at the end.
     -     -
     2 3|3 0 5|4
 
-### Problem 13 ###
+#### Problem 13
     4|4 6|5 2|4
     
     0 1|5 4|0 6
@@ -480,7 +492,7 @@ solutions are listed at the end.
     
     6|3 0|1 5|0
 
-### Problem 14 ###
+#### Problem 14
     2 1|2 5|2 0
     -         -
     2 3 1 2|6 1
@@ -493,7 +505,7 @@ solutions are listed at the end.
     - - -     -
     4 5 6 5|5 0
 
-### Problem 15 ###
+#### Problem 15
     0 2 1|3 1|2
     - -
     6 0 4|4 6|1
@@ -506,7 +518,7 @@ solutions are listed at the end.
     -         -
     6 5|6 3|6 5
 
-### Problem 16 ###
+#### Problem 16
     3|5 6|0 3|3 6
                 -
     4 0|1 5|2 1 2
@@ -519,7 +531,7 @@ solutions are listed at the end.
                 -
     2|1 6|1 0|4 0
 
-### Problem 17 ###
+#### Problem 17
     2 0|2 0|1 2|3 1
     -             -
     5 4|1 5|5 6|2 5
@@ -532,7 +544,7 @@ solutions are listed at the end.
     -             -
     4 5|6 2|2 4|6 4
 
-### Problem 18 ###
+#### Problem 18
     0 1|0 2 5 3|2 3
     -     - -     -
     4 6|5 4 1 2|0 6
@@ -545,7 +557,7 @@ solutions are listed at the end.
     -         -
     1 6|4 6|0 4 1|2
 
-### Problem 19 ###
+#### Problem 19
     4|2 5|6 3|3 5|4
     
     6 3|4 5|5 6|4 0
@@ -560,7 +572,7 @@ solutions are listed at the end.
     -             -
     1 2|0 3|0 4|4 1
 
-### Problem 20 ###
+#### Problem 20
     4|1 5|3 6 5|5 2
             -     -
     3|4 0 5 2 6|6 5
@@ -717,20 +729,8 @@ Tournament play is a series of games until one player wins seven points. One
 point for each tetromino.
 
 
-# Domino Puzzles By Other Designers #
-## Dominosa ##
-The domino puzzle I often see is called either Dominosa or Domino Solitaire. You
-start with a grid of numbers, and you have to lay the dominoes on them. It was
-invented by O.S. Adler in 1874. There's an [interesting proof][proof] that this
-puzzle is NP-hard.
-
-Reiner Knizia published some puzzles called [Domino Knobelspass][knizia] that
-are very similar to Dominosa.
-
-[proof]: http://cs.stackexchange.com/q/16850/40884
-[knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
-
-## Mountains and Valleys ##
+# Domino Puzzles By Other Designers
+## Mountains and Valleys
 Sid Sackson included this in his [Beyond Solitaire][solitaire] book, and I
 adapted it from paper, pencil, and dice to use dominoes.
 
@@ -806,7 +806,7 @@ rules as the cooperative version.
 
 [solitaire]: https://boardgamegeek.com/game/3940
 
-## Fujisan ##
+## Fujisan
 James Droscha designed this for the piecepack game system, and then adapted it
 for dominoes and pawns in a paper on
 [using entangled components in solitaire games][droscha].
@@ -816,7 +816,7 @@ to the top of Mount Fuji. You must find pathways for them to move up and down
 the mountain until they can all achieve the peak. Often, this will require you
 to guide them into positions from which they can assist each other.
 
-### Setup ###
+### Setup
 Remove all dominoes with the number six and all doubles from a standard set of
 double-six dominoes. Shuffle the remaining 15 dominoes face down, then place
 twelve face-up dominoes side by side. Leave the three remaining dominoes face
@@ -829,7 +829,7 @@ Here's an example layout:
 
 Place a Priest (pawn) beside each number at both ends of the mountain.
 
-### Moving a Priest ###
+### Moving a Priest
 1. A Priest may move onto a space if the number matches the number of unoccupied
   spaces the Priest must move in a straight line to get there (including the
   destination space itself, but not including the space the Priest's starting
@@ -848,10 +848,10 @@ Place a Priest (pawn) beside each number at both ends of the mountain.
 5. A Priest must enter the mountain from his own starting row; that is, he
   cannot move back or forth while he remains on the ground.
 
-### Goal ###
+### Goal
 The Priests will be content when they all reach the top of the mountain.
 
-### Variant ###
+### Variant
 Country Road: Once all four Priests have reached the peak, move the dominoes
 at the peak to the Priests' original setup positions at the two ends of the
 mountain and continue until all four Priests have left the mountain.
@@ -861,115 +861,115 @@ will not step back on.
 
 [droscha]: https://arxiv.org/abs/1810.01926
 
-## Fujisan Problems ##
-Shuffling the dominoes generates a nice set of problems. In 1000 randomly
-generated problems, 92% were solvable. Of those, the median solution length
-was 14, with half of them between 12 and 16. Here are some more challenging
-problems for you to try. The solutions are listed at the end.
+### Problems
+Shuffling the dominoes generates a nice set of Fujisan problems. In 1000
+randomly generated problems, 92% were solvable. Of those, the median solution
+length was 14, with half of them between 12 and 16. Here are some more
+challenging problems for you to try. The solutions are listed at the end.
 
-### Problem 1 ###
+#### Problem 1
     3 2 1 0 0 1 0 3 1 2 3 1
     - - - - - - - - - - - -
     4 0 0 4 5 2 3 2 5 5 1 4
 
-### Problem 2 ###
+#### Problem 2
     2 5 5 1 0 2 3 3 1 4 5 1
     - - - - - - - - - - - -
     1 1 2 4 5 0 2 4 3 0 4 0
 
-### Problem 3 ###
+#### Problem 3
     5 1 0 3 1 1 2 2 0 4 0 0
     - - - - - - - - - - - -
     2 2 5 5 5 3 0 4 4 3 1 3
 
-### Problem 4 ###
+#### Problem 4
     3 1 2 3 4 2 0 1 0 1 5 0
     - - - - - - - - - - - -
     4 3 1 5 2 0 5 0 4 4 2 3
 
-### Problem 5 ###
+#### Problem 5
     5 5 0 1 3 1 1 0 1 1 4 4
     - - - - - - - - - - - -
     2 0 2 2 5 4 5 3 0 3 0 2
 
-### Problem 6 ###
+#### Problem 6
     5 5 2 0 1 1 3 2 0 0 3 4
     - - - - - - - - - - - -
     2 1 4 4 2 4 2 0 1 5 1 5
 
-### Problem 7 ###
+#### Problem 7
     3 2 5 4 3 1 4 0 1 2 2 1
     - - - - - - - - - - - -
     4 5 0 1 0 0 0 2 2 4 3 3
 
-### Problem 8 ###
+#### Problem 8
     4 3 1 5 2 2 0 1 1 0 3 3
     - - - - - - - - - - - -
     0 1 0 4 0 3 5 4 2 3 5 4
 
-### Problem 9 ###
+#### Problem 9
     5 0 4 2 4 5 4 1 2 4 3 5
     - - - - - - - - - - - -
     3 3 5 1 0 0 1 0 5 2 1 1
 
-### Problem 10 ###
+#### Problem 10
     5 3 1 1 0 2 0 0 1 0 5 2
     - - - - - - - - - - - -
     4 5 5 3 2 3 1 4 2 3 0 5
 
-### Problem 11 ###
+#### Problem 11
     2 3 1 0 2 0 0 2 1 0 4 0
     - - - - - - - - - - - -
     3 4 4 2 5 5 4 4 3 1 5 3
 
-### Problem 12 ###
+#### Problem 12
     5 3 1 1 0 0 0 1 1 0 4 3
     - - - - - - - - - - - -
     4 4 5 3 2 5 1 4 2 3 0 5
 
-### Problem 13 ###
+#### Problem 13
     1 0 0 2 3 5 5 2 0 0 1 1
     - - - - - - - - - - - -
     4 3 4 0 2 2 3 1 5 1 3 5
 
-### Problem 14 ###
+#### Problem 14
     4 3 1 5 0 2 4 1 0 1 1 2
     - - - - - - - - - - - -
     1 4 3 2 2 3 0 2 5 0 5 4
 
-### Problem 15 ###
+#### Problem 15
     2 4 3 3 3 0 0 2 0 5 4 3
     - - - - - - - - - - - -
     5 5 0 2 1 5 4 1 1 1 1 5
 
-### Problem 16 ###
+#### Problem 16
     4 3 3 2 0 4 3 3 5 1 1 5
     - - - - - - - - - - - -
     5 4 1 5 2 0 0 2 0 4 0 3
 
-### Problem 17 ###
+#### Problem 17
     4 4 5 1 0 0 1 0 0 1 3 5
     - - - - - - - - - - - -
     5 3 2 2 1 5 4 2 4 3 0 1
 
-### Problem 18 ###
+#### Problem 18
     2 4 2 5 3 5 1 2 4 2 3 4
     - - - - - - - - - - - -
     5 5 1 0 1 1 0 0 1 4 0 0
 
-### Problem 19 ###
+#### Problem 19
     2 4 1 0 0 5 1 2 4 2 4 0
     - - - - - - - - - - - -
     5 5 2 5 3 1 0 0 1 4 3 4
 
-### Problem 20 ###
+#### Problem 20
     5 5 0 2 0 1 1 0 1 5 4 0
     - - - - - - - - - - - -
     1 3 3 4 2 4 2 1 3 2 0 5
 
-# Solutions #
-## Blocking Donimoes Solutions ##
-Here are the solutions to the Blocking Donimoes problems. For each step, move
+# Solutions
+## Unmatched Donimoes Solutions ##
+Here are the solutions to the Unmatched Donimoes problems. For each step, move
 the listed domino left, right, up, or down. 
 
 1. 24R, 24R, 23D
@@ -1011,7 +1011,7 @@ the listed domino left, right, up, or down.
     40U, 41U, 16U, 20L, 40U, 41U, 16U, 64R, 63R, 65R, 55R, 54D, 01R, 11D, 52D, 51D,
     66R, 66R, 33D, 33D, 42L, 50L, 44L, 60L
 
-## Capturing Donimoes Solutions ##
+## Capturing Donimoes Solutions
 Here are the solutions to the Capturing Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Then make captures for any matching
 numbers.
@@ -1041,7 +1041,7 @@ numbers.
 20. 25U, 40D, 10D, 63D, 60R, 60R, 32D, 20R, 31D, 65R, 62D, 21R, 51R, 34L, 53R,
     51R
 
-## Fujisan Solutions ##
+## Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different
 pawns, the top left is labelled as a (P)awn, the bottom is a k(N)ight, the top
 right is a (B)ishop, and the bottom right is a (R)ook.
@@ -1120,11 +1120,11 @@ right is a (B)ishop, and the bottom right is a (R)ook.
     PR5(+1), PD, ND, NR5(+2), NU, PU, RU, BL1(+3), BD, PD, PL2(+1), PU, BL2, RD,
     ND, NL4(+2), NU, RL4(+1)
 
-# Contributing #
+# Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [donkirkby.github.com/donimoes][github].
 
-Capturing and Blocking Donimoes, as well as Tetradominoes are original puzzles
+Capturing and Unmatched Donimoes, as well as Tetradominoes are original puzzles
 and games designed by [Don Kirkby][don].
 
 [github]: https://donkirkby.github.io/donimoes
