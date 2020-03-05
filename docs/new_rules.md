@@ -5,59 +5,10 @@ title: New Rules for Donimoes
 These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 
-* **Domino Finder** is a game I designed where you have to find the domino
-    without falling in a trap. (2-4 players, double-six dominoes, pawns, and two
-    dice)
 * **Dominosa** is the dominoes puzzle where you have to fit the set of dominoes
     into a grid of numbers.
 * **Adding Donimoes** is a puzzle I designed where you add dominoes in the given
     order.
-
-## Domino Finder
-A memory game with hidden traps.
-
-### Players
-2-4
-
-### Equipment
-* a set of dominoes from double blank to double six
-* one pawn for each player, in different colours
-* two six-sided dice
-
-### Object
-For 2 players, find 7 treasure dominoes. 3 players find 5, or 4 players find 4.
-
-### Setup
-Find the 7 dominoes that have blanks, gather them into a pile, and shuffle them
-face down. Shuffle the other 21 dominoes face down in a separate pile. Then,
-take 1 domino from the blanks pile and 3 from the other pile. Shuffle them
-together so you don't know what numbers they have and you don't know which has
-a blank. Lay them out face down in a long thin row. Repeat the process until you
-have 7 rows side by side, but leave gaps between the rows so you can turn them
-over as you play. You should end up with a rectangle of 7x8 secret numbers.
-
-Each player rolls the two dice, and the highest number plays first. Reroll to
-break ties. The starting player rolls the two dice to choose the treasure
-domino.
-
-### Play
-On your first turn, place your pawn next to one of the face down dominoes along
-the edge of the board. Every turn, you move your pawn around the board until you
-either find the treasure domino or you step in a trap (a blank square). If you
-want to move onto a face-down domino, place your pawn next to one end, and then
-flip the domino around the long axis, so the numbers stay in the same position.
-If you flip over a blank square next to your pawn, then you stepped in a trap!
-Place your pawn on the blank square, and your turn is over. If you flip over a
-domino that matches the two dice, you found the treasure! Place the treasure
-domino face up in front of you, move your pawn into the empty space, and your
-turn is over. Otherwise, keep moving around the board and flipping dominoes.
-When your turn is over, flip all the dominoes you revealed face down again,
-except for the one you're standing on. If you found the treasure, roll the two
-dice to choose a new treasure. If someone has already found that treasure
-domino, roll again. Play passes to the player on your right.
-
-### Winning
-As soon as you collect enough treasure, you win the game.
 
 ## Dominosa
 The domino puzzle I often see is called either Dominosa or Domino Solitaire. You
