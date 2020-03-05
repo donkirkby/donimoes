@@ -33,6 +33,8 @@ puzzles by other designers:
     Mount Fuji. He then adapted it for dominoes and pawns, and I found
     20 layouts that are much more challenging than usual. (1 player, double-six
     dominoes, and four pawns)
+* **Cobra Paw** is a quick-reaction game by Derek Weston. (2-4 players,
+    double-six dominoes, and two dice)
 
 ## Unmatched Donimoes
 A puzzle I designed that's the opposite of traditional dominoes: matches are
@@ -783,8 +785,10 @@ As soon as you collect enough treasure, you win the game.
 
 # Domino Puzzles By Other Designers
 ## Mountains and Valleys
-Sid Sackson included this in his [Beyond Solitaire][solitaire] book, and I
-adapted it from paper, pencil, and dice to use dominoes.
+Sid Sackson is one of my favourite game designers, who designed Acquire, Can't
+Stop, and I'm the Boss, among many, many others. He included Mountains and
+Valleys in his [Beyond Solitaire][solitaire] book, and I adapted it from paper,
+pencil, and dice to use dominoes.
 
 To start, shuffle a set of double-six dominoes face down, then turn 18 of them
 face up. The remaining 10 aren't used. Then arrange the dominoes into a 6x6
@@ -859,9 +863,9 @@ rules as the cooperative version.
 [solitaire]: https://boardgamegeek.com/game/3940
 
 ## Fujisan
-James Droscha designed this for the piecepack game system, and then adapted it
-for dominoes and pawns in a paper on
-[using entangled components in solitaire games][droscha].
+James Droscha is best known as the designer of the piecepack game system, and
+he designed Fujisan for the piecepack, then adapted it for dominoes and pawns in
+a paper on [using entangled components in solitaire games][droscha].
 
 Four Shinto Priests have traveled from their various prefectures in pilgrimage
 to the top of Mount Fuji. You must find pathways for them to move up and down
@@ -1018,6 +1022,43 @@ challenging problems for you to try. The solutions are listed at the end.
     5 5 0 2 0 1 1 0 1 5 4 0
     - - - - - - - - - - - -
     1 3 3 4 2 4 2 1 3 2 0 5
+
+## Cobra Paw
+Derek Weston is a new game designer who designed this cute quick-reaction game
+in 2017. I adapted it to use regular dice and dominoes, but the original game
+has custom dice and dominoes with some nice design features, so check it out if
+you like this basic version.
+
+### Players
+2 - 4
+
+### Equipment
+* a set of dominoes from double blank to double six
+* two six-sided dice
+
+### Object
+Collect six dominoes
+
+### Setup
+Shuffle all the dominoes face up in the centre of the table.
+
+Any player rolls the dice.
+
+### Play
+All players try to find the domino that matches the numbers on the two dice. As
+soon as you find it, put one finger on the centre of the domino. Whoever gets
+their finger on the domino first, takes it and places it face down in front of
+them. Then they roll the two dice to start the next search.
+
+If the domino that matches the dice is already face down, put your finger on the
+double blank. If the other players agree that the domino is face down, you can
+take any remaining domino except the double blank and place it face down in
+front of you. If you're wrong, though, all the other players get to take a
+domino! Plus, the player who found the right domino gets to take that as well.
+
+### Winning
+The first player to take six dominoes wins the game. If two players take their
+sixth domino at the same time, hunt for another domino.
 
 # Solutions
 ## Unmatched Donimoes Solutions ##
