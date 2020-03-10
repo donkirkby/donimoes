@@ -42,6 +42,8 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
+image_diffs/*.png
+image_diffs/*.svg
 
 # Translations
 *.mo

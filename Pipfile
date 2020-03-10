@@ -13,6 +13,7 @@ networkx = "==1.11"
 reportlab = "*"
 numpy = "==1.13.3"
 svgwrite = "*"
+svglib = "*"
 
 [requires]
 python_version = "3.6"

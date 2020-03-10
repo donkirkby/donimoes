@@ -1,4 +1,6 @@
 import re
+from collections import namedtuple
+from io import StringIO
 from turtle import TNavigator, TPen
 
 
@@ -22,6 +24,8 @@ class SvgTurtle(TNavigator, TPen):
         def window_height(self):
             return self._window_height
 
+    _Stamp = namedtuple('Stamp', 'pos heading color')
+
     def __init__(self, drawing, width=None, height=None):
         if width is None:
             width = _parse_int(drawing['width'])
@@ -33,11 +37,14 @@ class SvgTurtle(TNavigator, TPen):
         TNavigator.__init__(self)
         TPen.__init__(self)
         self.screen = self._Screen(drawing, width, height)
+        self.stamps = []
         self.__xoff = self.window_width()/2
         self.__yoff = -self.window_height()/2
+        self.color('black', 'black')
 
     def _convert_position(self, position):
-        return position[0] + self.__xoff, -position[1] - self.__yoff
+        return (round(position[0] + self.__xoff, 3),
+                round(-position[1] - self.__yoff, 3))
 
     def _goto(self, end):
         if self.screen:
@@ -68,6 +75,36 @@ class SvgTurtle(TNavigator, TPen):
                                                stroke_width=pensize,
                                                stroke_linecap='round'))
 
+    def to_svg(self) -> str:
+        self._path = None  # Cancel incomplete fill.
+        self._newLine()
+        self._flush_lines()
+        self._draw_stamps()
+        svg_file = StringIO()
+        self.screen.cv.write(svg_file)
+
+        return svg_file.getvalue()
+
+    def _draw_stamps(self):
+        self.pensize(1)
+        stamps = self.stamps[:]
+        self.stamps.clear()
+        for stamp in stamps:
+            self.up()
+            self.goto(stamp.pos)
+            self.setheading(stamp.heading)
+            self.color(*stamp.color)
+            self.down()
+            self.begin_fill()
+            self.left(151)
+            self.fd(10.296)
+            self.left(140.8)
+            self.fd(5.385)
+            self.right(43.6)
+            self.fd(5.385)
+            self.setpos(stamp.pos)
+            self.end_fill()
+
     def begin_fill(self):
         self.fill(True)
 
@@ -79,6 +116,7 @@ class SvgTurtle(TNavigator, TPen):
             for x1, y1, x2, y2, pencolor, pensize in self._lines_to_draw:
                 if pencolor is not None:
                     self._draw_line(x1, y1, x2, y2, pencolor, pensize)
+        self._draw_stamps()
 
     def fill(self, flag=None):
         if flag is None:
@@ -101,6 +139,10 @@ class SvgTurtle(TNavigator, TPen):
 
     def window_height(self):
         return self.screen.window_height()
+
+    def stamp(self):
+        self.stamps.append(
+            self._Stamp(self.pos(), self.heading(), self.color()))
 
     def write(self,
               arg,
@@ -140,12 +182,26 @@ class SvgTurtle(TNavigator, TPen):
             return color_map.get(color.lower(), color)
         try:
             r, g, b = color
-        except (ValueError, TypeError):
+        except ValueError:
             return '#000000'
         r, g, b = [round(255.0*x) for x in (r, g, b)]
         if not ((0 <= r <= 255) and (0 <= g <= 255) and (0 <= b <= 255)):
             return '#000000'
         return "#%02x%02x%02x" % (r, g, b)
+
+    @staticmethod
+    def _rgb_value(rgbstr):
+        return round(int(rgbstr, 16)/2.55)/100.0
+
+    def _color(self, colorstr):
+        """ Reverse lookup of _colorstr. """
+        if not colorstr.startswith('#'):
+            return colorstr
+        itercolors = getattr(color_map, 'iteritems', color_map.items)
+        for name, code in itercolors():
+            if code == colorstr:
+                return name
+        return tuple(self._rgb_value(colorstr[2*i+1:2*i+3]) for i in range(3))
 
 
 def _parse_int(s):

@@ -4,6 +4,7 @@ from turtle import done, Turtle
 
 from domino_puzzle import Board, CaptureBoardGraph, Domino, Cell
 
+DEFAULT_CELL_SIZE = 100
 PIP_PATTERNS = """\
 ---+
    |
@@ -37,7 +38,7 @@ OOO|
 """
 
 
-def draw_pips(turtle, pips, cell_size):
+def draw_pips(turtle, pips, cell_size=DEFAULT_CELL_SIZE):
     turtle.fillcolor('black')
     pip_pattern = PIP_PATTERNS.splitlines()[pips*4+1:pips*4+4]
     pip_radius = cell_size*0.09
@@ -67,7 +68,7 @@ def draw_pips(turtle, pips, cell_size):
     turtle.setpos(pos)
 
 
-def draw_domino(turtle, domino, cell_size=50.0):
+def draw_domino(turtle, domino, cell_size=DEFAULT_CELL_SIZE):
     turtle.up()
     turtle.back(cell_size * 0.45)
     turtle.left(90)
@@ -92,7 +93,7 @@ def draw_domino(turtle, domino, cell_size=50.0):
     turtle.back(cell_size)
 
 
-def draw_cell(turtle, cell, cell_size=50.0):
+def draw_cell(turtle, cell, cell_size=DEFAULT_CELL_SIZE):
     turtle.up()
     turtle.back(cell_size * 0.45)
     turtle.left(90)
@@ -141,7 +142,7 @@ def draw_domino_outline(cell_size, turtle):
     turtle.back(r)
 
 
-def draw_paths(turtle, board: Board, cell_size=50.0):
+def draw_paths(turtle, board: Board, cell_size=DEFAULT_CELL_SIZE):
     pos = turtle.pos()
     old_colour = turtle.color()
     old_width = turtle.width()
@@ -179,7 +180,7 @@ def draw_neighbour_path(turtle, cell, neighbour, cell_size):
         turtle.back(cell_size)
 
 
-def draw_board(turtle, board, cell_size=50.0):
+def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
     pos = turtle.pos()
     for y in range(board.height):
         for x in range(board.width):
@@ -207,6 +208,7 @@ def draw_arrow(turtle, cell_size, rotation=0):
     turtle.back(cell_size*.2)
     turtle.down()
     turtle.left(90)
+
     turtle.begin_fill()
     turtle.forward(cell_size*.05)
     turtle.right(90)
@@ -223,10 +225,11 @@ def draw_arrow(turtle, cell_size, rotation=0):
     turtle.forward(cell_size*.3)
     turtle.right(90)
     turtle.forward(cell_size*.05)
+    turtle.end_fill()
+
+    turtle.up()
     turtle.right(90)
     turtle.forward(cell_size*.2)
-    turtle.end_fill()
-    turtle.up()
     turtle.setpos(pos)
     turtle.right(rotation)
 
@@ -341,7 +344,7 @@ def draw_capture_circle(turtle,
         turtle.write(move_num, align='center')
 
 
-def draw_fuji(turtle, num_dominoes, cell_size):
+def draw_fuji(turtle, num_dominoes, cell_size=DEFAULT_CELL_SIZE):
     turtle.up()
     offset = (num_dominoes // 2 - 0.95) * cell_size
     turtle.forward(offset)
@@ -363,7 +366,11 @@ def draw_fuji(turtle, num_dominoes, cell_size):
     turtle.left(90)
 
 
-def draw_diagram(turtle, state, cell_size, solution=False, show_path=False):
+def draw_diagram(turtle,
+                 state,
+                 cell_size=DEFAULT_CELL_SIZE,
+                 solution=False,
+                 show_path=False):
     marks = {'>': partial(draw_arrow, turtle, cell_size),
              '^': partial(draw_arrow, turtle, cell_size, 90),
              '<': partial(draw_arrow, turtle, cell_size, 180),
@@ -501,31 +508,6 @@ def draw_joined_block(turtle, width, height):
         turtle.right(90)
     turtle.end_fill()
     turtle.up()
-
-
-def draw_position(turtle, size=10, color='red'):
-    old_pen = turtle.pen()
-    old_pos = turtle.pos()
-    old_heading = turtle.heading()
-    turtle.color(color)
-    turtle.begin_fill()
-
-    turtle.left(90)
-
-    turtle.forward(size*0.5)
-    turtle.right(120)
-    turtle.forward(size)
-    turtle.right(120)
-    turtle.forward(size)
-    turtle.right(120)
-    turtle.forward(size*0.5)
-
-    turtle.right(90)
-
-    turtle.end_fill()
-    turtle.setheading(old_heading)
-    turtle.setpos(old_pos)
-    turtle.pen(old_pen)
 
 
 def draw_demo(turtle):

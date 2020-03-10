@@ -1,9 +1,27 @@
-from turtle import *  # @UnusedWildImport
+from io import BytesIO
 
 import svgwrite
+import reportlab.graphics.shapes as reportlab_shapes
+from svglib.svglib import svg2rlg
 
 from diagram import draw_diagram
 from svg_turtle import SvgTurtle
+
+
+class SvgDiagram:
+    def __init__(self, width="400px", height="250px"):
+        if not isinstance(width, str):
+            width = f'{width}px'
+        if not isinstance(height, str):
+            height = f'{height}px'
+        self.svg_drawing = svgwrite.Drawing(size=(width, height))
+        self.turtle = SvgTurtle(self.svg_drawing)
+
+    def to_reportlab(self) -> reportlab_shapes.Drawing:
+        svg_text = self.turtle.to_svg()
+        svg_bytes = svg_text.encode()
+        drawing = svg2rlg(BytesIO(svg_bytes))
+        return drawing
 
 
 def draw_page(turtle):
@@ -27,18 +45,12 @@ def draw_page(turtle):
     draw_diagram(turtle, state, cell_size)
 
 
-def write_file(draw_func, filename, size):
-    drawing = svgwrite.Drawing(filename, size=size)
-    drawing.add(drawing.rect(fill='white', size=("100%", "100%")))
-    t = SvgTurtle(drawing)
-    Turtle._screen = t.screen
-    Turtle._pen = t
-    draw_func(t)
-    drawing.save()
-
-
 def main():
-    write_file(draw_page, 'diagram.svg', size=("500px", "500px"))
+    diagram = SvgDiagram()
+    diagram.svg_drawing.add(
+        diagram.svg_drawing.rect(fill='white', size=("100%", "100%")))
+    draw_page(diagram.turtle)
+    diagram.svg_drawing.saveas('diagram.svg')
     print('Done.')
 
 

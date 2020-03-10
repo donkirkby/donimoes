@@ -6,8 +6,7 @@ from subprocess import call
 
 from reportlab.lib import pagesizes
 from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.platypus.flowables import Flowable, Spacer, KeepTogether,\
-    ListFlowable
+from reportlab.platypus.flowables import Spacer, KeepTogether, ListFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ListStyle
 from reportlab.lib.units import inch
 # noinspection PyUnresolvedReferences
@@ -16,8 +15,8 @@ from reportlab.rl_config import defaultPageSize
 from diagram import draw_diagram, draw_fuji, draw_blocks
 from domino_puzzle import BoardError
 from footer import FooterCanvas
-from pdf_turtle import PdfTurtle
 from book_parser import parse, Styles
+from svg_diagram import SvgDiagram
 
 PAGE_HEIGHT = defaultPageSize[1]
 PAGE_WIDTH = defaultPageSize[0]
@@ -38,27 +37,28 @@ def parse_args():
     return parser.parse_args()
 
 
-class Diagram(Flowable):
+class Diagram:
     MAX_COLUMN_COUNT = 14
 
-    def __init__(self, board_state, show_path=False):
-        super().__init__()
+    def __init__(self, page_width, page_height, board_state, show_path=False):
+        self.page_width = page_width
+        self.page_height = page_height
         self.board_state = board_state
         self.show_path = show_path
         lines = board_state.splitlines(True)
         self.row_count = (len(lines) + 1)/2
         self.col_count = max(map(len, lines))/2
-        self.cell_size = None
-
-    def wrap(self, avail_width, avail_height):
-        self.cell_size = avail_width / Diagram.MAX_COLUMN_COUNT
+        self.cell_size = self.page_width / Diagram.MAX_COLUMN_COUNT
         self.width = self.cell_size * self.col_count
         self.height = self.cell_size * self.row_count
-        return self.width, self.height
+        self.resize()
 
-    def draw(self):
-        # noinspection PyUnresolvedReferences
-        t = PdfTurtle(self.canv, self._frame, self.width, self.height)
+    def resize(self):
+        pass
+
+    def build(self):
+        diagram = SvgDiagram(self.width, self.height)
+        t = diagram.turtle
         t.up()
         t.back(self.width/2)
         t.left(90)
@@ -67,6 +67,7 @@ class Diagram(Flowable):
         t.down()
         self.draw_background(t)
         self.draw_foreground(t)
+        return diagram.to_reportlab()
 
     def draw_foreground(self, t):
         try:
@@ -87,15 +88,13 @@ class FujisanDiagram(Diagram):
     def draw_background(self, t):
         draw_fuji(t, self.col_count, self.cell_size)
 
-    def wrap(self, avail_width, avail_height):
-        super().wrap(avail_width, avail_height)
+    def resize(self):
         self.height += self.cell_size
-        return self.width, self.height
 
 
 class TetrominoDiagram(Diagram):
-    def __init__(self, board_state):
-        super().__init__(board_state)
+    def __init__(self, page_width, page_height, board_state, show_path=False):
+        super().__init__(page_width, page_height, board_state, show_path)
         lines = board_state.splitlines()
         self.row_count = len(lines)
         self.col_count = max(len(line) for line in lines)
@@ -148,16 +147,23 @@ def main():
             continue
         elif state.style == Styles.Diagram:
             if 'Fujisan' in headings or 'Fujisan Problems' in headings:
-                flowable = FujisanDiagram(state.text)
+                flowable = FujisanDiagram(doc.width,
+                                          doc.height,
+                                          state.text).build()
             elif re.fullmatch(r'[#\s]*', state.text):
-                flowable = TetrominoDiagram(state.text)
+                flowable = TetrominoDiagram(doc.width,
+                                            doc.height,
+                                            state.text).build()
             else:
                 if 'Mountains and Valleys' in headings:
                     diagram_width = (len(state.text.splitlines()[0]) + 1)//2
                     show_path = diagram_width == 6
                 else:
                     show_path = False
-                flowable = Diagram(state.text, show_path)
+                flowable = Diagram(doc.width,
+                                   doc.height,
+                                   state.text,
+                                   show_path).build()
                 if show_path:
                     group.append(flowable)
                     flowable = Paragraph(
