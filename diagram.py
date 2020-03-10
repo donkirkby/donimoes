@@ -181,7 +181,7 @@ def draw_neighbour_path(turtle, cell, neighbour, cell_size):
 
 
 def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
-    pos = turtle.pos()
+    start_x, start_y = turtle.pos()
     for y in range(board.height):
         for x in range(board.width):
             cell = board[x][y]
@@ -199,7 +199,11 @@ def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
         turtle.left(90)
         turtle.forward(cell_size)
         turtle.right(90)
-    turtle.setpos(pos)
+    for domino, x, y in board.offset_dominoes:
+        turtle.setpos(start_x + x*cell_size, start_y + y*cell_size)
+        draw_domino(turtle, domino, cell_size)
+        pass
+    turtle.setpos((start_x, start_y))
 
 
 def draw_arrow(turtle, cell_size, rotation=0):

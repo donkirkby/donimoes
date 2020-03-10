@@ -35,6 +35,8 @@ puzzles by other designers:
     dominoes, and four pawns)
 * **Cobra Paw** is a quick-reaction game by Derek Weston. (2-4 players,
     double-six dominoes, and two dice)
+* **All Fives** is a traditional dominoes game, where you score points by making
+    the ends add up to a multiple of five. (2-4 players, double-six dominoes)
 
 ## Unmatched Donimoes
 A puzzle I designed that's the opposite of traditional dominoes: matches are
@@ -1059,6 +1061,163 @@ domino! Plus, the player who found the right domino gets to take that as well.
 ### Winning
 The first player to take six dominoes wins the game. If two players take their
 sixth domino at the same time, hunt for another domino.
+
+## All Fives
+Of the traditional domino games, this is my favourite. It has a lot of the same
+appeal as cribbage: some basic arithmetic, and playing the odds. Just make sure
+you understand how the sniff works.
+
+### Players
+2 - 4
+
+### Equipment
+* a set of dominoes from double blank to double six
+
+### Object
+Score points by making the ends add up to a multiple of five.
+
+### Setup
+Shuffle the dominoes face down, then draw 7 dominoes each, keeping them hidden
+from your opponents. (Draw 5 when there are 3 or 4 players.)
+
+### Play
+On your turn, you must play a domino with a matching number. In this example,
+the 24 domino has just been played. It's a valid move, because its 2 matches the
+2 on the open end.
+
+    6|3 3|2 2+4
+
+This example is not valid, because the 4 is played against a number that doesn't
+match.
+
+    6|3 3|2 4*2
+
+Dominoes must either be played against an end of the line, or against the sniff.
+(The sniff is explained in the rules for doubles.) This example is not valid,
+because the 34 domino wasn't played against one of the ends.
+
+    6|3 3|2
+
+        3
+        *
+        4
+
+### Draw
+You may draw extra dominoes before you play one, to give you more options. If
+you can't play any of your dominoes, then you must draw extra dominoes until you
+get one that you can play. If there are no dominoes left to draw and you can't
+play any, then pass your turn.
+
+### Doubles
+There are special rules for doubles, and there are extra special rules for the
+first double. Most doubles have to be played across the line, like this:
+
+            2         4
+    6|3 3|2 - 2|5 5|4 - 4|6
+            2         4
+
+Whichever double gets played first is called the sniff, and it has some
+differences from the other doubles. You can play against all four sides of the
+sniff, so if the 22 domino is the sniff, then a 24 domino could be played on
+the 22 domino, but not on the 44 domino.
+
+            2         4
+    6|3 3|2 - 2|5 5|4 - 4|6
+            2         4
+    
+            2
+            +
+            4
+
+The other difference with the sniff is that doesn't have to be played across the
+line, you can choose which way to play it. That can make a difference to the
+scoring.
+
+### Score
+After playing a domino, add up the numbers on the ends. If the total is a
+multiple of 5, then add it to your score. This example adds up to 5, and scores
+5 points.
+
+        3|2
+
+The next player adds a 63 domino, and the total is 8, no score. You don't count
+the 3's, because they're not on the ends.
+
+    6|3 3|2
+
+Now the first double gets played (the sniff). It's played across the line, so
+you count both numbers, and the total is 10. Score 10 points!
+
+            2
+    6|3 3|2 -
+            2
+
+A few turns later, a second double is played. It has to be played across the
+line, so you count both numbers. The sniff's ends are still open to play on, so
+you count them, and the total is 18. No score.
+
+            2         4
+    6|3 3|2 - 2|5 5|4 -
+            2         4
+
+The next play is on the regular double, so we stop counting it. The total is
+6 + 2 + 2 + 0 = 10. Score 10 points.
+
+            2         4
+    6|3 3|2 - 2|5 5|4 - 4|0
+            2         4
+
+Don't forget you can play off the sniff. Now the total is 6 + 2 + 1 + 0 = 9. No
+score.
+
+            2         4
+    6|3 3|2 - 2|5 5|4 - 4|0
+            2         4
+    
+            2
+            -
+            1
+
+Here's an example where the sniff should be played in line instead of across
+the line. Playing across the line would make a total of 14, but playing in line
+makes 10 and scores. Don't forget, you can still play off all four sides of the
+sniff.
+
+    6|4 4+4
+
+Always keep track of which ends need to be counted: there can be 2, 3, or 4. If
+you run out of room on the table, you can bend a line of dominoes around a
+corner, but keep track of where the end is.
+
+### Going Out
+When a player plays their last domino, they score regularly for that domino,
+plus they get points for the dominoes left in other players' hands. Each player
+reveals the dominoes in their hand, adds up the numbers, and rounds to the
+nearest multiple of 5. The player who went out gets that many points.
+
+If all players pass, then the player with the fewest points left in their hand
+goes out. They score the difference between their points and every other
+player's points. If there is a tie for fewest points, split the score. Always
+round scores to the nearest multiple of 5.
+
+### Winning
+If any player has over 200 points after someone goes out, then the player with
+the most points wins the game. If there is a tie for the most points, continue
+playing.
+
+### Strategy
+To make the arithmetic easier, look at the differences between the numbers on
+your dominoes. If the current total is 7, then you can score by raising the
+total by 3 or dropping it by 2. In this example, the difference between 3 and
+6 is 3, so playing it changes the total from 7 to 10.
+
+    4|3 3+6
+
+Particularly in a two-player game, there is a painful rhythm where your opponent
+repeatedly scores and you can't. The key to breaking out of that rhythm is to be
+able to score on a scoring position. Usually, that means playing a domino with
+a difference of 5. Those dominoes are 61, 50, and 55, so they are useful to keep
+in your hand.
 
 # Solutions
 ## Unmatched Donimoes Solutions ##

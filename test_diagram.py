@@ -269,3 +269,28 @@ def test_draw_fuji(drawing_differ):
     draw_fuji(actual.turtle, 4, 50)
 
     drawing_differ.assert_equal(actual, expected, 'draw_fuji')
+
+
+def test_draw_sniff(drawing_differ):
+    expected = SvgDiagram()
+    actual = SvgDiagram()
+
+    t = expected.turtle
+    t.up()
+    t.goto(150, -50)
+    t.left(90)
+    draw_domino(t, Domino(2, 2))
+    t.forward(50)
+    t.right(90)
+    t.back(200)
+    draw_domino(t, Domino(5, 2))
+
+    actual.turtle.up()
+    actual.turtle.goto(-100, 100)
+    draw_diagram(actual.turtle, """\
+    2
+5|2 -
+    2
+""")
+
+    drawing_differ.assert_equal(actual, expected, 'draw_sniff')

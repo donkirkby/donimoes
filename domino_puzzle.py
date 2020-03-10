@@ -100,6 +100,27 @@ class Board(object):
                     elif left_joint == ' ' and lower_joint == ' ':
                         cell = Cell(int(head))
                         board.add(cell, x+border, y+border)
+        for i, line in enumerate(lines):
+            for j, c in enumerate(line):
+                if not ('0' <= c <= '9'):
+                    continue
+                if i%2 == 0 and j%2 == 0:
+                    continue
+                head = int(c)
+                right_joint = j + 1 < line_length and lines[i][j + 1] or ' '
+                upper_joint = i + 1 < height and lines[i + 1][j] or ' '
+                if right_joint != ' ':
+                    tail = lines[i][j + 2]
+                    degrees = 0
+                elif upper_joint != ' ':
+                    tail = lines[i+2][j]
+                    degrees = 90
+                else:
+                    tail = None
+                if tail:
+                    domino = Domino(int(head), int(tail))
+                    domino.rotate(degrees)
+                    board.offset_dominoes.append((domino, j/2, i/2))
         return board
 
     def __init__(self, width, height, max_pips=None):
@@ -115,6 +136,9 @@ class Board(object):
         self.cells: typing.List[typing.List[Cell]] = []
         for _ in range(width):
             self.cells.append([None] * height)
+
+        # Track dominoes that aren't on the regular grid.
+        self.offset_dominoes = []  # [(domino, x, y)]
 
     def __eq__(self, other):
         for x in range(self.width):
