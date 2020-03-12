@@ -620,11 +620,15 @@ plain cardboard, and cut them out. Use a marker to colour one side of each
 shape. Each shape should be big enough fit on top of four domino numbers, with a
 small gap around the outside.
 
-    ###  ##  ####
-    #   ##
-             #
-    #   ##  ## ##
-    ###  ##  # ##
+    #|#|#     #|#     #|#|#|#
+    -         -
+    #       #|#
+    
+                      #
+                      -
+    #       #|#     #|#   #|#
+    -         -       -   - -
+    #|#|#     #|#     #   #|#
 
 ### Object
 Play the most tetrominoes.
@@ -723,9 +727,9 @@ play that tetromino. If you can't play any dominoes, discard one tetromino to
 count as unplayed, and draw up to four dominoes. Then put the same number of
 dominoes back in the pile, and shuffle the pile face down.
 
-**Level 1** - At the end of the game, count the number of black tetrominoes `B`,
-the number of white tetrominoes `W`, and the number of unplayed tetrominoes `X`.
-Calculate your score as `BxW + 7xX`. You win if your score is less than 10.
+**Level 1** - At the end of the game, count the number of black tetrominoes B,
+the number of white tetrominoes W, and the number of unplayed tetrominoes X.
+Calculate your score as BxW + 7xX. You win if your score is less than 10.
 
 **Level 2** - At the end of the game, imagine a rectangle surrounding the
 dominoes you played. Count the numbers along the longest side, and add that to
@@ -1047,16 +1051,19 @@ Shuffle all the dominoes face up in the centre of the table.
 Any player rolls the dice.
 
 ### Play
-All players try to find the domino that matches the numbers on the two dice. As
-soon as you find it, put one finger on the centre of the domino. Whoever gets
-their finger on the domino first, takes it and places it face down in front of
-them. Then they roll the two dice to start the next search.
+All players try to find the target domino - the one that matches the numbers on
+the two dice. As soon as you find it, put one finger on the centre of the
+domino. Whoever gets their finger on the target first, takes it and places it
+face down in front of them. Then they roll the two dice to start the next
+search. When you put your finger on the target, be sure not to cover the
+numbers, so the other players can still see that you got the right one.
 
-If the domino that matches the dice is already face down, put your finger on the
-double blank. If the other players agree that the domino is face down, you can
-take any remaining domino except the double blank and place it face down in
-front of you. If you're wrong, though, all the other players get to take a
-domino! Plus, the player who found the right domino gets to take that as well.
+If you think the target is already face down, be the first to put your finger on
+the double blank. If none of the other players can find the target, you can take
+any remaining domino except the double blank and place it face down in front of
+you. If you're wrong and another player finds the target, though, all the other
+players get to take a domino! Plus, the player who found the target gets to take
+it as well.
 
 ### Winning
 The first player to take six dominoes wins the game. If two players take their
@@ -1093,8 +1100,8 @@ match.
     6|3 3|2 4*2
 
 Dominoes must either be played against an end of the line, or against the sniff.
-(The sniff is explained in the rules for doubles.) This example is not valid,
-because the 34 domino wasn't played against one of the ends.
+(The sniff is explained below in the rules for doubles.) This example is not
+valid, because the 34 domino wasn't played against one of the ends.
 
     6|3 3|2
 
@@ -1376,8 +1383,8 @@ right is a (B)ishop, and the bottom right is a (R)ook.
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [donkirkby.github.com/donimoes][github].
 
-Capturing and Unmatched Donimoes, as well as Tetradominoes are original puzzles
-and games designed by [Don Kirkby][don].
+Capturing and Unmatched Donimoes, as well as Tetradominoes and Domino Finder are
+original puzzles and games designed by [Don Kirkby][don].
 
 [github]: https://donkirkby.github.io/donimoes
 [don]: https://donkirkby.github.io/

@@ -80,7 +80,7 @@ class Board(object):
         for x in range(width):
             for y in range(height):
                 head = lines[y*2][x*2]
-                if head not in ' x':
+                if head not in ' x#':
                     right_joint = x+1 < width and lines[y*2][x*2+1] or ' '
                     left_joint = 0 < x and lines[y*2][x*2-1] or ' '
                     upper_joint = y+1 < height and lines[y*2+1][x*2] or ' '
@@ -102,23 +102,26 @@ class Board(object):
                         board.add(cell, x+border, y+border)
         for i, line in enumerate(lines):
             for j, c in enumerate(line):
-                if not ('0' <= c <= '9'):
-                    continue
-                if i%2 == 0 and j%2 == 0:
-                    continue
-                head = int(c)
+                if c != '#':
+                    if not ('0' <= c <= '9'):
+                        continue
+                    if i % 2 == 0 and j % 2 == 0:
+                        continue
+                head = c if c == '#' else int(c)
                 right_joint = j + 1 < line_length and lines[i][j + 1] or ' '
-                upper_joint = i + 1 < height and lines[i + 1][j] or ' '
+                upper_joint = i + 1 < len(lines) and lines[i + 1][j] or ' '
+                neighbours = []  # [(tail, degrees)]
                 if right_joint != ' ':
                     tail = lines[i][j + 2]
                     degrees = 0
-                elif upper_joint != ' ':
+                    neighbours.append((tail, degrees))
+                if upper_joint != ' ':
                     tail = lines[i+2][j]
                     degrees = 90
-                else:
-                    tail = None
-                if tail:
-                    domino = Domino(int(head), int(tail))
+                    neighbours.append((tail, degrees))
+                for tail, degrees in neighbours:
+                    tail = tail if tail == '#' else int(tail)
+                    domino = Domino(head, tail)
                     domino.rotate(degrees)
                     board.offset_dominoes.append((domino, j/2, i/2))
         return board
@@ -214,6 +217,7 @@ class Board(object):
         max_mutations = len(self.dominoes)
         mutation_count = self.pick_mutation_count(max_mutations, random)
         is_successful = False
+        new_board = None
         while not is_successful:
             # mutation_count = min(mutation_count, 3)
             board_type = board_type or Board
@@ -501,7 +505,7 @@ class Domino(object):
             raise ValueError(f'Cell is not available: {cell.x},{cell.y}.')
 
     def __repr__(self):
-        return "Domino({}, {})".format(self.head.pips, self.tail.pips)
+        return f"Domino({self.head.pips!r}, {self.tail.pips!r})"
 
     def __eq__(self, other):
         if not isinstance(other, Domino):
@@ -1072,6 +1076,7 @@ def live_main():
     plt.ylabel('solution lengths')
     plt.savefig('scores.png')
     print('Done.')
+
 
 if __name__ == '__main__':
     # plotPerformance()

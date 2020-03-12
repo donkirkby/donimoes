@@ -36,11 +36,11 @@ class FooterCanvas(canvas.Canvas):
         self.saveState()
         self.setFont('Times-Roman', 14 if self.is_booklet else 9)
         if self._pageNumber % 2:
-            self.drawString(LETTER[0]-x, 65, str(self._pageNumber))
+            self.drawString(LETTER[0]-x, 45, str(self._pageNumber))
         else:
-            self.drawString(x, 65, str(self._pageNumber))
+            self.drawString(x, 45, str(self._pageNumber))
         if self._pageNumber == 1:
             self.drawCentredString(LETTER[0] / 2,
-                                   65,
+                                   45,
                                    "donkirkby.github.com/donimoes")
         self.restoreState()

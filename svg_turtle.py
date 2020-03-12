@@ -86,6 +86,10 @@ class SvgTurtle(TNavigator, TPen):
         return svg_file.getvalue()
 
     def _draw_stamps(self):
+        start_pos = self.pos()
+        start_heading = self.heading()
+        start_pensize = self.pensize()
+        start_isdown = self.isdown()
         self.pensize(1)
         stamps = self.stamps[:]
         self.stamps.clear()
@@ -104,6 +108,11 @@ class SvgTurtle(TNavigator, TPen):
             self.fd(5.385)
             self.setpos(stamp.pos)
             self.end_fill()
+        self.goto(start_pos)
+        self.setheading(start_heading)
+        self.pensize(start_pensize)
+        if not start_isdown:
+            self.up()
 
     def begin_fill(self):
         self.fill(True)
@@ -143,6 +152,8 @@ class SvgTurtle(TNavigator, TPen):
     def stamp(self):
         self.stamps.append(
             self._Stamp(self.pos(), self.heading(), self.color()))
+        if not self.fill():
+            self._draw_stamps()
 
     def write(self,
               arg,

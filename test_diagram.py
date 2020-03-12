@@ -253,16 +253,16 @@ def test_draw_fuji(drawing_differ):
 
     t = expected.turtle
     t.up()
-    t.goto(52.5, 97.5)
-    draw_domino_outline(50, t)
+    t.goto(75, 75)
+    draw_domino_outline(t, 50)
     t.right(90)
     t.forward(50),
     t.left(90)
-    draw_domino_outline(50, t)
+    draw_domino_outline(t, 50)
     t.right(90)
     t.forward(50),
     t.left(90)
-    draw_domino_outline(50, t)
+    draw_domino_outline(t, 50)
 
     actual.turtle.up()
     actual.turtle.goto(0, 100)
@@ -294,3 +294,28 @@ def test_draw_sniff(drawing_differ):
 """)
 
     drawing_differ.assert_equal(actual, expected, 'draw_sniff')
+
+
+def test_draw_tetromino(drawing_differ):
+    expected = SvgDiagram()
+    actual = SvgDiagram()
+
+    t = expected.turtle
+    t.up()
+    t.goto(0, -50)
+    draw_domino_outline(t, fill='black', margin=0)
+    t.left(90)
+    draw_domino_outline(t, fill='black', margin=0)
+    t.forward(100)
+    t.left(90)
+    draw_domino_outline(t, fill='black', margin=0)
+
+    actual.turtle.up()
+    actual.turtle.goto(-150, 100)
+    draw_diagram(actual.turtle, """\
+#|#
+  -
+  #|#
+""")
+
+    drawing_differ.assert_equal(actual, expected, 'draw_tetromino')

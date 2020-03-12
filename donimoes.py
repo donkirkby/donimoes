@@ -1,4 +1,3 @@
-import re
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
 from functools import partial
 from pathlib import Path
@@ -12,7 +11,7 @@ from reportlab.lib.units import inch
 # noinspection PyUnresolvedReferences
 from reportlab.rl_config import defaultPageSize
 
-from diagram import draw_diagram, draw_fuji, draw_blocks
+from diagram import draw_diagram, draw_fuji
 from domino_puzzle import BoardError
 from footer import FooterCanvas
 from book_parser import parse, Styles
@@ -92,17 +91,6 @@ class FujisanDiagram(Diagram):
         self.height += self.cell_size
 
 
-class TetrominoDiagram(Diagram):
-    def __init__(self, page_width, page_height, board_state, show_path=False):
-        super().__init__(page_width, page_height, board_state, show_path)
-        lines = board_state.splitlines()
-        self.row_count = len(lines)
-        self.col_count = max(len(line) for line in lines)
-
-    def draw_foreground(self, t):
-        draw_blocks(t, self.board_state, self.cell_size)
-
-
 def main():
     args = parse_args()
     markdown_path = Path(args.markdown.name)
@@ -150,10 +138,6 @@ def main():
                 flowable = FujisanDiagram(doc.width,
                                           doc.height,
                                           state.text).build()
-            elif re.fullmatch(r'[#\s]*', state.text):
-                flowable = TetrominoDiagram(doc.width,
-                                            doc.height,
-                                            state.text).build()
             else:
                 if 'Mountains and Valleys' in headings:
                     diagram_width = (len(state.text.splitlines()[0]) + 1)//2

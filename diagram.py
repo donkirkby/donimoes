@@ -69,28 +69,24 @@ def draw_pips(turtle, pips, cell_size=DEFAULT_CELL_SIZE):
 
 
 def draw_domino(turtle, domino, cell_size=DEFAULT_CELL_SIZE):
-    turtle.up()
-    turtle.back(cell_size * 0.45)
-    turtle.left(90)
-    turtle.forward(cell_size * 0.45)
-    turtle.right(90)
-    turtle.down()
-    draw_domino_outline(cell_size, turtle)
+    if domino.head.pips == '#':
+        draw_domino_outline(turtle, cell_size, fill='black', margin=0)
+        return
+    draw_domino_outline(turtle, cell_size)
 
     turtle.up()
-    turtle.forward(cell_size*.95)
+    turtle.forward(cell_size * 0.5)
     turtle.right(90)
-    turtle.forward(cell_size*.1)
+    turtle.back(cell_size * 0.35)
     turtle.down()
     turtle.forward(cell_size*.7)
     turtle.up()
     turtle.back(cell_size*.35)
     turtle.left(90)
-    turtle.back(cell_size*.5)
-    draw_pips(turtle, domino.head.pips, cell_size)
-    turtle.forward(cell_size)
+    turtle.forward(cell_size*.5)
     draw_pips(turtle, domino.tail.pips, cell_size)
     turtle.back(cell_size)
+    draw_pips(turtle, domino.head.pips, cell_size)
 
 
 def draw_cell(turtle, cell, cell_size=DEFAULT_CELL_SIZE):
@@ -124,22 +120,33 @@ def draw_cell(turtle, cell, cell_size=DEFAULT_CELL_SIZE):
     draw_pips(turtle, cell.pips, cell_size)
 
 
-def draw_domino_outline(cell_size, turtle):
-    turtle.fillcolor('white')
+def draw_domino_outline(turtle,
+                        cell_size=DEFAULT_CELL_SIZE,
+                        fill='white',
+                        margin=0.05):
     turtle.up()
     r = cell_size * 0.05
-    turtle.forward(r)
+    margin_size = cell_size * margin
+    turtle.back(cell_size/2-r-margin_size)
+    turtle.left(90)
+    turtle.forward(cell_size/2-margin_size)
+    turtle.right(90)
     turtle.down()
+    turtle.fillcolor(fill)
+
     turtle.begin_fill()
     for _ in range(2):
-        turtle.forward(cell_size * 1.8)
+        turtle.forward(2*cell_size - 2*(margin_size + r))
         turtle.circle(-r, 90)
-        turtle.forward(cell_size * .8)
+        turtle.forward(cell_size - 2*(margin_size + r))
         turtle.circle(-r, 90)
     turtle.end_fill()
 
     turtle.up()
-    turtle.back(r)
+    turtle.right(90)
+    turtle.forward(cell_size/2-margin_size)
+    turtle.left(90)
+    turtle.forward(cell_size/2-r-margin_size)
 
 
 def draw_paths(turtle, board: Board, cell_size=DEFAULT_CELL_SIZE):
@@ -201,8 +208,9 @@ def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
         turtle.right(90)
     for domino, x, y in board.offset_dominoes:
         turtle.setpos(start_x + x*cell_size, start_y + y*cell_size)
+        turtle.left(domino.degrees)
         draw_domino(turtle, domino, cell_size)
-        pass
+        turtle.right(domino.degrees)
     turtle.setpos((start_x, start_y))
 
 
@@ -350,14 +358,14 @@ def draw_capture_circle(turtle,
 
 def draw_fuji(turtle, num_dominoes, cell_size=DEFAULT_CELL_SIZE):
     turtle.up()
-    offset = (num_dominoes // 2 - 0.95) * cell_size
+    offset = (num_dominoes // 2 - 0.5) * cell_size
     turtle.forward(offset)
     turtle.right(90)
-    turtle.forward(cell_size*0.05)
+    turtle.forward(cell_size*0.5)
     turtle.left(90)
     turtle.down()
     for _ in range(3):
-        draw_domino_outline(cell_size, turtle)
+        draw_domino_outline(turtle, cell_size)
         turtle.up()
         turtle.right(90)
         turtle.forward(cell_size)
@@ -366,7 +374,7 @@ def draw_fuji(turtle, num_dominoes, cell_size=DEFAULT_CELL_SIZE):
     turtle.up()
     turtle.back(offset)
     turtle.right(90)
-    turtle.back(2.55*cell_size)
+    turtle.back(3*cell_size)
     turtle.left(90)
 
 
@@ -459,49 +467,6 @@ def draw_diagram(turtle,
         turtle.setpos(pos)
 
 
-def draw_blocks(turtle: Turtle, state: str, cell_size: float):
-    turtle.up()
-    margin = cell_size / 20
-    old_pos = turtle.pos()
-    old_colour = turtle.color()
-    turtle.color('black')
-    turtle.forward(margin)
-    turtle.right(90)
-    turtle.forward(margin)
-    turtle.left(90)
-    lines = state.splitlines()
-    lines.append('')
-    for i, line in enumerate(lines[:-1]):
-        below_line = lines[i + 1]
-        for j, c in enumerate(line):
-            right_neighbour = line[j+1:j+2]
-            below_neighbour = below_line[j:j+1]
-            diagonal_neighbour = below_line[j+1:j+2]
-            if c == '#' and right_neighbour == '#':
-                draw_joined_block(turtle,
-                                  2 * (cell_size-margin),
-                                  cell_size - 2*margin)
-            if c == '#' and below_neighbour == '#':
-                draw_joined_block(turtle,
-                                  cell_size - 2 * margin,
-                                  2 * (cell_size - margin))
-            if ''.join((c,
-                        right_neighbour,
-                        below_neighbour,
-                        diagonal_neighbour)) == '####':
-                draw_joined_block(turtle,
-                                  2 * (cell_size - margin),
-                                  2 * (cell_size - margin))
-            turtle.forward(cell_size)
-        turtle.back(cell_size*len(line))
-        turtle.right(90)
-        turtle.forward(cell_size)
-        turtle.left(90)
-
-    turtle.color(old_colour)
-    turtle.setpos(old_pos)
-
-
 def draw_joined_block(turtle, width, height):
     turtle.down()
     turtle.begin_fill()
@@ -557,13 +522,6 @@ def draw_demo(turtle):
 - -
 3 2 1|6 5|6
 """
-    blocks_state = """\
-### ###
-  #  #
-
-##  ##
- ## ##
-"""
     dominosa_state = """\
 0 1 2 3
   -
@@ -572,11 +530,9 @@ def draw_demo(turtle):
 1|2 3 4
 """
 
-    demo_type = 'dominosa'
+    demo_type = 'demo'
     if demo_type == 'mountains':
         draw_diagram(turtle, mountain_state, cell_size, show_path=True)
-    elif demo_type == 'blocks':
-        draw_blocks(turtle, blocks_state, cell_size)
     elif demo_type == 'dominosa':
         draw_diagram(turtle, dominosa_state, cell_size)
     else:

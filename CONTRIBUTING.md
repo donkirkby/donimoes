@@ -23,15 +23,13 @@ Before publishing a release, check the following:
 
 * The unit tests pass.
 * All the instructions are up to date in the README and CONTRIBUTING files.
-* The version number has been incremented.
 
 To publish a release:
 
-* Run the `donimoes.py` script to generate the PDF version.
-* Copy it to the `docs` folder.
+* Run the `donimoes.py` script to generate the PDF version in the `docs` folder.
 * Commit the changes and check that the new version works on the web site.
 * Go to the GitHub [releases page][releases], create a new release using a tag
-    like `v0.x.0-alpha`.
+    like `vX.Y`.
 * Close the milestone.
 
 [@donkirkby]: http://twitter.com/donkirkby
