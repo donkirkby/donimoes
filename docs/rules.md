@@ -28,11 +28,9 @@ puzzles by other designers:
 * **Mountains and Valleys** is a solitaire game by Sid Sackson where you have to
     lay out a map that you can hike on. I adapted it from paper, pencil, and
     dice to use dominoes.
-* **Fujisan** is a solitaire game by James Droscha designed for the piecepack
-    game system where you have to help four Shinto priests climb to the peak of
-    Mount Fuji. He then adapted it for dominoes and pawns, and I found
-    20 layouts that are much more challenging than usual. (1 player, double-six
-    dominoes, and four pawns)
+* **Fujisan** is a solitaire game by James Droscha where you help four Shinto
+    priests climb to the peak of Mount Fuji. I found 20 layouts that are much
+    more challenging than usual. (1 player, double-six dominoes, and four pawns)
 * **Cobra Paw** is a quick-reaction game by Derek Weston. (2-4 players,
     double-six dominoes, and two dice)
 * **All Fives** is a traditional dominoes game, where you score points by making

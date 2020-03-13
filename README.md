@@ -1,28 +1,38 @@
 # Donimoes: New Games and Puzzles
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of
-games, often with Mr. Hoyle's name on the cover, you might also find All Fives.
-If you're lucky, you'll even find Chickenfoot and Mexican Train.
+games, often with Mr. Hoyle's name on the cover, you might find the basic game
+and maybe All Fives. If you're lucky, you'll find Chickenfoot and Mexican Train.
 
-This book is a collection of new games and puzzles for dominoes that will
-broaden your horizons beyond a chain of dominoes with matching numbers:
+This book is a collection of domino games and puzzles that will broaden your
+horizons beyond a chain of dominoes with matching numbers. You'll find new games
+and puzzles that I designed, as well as some of my favourite domino games and
+puzzles by other designers:
 
-* **Blocking Donimoes** is a puzzle I designed where you have to slide all the
+* **Unmatched Donimoes** is a puzzle I designed where you have to slide all the
     dominoes into a rectangular shape, without sliding any matching numbers next
     to each other.
 * **Capturing Donimoes** is a puzzle I designed where you have to collect all the
     dominoes by sliding matching numbers next to each other.
 * **Tetradominoes** is a game I designed for one to four players where you play
     matching dominoes in a grid, then try to play the tetromino shapes on top.
+    (1-4 players, double-six dominoes, 7 cardboard tetrominoes, and some beads,
+    buttons, or coins)
+* **Domino Finder** is a memory game I designed where you have to find the
+    treasure domino without falling in a trap. (2-4 players,
+    double-six dominoes, pawns, and two dice)
 * **Mountains and Valleys** is a solitaire game by Sid Sackson where you have to
     lay out a map that you can hike on. I adapted it from paper, pencil, and
     dice to use dominoes.
-* **Fujisan** is a solitaire game by James Droscha designed for the piecepack
-    game system where you have to help four Shinto priests climb to the peak of
-    Mount Fuji. He then adapted it for dominoes and pawns, and I found
-    20 layouts that are much more challenging than usual.
+* **Fujisan** is a solitaire game by James Droscha where you help four Shinto
+    priests climb to the peak of Mount Fuji. I found 20 layouts that are much
+    more challenging than usual. (1 player, double-six dominoes, and four pawns)
+* **Cobra Paw** is a quick-reaction game by Derek Weston. (2-4 players,
+    double-six dominoes, and two dice)
+* **All Fives** is a traditional dominoes game, where you score points by making
+    the ends add up to a multiple of five. (2-4 players, double-six dominoes)
 
-The book of rules includes problems to solve for each puzzle. The Blocking
+The book of rules includes problems to solve for each puzzle. The Unmatched
 Donimoes problems are patterns of dominoes for you to start from, like this:
 
 ![Blocking example]
