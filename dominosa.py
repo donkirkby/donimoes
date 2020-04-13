@@ -1,9 +1,30 @@
 import random
 import typing
 from collections import defaultdict, Counter
+from enum import Enum
 from itertools import chain
 
-from domino_puzzle import Board, Cell, Domino
+from domino_puzzle import Board, Cell, Domino, BoardGraph
+
+
+PairState = Enum('PairState', 'UNDECIDED NEWLY_JOINED JOINED NEWLY_SPLIT SPLIT')
+PairState.state_codes = {' ': PairState.UNDECIDED,
+                         'j': PairState.NEWLY_JOINED,
+                         '|': PairState.JOINED,
+                         '-': PairState.JOINED,
+                         's': PairState.NEWLY_SPLIT,
+                         'S': PairState.SPLIT,
+                         '~': PairState.SPLIT}
+PairState.horizontal_displays = {PairState.UNDECIDED: ' ',
+                                 PairState.NEWLY_JOINED: 'j',
+                                 PairState.JOINED: '|',
+                                 PairState.NEWLY_SPLIT: 's',
+                                 PairState.SPLIT: 'S'}
+PairState.vertical_displays = {PairState.UNDECIDED: ' ',
+                               PairState.NEWLY_JOINED: 'j',
+                               PairState.JOINED: '-',
+                               PairState.NEWLY_SPLIT: 's',
+                               PairState.SPLIT: '~'}
 
 
 def place_unique_pairs(board: Board):
@@ -160,6 +181,54 @@ def check_for_duplicates(board: Board):
                 domino_counts[get_pair_key(domino.head, domino.tail)] += 1
     for key, count in domino_counts.items():
         assert count == 2, (key, count)
+
+
+class DominosaBoard(Board):
+    def __init__(self, width, height, max_pips=None):
+        super().__init__(width, height, max_pips)
+        self.pair_states = {}
+
+    def get_pair_state(self, x1: int, y1: int, x2: int, y2: int):
+        if x2 < x1 or y2 < y1:
+            x1, x2 = x2, x1
+            y1, y2 = y2, y1
+        return self.pair_states[(x1, y1, x2, y2)]
+
+    def add_joint(self, joint: str, x1: int, y1: int, x2: int, y2: int) -> str:
+        pair_state = PairState.state_codes[joint]
+        self.pair_states[(x1, y1, x2, y2)] = pair_state
+        if pair_state in (PairState.SPLIT, PairState.NEWLY_SPLIT):
+            return ' '
+        if pair_state == PairState.NEWLY_JOINED:
+            if x1 != x2:
+                return '|'
+            return '-'
+        return joint
+
+    def adjust_display(self, display: typing.List[typing.List[str]]):
+        for x1 in range(self.width):
+            for y1 in range(self.height):
+                for x2 in (x1, x1+1):
+                    for y2 in (y1, y1+1):
+                        if x2 >= self.width or y2 >= self.height:
+                            # Off the board.
+                            continue
+                        if (x1 == x2) == (y1 == y2):
+                            # Not a neighbour.
+                            continue
+                        pair_state = self.pair_states[(x1, y1, x2, y2)]
+                        if x1 == x2:
+                            pair_display = PairState.vertical_displays[pair_state]
+                        else:
+                            pair_display = PairState.horizontal_displays[pair_state]
+                        i = self.height*2 - y1 - y2 - 2
+                        j = x1 + x2
+                        display[i][j] = pair_display
+
+
+class DominosaGraph(BoardGraph):
+    def generate_moves(self, board):
+        pass
 
 
 def find_solutions(board: Board,

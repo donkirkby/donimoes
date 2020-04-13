@@ -1,6 +1,6 @@
 from domino_puzzle import Board
 from dominosa import place_unique_pairs, find_unique_pairs, join_pairs, find_one_neighbour_pairs, find_unjoined_pairs, \
-    find_solutions
+    find_solutions, DominosaBoard, PairState
 
 
 def test_find_unique_pairs_vertical():
@@ -271,3 +271,56 @@ def test_find_solutions_no_duplicates():
     solutions = find_solutions(board)
 
     assert solutions == expected_solutions
+
+
+def test_get_pair_state_default():
+    board = DominosaBoard.create("""\
+1 0 1
+
+1 0 0
+""")
+
+    pair_state = board.get_pair_state(0, 0, 0, 1)
+
+    assert pair_state == PairState.UNDECIDED
+
+
+def test_get_pair_state_vertical():
+    board = DominosaBoard.create("""\
+1 0 1
+j
+1 0 0
+""")
+
+    pair_state1 = board.get_pair_state(0, 0, 0, 1)
+    pair_state2 = board.get_pair_state(0, 1, 0, 0)
+
+    assert pair_state1 == PairState.NEWLY_JOINED
+    assert pair_state2 == PairState.NEWLY_JOINED
+
+
+def test_get_pair_state_horizontal():
+    board = DominosaBoard.create("""\
+1s0 1
+-
+1S0 0
+""")
+
+    pair_state1 = board.get_pair_state(0, 1, 1, 1)
+    pair_state2 = board.get_pair_state(1, 1, 0, 1)
+
+    assert pair_state1 == PairState.NEWLY_SPLIT
+    assert pair_state2 == PairState.NEWLY_SPLIT
+
+
+def test_display_pair_state():
+    expected_state = """\
+1s0|1
+-
+1S0j0
+"""
+    board = DominosaBoard.create(expected_state)
+
+    state = board.display()
+
+    assert state == expected_state

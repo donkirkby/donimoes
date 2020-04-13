@@ -85,6 +85,10 @@ class Board(object):
                     left_joint = 0 < x and lines[y*2][x*2-1] or ' '
                     upper_joint = y+1 < height and lines[y*2+1][x*2] or ' '
                     lower_joint = 0 < y and lines[y*2-1][x*2] or ' '
+                    right_joint = board.add_joint(right_joint, x, y, x+1, y)
+                    left_joint = board.add_joint(left_joint, x-1, y, x, y)
+                    upper_joint = board.add_joint(upper_joint, x, y, x, y+1)
+                    lower_joint = board.add_joint(lower_joint, x, y-1, x, y)
                     if right_joint != ' ':
                         tail = lines[y*2][x*2+2]
                         degrees = 0
@@ -186,6 +190,14 @@ class Board(object):
             item.x = x
             item.y = y
 
+    # noinspection PyUnusedLocal
+    @staticmethod
+    def add_joint(joint: str, x1: int, y1: int, x2: int, y2: int) -> str:
+        """ Record the joint character between a pair of cells.
+        :return: an adjusted joint character, in '|- '.
+        """
+        return joint
+
     def remove(self, item):
         try:
             self.remove(item.head)
@@ -207,6 +219,7 @@ class Board(object):
         domino.tail.domino = None
 
     def split_all(self):
+        """ Split all dominoes into separate cells. Useful for Dominosa. """
         for domino in self.dominoes:
             domino.head.domino = None
             domino.tail.domino = None
@@ -258,7 +271,7 @@ class Board(object):
         return self.cells[x]
 
     def __repr__(self):
-        return 'Board({}, {})'.format(self.width, self.height)
+        return f'{self.__class__.__name__}({self.width}, {self.height})'
 
     def display(self, cropped=False, cropping_bounds=None):
         """ Build a display string for the board's current state.
@@ -288,7 +301,11 @@ class Board(object):
                     dx, dy = cell.domino.direction
                     divider = '|' if dx else '-'
                     display[row-dy][col+dx] = divider
+        self.adjust_display(display)
         return ''.join(''.join(row).rstrip() + '\n' for row in display)
+
+    def adjust_display(self, display: typing.List[typing.List[str]]):
+        """ Adjust the display grid before it gets assembled. """
 
     def get_bounds(self, cropped):
         if not cropped:
@@ -1018,7 +1035,7 @@ def find_boards_with_deap(graph_class=CaptureBoardGraph,
     halloffame.display(graph_class)
 
 
-def testPerformance():
+def measure_performance():
     state = """\
 1|2 4|5 1|1
 
@@ -1081,6 +1098,6 @@ def live_main():
 if __name__ == '__main__':
     # plotPerformance()
     find_boards_with_deap()
-    # testPerformance()
+    # measure_performance()
 elif __name__ == '__live_coding__':
     live_main()
