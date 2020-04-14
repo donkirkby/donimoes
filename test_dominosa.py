@@ -1,31 +1,32 @@
 from domino_puzzle import Board
-from dominosa import place_unique_pairs, find_unique_pairs, join_pairs, find_one_neighbour_pairs, find_unjoined_pairs, \
-    find_solutions, DominosaBoard, PairState
+from dominosa import find_unique_pairs, join_pairs, find_one_neighbour_pairs, \
+    find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph
 
 
 def test_find_unique_pairs_vertical():
-    board = Board.create("""\
+    start_state = """\
 1 0 1
 
-1 0 0
-""")
-    expected_pairs = [(0, 0, 0, 1)]
-    expected_display = """\
-1 0 1
--
 1 0 0
 """
+    board = DominosaBoard.create(start_state)
+    expected_display = """\
+1 0 1
+j
+1 0 0
+"""
+    expected_moves = [('6:00j01', expected_display)]
+    graph = DominosaGraph(DominosaBoard)
 
-    pairs = find_unique_pairs(board)
-    join_pairs(board, pairs)
-    display = board.display()
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
 
-    assert pairs == expected_pairs
-    assert display == expected_display
+    assert moves == expected_moves
+    assert final_state == start_state
 
 
 def test_place_unique_pairs_horizontal():
-    board = Board.create("""\
+    board = DominosaBoard.create("""\
 1 1
 
 0 0
@@ -33,39 +34,177 @@ def test_place_unique_pairs_horizontal():
 1 0
 """)
     expected_display = """\
-1|1
+1j1
 
 0 0
 
 1 0
 """
 
-    place_unique_pairs(board)
+    expected_moves = [('6:02j12', expected_display)]
+    graph = DominosaGraph(DominosaBoard)
 
-    display = board.display()
+    moves = list(graph.generate_moves(board))
 
-    assert display == expected_display
+    assert moves == expected_moves
 
 
-def test_unique_pairs_solution():
-    board = Board.create("""\
-1 1 0
-
-0 0 1
-""")
-    expected_display = """\
-1|1 0
-    -
-0|0 1
+def test_rule1_single_neighbour():
+    start_state = """\
+1 1 0 1
+s s
+0|0s2 0
+s s
+1 2 2 2
 """
+    board = DominosaBoard.create(start_state)
+    expected_display1 = """\
+1 1 0 1
+s s
+0|0s2 0
+s s
+1j2 2 2
+"""
+    expected_display2 = """\
+1j1 0 1
+s s
+0|0s2 0
+s s
+1 2 2 2
+"""
+    expected_moves = [('1:00j10', expected_display1),
+                      ('1:02j12', expected_display2)]
+    graph = DominosaGraph(DominosaBoard)
 
-    num_placed = place_unique_pairs(board)  # Place doubles.
-    place_unique_pairs(board)  # Place 0|1.
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
 
-    display = board.display()
+    assert moves == expected_moves
+    assert final_state == start_state
 
-    assert display == expected_display
-    assert num_placed == 2  # Two doubles placed in first call.
+
+def test_rule1_single_neighbour_for_cell():
+    start_state = """\
+1 1 0 1
+s
+0s0 2 0
+-
+1s2 2 2
+"""
+    board = DominosaBoard.create(start_state)
+    expected_display = """\
+1j1 0 1
+s
+0s0 2 0
+-
+1s2 2 2
+"""
+    expected_moves = [('1:02j12', expected_display)]
+    graph = DominosaGraph(DominosaBoard)
+
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
+
+    assert moves == expected_moves
+    assert final_state == start_state
+
+
+def test_rule2_split_neighbours():
+    start_state = """\
+1 0 1
+j
+1 0 0
+"""
+    board = DominosaBoard.create(start_state)
+    expected_display = """\
+1s0 1
+-
+1s0 0
+"""
+    expected_moves = [('2:00|01,00s10,01s11', expected_display)]
+    graph = DominosaGraph(DominosaBoard)
+
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
+
+    assert moves == expected_moves
+    assert final_state == start_state
+
+
+def test_rule2_split_duplicate():
+    start_state = """\
+2j2 2 0
+~ ~
+0|0 2 1
+
+1|1 0 1
+"""
+    board = DominosaBoard.create(start_state)
+    expected_display = """\
+2|2s2 0
+~ ~ s
+0|0 2 1
+
+1|1 0 1
+"""
+    expected_moves = [('2:02|12,12s22,21s22', expected_display)]
+    graph = DominosaGraph(DominosaBoard)
+
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
+
+    assert moves == expected_moves
+    assert final_state == start_state
+
+
+def test_rule3_newly_split():
+    start_state = """\
+1s1 2 3 1
+-
+0s2 2 2 3
+s
+0 2 0 3 1
+
+3 0 0 3 1
+"""
+    board = DominosaBoard.create(start_state)
+    expected_display1 = """\
+1s1 2 3 1
+-
+0s2 2 2 3
+~
+0 2 0 3 1
+
+3 0 0 3 1
+"""
+    expected_display2 = """\
+1s1 2 3 1
+-
+0S2 2 2 3
+s
+0 2 0 3 1
+
+3 0 0 3 1
+"""
+    expected_display3 = """\
+1S1 2 3 1
+-
+0s2 2 2 3
+s
+0 2 0 3 1
+        j
+3 0 0 3 1
+"""
+    expected_moves = [('3:01S02', expected_display1),
+                      ('3:02S12', expected_display2),
+                      ('3:03S13,40j41', expected_display3)]
+    graph = DominosaGraph(DominosaBoard)
+
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
+
+    assert moves == expected_moves
+    assert final_state == start_state
 
 
 def test_unique_pairs_check_joined():
@@ -112,30 +251,6 @@ def test_unique_pairs_conflict():
 """
 
     pairs = find_unique_pairs(board)
-    join_pairs(board, pairs)
-    display = board.display()
-
-    assert display == expected_display
-
-
-def test_place_only_neighbours():
-    board = Board.create("""\
-1 1 0 1
-
-0|0 2 0
-
-1 2 2 2
-""")
-
-    expected_display = """\
-1|1 0 1
-
-0|0 2 0
-
-1|2 2 2
-"""
-
-    pairs = find_one_neighbour_pairs(board)
     join_pairs(board, pairs)
     display = board.display()
 
@@ -311,6 +426,21 @@ def test_get_pair_state_horizontal():
 
     assert pair_state1 == PairState.NEWLY_SPLIT
     assert pair_state2 == PairState.NEWLY_SPLIT
+
+
+def test_walk():
+    board = DominosaBoard.create("""\
+1|2 0|1
+
+0 0|2 2
+-     -
+0 1|1 2
+""")
+
+    graph = DominosaGraph()
+    states = graph.walk(board)
+    print(*states, sep='\n\n')
+    assert graph.has_solution
 
 
 def test_display_pair_state():

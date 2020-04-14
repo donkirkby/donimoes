@@ -3,9 +3,9 @@ import typing
 from collections import defaultdict, Counter
 from enum import Enum
 from itertools import chain
+from sys import maxsize
 
-from domino_puzzle import Board, Cell, Domino, BoardGraph
-
+from domino_puzzle import Board, Cell, Domino, BoardGraph, find_boards_with_deap
 
 PairState = Enum('PairState', 'UNDECIDED NEWLY_JOINED JOINED NEWLY_SPLIT SPLIT')
 PairState.state_codes = {' ': PairState.UNDECIDED,
@@ -72,6 +72,26 @@ def find_pair_locations(board: Board) -> dict:
             if 0 < y:
                 record_pair(board[x][y - 1], cell, pair_locations)
     return pair_locations
+
+
+def find_matching_pairs(board: Board, x1: int, y1: int, x2: int, y2: int):
+    """ Find all pairs that match the pips on the given pair.
+
+    :return: generator of (x1, y1, x2, y2) pairs with the same pips
+    """
+    target_pips = {board[x][y].pips for x, y in ((x1, y1), (x2, y2))}
+    for x in range(board.width):
+        for y in range(board.height):
+            head_pips = board[x][y].pips
+            pairs = []
+            if 0 < x:
+                pairs.append((x-1, y, x, y))
+            if 0 < y:
+                pairs.append((x, y-1, x, y))
+            for x1dup, y1dup, x2dup, y2dup in pairs:
+                dup_pips = {head_pips, board[x1dup][y1dup].pips}
+                if target_pips == dup_pips:
+                    yield x1dup, y1dup, x2dup, y2dup
 
 
 def join_pair(board: Board, x1: int, y1: int, x2: int, y2: int):
@@ -184,6 +204,11 @@ def check_for_duplicates(board: Board):
 
 
 class DominosaBoard(Board):
+    @classmethod
+    def create(cls, state, border=0, max_pips=None):
+        # We never want borders for Dominosa boards, because nothing moves.
+        return super().create(state, border=0, max_pips=max_pips)
+
     def __init__(self, width, height, max_pips=None):
         super().__init__(width, height, max_pips)
         self.pair_states = {}
@@ -194,7 +219,21 @@ class DominosaBoard(Board):
             y1, y2 = y2, y1
         return self.pair_states[(x1, y1, x2, y2)]
 
+    def set_pair_state(self,
+                       x1: int,
+                       y1: int,
+                       x2: int,
+                       y2: int,
+                       pair_state: PairState):
+        if x2 < x1 or y2 < y1:
+            x1, x2 = x2, x1
+            y1, y2 = y2, y1
+        self.pair_states[(x1, y1, x2, y2)] = pair_state
+
     def add_joint(self, joint: str, x1: int, y1: int, x2: int, y2: int) -> str:
+        if not self.is_in_bounds(x1, y1, x2, y2):
+            assert joint == ' ', joint
+            return joint
         pair_state = PairState.state_codes[joint]
         self.pair_states[(x1, y1, x2, y2)] = pair_state
         if pair_state in (PairState.SPLIT, PairState.NEWLY_SPLIT):
@@ -204,6 +243,25 @@ class DominosaBoard(Board):
                 return '|'
             return '-'
         return joint
+
+    def is_in_bounds(self, x1, y1, x2, y2):
+        for value, limit in ((x1, self.width),
+                             (x2, self.width),
+                             (y1, self.height),
+                             (y2, self.height)):
+            if value < 0 or limit <= value:
+                return False
+        return True
+
+    def display(self, cropped=False, cropping_bounds=None):
+        cropped = False
+        return super().display(cropped, cropping_bounds)
+
+    def split(self, domino):
+        x1, y1 = domino.head.x, domino.head.y
+        x2, y2 = domino.tail.x, domino.tail.y
+        super().split(domino)
+        self.set_pair_state(x1, y1, x2, y2, PairState.UNDECIDED)
 
     def adjust_display(self, display: typing.List[typing.List[str]]):
         for x1 in range(self.width):
@@ -225,10 +283,126 @@ class DominosaBoard(Board):
                         j = x1 + x2
                         display[i][j] = pair_display
 
+    def find_neighbours(self, x1, y1, x2, y2):
+        """ Yield all neighbouring pairs of this pair, regardless of state. """
+        for x_start, y_start in ((x1, y1), (x2, y2)):
+            for x1n, y1n, x2n, y2n in ((x_start, y_start, x_start+1, y_start),
+                                       (x_start, y_start, x_start, y_start+1),
+                                       (x_start-1, y_start, x_start, y_start),
+                                       (x_start, y_start-1, x_start, y_start)):
+                if (x1n, y1n, x2n, y2n) == (x1, y1, x2, y2):
+                    continue
+                if self.is_in_bounds(x1n, y1n, x2n, y2n):
+                    yield x1n, y1n, x2n, y2n
+
+
+def generate_moves_from_single_neighbours(board):
+    used_cells = set()
+    undecided_neighbours = defaultdict(list)  # {(x1, y1): [x2, y2]}
+    for (x1, y1, x2, y2), pair_state in board.pair_states.items():
+        if pair_state in (PairState.NEWLY_JOINED, PairState.JOINED):
+            used_cells.add((x1, y1))
+            used_cells.add((x2, y2))
+        elif pair_state == PairState.UNDECIDED:
+            undecided_neighbours[(x1, y1)].append((x2, y2))
+            undecided_neighbours[(x2, y2)].append((x1, y1))
+    isolated_cells = {cell
+                      for cell, neighbours in undecided_neighbours.items()
+                      if len(neighbours) == 1} - used_cells
+    for x1, y1 in isolated_cells:
+        x2, y2 = undecided_neighbours[(x1, y1)][0]
+        board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_JOINED)
+        move = f'1:{x1}{y1}j{x2}{y2}'
+        yield move, board.display()
+        board.set_pair_state(x1, y1, x2, y2, PairState.UNDECIDED)
+
+
+def generate_moves_from_newly_joined(board):
+    for (x1, y1, x2, y2), pair_state in board.pair_states.items():
+        if pair_state != PairState.NEWLY_JOINED:
+            continue
+        board.set_pair_state(x1, y1, x2, y2, PairState.JOINED)
+        move = f'2:{x1}{y1}|{x2}{y2}'
+        split_pairs = []
+        for x1n, y1n, x2n, y2n in chain(board.find_neighbours(x1, y1, x2, y2),
+                                        find_matching_pairs(
+                                            board, x1, y1, x2, y2)):
+            pair_state2 = board.get_pair_state(x1n, y1n, x2n, y2n)
+            if pair_state2 == PairState.UNDECIDED:
+                split_pairs.append((x1n, y1n, x2n, y2n))
+                board.set_pair_state(x1n, y1n, x2n, y2n, PairState.NEWLY_SPLIT)
+                move += f',{x1n}{y1n}s{x2n}{y2n}'
+
+        yield move, board.display()
+        board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_JOINED)
+        for x1n, y1n, x2n, y2n in split_pairs:
+            board.set_pair_state(x1n, y1n, x2n, y2n, PairState.UNDECIDED)
+
+
+def generate_moves_from_newly_split(board):
+    for (x1, y1, x2, y2), pair_state in board.pair_states.items():
+        if pair_state != PairState.NEWLY_SPLIT:
+            continue
+        matching_pairs = []
+        for x1dup, y1dup, x2dup, y2dup in find_matching_pairs(
+                                            board, x1, y1, x2, y2):
+            pair_state2 = board.get_pair_state(x1dup, y1dup, x2dup, y2dup)
+            if pair_state2 == PairState.UNDECIDED:
+                matching_pairs.append((x1dup, y1dup, x2dup, y2dup))
+        move = f'3:{x1}{y1}S{x2}{y2}'
+        board.set_pair_state(x1, y1, x2, y2, PairState.SPLIT)
+        if len(matching_pairs) != 1:
+            yield move, board.display()
+        else:
+            x1dup, y1dup, x2dup, y2dup = matching_pairs[0]
+            move += f',{x1dup}{y1dup}j{x2dup}{y2dup}'
+            board.set_pair_state(x1dup, y1dup, x2dup, y2dup,
+                                 PairState.NEWLY_JOINED)
+            yield move, board.display()
+            board.set_pair_state(x1dup, y1dup, x2dup, y2dup,
+                                 PairState.UNDECIDED)
+        board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_SPLIT)
+
+
+def generate_moves_from_unique_pairs(board):
+    for x1, y1, x2, y2 in find_unique_pairs(board):
+        board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_JOINED)
+        move = f'6:{x1}{y1}j{x2}{y2}'
+        yield move, board.display()
+        board.set_pair_state(x1, y1, x2, y2, PairState.UNDECIDED)
+
 
 class DominosaGraph(BoardGraph):
-    def generate_moves(self, board):
-        pass
+    def __init__(self, board_class=DominosaBoard):
+        super().__init__(board_class)
+        self.has_solution = None
+
+    def walk(self, board, size_limit=maxsize):
+        board.split_all()
+        self.has_solution = False
+        return super().walk(board, maxsize)
+
+    def generate_moves(self, board: DominosaBoard):
+        """ Generate all moves from the board's current state.
+
+        :param Board board: the current state
+        :return: a generator of (move_description, state) tuples
+        """
+
+        for rule in (generate_moves_from_single_neighbours(board),
+                     generate_moves_from_newly_joined(board),
+                     generate_moves_from_newly_split(board),
+                     generate_moves_from_unique_pairs(board)):
+            has_yielded = False
+            for move, state in rule:
+                new_board: DominosaBoard = self.board_class.create(state)
+                if not any(pair_state == PairState.UNDECIDED
+                           for pair_state in new_board.pair_states.values()):
+                    self.has_solution = True
+                yield move, state
+                has_yielded = True
+            if has_yielded:
+                return
 
 
 def find_solutions(board: Board,
@@ -284,9 +458,9 @@ def find_solutions(board: Board,
     return solutions
 
 
-def main():
+def old_main():
     while True:
-        board = Board(6, 5, max_pips=4)
+        board = Board(4, 3, max_pips=2)
         board.fill(random)
         board.split_all()
         solutions = find_solutions(board, verbose=False, max_solutions=1)
@@ -297,6 +471,10 @@ def main():
     print(f'Find the solution.')
     board.split_all()
     print(board.display())
+
+
+def main():
+    find_boards_with_deap(graph_class=DominosaGraph)
 
 
 if __name__ == '__main__':

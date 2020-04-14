@@ -212,6 +212,7 @@ class Board(object):
     def join(self, cell1, cell2):
         domino = Domino(cell1, cell2)
         self.dominoes.append(domino)
+        return domino
 
     def split(self, domino):
         self.dominoes.remove(domino)
@@ -220,10 +221,8 @@ class Board(object):
 
     def split_all(self):
         """ Split all dominoes into separate cells. Useful for Dominosa. """
-        for domino in self.dominoes:
-            domino.head.domino = None
-            domino.tail.domino = None
-        self.dominoes.clear()
+        for domino in self.dominoes[:]:
+            self.split(domino)
 
     def mutate(self, random, board_type=None, matches_allowed=True):
         # Choose number of mutations: 1 is most common, n is least common
@@ -683,7 +682,7 @@ class BoardGraph(object):
         """ Generate all moves from the board's current state.
 
         :param Board board: the current state
-        :return: a generator of (state, move_description) tuples
+        :return: a generator of (move_description, state) tuples
         """
         self.check_progress(board)
         dominoes = set(board.dominoes)
@@ -887,26 +886,28 @@ class BoardAnalysis(object):
                     self.max_choices,
                     self.choice_counts)
 
+
 SLOW_BOARD_SIZE = 2000
 MAX_BOARD_SIZE = 10000  # 140000 Bad, 70000 Mostly Good
 
 
 class SearchManager(object):
-    def __init__(self, graph_class):
+    def __init__(self, graph_class, max_pips=6):
         self.graph_class = graph_class
         self.scores = []
         self.graph_sizes = []
+        self.max_pips = max_pips
 
-    def createRandomBoard(self, boardType, random, width, height):
-        is_successful = False
-        while not is_successful:
-            board = boardType(width, height, max_pips=6)
-            is_successful = board.fill(random, matches_allowed=False)
-        return board
+    def create_random_board(self, board_type, random, width, height):
+        while True:
+            board = board_type(width, height, max_pips=self.max_pips)
+            if board.fill(random, matches_allowed=False):
+                return board
 
-    def mutateBoard(self, boardType, random, board):
+    @staticmethod
+    def mutate_board(board_type, random, board):
         return board.mutate(random,
-                            board_type=boardType,
+                            board_type=board_type,
                             matches_allowed=False),
 
     def evaluateBoard(self, slow_queue, individual):
@@ -980,6 +981,7 @@ def monitor(hall_of_fame, graph_class):
 
 
 CXPB, MUTPB, NPOP, NGEN, WIDTH, HEIGHT = 0.0, 0.5, 1000, 300, 4, 3
+MAX_PIPS = 2
 OPTIMUM_SOLUTION_LENGTH = WIDTH*HEIGHT
 
 
@@ -988,7 +990,7 @@ def find_boards_with_deap(graph_class=CaptureBoardGraph,
     print('Starting.')
     random = Random()
     manager = Manager()
-    search_manager = SearchManager(graph_class)
+    search_manager = SearchManager(graph_class, max_pips=MAX_PIPS)
     slow_queue = manager.Queue()
     results_queue = manager.Queue()
     creator.create("FitnessMax", base.Fitness, weights=BoardAnalysis.WEIGHTS)
@@ -1003,27 +1005,32 @@ def find_boards_with_deap(graph_class=CaptureBoardGraph,
     pool.apply_async(search_manager.evaluateSlowBoards,
                      [slow_queue, results_queue])
     toolbox.register("map", search_manager.loggedMap, pool)
+    # noinspection PyUnresolvedReferences
     toolbox.register("individual",
-                     search_manager.createRandomBoard,
-                     creator.Individual,  # @UndefinedVariable
+                     search_manager.create_random_board,
+                     creator.Individual,
                      random,
                      WIDTH,
                      HEIGHT)
+    # noinspection PyUnresolvedReferences
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
     # toolbox.register("mate", tools.cxTwoPoint)
+    # noinspection PyUnresolvedReferences
     toolbox.register("mutate",
-                     search_manager.mutateBoard,
-                     creator.Individual,  # @UndefinedVariable
+                     search_manager.mutate_board,
+                     creator.Individual,
                      random)
+    # noinspection PyUnresolvedReferences
     toolbox.register("select",
                      search_manager.selectBoards,
                      partial(tools.selTournament, tournsize=3),
                      results_queue,
                      halloffame,
-                     creator.Individual)  # @UndefinedVariable
+                     creator.Individual)
     toolbox.register("evaluate", search_manager.evaluateBoard, slow_queue)
 
+    # noinspection PyUnresolvedReferences
     pop = toolbox.population(n=NPOP)
     stats = Statistics()
     stats.register("best", BoardAnalysis.best_score)
