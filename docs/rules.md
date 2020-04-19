@@ -749,7 +749,7 @@ A memory game with hidden traps.
 * two six-sided dice
 
 ### Object
-For 2 players, find 7 treasure dominoes. 3 players find 5, or 4 players find 4.
+For 2 players, find 5 treasure dominoes. 3 players find 4, or 4 players find 3.
 
 ### Setup
 Find the 7 dominoes that have blanks, gather them into a pile, and shuffle them
@@ -765,31 +765,39 @@ break ties. The starting player rolls the two dice to choose the treasure
 domino.
 
 ### Play
-On your first turn, place your pawn next to one of the face down dominoes along
-the edge of the board. Every turn, you move your pawn around the board until you
-either find the treasure domino or you step in a trap (a blank square). If you
-want to move onto a face-down domino, place your pawn next to one end, and then
-flip the domino around the long axis, so the numbers stay in the same position.
-If you flip over a blank square next to your pawn, then you stepped in a trap!
-Place your pawn on the blank square, and your turn is over. If you flip over a
-domino that matches the two dice, you found the treasure! Place the treasure
-domino face up in front of you, move your pawn into the empty space, and your
-turn is over. Otherwise, keep moving around the board and flipping dominoes.
-You must stay on the board and move one space at a time. No jumping over blanks,
-other pawns, or face-down dominoes. You are allowed to step on spaces where a
-domino has already been removed.
+On your first turn, place your pawn next to one of the face-down dominoes along
+the edge of the board. Every turn, you flip up one face-down domino, and move
+your pawn onto it. Your pawn must be next to the domino you want to flip up,
+but you may move it over dominoes that are already face up, before you get to
+the domino you want to flip up. You may also move it over empty spaces where
+dominoes have been removed. You may not move it over blanks or face-down
+dominoes. Once your pawn is next to the face-down domino you want to flip,
+place your pawn next to one end, and then flip the domino around the long axis,
+so the numbers stay in the same position. If you flip over a blank square next
+to your pawn, then you stepped in a trap! Place your pawn on the blank square,
+and skip your next turn.
 
-When your turn is over, flip all the dominoes you revealed face down again,
-except for the one you're standing on. If you found the treasure, roll the two
-dice to choose a new treasure. If someone has already found that treasure
-domino, roll again. Play passes to the player on your right.
+If you flip over a domino that matches the two dice, you found the treasure!
+Place the treasure domino face up in front of you, move your pawn into the
+empty space, and prepare for the next treasure:
+ 
+* Flip every revealed trap so that it is face down, unless there's a pawn on it.
+* Roll the dice to see what the next treasure is.
+* If you roll numbers that match a previous treasure domino that's now in front
+    of a player or if they match a domino that a player's pawn is on, just roll
+    again.
+* If you roll numbers that match a face-up domino, flip it face down. Roll
+    again.
+
+Whether you found the treasure or not, your turn ends after flipping one domino.
+The turn passes to the player on your right.
 
 ### Winning
-As soon as you collect enough treasure, you win the game.
+As soon as you collect enough treasures, you win the game.
 
 # Domino Puzzles By Other Designers
 ## Mountains and Valleys
-Sid Sackson is one of my favourite game designers, who designed Acquire, Can't
+Sid Sackson is one of my favourite game designers. He designed Acquire, Can't
 Stop, and I'm the Boss, among many, many others. He included Mountains and
 Valleys in his [Beyond Solitaire][solitaire] book, and I adapted it from paper,
 pencil, and dice to use dominoes.

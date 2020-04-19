@@ -1,6 +1,6 @@
 from domino_puzzle import Board
 from dominosa import find_unique_pairs, join_pairs, find_one_neighbour_pairs, \
-    find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph
+    find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph, DominosaProblem, calculate_fitness
 
 
 def test_find_unique_pairs_vertical():
@@ -168,36 +168,16 @@ s
 3 0 0 3 1
 """
     board = DominosaBoard.create(start_state)
-    expected_display1 = """\
-1s1 2 3 1
--
-0s2 2 2 3
-~
-0 2 0 3 1
-
-3 0 0 3 1
-"""
-    expected_display2 = """\
-1s1 2 3 1
--
-0S2 2 2 3
-s
-0 2 0 3 1
-
-3 0 0 3 1
-"""
-    expected_display3 = """\
+    expected_display = """\
 1S1 2 3 1
 -
-0s2 2 2 3
-s
+0S2 2 2 3
+~
 0 2 0 3 1
         j
 3 0 0 3 1
 """
-    expected_moves = [('3:01S02', expected_display1),
-                      ('3:02S12', expected_display2),
-                      ('3:03S13,40j41', expected_display3)]
+    expected_moves = [('3:01S02,02S12,03S13,40j41', expected_display)]
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -428,21 +408,6 @@ def test_get_pair_state_horizontal():
     assert pair_state2 == PairState.NEWLY_SPLIT
 
 
-def test_walk():
-    board = DominosaBoard.create("""\
-1|2 0|1
-
-0 0|2 2
--     -
-0 1|1 2
-""")
-
-    graph = DominosaGraph()
-    states = graph.walk(board)
-    print(*states, sep='\n\n')
-    assert graph.has_solution
-
-
 def test_display_pair_state():
     expected_state = """\
 1s0|1
@@ -454,3 +419,51 @@ def test_display_pair_state():
     state = board.display()
 
     assert state == expected_state
+
+
+def test_random_init():
+    expected_keys = {'solution', 'max_pips'}
+
+    problem = DominosaProblem(init_params=dict(width=4, height=5, max_pips=3))
+
+    assert problem.value.keys() == expected_keys
+    lines = problem.value['solution'].splitlines(keepends=False)
+    assert len(lines) == 9
+    assert len(lines[0]) == 7
+    assert 'x' not in problem.value['solution']
+
+
+def test_fitness_counts_unplaced_dominoes():
+    value = dict(solution="""\
+0 1 1
+- - -
+0 1 0
+""")
+    problem = DominosaProblem(value)
+    expected_dominoes_unused = 2
+    expected_moves_fitness = 0
+    expected_fitness = (-expected_dominoes_unused, expected_moves_fitness)
+
+    fitness = calculate_fitness(problem)
+
+    assert fitness == expected_fitness
+
+
+def test_fitness_counts_solution_moves():
+    value = dict(solution="""\
+1|2 0|1
+
+0 0|2 2
+-     -
+0 1|1 2
+""")
+    problem = DominosaProblem(value)
+    expected_dominoes_unused = 0
+    unique_pair_move_count = 1
+    other_move_count = 9
+    expected_move_fitness = -(10*unique_pair_move_count + other_move_count)
+    expected_fitness = (-expected_dominoes_unused, expected_move_fitness)
+
+    fitness = calculate_fitness(problem)
+
+    assert fitness == expected_fitness
