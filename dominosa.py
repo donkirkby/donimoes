@@ -2,10 +2,13 @@ import random
 import typing
 from collections import defaultdict, Counter
 from enum import Enum
+from functools import partial
 from itertools import chain
 from sys import maxsize
 
-from domino_puzzle import Board, Cell, Domino, BoardGraph, find_boards_with_deap, GraphLimitExceeded
+from networkx import shortest_path
+
+from domino_puzzle import Board, Cell, Domino, BoardGraph, GraphLimitExceeded
 from evo import Individual, Evolution
 
 PairState = Enum('PairState', 'UNDECIDED NEWLY_JOINED JOINED NEWLY_SPLIT SPLIT')
@@ -65,25 +68,27 @@ class DominosaProblem(Individual):
                     max_pips=max_pips)
 
 
-def calculate_fitness(problem):
+def calculate_fitness(problem, move_weights=None):
     value = problem.value
     fitness = value.get('fitness')
     if fitness is not None:
         return fitness
-    board = DominosaBoard.create(value['solution'])
-    graph = DominosaGraph()
+    board = DominosaBoard.create(value['solution'], max_pips=value['max_pips'])
+    graph = DominosaGraph(move_weights=move_weights)
     try:
         graph.walk(board, size_limit=10_000)
     except GraphLimitExceeded:
         pass
-    dominoes_used = graph.min_domino_count
+    dominoes_unused = graph.min_domino_count
     if graph.last is None:
-        moves_fitness = 0
+        fitness = -10000 * dominoes_unused
     else:
-        moves = graph.get_solution()
-        moves_fitness = -sum(10 if move.startswith('6:') else 1
-                             for move in moves)
-    value['fitness'] = fitness = (-dominoes_used, moves_fitness)
+        fitness = 0
+        solution_nodes = shortest_path(graph.graph, graph.start, graph.last)
+        for i in range(len(solution_nodes)-1):
+            source, target = solution_nodes[i:i+2]
+            fitness -= graph.graph[source][target].get('weight', 1)
+    value['fitness'] = fitness
     return fitness
 
 
@@ -139,7 +144,15 @@ def find_matching_pairs(board: Board, x1: int, y1: int, x2: int, y2: int):
 
     :return: generator of (x1, y1, x2, y2) pairs with the same pips
     """
-    target_pips = {board[x][y].pips for x, y in ((x1, y1), (x2, y2))}
+    yield from find_pairs_by_pips(board, board[x1][y1].pips, board[x2][y2].pips)
+
+
+def find_pairs_by_pips(board, head_pips, tail_pips):
+    """ Find all pairs that match the given pips.
+
+    :return: generator of (x1, y1, x2, y2) pairs with the same pips
+    """
+    target_pips = {head_pips, tail_pips}
     for x in range(board.width):
         for y in range(board.height):
             head_pips = board[x][y].pips
@@ -438,6 +451,41 @@ def generate_moves_from_newly_split(board):
             board.set_pair_state(x1, y1, x2, y2, old_state)
 
 
+def generate_moves_from_duplicate_neighbours(board):
+    used_cells = set()
+    undecided_neighbour_pips = defaultdict(set)  # {(x1, y1): {pips}}
+    for (x1, y1, x2, y2), pair_state in board.pair_states.items():
+        if pair_state in (PairState.NEWLY_JOINED, PairState.JOINED):
+            used_cells.add((x1, y1))
+            used_cells.add((x2, y2))
+        elif pair_state == PairState.UNDECIDED:
+            pip_set1 = undecided_neighbour_pips[(x1, y1)]
+            pip_set1.add(board[x2][y2].pips)
+            pip_set2 = undecided_neighbour_pips[(x2, y2)]
+            pip_set2.add(board[x1][y1].pips)
+    surrounded_cells = {cell
+                        for cell, pips in undecided_neighbour_pips.items()
+                        if len(pips) == 1} - used_cells
+    for x1, y1 in surrounded_cells:
+        head_pips = board[x1][y1].pips
+        tail_pips, = undecided_neighbour_pips[(x1, y1)]
+        for x1dup, y1dup, x2dup, y2dup in find_pairs_by_pips(board,
+                                                             head_pips,
+                                                             tail_pips):
+            if (x1, y1) in ((x1dup, y1dup), (x2dup, y2dup)):
+                continue
+            pair_state = board.get_pair_state(x1dup, y1dup, x2dup, y2dup)
+            if pair_state == PairState.UNDECIDED:
+                board.set_pair_state(x1dup, y1dup,
+                                     x2dup, y2dup,
+                                     PairState.NEWLY_SPLIT)
+                move = f'4:{x1}{y1},{x1dup}{y1dup}s{x2dup}{y2dup}'
+                yield move, board.display()
+                board.set_pair_state(x1dup, y1dup,
+                                     x2dup, y2dup,
+                                     PairState.UNDECIDED)
+
+
 def generate_moves_from_unique_pairs(board):
     for x1, y1, x2, y2 in find_unique_pairs(board):
         board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_JOINED)
@@ -447,11 +495,12 @@ def generate_moves_from_unique_pairs(board):
 
 
 class DominosaGraph(BoardGraph):
-    def __init__(self, board_class=DominosaBoard):
+    def __init__(self, board_class=DominosaBoard, move_weights=None):
         super().__init__(board_class)
         self.solution_states = set()
         self.last = None
         self.min_domino_count = None
+        self.move_weights = move_weights
 
     def walk(self, board, size_limit=maxsize):
         board.split_all()
@@ -472,30 +521,53 @@ class DominosaGraph(BoardGraph):
         for rule in (generate_moves_from_single_neighbours(board),
                      generate_moves_from_newly_joined(board),
                      generate_moves_from_newly_split(board),
+                     generate_moves_from_duplicate_neighbours(board),
                      generate_moves_from_unique_pairs(board)):
             has_yielded = False
             for move, state in rule:
-                new_board: DominosaBoard = self.board_class.create(state)
+                new_board: DominosaBoard = self.board_class.create(
+                    state,
+                    max_pips=board.max_pips)
                 self.check_progress(new_board)
-
-                if not any(pair_state == PairState.UNDECIDED
-                           for pair_state in new_board.pair_states.values()):
+                if not new_board.extra_dominoes:
+                    state = clean_solution(board)
+                    self.solution_states.add(state)
                     if self.last is None:
                         self.last = state
-                    if all(pair_state in (PairState.JOINED, PairState.SPLIT)
-                           for pair_state in new_board.pair_states.values()):
-                        self.solution_states.add(state)
-                yield move, state
+                move_attrs = {}
+                if self.move_weights:
+                    move_label = move.split(':')[0]
+                    move_num = int(move_label)
+                    move_attrs['weight'] = self.move_weights[move_num]
+                yield move, state, move_attrs
                 has_yielded = True
             if has_yielded:
                 return
 
     def check_progress(self, board):
         """ Keep track of which board state was the closest to a solution. """
-        total_dominoes = board.width * board.height // 2
-        domino_count = total_dominoes - len(board.dominoes)
+        if board.max_pips is None:
+            raise ValueError('Board does not have max_pips set.')
+        domino_count = len(board.extra_dominoes)
         if self.min_domino_count is None or domino_count < self.min_domino_count:
             self.min_domino_count = domino_count
+
+
+def clean_solution(board: DominosaBoard) -> str:
+    old_pair_states = {pair: pair_state
+                       for pair, pair_state in board.pair_states.items()
+                       if pair_state in (PairState.NEWLY_JOINED,
+                                         PairState.NEWLY_SPLIT,
+                                         PairState.SPLIT)}
+    for pair, pair_state in old_pair_states.items():
+        if pair_state == PairState.NEWLY_JOINED:
+            board.set_pair_state(*pair, PairState.JOINED)
+        else:
+            board.set_pair_state(*pair, PairState.UNDECIDED)
+    clean_state = board.display()
+    for pair, pair_state in old_pair_states.items():
+        board.set_pair_state(*pair, pair_state)
+    return clean_state
 
 
 def find_solutions(board: Board,
@@ -566,21 +638,24 @@ def main1():
     print(board.display())
 
 
-def main2():
-    find_boards_with_deap(graph_class=DominosaGraph)
-
-
 def main():
+    max_pips = 5
+    init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
+    move_weights = {1: 1,
+                    2: 3,
+                    3: 3,
+                    4: 1,
+                    6: 10}
     evo = Evolution(
         pool_size=100,
-        fitness=calculate_fitness,
+        fitness=partial(calculate_fitness, move_weights=move_weights),
         individual_class=DominosaProblem,
         n_offsprings=30,
         pair_params=None,
         mutate_params=None,
-        init_params=dict(width=7, height=6, max_pips=5))
-    n_epochs = 1000  # TODO: Use weights on graph edges for how desirable each move is.
-    # TODO: make final move to 'solved' state, and add edge. Then find cheapest path to 'solved'.
+        init_params=init_params)
+    n_epochs = 1000
+
     hist = []
     for i in range(n_epochs):
         top_individual = evo.pool.individuals[-1]

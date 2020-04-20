@@ -216,6 +216,8 @@ class Board(object):
 
     def split(self, domino):
         self.dominoes.remove(domino)
+        if self.max_pips is not None:
+            self.extra_dominoes.append(domino)
         domino.head.domino = None
         domino.tail.domino = None
 
@@ -664,18 +666,20 @@ class BoardGraph(object):
         self.graph = DiGraph()
         self.start = board.display(cropped=True)
         self.graph.add_node(self.start)
+        max_pips = board.max_pips
         pending_nodes.append(self.start)
         while pending_nodes:
             if len(self.graph) >= size_limit:
                 raise GraphLimitExceeded(size_limit)
             state = pending_nodes.pop()
-            board = self.board_class.create(state, border=1)
-            for move, new_state in self.generate_moves(board):
+            board = self.board_class.create(state, border=1, max_pips=max_pips)
+            for move, new_state, *edge in self.generate_moves(board):
                 if not self.graph.has_node(new_state):
                     # new node
                     self.graph.add_node(new_state)
                     pending_nodes.append(new_state)
-                self.graph.add_edge(state, new_state, move=move)
+                edge_attrs = edge and edge[0] or None
+                self.graph.add_edge(state, new_state, edge_attrs, move=move)
         return set(self.graph.nodes())
 
     def generate_moves(self, board):

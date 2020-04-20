@@ -1,21 +1,23 @@
+from networkx import DiGraph
+
 from domino_puzzle import Board
 from dominosa import find_unique_pairs, join_pairs, find_one_neighbour_pairs, \
     find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph, DominosaProblem, calculate_fitness
 
 
-def test_find_unique_pairs_vertical():
+def test_rule6_unique_pairs_vertical():
     start_state = """\
 1 0 1
 
 1 0 0
 """
-    board = DominosaBoard.create(start_state)
+    board = DominosaBoard.create(start_state, max_pips=1)
     expected_display = """\
 1 0 1
 j
 1 0 0
 """
-    expected_moves = [('6:00j01', expected_display)]
+    expected_moves = [('6:00j01', expected_display, {})]
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -25,14 +27,14 @@ j
     assert final_state == start_state
 
 
-def test_place_unique_pairs_horizontal():
+def test_rule6_unique_pairs_horizontal():
     board = DominosaBoard.create("""\
 1 1
 
 0 0
 
 1 0
-""")
+""", max_pips=1)
     expected_display = """\
 1j1
 
@@ -41,7 +43,7 @@ def test_place_unique_pairs_horizontal():
 1 0
 """
 
-    expected_moves = [('6:02j12', expected_display)]
+    expected_moves = [('6:02j12', expected_display, {})]
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -57,7 +59,7 @@ s s
 s s
 1 2 2 2
 """
-    board = DominosaBoard.create(start_state)
+    board = DominosaBoard.create(start_state, max_pips=2)
     expected_display1 = """\
 1 1 0 1
 s s
@@ -72,8 +74,8 @@ s s
 s s
 1 2 2 2
 """
-    expected_moves = [('1:00j10', expected_display1),
-                      ('1:02j12', expected_display2)]
+    expected_moves = [('1:00j10', expected_display1, {}),
+                      ('1:02j12', expected_display2, {})]
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -91,7 +93,7 @@ s
 -
 1s2 2 2
 """
-    board = DominosaBoard.create(start_state)
+    board = DominosaBoard.create(start_state, max_pips=2)
     expected_display = """\
 1j1 0 1
 s
@@ -99,7 +101,29 @@ s
 -
 1s2 2 2
 """
-    expected_moves = [('1:02j12', expected_display)]
+    expected_moves = [('1:02j12', expected_display, {})]
+    graph = DominosaGraph(DominosaBoard)
+
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
+
+    assert moves == expected_moves
+    assert final_state == start_state
+
+
+def test_rule1_to_solution():
+    start_state = """\
+0 0 1
+s s j
+1|1s0
+"""
+    board = DominosaBoard.create(start_state, max_pips=1)
+    expected_display = """\
+0|0 1
+    -
+1|1 0
+"""
+    expected_moves = [('1:01j11', expected_display, {})]
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -115,13 +139,13 @@ def test_rule2_split_neighbours():
 j
 1 0 0
 """
-    board = DominosaBoard.create(start_state)
+    board = DominosaBoard.create(start_state, max_pips=1)
     expected_display = """\
 1s0 1
 -
 1s0 0
 """
-    expected_moves = [('2:00|01,00s10,01s11', expected_display)]
+    expected_moves = [('2:00|01,00s10,01s11', expected_display, {})]
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -139,7 +163,7 @@ def test_rule2_split_duplicate():
 
 1|1 0 1
 """
-    board = DominosaBoard.create(start_state)
+    board = DominosaBoard.create(start_state, max_pips=2)
     expected_display = """\
 2|2s2 0
 ~ ~ s
@@ -147,7 +171,7 @@ def test_rule2_split_duplicate():
 
 1|1 0 1
 """
-    expected_moves = [('2:02|12,12s22,21s22', expected_display)]
+    expected_moves = [('2:02|12,12s22,21s22', expected_display, {})]
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -167,7 +191,7 @@ s
 
 3 0 0 3 1
 """
-    board = DominosaBoard.create(start_state)
+    board = DominosaBoard.create(start_state, max_pips=3)
     expected_display = """\
 1S1 2 3 1
 -
@@ -177,7 +201,7 @@ s
         j
 3 0 0 3 1
 """
-    expected_moves = [('3:01S02,02S12,03S13,40j41', expected_display)]
+    expected_moves = [('3:01S02,02S12,03S13,40j41', expected_display, {})]
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -185,6 +209,66 @@ s
 
     assert moves == expected_moves
     assert final_state == start_state
+
+
+def test_rule4_duplicate_neighours():
+    start_state = """\
+2 2 0 1
+
+2 1 0 1
+
+2 0 0 1
+"""
+    board = DominosaBoard.create(start_state, max_pips=3)
+    expected_display = """\
+2 2 0 1
+
+2 1 0 1
+s
+2 0 0 1
+"""
+    expected_moves = [('4:02,00s01', expected_display, {})]
+    graph = DominosaGraph(DominosaBoard)
+
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
+
+    assert moves == expected_moves
+    assert final_state == start_state
+
+
+def test_move_weights():
+    start_state = """\
+1 1 0
+
+0 0 1
+"""
+    board = DominosaBoard.create(start_state, max_pips=1)
+
+    graph = DominosaGraph(DominosaBoard, move_weights={1: 2,
+                                                       2: 3,
+                                                       3: 4,
+                                                       6: 10})
+
+    graph.walk(board)
+    graph_x: DiGraph = graph.graph
+    newly_joined_state = """\
+1j1 0
+
+0 0 1
+"""
+    joined_state = """\
+1|1s0
+s s
+0 0 1
+"""
+    weight6 = graph_x.get_edge_data(start_state,
+                                    newly_joined_state)['weight']
+    weight2 = graph_x.get_edge_data(newly_joined_state,
+                                    joined_state)['weight']
+
+    assert weight6 == 10
+    assert weight2 == 3
 
 
 def test_unique_pairs_check_joined():
@@ -438,11 +522,11 @@ def test_fitness_counts_unplaced_dominoes():
 0 1 1
 - - -
 0 1 0
-""")
+""",
+                 max_pips=1)
     problem = DominosaProblem(value)
     expected_dominoes_unused = 2
-    expected_moves_fitness = 0
-    expected_fitness = (-expected_dominoes_unused, expected_moves_fitness)
+    expected_fitness = -10000 * expected_dominoes_unused
 
     fitness = calculate_fitness(problem)
 
@@ -456,14 +540,16 @@ def test_fitness_counts_solution_moves():
 0 0|2 2
 -     -
 0 1|1 2
-""")
+""",
+                 max_pips=2)
     problem = DominosaProblem(value)
-    expected_dominoes_unused = 0
     unique_pair_move_count = 1
-    other_move_count = 9
-    expected_move_fitness = -(10*unique_pair_move_count + other_move_count)
-    expected_fitness = (-expected_dominoes_unused, expected_move_fitness)
+    other_move_count = 8
+    expected_fitness = -(10*unique_pair_move_count + other_move_count)
 
-    fitness = calculate_fitness(problem)
+    fitness = calculate_fitness(problem, move_weights={1: 1,
+                                                       2: 1,
+                                                       3: 1,
+                                                       6: 10})
 
     assert fitness == expected_fitness
