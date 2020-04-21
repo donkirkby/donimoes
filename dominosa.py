@@ -452,6 +452,11 @@ def generate_moves_from_newly_split(board):
 
 
 def generate_moves_from_duplicate_neighbours(board):
+    """ Generate moves according to rule 4.
+
+    If all of a cell's neighbours are the same, then you know that pair can't
+    be linked anywhere else on the board.
+    """
     used_cells = set()
     undecided_neighbour_pips = defaultdict(set)  # {(x1, y1): {pips}}
     for (x1, y1, x2, y2), pair_state in board.pair_states.items():
@@ -469,6 +474,8 @@ def generate_moves_from_duplicate_neighbours(board):
     for x1, y1 in surrounded_cells:
         head_pips = board[x1][y1].pips
         tail_pips, = undecided_neighbour_pips[(x1, y1)]
+        split_pairs = []  # [(x1dup, y1dup, x2dup, y2dup)]
+        move = f'4:{x1}{y1}'
         for x1dup, y1dup, x2dup, y2dup in find_pairs_by_pips(board,
                                                              head_pips,
                                                              tail_pips):
@@ -479,17 +486,69 @@ def generate_moves_from_duplicate_neighbours(board):
                 board.set_pair_state(x1dup, y1dup,
                                      x2dup, y2dup,
                                      PairState.NEWLY_SPLIT)
-                move = f'4:{x1}{y1},{x1dup}{y1dup}s{x2dup}{y2dup}'
-                yield move, board.display()
-                board.set_pair_state(x1dup, y1dup,
-                                     x2dup, y2dup,
-                                     PairState.UNDECIDED)
+                move += f',{x1dup}{y1dup}s{x2dup}{y2dup}'
+                split_pairs.append((x1dup, y1dup, x2dup, y2dup))
+        if split_pairs:
+            yield move, board.display()
+        for x1dup, y1dup, x2dup, y2dup in split_pairs:
+            board.set_pair_state(x1dup, y1dup,
+                                 x2dup, y2dup,
+                                 PairState.UNDECIDED)
+
+
+def generate_moves_from_shared_spaces(board):
+    pair_locations = find_pair_locations(board)
+    for (head_pips, tail_pips), pairs in pair_locations.items():
+        if pairs is None:
+            continue
+        common_cells = set()
+        for i, (x1, y1, x2, y2) in enumerate(pairs):
+            cells = {(x1, y1), (x2, y2)}
+            if i == 0:
+                common_cells.update(cells)
+            else:
+                common_cells.intersection_update(cells)
+        if not common_cells:
+            continue
+        ((x1, y1), ) = common_cells
+        common_pips = board[x1][y1].pips
+        if common_pips == head_pips:
+            needed_pips = tail_pips
+        else:
+            needed_pips = head_pips
+        to_split = []  # [(x2, y2)]
+        for x2 in range(x1-1, x1+2):
+            if x2 < 0 or board.width <= x2:
+                # out of bounds
+                continue
+            for y2 in range(y1-1, y1+2):
+                if y2 < 0 or board.height <= y2:
+                    # out of bounds
+                    continue
+                if (x2 == x1) == (y2 == y1):
+                    # on x1, y1 or diagonal
+                    continue
+                pair_state = board.get_pair_state(x1, y1, x2, y2)
+                if pair_state != PairState.UNDECIDED:
+                    continue
+                neighbour_pips = board[x2][y2].pips
+                if neighbour_pips != needed_pips:
+                    to_split.append((x2, y2))
+        if not to_split:
+            continue
+        move = f'6:{x1}{y1}'
+        for x2, y2 in to_split:
+            board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_SPLIT)
+            move += f',{x1}{y1}s{x2}{y2}'
+        yield move, board.display()
+        for x2, y2 in to_split:
+            board.set_pair_state(x1, y1, x2, y2, PairState.UNDECIDED)
 
 
 def generate_moves_from_unique_pairs(board):
     for x1, y1, x2, y2 in find_unique_pairs(board):
         board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_JOINED)
-        move = f'6:{x1}{y1}j{x2}{y2}'
+        move = f'5:{x1}{y1}j{x2}{y2}'
         yield move, board.display()
         board.set_pair_state(x1, y1, x2, y2, PairState.UNDECIDED)
 
@@ -522,7 +581,8 @@ class DominosaGraph(BoardGraph):
                      generate_moves_from_newly_joined(board),
                      generate_moves_from_newly_split(board),
                      generate_moves_from_duplicate_neighbours(board),
-                     generate_moves_from_unique_pairs(board)):
+                     generate_moves_from_unique_pairs(board),
+                     generate_moves_from_shared_spaces(board)):
             has_yielded = False
             for move, state in rule:
                 new_board: DominosaBoard = self.board_class.create(
@@ -639,13 +699,33 @@ def main1():
 
 
 def main():
-    max_pips = 5
+    level_weights = dict(easy={1: 1,  # single neighbour
+                               2: 10000,  # newly joined
+                               3: 10000,  # newly split
+                               4: 10000,  # duplicate neighbours
+                               5: 10,  # unique pairs
+                               6: 10000},  # shared spaces
+                         medium={1: 1,
+                                 2: 3,
+                                 3: 3,
+                                 4: 10000,
+                                 5: 10,
+                                 6: 10000},
+                         hard={1: 1,
+                               2: 3,
+                               3: 3,
+                               4: 1,
+                               5: 10,
+                               6: 10000},
+                         tricky={1: 1,
+                                 2: 3,
+                                 3: 3,
+                                 4: 3,
+                                 5: 10,
+                                 6: 1})
+    move_weights = level_weights['tricky']
+    max_pips = 4
     init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
-    move_weights = {1: 1,
-                    2: 3,
-                    3: 3,
-                    4: 1,
-                    6: 10}
     evo = Evolution(
         pool_size=100,
         fitness=partial(calculate_fitness, move_weights=move_weights),

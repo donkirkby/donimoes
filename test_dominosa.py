@@ -2,10 +2,11 @@ from networkx import DiGraph
 
 from domino_puzzle import Board
 from dominosa import find_unique_pairs, join_pairs, find_one_neighbour_pairs, \
-    find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph, DominosaProblem, calculate_fitness
+    find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph, DominosaProblem, calculate_fitness, \
+    generate_moves_from_unique_pairs
 
 
-def test_rule6_unique_pairs_vertical():
+def test_rule5_unique_pairs_vertical():
     start_state = """\
 1 0 1
 
@@ -17,17 +18,16 @@ def test_rule6_unique_pairs_vertical():
 j
 1 0 0
 """
-    expected_moves = [('6:00j01', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('5:00j01', expected_display)]
 
-    moves = list(graph.generate_moves(board))
+    moves = list(generate_moves_from_unique_pairs(board))
     final_state = board.display()
 
     assert moves == expected_moves
     assert final_state == start_state
 
 
-def test_rule6_unique_pairs_horizontal():
+def test_rule5_unique_pairs_horizontal():
     board = DominosaBoard.create("""\
 1 1
 
@@ -43,10 +43,9 @@ def test_rule6_unique_pairs_horizontal():
 1 0
 """
 
-    expected_moves = [('6:02j12', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('5:02j12', expected_display)]
 
-    moves = list(graph.generate_moves(board))
+    moves = list(generate_moves_from_unique_pairs(board))
 
     assert moves == expected_moves
 
@@ -102,6 +101,27 @@ s
 1s2 2 2
 """
     expected_moves = [('1:02j12', expected_display, {})]
+    graph = DominosaGraph(DominosaBoard)
+
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
+
+    assert moves == expected_moves
+    assert final_state == start_state
+
+
+def test_rule6_big_head():
+    start_state = """\
+2 2s1|1s0
+    s s -
+2 1s0|0s2
+s s s s s
+3 3 3 2 3
+  s
+0 1 0 3 1
+"""
+    board = DominosaBoard.create(start_state, max_pips=2)
+    expected_moves = []
     graph = DominosaGraph(DominosaBoard)
 
     moves = list(graph.generate_moves(board))
@@ -237,6 +257,36 @@ s
     assert final_state == start_state
 
 
+def test_rule6_shared_space():
+    start_state = """\
+2 3 3 1 3
+
+0 1 2 0 3
+
+0 0 2 2 3
+~ ~
+1|1S2 1 0
+"""
+    board = DominosaBoard.create(start_state, max_pips=3)
+    expected_display = """\
+2 3 3 1 3
+
+0 1 2 0 3
+
+0 0s2 2 3
+~ ~
+1|1S2 1 0
+"""
+    expected_moves = [('6:21,21s11', expected_display, {})]
+    graph = DominosaGraph(DominosaBoard)
+
+    moves = list(graph.generate_moves(board))
+    final_state = board.display()
+
+    assert moves == expected_moves
+    assert final_state == start_state
+
+
 def test_move_weights():
     start_state = """\
 1 1 0
@@ -248,27 +298,27 @@ def test_move_weights():
     graph = DominosaGraph(DominosaBoard, move_weights={1: 2,
                                                        2: 3,
                                                        3: 4,
-                                                       6: 10})
+                                                       4: 5,
+                                                       5: 10,
+                                                       6: 7})
 
     graph.walk(board)
     graph_x: DiGraph = graph.graph
-    newly_joined_state = """\
-1j1 0
-
-0 0 1
-"""
-    joined_state = """\
-1|1s0
+    dup_state = """\
+1 1s0
 s s
 0 0 1
 """
-    weight6 = graph_x.get_edge_data(start_state,
-                                    newly_joined_state)['weight']
-    weight2 = graph_x.get_edge_data(newly_joined_state,
-                                    joined_state)['weight']
+    joined_state = """\
+1j1s0
+s s
+0 0 1
+"""
+    weight4 = graph_x.get_edge_data(start_state, dup_state)['weight']
+    weight1 = graph_x.get_edge_data(dup_state, joined_state)['weight']
 
-    assert weight6 == 10
-    assert weight2 == 3
+    assert weight4 == 5
+    assert weight1 == 2
 
 
 def test_unique_pairs_check_joined():
@@ -550,6 +600,6 @@ def test_fitness_counts_solution_moves():
     fitness = calculate_fitness(problem, move_weights={1: 1,
                                                        2: 1,
                                                        3: 1,
-                                                       6: 10})
+                                                       5: 10})
 
     assert fitness == expected_fitness
