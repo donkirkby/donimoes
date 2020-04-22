@@ -84,10 +84,14 @@ def calculate_fitness(problem, move_weights=None):
         fitness = -10000 * dominoes_unused
     else:
         fitness = 0
-        solution_nodes = shortest_path(graph.graph, graph.start, graph.last)
+        solution_nodes = shortest_path(graph.graph,
+                                       graph.start,
+                                       graph.last,
+                                       'weight')
         for i in range(len(solution_nodes)-1):
             source, target = solution_nodes[i:i+2]
-            fitness -= graph.graph[source][target].get('weight', 1)
+            edge = graph.graph[source][target]
+            fitness -= edge.get('weight', 1)
     value['fitness'] = fitness
     return fitness
 
@@ -429,9 +433,17 @@ def generate_moves_from_newly_split(board):
         pair_group.append((x1, y1, x2, y2, PairState.SPLIT))
         if len(matching_pairs) == 1:
             x1dup, y1dup, x2dup, y2dup = matching_pairs[0]
-            pair_group.append((x1dup, y1dup, x2dup, y2dup, PairState.NEWLY_JOINED))
-            pair_groups.append(pair_group)
-            pair_group = []
+            has_joined_neighbour = False
+            for x1n, y1n, x2n, y2n in board.find_neighbours(x1dup, y1dup,
+                                                            x2dup, y2dup):
+                neighbour_state = board.get_pair_state(x1n, y1n, x2n, y2n)
+                if neighbour_state in (PairState.JOINED, PairState.NEWLY_JOINED):
+                    has_joined_neighbour = True
+                    break
+            if not has_joined_neighbour:
+                pair_group.append((x1dup, y1dup, x2dup, y2dup, PairState.NEWLY_JOINED))
+                pair_groups.append(pair_group)
+                pair_group = []
     for pair_group in pair_groups:
         move = None
         for x1, y1, x2, y2, new_state in pair_group:
@@ -499,7 +511,7 @@ def generate_moves_from_duplicate_neighbours(board):
 def generate_moves_from_shared_spaces(board):
     pair_locations = find_pair_locations(board)
     for (head_pips, tail_pips), pairs in pair_locations.items():
-        if pairs is None:
+        if pairs is None or len(pairs) == 1:
             continue
         common_cells = set()
         for i, (x1, y1, x2, y2) in enumerate(pairs):
@@ -536,7 +548,7 @@ def generate_moves_from_shared_spaces(board):
                     to_split.append((x2, y2))
         if not to_split:
             continue
-        move = f'6:{x1}{y1}'
+        move = f'5:{x1}{y1}'
         for x2, y2 in to_split:
             board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_SPLIT)
             move += f',{x1}{y1}s{x2}{y2}'
@@ -548,14 +560,29 @@ def generate_moves_from_shared_spaces(board):
 def generate_moves_from_unique_pairs(board):
     for x1, y1, x2, y2 in find_unique_pairs(board):
         board.set_pair_state(x1, y1, x2, y2, PairState.NEWLY_JOINED)
-        move = f'5:{x1}{y1}j{x2}{y2}'
+        move = f'6:{x1}{y1}j{x2}{y2}'
         yield move, board.display()
         board.set_pair_state(x1, y1, x2, y2, PairState.UNDECIDED)
 
 
 class DominosaGraph(BoardGraph):
-    def __init__(self, board_class=DominosaBoard, move_weights=None):
+    def __init__(self,
+                 board_class=DominosaBoard,
+                 move_weights=None,
+                 debug=False):
         super().__init__(board_class)
+        move_generators = {1: generate_moves_from_single_neighbours,
+                           2: generate_moves_from_newly_joined,
+                           3: generate_moves_from_newly_split,
+                           4: generate_moves_from_duplicate_neighbours,
+                           5: generate_moves_from_shared_spaces,
+                           6: generate_moves_from_unique_pairs}
+        if move_weights is None:
+            move_weights = {6: 1}
+        self.debug = debug
+        selected_rules = sorted(move_weights)
+        self.move_generators = [move_generators[rule]
+                                for rule in selected_rules]
         self.solution_states = set()
         self.last = None
         self.min_domino_count = None
@@ -577,14 +604,14 @@ class DominosaGraph(BoardGraph):
         :return: a generator of (move_description, state) tuples
         """
 
-        for rule in (generate_moves_from_single_neighbours(board),
-                     generate_moves_from_newly_joined(board),
-                     generate_moves_from_newly_split(board),
-                     generate_moves_from_duplicate_neighbours(board),
-                     generate_moves_from_unique_pairs(board),
-                     generate_moves_from_shared_spaces(board)):
+        for rule in (generator(board)
+                     for generator in self.move_generators):
             has_yielded = False
             for move, state in rule:
+                if self.debug:
+                    print()
+                    print(move)
+                    print(state)
                 new_board: DominosaBoard = self.board_class.create(
                     state,
                     max_pips=board.max_pips)
@@ -699,32 +726,27 @@ def main1():
 
 
 def main():
-    level_weights = dict(easy={1: 1,  # single neighbour
-                               2: 10000,  # newly joined
-                               3: 10000,  # newly split
-                               4: 10000,  # duplicate neighbours
-                               5: 10,  # unique pairs
-                               6: 10000},  # shared spaces
-                         medium={1: 1,
-                                 2: 3,
-                                 3: 3,
-                                 4: 10000,
-                                 5: 10,
-                                 6: 10000},
+    level_weights = dict(tricky={1: 1,  # single neighbour
+                                 2: 0,  # newly joined
+                                 3: 3,  # newly split
+                                 4: 3,  # duplicate neighbours
+                                 5: 1,  # shared spaces
+                                 6: 10},  # unique pairs
                          hard={1: 1,
-                               2: 3,
+                               2: 0,
                                3: 3,
                                4: 1,
-                               5: 10,
-                               6: 10000},
-                         tricky={1: 1,
-                                 2: 3,
+                               6: 10},
+                         medium={1: 1,
+                                 2: 0,
                                  3: 3,
-                                 4: 3,
-                                 5: 10,
-                                 6: 1})
+                                 6: 10},
+                         easy={1: 1,
+                               2: 0,
+                               6: 10})
     move_weights = level_weights['tricky']
-    max_pips = 4
+    # 18 -24 -24 '0 1 0 2 0 3\n\n3 3 1 4 2 4\n\n1 1 0 0 1 3\n\n2 0 4 2 2 4\n           \n1 2 3 4 4 3\n'
+    max_pips = 6
     init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
     evo = Evolution(
         pool_size=100,

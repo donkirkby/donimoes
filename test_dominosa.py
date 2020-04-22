@@ -3,10 +3,11 @@ from networkx import DiGraph
 from domino_puzzle import Board
 from dominosa import find_unique_pairs, join_pairs, find_one_neighbour_pairs, \
     find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph, DominosaProblem, calculate_fitness, \
-    generate_moves_from_unique_pairs
+    generate_moves_from_unique_pairs, generate_moves_from_single_neighbours, generate_moves_from_newly_joined, \
+    generate_moves_from_newly_split, generate_moves_from_duplicate_neighbours
 
 
-def test_rule5_unique_pairs_vertical():
+def test_rule6_unique_pairs_vertical():
     start_state = """\
 1 0 1
 
@@ -18,7 +19,7 @@ def test_rule5_unique_pairs_vertical():
 j
 1 0 0
 """
-    expected_moves = [('5:00j01', expected_display)]
+    expected_moves = [('6:00j01', expected_display)]
 
     moves = list(generate_moves_from_unique_pairs(board))
     final_state = board.display()
@@ -27,7 +28,7 @@ j
     assert final_state == start_state
 
 
-def test_rule5_unique_pairs_horizontal():
+def test_rule6_unique_pairs_horizontal():
     board = DominosaBoard.create("""\
 1 1
 
@@ -43,7 +44,7 @@ def test_rule5_unique_pairs_horizontal():
 1 0
 """
 
-    expected_moves = [('5:02j12', expected_display)]
+    expected_moves = [('6:02j12', expected_display)]
 
     moves = list(generate_moves_from_unique_pairs(board))
 
@@ -73,11 +74,10 @@ s s
 s s
 1 2 2 2
 """
-    expected_moves = [('1:00j10', expected_display1, {}),
-                      ('1:02j12', expected_display2, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('1:00j10', expected_display1),
+                      ('1:02j12', expected_display2)]
 
-    moves = list(graph.generate_moves(board))
+    moves = list(generate_moves_from_single_neighbours(board))
     final_state = board.display()
 
     assert moves == expected_moves
@@ -100,10 +100,9 @@ s
 -
 1s2 2 2
 """
-    expected_moves = [('1:02j12', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('1:02j12', expected_display)]
 
-    moves = list(graph.generate_moves(board))
+    moves = list(generate_moves_from_single_neighbours(board))
     final_state = board.display()
 
     assert moves == expected_moves
@@ -143,8 +142,8 @@ s s j
     -
 1|1 0
 """
-    expected_moves = [('1:01j11', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('1:01j11', expected_display, {'weight': 1})]
+    graph = DominosaGraph(DominosaBoard, move_weights={1: 1})
 
     moves = list(graph.generate_moves(board))
     final_state = board.display()
@@ -165,10 +164,9 @@ j
 -
 1s0 0
 """
-    expected_moves = [('2:00|01,00s10,01s11', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('2:00|01,00s10,01s11', expected_display)]
 
-    moves = list(graph.generate_moves(board))
+    moves = list(generate_moves_from_newly_joined(board))
     final_state = board.display()
 
     assert moves == expected_moves
@@ -191,10 +189,9 @@ def test_rule2_split_duplicate():
 
 1|1 0 1
 """
-    expected_moves = [('2:02|12,12s22,21s22', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('2:02|12,12s22,21s22', expected_display)]
 
-    moves = list(graph.generate_moves(board))
+    moves = list(generate_moves_from_newly_joined(board))
     final_state = board.display()
 
     assert moves == expected_moves
@@ -221,10 +218,9 @@ s
         j
 3 0 0 3 1
 """
-    expected_moves = [('3:01S02,02S12,03S13,40j41', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('3:01S02,02S12,03S13,40j41', expected_display)]
 
-    moves = list(graph.generate_moves(board))
+    moves = list(generate_moves_from_newly_split(board))
     final_state = board.display()
 
     assert moves == expected_moves
@@ -247,17 +243,16 @@ def test_rule4_duplicate_neighours():
 s
 2 0 0 1
 """
-    expected_moves = [('4:02,00s01', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('4:02,00s01', expected_display)]
 
-    moves = list(graph.generate_moves(board))
+    moves = list(generate_moves_from_duplicate_neighbours(board))
     final_state = board.display()
 
     assert moves == expected_moves
     assert final_state == start_state
 
 
-def test_rule6_shared_space():
+def test_rule5_shared_space():
     start_state = """\
 2 3 3 1 3
 
@@ -277,8 +272,8 @@ def test_rule6_shared_space():
 ~ ~
 1|1S2 1 0
 """
-    expected_moves = [('6:21,21s11', expected_display, {})]
-    graph = DominosaGraph(DominosaBoard)
+    expected_moves = [('5:21,21s11', expected_display, {'weight': 1})]
+    graph = DominosaGraph(DominosaBoard, move_weights={5:1, 6:10})
 
     moves = list(graph.generate_moves(board))
     final_state = board.display()
@@ -593,13 +588,15 @@ def test_fitness_counts_solution_moves():
 """,
                  max_pips=2)
     problem = DominosaProblem(value)
-    unique_pair_move_count = 1
-    other_move_count = 8
-    expected_fitness = -(10*unique_pair_move_count + other_move_count)
+    rule5_move_count = 1
+    other_move_count = 9
+    expected_fitness = -(10*rule5_move_count + other_move_count)
 
     fitness = calculate_fitness(problem, move_weights={1: 1,
                                                        2: 1,
                                                        3: 1,
-                                                       5: 10})
+                                                       4: 1,
+                                                       5: 10,
+                                                       6: 100})
 
     assert fitness == expected_fitness
