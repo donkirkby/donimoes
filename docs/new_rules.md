@@ -124,6 +124,36 @@ are very similar to Dominosa.
                
     1 2 3 4 4 3
 
+### Problem 17
+    0 3 2 6 2 5 1 6
+    
+    3 0 2 3 5 5 5 2
+                   
+    1 3 6 2 4 3 4 1
+    
+    5 0 4 5 0 6 0 0
+           
+    0 2 2 1 4 3 6 0
+                   
+    3 3 1 1 1 2 5 1
+    
+    6 6 4 6 4 5 4 4
+
+### Problem 18
+    6 2 6 2 3 6 2 2
+               
+    5 2 2 4 4 6 6 5
+                   
+    6 1 1 6 1 1 4 5
+               
+    0 1 3 0 0 0 1 1
+    
+    3 3 4 5 0 5 3 6
+    
+    0 2 5 4 1 5 3 5
+                   
+    0 4 3 4 0 3 4 2
+
 ### Problem 19
     0 5 1 3 2 6 0 4
     
@@ -153,6 +183,38 @@ are very similar to Dominosa.
     3 4 1 4 1 6 6 5
                    
     2 4 0 3 3 1 4 3
+
+### Dominosa Strategy
+There are several methods to deduce where the dominoes must be placed, and it's
+helpful to record on the puzzle, not only where the dominoes can be, but also
+where they can't be. Here are some rules to help you make progress:
+
+1. Look for a cell that only has one neighbour, and join it with its neighbour.
+    Particularly check near the last pair you joined.
+2. If you have a newly joined pair of numbers, check if the same pair appears
+    elsewhere. Split the other location, because you can't have two dominoes
+    the same. Also check all of the other neighbours that the newly joined pair
+    might have joined with. Those pairs of numbers might now be unique.
+3. If you have a newly split pair of numbers, look for the same pair elsewhere
+    on the board to see if there is only one pair like them. If so, join them.
+4. If all of a space's available neighbours are the same, you know it will join
+    one of them. Look for the same pair of numbers elsewhere on the board, and
+    mark them as split.
+5. If a pair of undecided numbers appears more than once on the board, but all
+    of the pairs share one space, then you know that space must join to the
+    other number. Mark any other available neighbours as split.
+6. Look for unique pairs of numbers, and mark them as joined. (This is the
+    tedious part, so I try to only require it once or twice in each puzzle.)
+7. If two unsolved areas are joined by a narrow neck, you know that both areas
+    must have an even number of spaces in them. That will tell you where you can
+    split or join the spaces in the neck.
+8. If none of the other rules apply, guess at a domino's placement by marking a
+    pair as joined.  If it later causes a contradiction, backtrack and mark it
+    split. (This would be very frustrating when solving, so none of the problems
+    in this collection require it.)
+
+The easiest puzzles in this collection only require a couple of these rules, and
+then the later puzzles require more and more different rules to solve.
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.
@@ -246,6 +308,154 @@ solutions are listed at the end.
     2 3 5 4 5 2
     - - - - - -
     1 5 1 5 5 4
+
+# Solutions
+## Dominosa Solutions
+### Solution 1
+    2|2 1 2
+        - -
+    0|0 1 0
+    
+    1|2 0|1
+
+### Solution 2
+    3 2|4 4|4 4
+    -         -
+    0 1|3 0 4 0
+          - -
+    0|2 1 0 3 2
+        -     -
+    3|3 1 2|2 1
+    
+    1|0 1|4 2|3
+
+### Solution 3
+    1|0 3 4 4|0 2
+        - -     -
+    1 5 0 2 4 1 0
+    - -     - -
+    4 5 1 4 4 3 2
+        - -     -
+    0 2 2 3 1 3 2
+    - -     - -
+    0 5 3 0 1 2 1
+        - -     -
+    5|4 3 5 3|5 5
+
+### Solution 4
+    3 2|2 1|3
+    -
+    2 0|0 0|2
+    
+    1 0 2 0|1
+    - - -
+    1 3 1 3|3
+
+### Solution 5
+    1|2 4 0|0 3
+        -     -
+    4|4 3 1|3 2
+    
+    0|2 1|0 3|0
+    
+    4 2|2 1|1 4
+    -         -
+    1 3|3 2|4 0
+
+### Solution 6
+    0|5 3 5 2 1|1
+        - - -
+    4 3 2 4 1 4 4
+    - -       - -
+    2 3 4 2|2 0 3
+        -
+    2 5 1 0|0 5 1
+    - -       - -
+    0 5 3 1|5 2 0
+        -
+    3|5 1 4|4 0|3
+
+### Solution 7
+    6 2|2 3|0 6|2 4
+    -             -
+    1 6 6|6 3|4 5 2
+      -         -
+    3 0 0|2 6 6 2 4
+    -       - -   -
+    2 0|5 2 5 4 4 0
+          -     -
+    1|1 4 1 0|0 4 5
+        -         -
+    3|6 1 1|5 3|5 5
+    
+    0|1 4|5 1|3 3|3
+
+### Solution 15
+    4 1|1 0|1 2
+    -         -
+    0 3|3 4 0 0
+          - -
+    1|3 4 1 0 4
+        -     -
+    2|4 4 2|2 3
+    
+    2|3 0|3 1|2
+
+### Solution 16
+    0|1 0|2 0|3
+    
+    3|3 1|4 2|4
+    
+    1|1 0|0 1|3
+    
+    2 0|4 2|2 4
+    -         -
+    1 2|3 4|4 3
+
+### Solution 18
+    6 2|6 2|3 6 2|2
+    -         -
+    5 2 2|4 4 6 6 5
+      -     -   - -
+    6 1 1|6 1 1 4 5
+    -         -
+    0 1|3 0|0 0 1|1
+    
+    3|3 4|5 0|5 3|6
+    
+    0|2 5 4 1|5 3 5
+        - -     - -
+    0|4 3 4 0|3 4 2
+
+### Solution 19
+    0|5 1|3 2|6 0|4
+    
+    4 0|6 5 3|6 0 6
+    -     -     - -
+    3 2|5 1 1|6 0 6
+    
+    4|5 4 5|5 0|2 1
+        -         -
+    2|2 4 2|3 4|1 1
+    
+    5|6 4|6 3 2 4|2
+            - -
+    0|1 3|5 3 1 3|0
+
+### Solution 20
+    0|4 2|6 2|5 0|5
+    
+    3 5|6 1|3 6|3 1
+    -             -
+    2 1|2 6 4|4 0 1
+          -     -
+    0|2 3 1 5|5 0 5
+        -         -
+    0|6 0 6 5 2|2 4
+          - -
+    3|4 1 4 1 6|6 5
+        -         -
+    2|4 0 3|3 1|4 3
 
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the

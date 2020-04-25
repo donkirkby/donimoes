@@ -78,7 +78,9 @@ def calculate_fitness(problem, move_weights=None):
     try:
         graph.walk(board, size_limit=10_000)
     except GraphLimitExceeded:
-        pass
+        if graph.last is None:
+            return -2_000_000
+        return -1_000_000
     dominoes_unused = graph.min_domino_count
     if graph.last is None:
         fitness = -10000 * dominoes_unused
@@ -626,6 +628,7 @@ class DominosaGraph(BoardGraph):
                     move_label = move.split(':')[0]
                     move_num = int(move_label)
                     move_attrs['weight'] = self.move_weights[move_num]
+                    move_attrs['move_num'] = move_num
                 yield move, state, move_attrs
                 has_yielded = True
             if has_yielded:
@@ -745,7 +748,7 @@ def main():
                                2: 0,
                                6: 10})
     move_weights = level_weights['tricky']
-    # 18 -24 -24 '0 1 0 2 0 3\n\n3 3 1 4 2 4\n\n1 1 0 0 1 3\n\n2 0 4 2 2 4\n           \n1 2 3 4 4 3\n'
+
     max_pips = 6
     init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
     evo = Evolution(
