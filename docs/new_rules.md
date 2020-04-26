@@ -12,15 +12,15 @@ know what you think.
 
 ## Dominosa
 The domino puzzle I most often see in books or online is called either Dominosa
-or Domino Solitaire. Given a grid of numbers, you have to lay the dominoes on
-them so they match the numbers. It was invented by O.S. Adler in 1874. I took a
-long time to add this puzzle to the collection, because I found it tedious to
-keep searching for unique numbers. After some research, though, I learned that
-people have found many other techniques for solving that aren't as tedious. Try
-to work out your own techniques as you solve these problems, then read my
-techniques at the end. Let me know if you find any new ones. Even with all
-those tricks, it's not trivial to solve. (In computer science, it's called
-[NP-hard].)
+or Domino Solitaire. Given a grid of numbers, you have to lay out the dominoes
+so they match the numbers, without duplicated or missing dominoes. Dominosa was
+invented by O.S. Adler in 1874. I took a long time to add this puzzle to the
+collection, because I found it tedious to keep searching for unique numbers.
+After some research, though, I learned that people have found many other
+techniques for solving that aren't as tedious. Try to work out your own
+techniques as you solve these problems, then read my techniques at the end. Let
+me know if you find any new ones. Even with all those tricks, it's not trivial
+to solve. (In computer science, it's called [NP-hard].)
 
 One thing I find interesting about this puzzle is that it's easier to solve with
 pencil and paper than with a set of dominoes.
@@ -48,15 +48,15 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     2 3 1 0 2
 
 ### Problem 3
-    3 1 1 2 3 0
+    3 0 1 1 0 4
     
-    1 0 2 1 4 4
+    2 4 4 1 1 2
     
-    4 4 0 0 3 0
+    2 4 2 2 1 4
     
-    2 4 2 3 3 4
+    3 3 4 0 0 3
     
-    1 3 2 0 1 2
+    3 0 2 1 3 0
 
 ### Problem 4
     0 2 1 1 2
@@ -103,17 +103,17 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     3 3 1 2 3 5 4
 
 ### Problem 8
-    1 0 3 4 4 0 2
-                 
-    1 5 0 2 4 1 0
-               
-    4 5 1 4 4 3 2
-                 
-    0 2 2 3 1 3 2
-               
-    0 5 3 0 1 2 1
-                 
-    5 4 3 5 3 5 5
+    3 5 0 1 3 4 5
+    
+    3 1 4 1 3 3 0
+    
+    3 1 5 0 0 2 4
+    
+    0 4 0 2 5 5 2
+    
+    2 2 1 5 2 4 4
+    
+    3 0 1 5 1 2 4
 
 ### Problem 9
     1 2 4 2 3 4
@@ -216,87 +216,69 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     0 4 4 1 3 0
 
 ### Problem 17
-    0 3 2 6 2 5 1 6
+    0 2 3 1 2 5 5
     
-    3 0 2 3 5 5 5 2
-                   
-    1 3 6 2 4 3 4 1
+    3 5 0 4 1 1 3
     
-    5 0 4 5 0 6 0 0
-           
-    0 2 2 1 4 3 6 0
-                   
-    3 3 1 1 1 2 5 1
+    4 4 4 2 0 5 3
     
-    6 6 4 6 4 5 4 4
+    1 1 3 2 3 2 5
+    
+    4 5 0 0 0 4 2
+    
+    1 5 3 4 0 1 2
 
 ### Problem 18
-    6 2 6 2 3 6 2 2
-               
-    5 2 2 4 4 6 6 5
-                   
-    6 1 1 6 1 1 4 5
-               
-    0 1 3 0 0 0 1 1
+    3 4 0 5 2 3 3
     
-    3 3 4 5 0 5 3 6
+    0 0 2 4 5 0 3
     
-    0 2 5 4 1 5 3 5
-                   
-    0 4 3 4 0 3 4 2
+    3 0 4 1 3 0 5
+    
+    5 5 3 5 1 1 2
+    
+    4 4 1 2 2 2 4
+    
+    1 5 1 4 2 0 1
 
 ### Problem 19
-    0 5 1 3 2 6 0 4
+    2 3 4 4 1 3 2 5
     
-    4 0 6 5 3 6 0 6
-                   
-    3 2 5 1 1 6 0 6
+    6 6 0 5 5 5 3 3
     
-    4 5 4 5 5 0 2 1
-                   
-    2 2 4 2 3 4 1 1
+    6 4 3 6 1 4 6 0
     
-    5 6 4 6 3 2 4 2
-               
-    0 1 3 5 3 1 3 0
+    2 3 2 4 2 5 1 1
+    
+    5 6 5 4 1 2 6 0
+    
+    0 0 5 0 2 2 4 6
+    
+    1 1 3 3 0 1 4 0
 
 ### Problem 20
-    0 4 2 6 2 5 0 5
+    0 6 0 1 4 4 3 6
     
-    3 5 6 1 3 6 3 1
-                   
-    2 1 2 6 4 4 0 1
-                 
-    0 2 3 1 5 5 0 5
-                   
-    0 6 0 6 5 2 2 4
-             
-    3 4 1 4 1 6 6 5
-                   
-    2 4 0 3 3 1 4 3
-
-### Problem 20b
-    0 4 3 6 0 0 1 3
+    2 6 6 0 5 2 6 3
     
-    5 5 4 6 6 3 4 5
+    3 4 1 1 2 2 5 0
     
-    6 2 4 3 1 2 3 2
+    3 5 5 3 6 6 0 4
     
-    0 2 5 3 5 4 2 5
+    1 1 1 3 4 2 3 6
     
-    4 6 1 6 5 2 6 3
+    1 5 0 2 1 5 4 4
     
-    6 0 3 2 0 2 1 4
-    
-    5 0 1 1 1 1 4 0
+    0 0 3 5 2 4 2 5
 
 ### Dominosa Strategy
 There are several methods to deduce where the dominoes must be placed, and it's
-helpful to record on the puzzle, not only where the dominoes can be, but also
-where they can't be. Here are some rules to help you make progress:
+helpful to write notes on the puzzle. Often, you can tell where a domino can't
+be before you know where it must be. Here are some rules to help you make
+progress:
 
-1. Look for a cell that only has one neighbour, and join it with its neighbour.
-    Particularly check near the last pair you joined.
+1. Look for a number that only has one neighbour, and join it with its
+    neighbour. Particularly check near the last pair you joined.
 2. If you have a newly joined pair of numbers, check if the same pair appears
     elsewhere. Split the other location, because you can't have two dominoes
     the same. Also check all of the other neighbours that the newly joined pair
@@ -306,11 +288,11 @@ where they can't be. Here are some rules to help you make progress:
 4. If all of a space's available neighbours are the same, you know it will join
     one of them. Look for the same pair of numbers elsewhere on the board, and
     mark them as split.
-5. If a pair of undecided numbers appears more than once on the board, but all
-    of the pairs share one space, then you know that space must join to the
-    other number. Mark any other available neighbours as split.
+5. If a pair of numbers appears more than once on the board, but all of the
+    pairs share one space, then you know that space must join to the other
+    number. Mark any other available neighbours as split.
 6. Look for unique pairs of numbers, and mark them as joined. (This is the
-    tedious part, so I try to only require it once or twice in each puzzle.)
+    tedious part, so I try to only require it a few times in each puzzle.)
 7. If two unsolved areas are joined by a narrow neck, you know that both areas
     must have an even number of spaces in them. That will tell you where you can
     split or join the spaces in the neck.
@@ -434,15 +416,15 @@ solutions are listed at the end.
     2|3 1 0|2
 
 ### Solution 3
-    3 1|1 2|3 0
+    3 0|1 1 0|4
+    -     -
+    2 4|4 1 1|2
+    
+    2|4 2|2 1|4
+    
+    3 3|4 0|0 3
     -         -
-    1 0|2 1|4 4
-    
-    4|4 0|0 3|0
-    
-    2 4 2 3|3 4
-    - - -     -
-    1 3 2 0|1 2
+    3 0|2 1|3 0
 
 ### Solution 4
     0|2 1|1 2
@@ -487,6 +469,19 @@ solutions are listed at the end.
     4 0|2 0|1 5 5
                 -
     3|3 1|2 3|5 4
+
+### Solution 8
+    3|5 0|1 3|4 5
+                -
+    3 1|4 1|3 3 0
+    -         -
+    3 1|5 0|0 2 4
+                -
+    0|4 0|2 5 5 2
+            - -
+    2|2 1 5 2 4 4
+        - -     -
+    3|0 1 5 1|2 4
 
 ### Solution 9
     1|2 4 2|3 4
@@ -551,6 +546,21 @@ solutions are listed at the end.
     
     1|5 5|4 0|1 1|4
 
+### Solution 14
+    1|5 6 2|2 2 6|2
+        -     -
+    4 1 5 5|3 3 2 6
+    - -         - -
+    3 0 2 2|0 3 5 4
+        -     -
+    1|3 1 4|4 3 6|3
+    
+    0|5 4|5 3 1|1 6
+            -     -
+    4 0|6 4 0 0|0 6
+    -     -
+    0 5|5 1 1|6 2|4
+
 ### Solution 15
     0|0 1|3 1|1
     
@@ -573,50 +583,61 @@ solutions are listed at the end.
     -         -
     0 4|4 1|3 0
 
+### Solution 17
+    0|2 3 1|2 5|5
+        -
+    3|5 0 4 1|1 3
+          -     -
+    4 4|4 2 0|5 3
+    -
+    1 1|3 2|3 2|5
+    
+    4|5 0|0 0|4 2
+                -
+    1|5 3|4 0|1 2
+
 ### Solution 18
-    6 2|6 2|3 6 2|2
+    3|4 0|5 2|3 3
+                -
+    0 0|2 4|5 0 3
     -         -
-    5 2 2|4 4 6 6 5
-      -     -   - -
-    6 1 1|6 1 1 4 5
-    -         -
-    0 1|3 0|0 0 1|1
+    3 0|4 1|3 0 5
+                -
+    5|5 3|5 1|1 2
     
-    3|3 4|5 0|5 3|6
-    
-    0|2 5 4 1|5 3 5
-        - -     - -
-    0|4 3 4 0|3 4 2
+    4|4 1|2 2 2|4
+            -
+    1|5 1|4 2 0|1
 
 ### Solution 19
-    0|5 1|3 2|6 0|4
+    2|3 4|4 1|3 2|5
     
-    4 0|6 5 3|6 0 6
-    -     -     - -
-    3 2|5 1 1|6 0 6
-    
-    4|5 4 5|5 0|2 1
-        -         -
-    2|2 4 2|3 4|1 1
-    
-    5|6 4|6 3 2 4|2
-            - -
-    0|1 3|5 3 1 3|0
+    6|6 0|5 5 5|3 3
+            -     -
+    6 4 3|6 1 4 6 0
+    - -       - -
+    2 3 2|4 2 5 1 1
+            -     -
+    5|6 5 4 1 2 6 0
+        - -   - -
+    0|0 5 0 2 2 4 6
+            -     -
+    1|1 3|3 0 1|4 0
 
 ### Solution 20
-    0|4 2|6 2|5 0|5
+    0|6 0|1 4|4 3|6
     
-    3 5|6 1|3 6|3 1
-    -             -
-    2 1|2 6 4|4 0 1
-          -     -
-    0|2 3 1 5|5 0 5
-        -         -
-    0|6 0 6 5 2|2 4
-          - -
-    3|4 1 4 1 6|6 5
-        -         -
-    2|4 0 3|3 1|4 3
+    2|6 6 0|5 2 6 3
+        -     - - -
+    3|4 1 1|2 2 5 0
+    
+    3 5|5 3 6|6 0|4
+    -     -
+    1 1|1 3 4 2|3 6
+            -     -
+    1|5 0|2 1 5|4 4
+    
+    0|0 3|5 2|4 2|5
 
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the
