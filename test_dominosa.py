@@ -2,9 +2,9 @@ from networkx import DiGraph
 
 from domino_puzzle import Board
 from dominosa import find_unique_pairs, join_pairs, find_one_neighbour_pairs, \
-    find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph, DominosaProblem, calculate_fitness, \
+    find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph, DominosaProblem, \
     generate_moves_from_unique_pairs, generate_moves_from_single_neighbours, generate_moves_from_newly_joined, \
-    generate_moves_from_newly_split, generate_moves_from_duplicate_neighbours
+    generate_moves_from_newly_split, generate_moves_from_duplicate_neighbours, FitnessCalculator
 
 
 def test_rule6_unique_pairs_vertical():
@@ -142,7 +142,8 @@ s s j
     -
 1|1 0
 """
-    expected_moves = [('1:01j11', expected_display, {'weight': 1})]
+    expected_moves = [('1:01j11', expected_display, {'weight': 1,
+                                                     'move_num': 1})]
     graph = DominosaGraph(DominosaBoard, move_weights={1: 1})
 
     moves = list(graph.generate_moves(board))
@@ -272,7 +273,8 @@ def test_rule5_shared_space():
 ~ ~
 1|1S2 1 0
 """
-    expected_moves = [('5:21,21s11', expected_display, {'weight': 1})]
+    expected_moves = [('5:21,21s11', expected_display, {'weight': 1,
+                                                        'move_num': 5})]
     graph = DominosaGraph(DominosaBoard, move_weights={5:1, 6:10})
 
     moves = list(graph.generate_moves(board))
@@ -571,9 +573,12 @@ def test_fitness_counts_unplaced_dominoes():
                  max_pips=1)
     problem = DominosaProblem(value)
     expected_dominoes_unused = 2
-    expected_fitness = -10000 * expected_dominoes_unused
+    expected_move_types_unused = 2
+    expected_fitness = (-1_000_000 * expected_dominoes_unused +
+                        -10_000 * expected_move_types_unused)
 
-    fitness = calculate_fitness(problem)
+    calculator = FitnessCalculator()
+    fitness = calculator.calculate(problem)
 
     assert fitness == expected_fitness
 
@@ -590,13 +595,17 @@ def test_fitness_counts_solution_moves():
     problem = DominosaProblem(value)
     rule5_move_count = 1
     other_move_count = 9
-    expected_fitness = -(10*rule5_move_count + other_move_count)
+    unused_move_types = 3
+    expected_fitness = -(10*rule5_move_count +
+                         other_move_count +
+                         10_000*unused_move_types)
 
-    fitness = calculate_fitness(problem, move_weights={1: 1,
-                                                       2: 1,
-                                                       3: 1,
-                                                       4: 1,
-                                                       5: 10,
-                                                       6: 100})
+    calculator = FitnessCalculator(move_weights={1: 1,
+                                                 2: 1,
+                                                 3: 1,
+                                                 4: 1,
+                                                 5: 10,
+                                                 6: 100})
+    fitness = calculator.calculate(problem)
 
     assert fitness == expected_fitness

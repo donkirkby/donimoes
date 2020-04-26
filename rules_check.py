@@ -1,11 +1,10 @@
+import re
 from pathlib import Path
-
-from networkx import shortest_path, edges, DiGraph, NetworkXNoPath
 
 from adding_puzzle import AddingBoardGraph
 from book_parser import parse, Styles
-from domino_puzzle import BoardAnalysis, Board, GraphLimitExceeded
-from dominosa import DominosaBoard, DominosaGraph
+from domino_puzzle import BoardAnalysis, Board
+from dominosa import DominosaBoard, FitnessCalculator, LEVEL_WEIGHTS, DominosaProblem
 
 
 def main():
@@ -13,7 +12,7 @@ def main():
     rules_text = rules_path.read_text()
 
     states = parse(rules_text)
-    scores = ''
+    summaries = []
     heading = ''
     is_dominosa = False
     for state in states:
@@ -21,64 +20,59 @@ def main():
             is_dominosa = 'Dominosa' in state.text
         if state.style == Styles.Diagram and heading.startswith('Problem'):
             if is_dominosa:
-                new_scores = check_dominosa(state, heading)
+                summary = check_dominosa(state, heading)
             else:
-                new_scores = check_other(state, heading)
-            scores += new_scores
+                summary = check_other(state, heading)
+            summaries.append(summary)
         if state.style.startswith(Styles.Heading):
             heading = state.text
-    print(scores)
+    print(*summaries, sep='\n')
 
 
 def check_dominosa(state, heading):
-    n = heading.split(' ')[-1]
+    """ Score solution to a Dominosa problem.
+
+    Current fitness scores:
+    1. 4x3 -21 (52 nodes)
+    2. 5x4 -28 (398 nodes)
+    3. 6x5 -45 (4372 nodes)
+    4. 5x4 -36 (369 nodes)
+    5. 6x5 -50 (909 nodes)
+    6. 6x5 -50 (3212 nodes)
+    7. 7x6 -70 (9369 nodes)
+    8. 7x6 -74 (834 nodes)
+    9. 6x5 -48 (3156 nodes)
+    10. 6x5 -47 (4422 nodes)
+    11. 7x6 -70 (5910 nodes)
+    12. 7x6 -70 (9119 nodes)
+    13. 8x7 -105 (8230 nodes)
+    14. 8x7 -104 (4244 nodes)
+    15. 6x5 -56 (2579 nodes)
+    16. 6x5 -54 (6021 nodes)
+    17. 8x7 -120092 (10003 nodes)
+    18. 8x7 -130088 (10000 nodes)
+    19. 8x7 -120092 (10000 nodes)
+    20. 8x7 -110115 (10000 nodes)
+    20b. 8x7 -108 (8298 nodes)
+    """
+    n_text = heading.split(' ')[-1]
+    n = int(re.match(r'\d+', n_text).group(0))
+    if n <= 3:
+        move_weights = LEVEL_WEIGHTS['easy']
+    elif n <= 8:
+        move_weights = LEVEL_WEIGHTS['medium']
+    elif n <= 14:
+        move_weights = LEVEL_WEIGHTS['hard']
+    else:
+        move_weights = LEVEL_WEIGHTS['tricky']
+    fitness_calculator = FitnessCalculator(move_weights)
     board = DominosaBoard.create(state.text)
     board.max_pips = board.width - 2
-    graph = DominosaGraph(move_weights={1: 1,
-                                        2: 3,
-                                        3: 3,
-                                        4: 3,
-                                        5: 4,
-                                        6: 10})
-    fitness = 0
-    try:
-        graph.walk(board, size_limit=10_000)
-    except GraphLimitExceeded:
-        if graph.last is None:
-            raise
-        fitness -= 1_000_000
-    assert graph.last is not None
-    solution_nodes = shortest_path(graph.graph,
-                                   graph.start,
-                                   graph.last,
-                                   'weight')
-    moves = []
-    for i in range(len(solution_nodes)-1):
-        source, target = solution_nodes[i:i+2]
-        edge = graph.graph[source][target]
-        fitness -= edge.get('weight', 1)
-        moves.append(edge.get('move'))
-    required_moves = []
-    for excluded_move_num in graph.move_weights:
-        remaining_graph = DiGraph()
-        for a, b in edges(graph.graph):
-            edge_attrs = graph.graph[a][b]
-            if edge_attrs.get('move_num') != excluded_move_num:
-                remaining_graph.add_edge(a, b, **edge_attrs)
-        try:
-            shortest_path(remaining_graph, graph.start, graph.last, 'weight')
-        except (NetworkXNoPath, KeyError):
-            required_moves.append(excluded_move_num)
-    required_moves.sort()
-    print(n + '. ' + '; '.join(moves), '==>', fitness)
-    print('required moves:', required_moves)
-    print(graph.last)
-    new_scores = '{}. {}x{} {} ({} nodes)\n'.format(n,
-                                                    board.width,
-                                                    board.height,
-                                                    fitness,
-                                                    len(graph.graph))
-    return new_scores
+    problem = DominosaProblem(dict(solution=board.display(),
+                                   max_pips=board.max_pips))
+    fitness_calculator.calculate(problem)
+    print(n_text + '.', fitness_calculator.format_details())
+    return n_text + '. ' + fitness_calculator.format_summaries()
 
 
 def check_other(state, heading):

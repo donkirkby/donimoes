@@ -5,21 +5,30 @@ title: New Rules for Donimoes
 These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 
-* **Dominosa** is the dominoes puzzle where you have to fit the set of dominoes
-    into a grid of numbers.
+* **Dominosa** is the classic domino puzzle where you have to fit the set of
+    dominoes onto a grid of numbers.
 * **Adding Donimoes** is a puzzle I designed where you add dominoes in the given
     order.
 
 ## Dominosa
-The domino puzzle I often see is called either Dominosa or Domino Solitaire. You
-start with a grid of numbers, and you have to lay the dominoes on them. It was
-invented by O.S. Adler in 1874. There's an [interesting proof][proof] that this
-puzzle is NP-hard.
+The domino puzzle I most often see in books or online is called either Dominosa
+or Domino Solitaire. Given a grid of numbers, you have to lay the dominoes on
+them so they match the numbers. It was invented by O.S. Adler in 1874. I took a
+long time to add this puzzle to the collection, because I found it tedious to
+keep searching for unique numbers. After some research, though, I learned that
+people have found many other techniques for solving that aren't as tedious. Try
+to work out your own techniques as you solve these problems, then read my
+techniques at the end. Let me know if you find any new ones. Even with all
+those tricks, it's not trivial to solve. (In computer science, it's called
+[NP-hard].)
 
-Reiner Knizia published some puzzles called [Domino Knobelspass][knizia] that
-are very similar to Dominosa.
+One thing I find interesting about this puzzle is that it's easier to solve with
+pencil and paper than with a set of dominoes.
 
-[proof]: http://cs.stackexchange.com/q/16850/40884
+If you like this style of puzzle, Reiner Knizia published some puzzles called
+[Domino Knobelspass][knizia] that are very similar to Dominosa.
+
+[NP-hard]: http://cs.stackexchange.com/q/16850/40884
 [knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
 
 ### Problem 1
@@ -30,18 +39,70 @@ are very similar to Dominosa.
     1 2 0 1
 
 ### Problem 2
-    3 2 4 4 4 4
-               
-    0 1 3 0 4 0
-             
-    0 2 1 0 3 2
-               
-    3 3 1 2 2 1
+    0 1 0 1 3
     
-    1 0 1 4 2 3
-
+    3 1 0 2 2
+    
+    3 2 1 0 3
+    
+    2 3 1 0 2
 
 ### Problem 3
+    3 1 1 2 3 0
+    
+    1 0 2 1 4 4
+    
+    4 4 0 0 3 0
+    
+    2 4 2 3 3 4
+    
+    1 3 2 0 1 2
+
+### Problem 4
+    0 2 1 1 2
+    
+    0 0 1 3 2
+    
+    0 0 3 1 3
+    
+    3 3 1 2 2
+
+### Problem 5
+    3 4 0 1 1 2
+    
+    1 2 2 2 4 4
+    
+    1 0 0 3 2 3
+    
+    1 4 2 4 0 4
+    
+    0 0 3 3 1 3
+
+### Problem 6
+    1 2 3 3 0 3
+    
+    0 3 0 4 4 4
+    
+    0 2 4 2 3 3
+    
+    1 4 1 4 1 2
+    
+    2 2 1 0 0 1
+
+### Problem 7
+    2 5 0 0 2 4 3
+    
+    4 1 5 0 3 3 2
+    
+    0 1 2 2 4 1 4
+    
+    4 1 0 5 1 5 3
+    
+    4 0 2 0 1 5 5
+    
+    3 3 1 2 3 5 4
+
+### Problem 8
     1 0 3 4 4 0 2
                  
     1 5 0 2 4 1 0
@@ -54,75 +115,105 @@ are very similar to Dominosa.
                  
     5 4 3 5 3 5 5
 
-### Problem 4
-    3 2 2 1 3
-     
-    2 0 0 0 2
+### Problem 9
+    1 2 4 2 3 4
     
-    1 0 2 0 1
-         
-    1 3 1 3 3
+    1 4 4 1 3 3
+    
+    2 2 0 1 0 3
+    
+    0 4 0 3 3 1
+    
+    2 4 0 1 0 2
 
-### Problem 5
-    1 2 4 0 0 3
-               
-    4 4 3 1 3 2
+### Problem 10
+    1 2 4 2 3 1
     
-    0 2 1 0 3 0
+    1 3 2 0 0 1
     
-    4 2 2 1 1 4
-               
-    1 3 3 2 4 0
+    4 4 3 3 2 2
+    
+    3 0 4 0 1 4
+    
+    0 2 4 0 3 1
 
-### Problem 6
-    0 5 3 5 2 1 1
-             
-    4 3 2 4 1 4 4
-                 
-    2 3 4 2 2 0 3
-         
-    2 5 1 0 0 5 1
-                 
-    0 5 3 1 5 2 0
-         
-    3 5 1 4 4 0 3
-
-### Problem 7
-    6 2 2 3 0 6 2 4
-                   
-    1 6 6 6 3 4 5 2
-                 
-    3 0 0 2 6 6 2 4
-                   
-    2 0 5 2 5 4 4 0
-                 
-    1 1 4 1 0 0 4 5
-                   
-    3 6 1 1 5 3 5 5
+### Problem 11
+    5 1 3 2 3 1 1
     
-    0 1 4 5 1 3 3 3
+    0 5 4 5 2 2 5
+    
+    4 2 4 1 2 4 3
+    
+    3 4 2 0 0 4 3
+    
+    5 0 1 4 0 3 3
+    
+    5 1 5 2 0 0 1
+
+### Problem 12
+    3 4 3 3 1 5 2
+    
+    0 4 0 0 2 3 0
+    
+    0 5 2 2 4 1 5
+    
+    3 4 5 4 3 5 2
+    
+    2 1 0 3 1 5 5
+    
+    4 4 1 2 0 1 1
+
+### Problem 13
+    6 0 6 4 1 3 4 5
+    
+    4 6 4 4 1 2 2 2
+    
+    6 2 2 0 2 0 3 3
+    
+    3 5 6 6 0 4 5 1
+    
+    5 1 2 6 5 5 3 0
+    
+    0 3 3 2 3 1 6 0
+    
+    1 5 5 4 0 1 1 4
+
+### Problem 14
+    1 5 6 2 2 2 6 2
+    
+    4 1 5 5 3 3 2 6
+    
+    3 0 2 2 0 3 5 4
+    
+    1 3 1 4 4 3 6 3
+    
+    0 5 4 5 3 1 1 6
+    
+    4 0 6 4 0 0 0 6
+    
+    0 5 5 1 1 6 2 4
 
 ### Problem 15
-    4 1 1 0 1 2
-               
-    0 3 3 4 0 0
-             
-    1 3 4 1 0 4
-               
-    2 4 4 2 2 3
+    0 0 1 3 1 1
     
-    2 3 0 3 1 2
+    4 0 2 2 3 2
+    
+    3 4 3 3 3 2
+    
+    4 4 2 4 0 4
+    
+    0 0 1 1 2 1
 
 ### Problem 16
-    0 1 0 2 0 3
+    2 3 2 2 3 3
     
-    3 3 1 4 2 4
+    3 0 1 4 1 1
     
-    1 1 0 0 1 3
+    0 2 3 4 4 1
     
-    2 0 4 2 2 4
-               
-    1 2 3 4 4 3
+    2 1 0 4 2 0
+    
+    0 4 4 1 3 0
 
 ### Problem 17
     0 3 2 6 2 5 1 6
@@ -183,6 +274,21 @@ are very similar to Dominosa.
     3 4 1 4 1 6 6 5
                    
     2 4 0 3 3 1 4 3
+
+### Problem 20b
+    0 4 3 6 0 0 1 3
+    
+    5 5 4 6 6 3 4 5
+    
+    6 2 4 3 1 2 3 2
+    
+    0 2 5 3 5 4 2 5
+    
+    4 6 1 6 5 2 6 3
+    
+    6 0 3 2 0 2 1 4
+    
+    5 0 1 1 1 1 4 0
 
 ### Dominosa Strategy
 There are several methods to deduce where the dominoes must be placed, and it's
@@ -319,98 +425,153 @@ solutions are listed at the end.
     1|2 0|1
 
 ### Solution 2
-    3 2|4 4|4 4
-    -         -
-    0 1|3 0 4 0
-          - -
-    0|2 1 0 3 2
-        -     -
-    3|3 1 2|2 1
-    
-    1|0 1|4 2|3
+    0|1 0 1|3
+        -
+    3 1 0 2|2
+    - -
+    3 2 1 0|3
+        -
+    2|3 1 0|2
 
 ### Solution 3
-    1|0 3 4 4|0 2
-        - -     -
-    1 5 0 2 4 1 0
-    - -     - -
-    4 5 1 4 4 3 2
-        - -     -
-    0 2 2 3 1 3 2
-    - -     - -
-    0 5 3 0 1 2 1
-        - -     -
-    5|4 3 5 3|5 5
+    3 1|1 2|3 0
+    -         -
+    1 0|2 1|4 4
+    
+    4|4 0|0 3|0
+    
+    2 4 2 3|3 4
+    - - -     -
+    1 3 2 0|1 2
 
 ### Solution 4
-    3 2|2 1|3
-    -
-    2 0|0 0|2
-    
-    1 0 2 0|1
-    - - -
-    1 3 1 3|3
+    0|2 1|1 2
+            -
+    0 0|1 3 2
+    -     -
+    0 0|3 1 3
+            -
+    3|3 1|2 2
 
 ### Solution 5
-    1|2 4 0|0 3
-        -     -
-    4|4 3 1|3 2
+    3|4 0|1 1|2
     
-    0|2 1|0 3|0
+    1 2 2|2 4|4
+    - -
+    1 0 0|3 2|3
     
-    4 2|2 1|1 4
-    -         -
-    1 3|3 2|4 0
+    1|4 2|4 0|4
+    
+    0|0 3|3 1|3
 
 ### Solution 6
-    0|5 3 5 2 1|1
-        - - -
-    4 3 2 4 1 4 4
-    - -       - -
-    2 3 4 2|2 0 3
-        -
-    2 5 1 0|0 5 1
-    - -       - -
-    0 5 3 1|5 2 0
-        -
-    3|5 1 4|4 0|3
+    1 2 3|3 0|3
+    - -
+    0 3 0 4|4 4
+        -     -
+    0|2 4 2 3 3
+          - -
+    1|4 1 4 1 2
+        -     -
+    2|2 1 0|0 1
 
 ### Solution 7
-    6 2|2 3|0 6|2 4
-    -             -
-    1 6 6|6 3|4 5 2
-      -         -
-    3 0 0|2 6 6 2 4
-    -       - -   -
-    2 0|5 2 5 4 4 0
-          -     -
-    1|1 4 1 0|0 4 5
-        -         -
-    3|6 1 1|5 3|5 5
+    2|5 0|0 2|4 3
+                -
+    4 1|5 0|3 3 2
+    -         -
+    0 1 2|2 4 1 4
+      -     -   -
+    4 1 0|5 1 5 3
+    -         -
+    4 0|2 0|1 5 5
+                -
+    3|3 1|2 3|5 4
+
+### Solution 9
+    1|2 4 2|3 4
+        -     -
+    1|4 4 1 3 3
+          - -
+    2|2 0 1 0 3
+        -     -
+    0|4 0 3|3 1
     
-    0|1 4|5 1|3 3|3
+    2|4 0|1 0|2
+
+### Solution 10
+    1|2 4 2|3 1
+        -     -
+    1|3 2 0|0 1
+    
+    4 4 3|3 2|2
+    - -
+    3 0 4 0|1 4
+        -     -
+    0|2 4 0|3 1
+
+### Solution 11
+    5 1|3 2|3 1|1
+    -
+    0 5 4|5 2|2 5
+      -         -
+    4 2 4 1|2 4 3
+    -   -     -
+    3 4 2 0|0 4 3
+      -         -
+    5 0 1|4 0|3 3
+    -
+    5 1|5 2|0 0|1
+
+### Solution 12
+    3|4 3|3 1|5 2
+                -
+    0|4 0|0 2 3 0
+            - -
+    0|5 2|2 4 1 5
+                -
+    3 4 5|4 3|5 2
+    - -
+    2 1 0|3 1 5|5
+            -
+    4|4 1|2 0 1|1
+
+### Solution 13
+    6 0|6 4 1 3|4 5
+    -     - -     -
+    4 6 4 4 1 2|2 2
+      - -
+    6 2 2 0|2 0|3 3
+    -             -
+    3 5|6 6 0|4 5 1
+          -     -
+    5 1|2 6 5|5 3 0
+    -             -
+    0 3|3 2|3 1|6 0
+    
+    1|5 5|4 0|1 1|4
 
 ### Solution 15
-    4 1|1 0|1 2
-    -         -
-    0 3|3 4 0 0
-          - -
-    1|3 4 1 0 4
-        -     -
-    2|4 4 2|2 3
+    0|0 1|3 1|1
     
-    2|3 0|3 1|2
+    4 0|2 2|3 2
+    -         -
+    3 4 3|3 3 2
+      -     -
+    4 4 2|4 0 4
+    -         -
+    0 0|1 1|2 1
 
 ### Solution 16
-    0|1 0|2 0|3
+    2|3 2|2 3|3
     
-    3|3 1|4 2|4
-    
-    1|1 0|0 1|3
-    
-    2 0|4 2|2 4
+    3 0|1 4|1 1
     -         -
-    1 2|3 4|4 3
+    0 2 3|4 4 1
+      -     -
+    2 1 0|4 2 0
+    -         -
+    0 4|4 1|3 0
 
 ### Solution 18
     6 2|6 2|3 6 2|2

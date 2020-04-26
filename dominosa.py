@@ -1,15 +1,39 @@
 import random
 import typing
 from collections import defaultdict, Counter
-from enum import Enum
-from functools import partial
+from enum import Enum, IntEnum
 from itertools import chain
 from sys import maxsize
 
-from networkx import shortest_path
+from networkx import shortest_path, DiGraph, edges, NetworkXNoPath
 
 from domino_puzzle import Board, Cell, Domino, BoardGraph, GraphLimitExceeded
 from evo import Individual, Evolution
+
+MoveType = IntEnum('MoveType', ('SINGLE_NEIGHBOUR',
+                                'NEWLY_JOINED',
+                                'NEWLY_SPLIT',
+                                'DUPLICATE_NEIGHBOURS',
+                                'SHARED_SPACES',
+                                'UNIQUE_PAIRS'))
+LEVEL_WEIGHTS = dict(tricky={MoveType.SINGLE_NEIGHBOUR: 1,
+                             MoveType.NEWLY_JOINED: 3,
+                             MoveType.NEWLY_SPLIT: 3,
+                             MoveType.DUPLICATE_NEIGHBOURS: 3,
+                             MoveType.SHARED_SPACES: 1,
+                             MoveType.UNIQUE_PAIRS: 10},
+                     hard={MoveType.SINGLE_NEIGHBOUR: 1,
+                           MoveType.NEWLY_JOINED: 3,
+                           MoveType.NEWLY_SPLIT: 3,
+                           MoveType.DUPLICATE_NEIGHBOURS: 1,
+                           MoveType.UNIQUE_PAIRS: 10},
+                     medium={MoveType.SINGLE_NEIGHBOUR: 1,
+                             MoveType.NEWLY_JOINED: 3,
+                             MoveType.NEWLY_SPLIT: 3,
+                             MoveType.UNIQUE_PAIRS: 10},
+                     easy={MoveType.SINGLE_NEIGHBOUR: 1,
+                           MoveType.NEWLY_JOINED: 3,
+                           MoveType.UNIQUE_PAIRS: 10})
 
 PairState = Enum('PairState', 'UNDECIDED NEWLY_JOINED JOINED NEWLY_SPLIT SPLIT')
 PairState.state_codes = {' ': PairState.UNDECIDED,
@@ -68,34 +92,81 @@ class DominosaProblem(Individual):
                     max_pips=max_pips)
 
 
-def calculate_fitness(problem, move_weights=None):
-    value = problem.value
-    fitness = value.get('fitness')
-    if fitness is not None:
-        return fitness
-    board = DominosaBoard.create(value['solution'], max_pips=value['max_pips'])
-    graph = DominosaGraph(move_weights=move_weights)
-    try:
-        graph.walk(board, size_limit=10_000)
-    except GraphLimitExceeded:
-        if graph.last is None:
-            return -2_000_000
-        return -1_000_000
-    dominoes_unused = graph.min_domino_count
-    if graph.last is None:
-        fitness = -10000 * dominoes_unused
-    else:
+class FitnessCalculator:
+    def __init__(self, move_weights=None):
+        self.move_weights = move_weights or LEVEL_WEIGHTS['easy']
+        self.details = []
+        self.summaries = []
+
+    def format_summaries(self):
+        display = '\n'.join(self.summaries)
+        self.summaries.clear()
+        return display
+
+    def format_details(self):
+        display = '\n\n'.join(self.details)
+        self.details.clear()
+        return display
+
+    def calculate(self, problem):
+        """ Calculate fitness score based on the solution.
+
+        Categories (most valuable to least:
+        -1,000,000 * unsolved dominoes when no unique solution found
+        -100,000 when the graph had more than 10,000 nodes and stopped exploring
+        -10,000 * (move types available - move types needed)
+        -sum(move weights) where there are a maximum of 200 moves and weight 10
+        """
+        value = problem.value
+        fitness = value.get('fitness')
+        if fitness is not None:
+            return fitness
+        board = DominosaBoard.create(value['solution'], max_pips=value['max_pips'])
+        graph = DominosaGraph(move_weights=self.move_weights)
         fitness = 0
-        solution_nodes = shortest_path(graph.graph,
-                                       graph.start,
-                                       graph.last,
-                                       'weight')
-        for i in range(len(solution_nodes)-1):
-            source, target = solution_nodes[i:i+2]
-            edge = graph.graph[source][target]
-            fitness -= edge.get('weight', 1)
-    value['fitness'] = fitness
-    return fitness
+        try:
+            graph.walk(board, size_limit=10_000)
+        except GraphLimitExceeded:
+            fitness -= 100_000
+        dominoes_unused = graph.min_domino_count
+        if graph.last is None:
+            fitness -= 1_000_000 * dominoes_unused
+            moves = ['unsolved']
+        else:
+            solution_nodes = shortest_path(graph.graph,
+                                           graph.start,
+                                           graph.last,
+                                           'weight')
+            moves = []
+            for i in range(len(solution_nodes)-1):
+                source, target = solution_nodes[i:i+2]
+                edge = graph.graph[source][target]
+                fitness -= edge.get('weight', 1)
+                moves.append(edge.get('move'))
+
+        required_moves = []
+        for excluded_move_num in graph.move_weights:
+            remaining_graph = DiGraph()
+            for a, b in edges(graph.graph):
+                edge_attrs = graph.graph[a][b]
+                if edge_attrs.get('move_num') != excluded_move_num:
+                    remaining_graph.add_edge(a, b, **edge_attrs)
+            try:
+                shortest_path(remaining_graph, graph.start, graph.last, 'weight')
+            except (NetworkXNoPath, KeyError):
+                required_moves.append(excluded_move_num)
+        fitness -= 10_000 * (len(self.move_weights) - len(required_moves))
+        required_moves.sort()
+        detail_items = ['; '.join(moves) + f' ==> {fitness}']
+        if graph.last is not None:
+            detail_items.append(f'required moves: {required_moves}')
+            detail_items.append(graph.last)
+        self.details.append('\n'.join(detail_items))
+        self.summaries.append(f'{board.width}x{board.height} {fitness} '
+                              f'({len(graph.graph)} nodes)')
+
+        value['fitness'] = fitness
+        return fitness
 
 
 def place_unique_pairs(board: Board):
@@ -729,31 +800,19 @@ def main1():
 
 
 def main():
-    level_weights = dict(tricky={1: 1,  # single neighbour
-                                 2: 0,  # newly joined
-                                 3: 3,  # newly split
-                                 4: 3,  # duplicate neighbours
-                                 5: 1,  # shared spaces
-                                 6: 10},  # unique pairs
-                         hard={1: 1,
-                               2: 0,
-                               3: 3,
-                               4: 1,
-                               6: 10},
-                         medium={1: 1,
-                                 2: 0,
-                                 3: 3,
-                                 6: 10},
-                         easy={1: 1,
-                               2: 0,
-                               6: 10})
-    move_weights = level_weights['tricky']
+    # Suggested sizes:
+    # easy (1-3) 2, 3, 4
+    # medium (4-8) 3, 4, 4, 5, 5
+    # hard (9-14) 4, 4, 5, 5, 6, 6
+    # tricky (15-20) 4, 4, 5, 5, 6, 6
+    move_weights = LEVEL_WEIGHTS['tricky']
 
-    max_pips = 6
+    max_pips = 5
+    fitness_calculator = FitnessCalculator(move_weights)
     init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
     evo = Evolution(
         pool_size=100,
-        fitness=partial(calculate_fitness, move_weights=move_weights),
+        fitness=fitness_calculator.calculate,
         individual_class=DominosaProblem,
         n_offsprings=30,
         pair_params=None,
@@ -780,7 +839,10 @@ def main():
 
 
 def strip_solution(solution):
-    return solution.replace('|', ' ').replace('-', ' ')
+    cleaned = solution.replace('|', ' ').replace('-', ' ')
+    lines = cleaned.splitlines()
+    stripped_lines = ('    ' + line.rstrip() for line in lines)
+    return '\n'.join(stripped_lines)
 
 
 if __name__ == '__main__':
