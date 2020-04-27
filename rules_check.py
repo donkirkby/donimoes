@@ -8,7 +8,7 @@ from dominosa import DominosaBoard, FitnessCalculator, LEVEL_WEIGHTS, DominosaPr
 
 
 def main():
-    rules_path = Path(__file__).parent / 'docs' / 'new_rules.md'
+    rules_path = Path(__file__).parent / 'docs' / 'rules.md'
     rules_text = rules_path.read_text()
 
     states = parse(rules_text)

@@ -1,10 +1,9 @@
 from networkx import DiGraph
 
-from domino_puzzle import Board
-from dominosa import find_unique_pairs, join_pairs, find_one_neighbour_pairs, \
-    find_unjoined_pairs, find_solutions, DominosaBoard, PairState, DominosaGraph, DominosaProblem, \
-    generate_moves_from_unique_pairs, generate_moves_from_single_neighbours, generate_moves_from_newly_joined, \
-    generate_moves_from_newly_split, generate_moves_from_duplicate_neighbours, FitnessCalculator
+from dominosa import DominosaBoard, PairState, DominosaGraph, DominosaProblem, \
+    generate_moves_from_unique_pairs, generate_moves_from_single_neighbours, \
+    generate_moves_from_newly_joined, generate_moves_from_newly_split, \
+    generate_moves_from_duplicate_neighbours, FitnessCalculator, strip_solution
 
 
 def test_rule6_unique_pairs_vertical():
@@ -275,7 +274,7 @@ def test_rule5_shared_space():
 """
     expected_moves = [('5:21,21s11', expected_display, {'weight': 1,
                                                         'move_num': 5})]
-    graph = DominosaGraph(DominosaBoard, move_weights={5:1, 6:10})
+    graph = DominosaGraph(DominosaBoard, move_weights={5: 1, 6: 10})
 
     moves = list(graph.generate_moves(board))
     final_state = board.display()
@@ -316,187 +315,6 @@ s s
 
     assert weight4 == 5
     assert weight1 == 2
-
-
-def test_unique_pairs_check_joined():
-    board = Board.create("""\
-2|2 2 0
-
-0|0 2 1
-
-1|1 0 1
-""")
-    expected_pairs = [(2, 1, 3, 1)]
-    expected_display = """\
-2|2 2 0
-
-0|0 2|1
-
-1|1 0 1
-"""
-
-    pairs = find_unique_pairs(board)
-
-    assert pairs == expected_pairs
-
-    join_pairs(board, pairs)
-    display = board.display()
-
-    assert display == expected_display
-
-
-def test_unique_pairs_conflict():
-    board = Board.create("""\
-1 1 0 1
--
-0 0|2 1
-
-0 2|2 2
-""")
-    expected_display = """\
-1 1 0 1
--
-0 0|2 1
-      -
-0 2|2 2
-"""
-
-    pairs = find_unique_pairs(board)
-    join_pairs(board, pairs)
-    display = board.display()
-
-    assert display == expected_display
-
-
-def test_place_only_neighbours_conflict():
-    board = Board.create("""\
-2 3 2|2 3
-
-0 1|2 2 3
-
-1 1 0 3 3
-    - - -
-0 1 0 0 1
-""")
-
-    expected_display = """\
-2|3 2|2 3
-        -
-0 1|2 2 3
-
-1 1 0 3 3
-    - - -
-0 1 0 0 1
-"""
-
-    pairs = find_one_neighbour_pairs(board)
-    join_pairs(board, pairs)
-    display = board.display()
-
-    assert display == expected_display
-
-
-def test_place_only_neighbours_existing_duplicate():
-    board = Board.create("""\
-0|0 0 1
-    -
-0 2 2 1
-
-1|1 2|2
-""")
-
-    expected_display = """\
-0|0 0 1
-    -
-0 2 2 1
-
-1|1 2|2
-"""
-
-    pairs = find_one_neighbour_pairs(board)
-    join_pairs(board, pairs)
-    display = board.display()
-
-    assert display == expected_display
-
-
-def test_place_only_neighbours_new_duplicate():
-    board = Board.create("""\
-0 0 0 1
--   -
-0 2 2 1
-
-1 1 2|2
-""")
-
-    expected_display = """\
-0 0 0 1
--   -
-0 2 2 1
-
-1|1 2|2
-"""
-
-    pairs = find_one_neighbour_pairs(board)
-    join_pairs(board, pairs)
-    display = board.display()
-
-    assert display == expected_display
-
-
-def test_find_unjoined_pairs():
-    board = Board.create("""\
-1 0 1
--
-1 0 0
-""")
-    expected_pairs = [(1, 0, 1, 1), (1, 0, 2, 0), (1, 1, 2, 1), (2, 0, 2, 1)]
-
-    pairs = find_unjoined_pairs(board)
-
-    assert pairs == expected_pairs
-
-
-def test_find_solutions():
-    board = Board.create("""\
-1 0 1
--
-1 0 0
-""")
-    expected_solutions = set("""\
-1 0 1
-- - -
-1 0 0
-=====
-1 0|1
--
-1 0|0
-""".split('=====\n'))
-
-    solutions = find_solutions(board)
-
-    assert solutions == expected_solutions
-
-
-def test_find_solutions_no_duplicates():
-    board = Board.create("""\
-2|2 1 2
-
-1|1 0 2
-
-0|0 0 1
-""")
-    expected_solutions = {"""\
-2|2 1|2
-
-1|1 0|2
-
-0|0 0|1
-"""}
-
-    solutions = find_solutions(board)
-
-    assert solutions == expected_solutions
 
 
 def test_get_pair_state_default():
@@ -609,3 +427,19 @@ def test_fitness_counts_solution_moves():
     fitness = calculator.calculate(problem)
 
     assert fitness == expected_fitness
+
+
+def test_strip_solution():
+    solution = """\
+1|2 3
+    -
+4|5 6
+"""
+    expected_stripped = """\
+    1 2 3
+    
+    4 5 6"""
+
+    stripped = strip_solution(solution)
+
+    assert stripped == expected_stripped
