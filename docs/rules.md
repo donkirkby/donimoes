@@ -35,6 +35,8 @@ puzzles by other designers:
     double-six dominoes, and two dice)
 * **All Fives** is a traditional dominoes game, where you score points by making
     the ends add up to a multiple of five. (2-4 players, double-six dominoes)
+* **Dominosa** is the classic domino puzzle by O.S. Adler where you have to fit
+    the set of dominoes onto a grid of numbers.
 
 ## Unmatched Donimoes
 A puzzle I designed that's the opposite of traditional dominoes: matches are
@@ -1232,6 +1234,300 @@ able to score on a scoring position. Usually, that means playing a domino with
 a difference of 5. Those dominoes are 61, 50, and 55, so they are useful to keep
 in your hand.
 
+## Dominosa
+The domino puzzle I most often see in books or online is called either Dominosa
+or Domino Solitaire. Given a grid of numbers, you have to lay out the dominoes
+so they match the numbers, without duplicated or missing dominoes. Dominosa was
+invented by O.S. Adler in 1874. I took a long time to add this puzzle to the
+collection, because I found it tedious to keep searching for unique numbers.
+After some research, though, I learned that people have found many other
+techniques for solving that aren't as tedious. Try to work out your own
+techniques as you solve these problems, then read my techniques at the end. Let
+me know if you find any new ones. Even with all those tricks, it's not trivial
+to solve. (In computer science, it's called [NP-hard][np].)
+
+One thing I find interesting about this puzzle is that it's easier to solve with
+pencil and paper than with a set of dominoes.
+
+If you like this style of puzzle, Reiner Knizia published some puzzles called
+[Domino Knobelspass][knizia] that are very similar to Dominosa.
+
+[np]: http://cs.stackexchange.com/q/16850/40884
+[knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
+
+### Problem 1
+    2 2 1 2
+           
+    0 0 1 0
+    
+    1 2 0 1
+
+### Problem 2
+    0 1 0 1 3
+    
+    3 1 0 2 2
+    
+    3 2 1 0 3
+    
+    2 3 1 0 2
+
+### Problem 3
+    3 0 1 1 0 4
+    
+    2 4 4 1 1 2
+    
+    2 4 2 2 1 4
+    
+    3 3 4 0 0 3
+    
+    3 0 2 1 3 0
+
+### Problem 4
+    0 2 1 1 2
+    
+    0 0 1 3 2
+    
+    0 0 3 1 3
+    
+    3 3 1 2 2
+
+### Problem 5
+    3 4 0 1 1 2
+    
+    1 2 2 2 4 4
+    
+    1 0 0 3 2 3
+    
+    1 4 2 4 0 4
+    
+    0 0 3 3 1 3
+
+### Problem 6
+    1 2 3 3 0 3
+    
+    0 3 0 4 4 4
+    
+    0 2 4 2 3 3
+    
+    1 4 1 4 1 2
+    
+    2 2 1 0 0 1
+
+### Problem 7
+    2 5 0 0 2 4 3
+    
+    4 1 5 0 3 3 2
+    
+    0 1 2 2 4 1 4
+    
+    4 1 0 5 1 5 3
+    
+    4 0 2 0 1 5 5
+    
+    3 3 1 2 3 5 4
+
+### Problem 8
+    3 5 0 1 3 4 5
+    
+    3 1 4 1 3 3 0
+    
+    3 1 5 0 0 2 4
+    
+    0 4 0 2 5 5 2
+    
+    2 2 1 5 2 4 4
+    
+    3 0 1 5 1 2 4
+
+### Problem 9
+    1 2 4 2 3 4
+    
+    1 4 4 1 3 3
+    
+    2 2 0 1 0 3
+    
+    0 4 0 3 3 1
+    
+    2 4 0 1 0 2
+
+### Problem 10
+    1 2 4 2 3 1
+    
+    1 3 2 0 0 1
+    
+    4 4 3 3 2 2
+    
+    3 0 4 0 1 4
+    
+    0 2 4 0 3 1
+
+### Problem 11
+    5 1 3 2 3 1 1
+    
+    0 5 4 5 2 2 5
+    
+    4 2 4 1 2 4 3
+    
+    3 4 2 0 0 4 3
+    
+    5 0 1 4 0 3 3
+    
+    5 1 5 2 0 0 1
+
+### Problem 12
+    3 4 3 3 1 5 2
+    
+    0 4 0 0 2 3 0
+    
+    0 5 2 2 4 1 5
+    
+    3 4 5 4 3 5 2
+    
+    2 1 0 3 1 5 5
+    
+    4 4 1 2 0 1 1
+
+### Problem 13
+    6 0 6 4 1 3 4 5
+    
+    4 6 4 4 1 2 2 2
+    
+    6 2 2 0 2 0 3 3
+    
+    3 5 6 6 0 4 5 1
+    
+    5 1 2 6 5 5 3 0
+    
+    0 3 3 2 3 1 6 0
+    
+    1 5 5 4 0 1 1 4
+
+### Problem 14
+    1 5 6 2 2 2 6 2
+    
+    4 1 5 5 3 3 2 6
+    
+    3 0 2 2 0 3 5 4
+    
+    1 3 1 4 4 3 6 3
+    
+    0 5 4 5 3 1 1 6
+    
+    4 0 6 4 0 0 0 6
+    
+    0 5 5 1 1 6 2 4
+
+### Problem 15
+    0 0 1 3 1 1
+    
+    4 0 2 2 3 2
+    
+    3 4 3 3 3 2
+    
+    4 4 2 4 0 4
+    
+    0 0 1 1 2 1
+
+### Problem 16
+    2 3 2 2 3 3
+    
+    3 0 1 4 1 1
+    
+    0 2 3 4 4 1
+    
+    2 1 0 4 2 0
+    
+    0 4 4 1 3 0
+
+### Problem 17
+    0 2 3 1 2 5 5
+    
+    3 5 0 4 1 1 3
+    
+    4 4 4 2 0 5 3
+    
+    1 1 3 2 3 2 5
+    
+    4 5 0 0 0 4 2
+    
+    1 5 3 4 0 1 2
+
+### Problem 18
+    3 4 0 5 2 3 3
+    
+    0 0 2 4 5 0 3
+    
+    3 0 4 1 3 0 5
+    
+    5 5 3 5 1 1 2
+    
+    4 4 1 2 2 2 4
+    
+    1 5 1 4 2 0 1
+
+### Problem 19
+    2 3 4 4 1 3 2 5
+    
+    6 6 0 5 5 5 3 3
+    
+    6 4 3 6 1 4 6 0
+    
+    2 3 2 4 2 5 1 1
+    
+    5 6 5 4 1 2 6 0
+    
+    0 0 5 0 2 2 4 6
+    
+    1 1 3 3 0 1 4 0
+
+### Problem 20
+    0 6 0 1 4 4 3 6
+    
+    2 6 6 0 5 2 6 3
+    
+    3 4 1 1 2 2 5 0
+    
+    3 5 5 3 6 6 0 4
+    
+    1 1 1 3 4 2 3 6
+    
+    1 5 0 2 1 5 4 4
+    
+    0 0 3 5 2 4 2 5
+
+### Dominosa Strategy
+There are several methods to deduce where the dominoes must be placed, and it's
+helpful to write notes on the puzzle. Often, you can tell where a domino can't
+be before you know where it must be. Here are some rules to help you make
+progress:
+
+1. Look for a number that only has one neighbour, and join it with its
+    neighbour. Particularly check near the last pair you joined.
+2. If you have a newly joined pair of numbers, check if the same pair appears
+    elsewhere. Split the other location, because you can't have two dominoes
+    the same. Also check all of the other neighbours that the newly joined pair
+    might have joined with. Those pairs of numbers might now be unique.
+3. If you have a newly split pair of numbers, look for the same pair elsewhere
+    on the board to see if there is only one pair like them. If so, join them.
+4. If all of a space's available neighbours are the same, you know it will join
+    one of them. Look for the same pair of numbers elsewhere on the board, and
+    mark them as split.
+5. If a pair of numbers appears more than once on the board, but all of the
+    pairs share one space, then you know that space must join to the other
+    number. Mark any other available neighbours as split.
+6. Look for unique pairs of numbers, and mark them as joined. (This is the
+    tedious part, so I try to only require it a few times in each puzzle.)
+7. If two unsolved areas are joined by a narrow neck, you know that both areas
+    must have an even number of spaces in them. That will tell you where you can
+    split or join the spaces in the neck.
+8. If none of the other rules apply, guess at a domino's placement by marking a
+    pair as joined.  If it later causes a contradiction, backtrack and mark it
+    split. (This would be very frustrating when solving, so none of the problems
+    in this collection require it.)
+
+The easiest puzzles in this collection only require a couple of these rules, and
+then the later puzzles require more and more different rules to solve.
+
 # Solutions
 ## Unmatched Donimoes Solutions ##
 Here are the solutions to the Unmatched Donimoes problems. For each step, move
@@ -1384,6 +1680,247 @@ right is a (B)ishop, and the bottom right is a (R)ook.
     NL1, NU, RR4(+2), RD, PD, PL1, PL4, PU, NL5(+1), PD, ND, NR2(+1), NU, PU,
     PR5(+1), PD, ND, NR5(+2), NU, PU, RU, BL1(+3), BD, PD, PL2(+1), PU, BL2, RD,
     ND, NL4(+2), NU, RL4(+1)
+
+## Dominosa Solutions
+### Solution 1
+    2|2 1 2
+        - -
+    0|0 1 0
+    
+    1|2 0|1
+
+### Solution 2
+    0|1 0 1|3
+        -
+    3 1 0 2|2
+    - -
+    3 2 1 0|3
+        -
+    2|3 1 0|2
+
+### Solution 3
+    3 0|1 1 0|4
+    -     -
+    2 4|4 1 1|2
+    
+    2|4 2|2 1|4
+    
+    3 3|4 0|0 3
+    -         -
+    3 0|2 1|3 0
+
+### Solution 4
+    0|2 1|1 2
+            -
+    0 0|1 3 2
+    -     -
+    0 0|3 1 3
+            -
+    3|3 1|2 2
+
+### Solution 5
+    3|4 0|1 1|2
+    
+    1 2 2|2 4|4
+    - -
+    1 0 0|3 2|3
+    
+    1|4 2|4 0|4
+    
+    0|0 3|3 1|3
+
+### Solution 6
+    1 2 3|3 0|3
+    - -
+    0 3 0 4|4 4
+        -     -
+    0|2 4 2 3 3
+          - -
+    1|4 1 4 1 2
+        -     -
+    2|2 1 0|0 1
+
+### Solution 7
+    2|5 0|0 2|4 3
+                -
+    4 1|5 0|3 3 2
+    -         -
+    0 1 2|2 4 1 4
+      -     -   -
+    4 1 0|5 1 5 3
+    -         -
+    4 0|2 0|1 5 5
+                -
+    3|3 1|2 3|5 4
+
+### Solution 8
+    3|5 0|1 3|4 5
+                -
+    3 1|4 1|3 3 0
+    -         -
+    3 1|5 0|0 2 4
+                -
+    0|4 0|2 5 5 2
+            - -
+    2|2 1 5 2 4 4
+        - -     -
+    3|0 1 5 1|2 4
+
+### Solution 9
+    1|2 4 2|3 4
+        -     -
+    1|4 4 1 3 3
+          - -
+    2|2 0 1 0 3
+        -     -
+    0|4 0 3|3 1
+    
+    2|4 0|1 0|2
+
+### Solution 10
+    1|2 4 2|3 1
+        -     -
+    1|3 2 0|0 1
+    
+    4 4 3|3 2|2
+    - -
+    3 0 4 0|1 4
+        -     -
+    0|2 4 0|3 1
+
+### Solution 11
+    5 1|3 2|3 1|1
+    -
+    0 5 4|5 2|2 5
+      -         -
+    4 2 4 1|2 4 3
+    -   -     -
+    3 4 2 0|0 4 3
+      -         -
+    5 0 1|4 0|3 3
+    -
+    5 1|5 2|0 0|1
+
+### Solution 12
+    3|4 3|3 1|5 2
+                -
+    0|4 0|0 2 3 0
+            - -
+    0|5 2|2 4 1 5
+                -
+    3 4 5|4 3|5 2
+    - -
+    2 1 0|3 1 5|5
+            -
+    4|4 1|2 0 1|1
+
+### Solution 13
+    6 0|6 4 1 3|4 5
+    -     - -     -
+    4 6 4 4 1 2|2 2
+      - -
+    6 2 2 0|2 0|3 3
+    -             -
+    3 5|6 6 0|4 5 1
+          -     -
+    5 1|2 6 5|5 3 0
+    -             -
+    0 3|3 2|3 1|6 0
+    
+    1|5 5|4 0|1 1|4
+
+### Solution 14
+    1|5 6 2|2 2 6|2
+        -     -
+    4 1 5 5|3 3 2 6
+    - -         - -
+    3 0 2 2|0 3 5 4
+        -     -
+    1|3 1 4|4 3 6|3
+    
+    0|5 4|5 3 1|1 6
+            -     -
+    4 0|6 4 0 0|0 6
+    -     -
+    0 5|5 1 1|6 2|4
+
+### Solution 15
+    0|0 1|3 1|1
+    
+    4 0|2 2|3 2
+    -         -
+    3 4 3|3 3 2
+      -     -
+    4 4 2|4 0 4
+    -         -
+    0 0|1 1|2 1
+
+### Solution 16
+    2|3 2|2 3|3
+    
+    3 0|1 4|1 1
+    -         -
+    0 2 3|4 4 1
+      -     -
+    2 1 0|4 2 0
+    -         -
+    0 4|4 1|3 0
+
+### Solution 17
+    0|2 3 1|2 5|5
+        -
+    3|5 0 4 1|1 3
+          -     -
+    4 4|4 2 0|5 3
+    -
+    1 1|3 2|3 2|5
+    
+    4|5 0|0 0|4 2
+                -
+    1|5 3|4 0|1 2
+
+### Solution 18
+    3|4 0|5 2|3 3
+                -
+    0 0|2 4|5 0 3
+    -         -
+    3 0|4 1|3 0 5
+                -
+    5|5 3|5 1|1 2
+    
+    4|4 1|2 2 2|4
+            -
+    1|5 1|4 2 0|1
+
+### Solution 19
+    2|3 4|4 1|3 2|5
+    
+    6|6 0|5 5 5|3 3
+            -     -
+    6 4 3|6 1 4 6 0
+    - -       - -
+    2 3 2|4 2 5 1 1
+            -     -
+    5|6 5 4 1 2 6 0
+        - -   - -
+    0|0 5 0 2 2 4 6
+            -     -
+    1|1 3|3 0 1|4 0
+
+### Solution 20
+    0|6 0|1 4|4 3|6
+    
+    2|6 6 0|5 2 6 3
+        -     - - -
+    3|4 1 1|2 2 5 0
+    
+    3 5|5 3 6|6 0|4
+    -     -
+    1 1|1 3 4 2|3 6
+            -     -
+    1|5 0|2 1 5|4 4
+    
+    0|0 3|5 2|4 2|5
 
 # Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at

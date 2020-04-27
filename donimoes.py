@@ -23,6 +23,7 @@ PAGE_WIDTH = defaultPageSize[0]
 
 def parse_args():
     default_markdown = str(Path(__file__).parent / 'docs' / 'rules.md')
+    # noinspection PyTypeChecker
     parser = ArgumentParser(description='Convert rules markdown into a PDF.',
                             formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('--booklet',
