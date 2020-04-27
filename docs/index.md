@@ -34,6 +34,8 @@ puzzles by other designers:
     double-six dominoes, and two dice)
 * **All Fives** is a traditional dominoes game, where you score points by making
     the ends add up to a multiple of five. (2-4 players, double-six dominoes)
+* **Dominosa** is the classic domino puzzle by O.S. Adler where you have to fit
+    the set of dominoes onto a grid of numbers.
 
 The book of rules includes problems to solve for each puzzle. The Blocking
 Donimoes problems are patterns of dominoes for you to start from, like this:
