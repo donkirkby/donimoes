@@ -7,7 +7,7 @@ def main():
     diagram = SvgDiagram(width="600", height="500")
     draw_page(diagram.turtle)
     drawing = diagram.to_reportlab()
-    drawToFile(drawing, 'diagram.png')
+    drawToFile(drawing, 'diagram.png', 'PNG')
     print('Done.')
 
 
