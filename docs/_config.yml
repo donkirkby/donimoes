@@ -6,4 +6,4 @@ defaults:
   - scope:
       path: ""
     values:
-      hero_image: /images/index_hero.jpg
+      hero_image: images/index_hero.jpg
