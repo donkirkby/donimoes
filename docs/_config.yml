@@ -1,6 +1,9 @@
+remote_theme: chrisrhymes/bulma-clean-theme
+title: Donimoes
+google_analytics: UA-4644630-2
+
 defaults:
-  -
-    scope:
-      path: "" # an empty string here means all files in the project
+  - scope:
+      path: ""
     values:
-      layout: "default"
+      hero_image: /images/index_hero.jpg
