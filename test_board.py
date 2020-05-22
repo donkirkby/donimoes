@@ -978,3 +978,66 @@ def test_split_all():
     display = board.display()
     assert display == expected_display
     assert board.dominoes == []
+
+
+def test_markers():
+    start_state = '''\
+P|1 2 N
+    - -
+4|R 6 0
+---
+R5P0N3
+'''
+    expected_markers = {(1, 0): 'R', (0, 1): 'P', (3, 1): 'N'}
+
+    board = Board.create(start_state)
+
+    assert board.markers == expected_markers
+    assert board.display() == start_state
+
+
+def test_markers_off_board():
+    start_state = '''\
+R x x x
+
+0|1 2 N
+    - -
+4|P 6 0
+---
+P5N3Rx
+'''
+    expected_markers = {(1, 0): 'P', (3, 1): 'N', (0, 2): 'R'}
+
+    board = Board.create(start_state)
+
+    assert board.markers == expected_markers
+    assert board.display() == start_state
+
+
+def test_markers_border():
+    start_state = '''\
+P|1 2 N
+    - -
+4|R 6 0
+---
+R5P0N3
+'''
+
+    board = Board.create(start_state, border=1)
+
+    assert board.display(cropped=True) == start_state
+
+
+def test_markers_off_board_cropped():
+    start_state = '''\
+R x x x
+
+0|1 2 N
+    - -
+4|P 6 0
+---
+P5N3Rx
+'''
+    board = Board.create(start_state, border=1)
+
+    assert board.display(cropped=True) == start_state

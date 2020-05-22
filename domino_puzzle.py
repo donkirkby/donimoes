@@ -69,7 +69,13 @@ class BadPositionError(BoardError):
 class Board(object):
     @classmethod
     def create(cls, state, border=0, max_pips=None):
-        lines = state.splitlines(False)
+        sections = state.split('\n---\n')
+        if len(sections) <= 1:
+            marker_pips = {}
+        else:
+            marker_text = iter(sections[1].rstrip())
+            marker_pips = dict(zip(marker_text, marker_text))
+        lines = sections[0].splitlines(False)
         lines.reverse()
         height = (len(lines)+1) // 2
         line_length = height and max(map(len, lines))
@@ -80,6 +86,7 @@ class Board(object):
         for x in range(width):
             for y in range(height):
                 head = lines[y*2][x*2]
+                head = board.process_pips(head, marker_pips, x, y, border)
                 if head not in ' x#':
                     right_joint = x+1 < width and lines[y*2][x*2+1] or ' '
                     left_joint = 0 < x and lines[y*2][x*2-1] or ' '
@@ -91,9 +98,19 @@ class Board(object):
                     lower_joint = board.add_joint(lower_joint, x, y-1, x, y)
                     if right_joint != ' ':
                         tail = lines[y*2][x*2+2]
+                        tail = board.process_pips(tail,
+                                                  marker_pips,
+                                                  x+1,
+                                                  y,
+                                                  border)
                         degrees = 0
                     elif upper_joint != ' ':
                         tail = lines[y*2+2][x*2]
+                        tail = board.process_pips(tail,
+                                                  marker_pips,
+                                                  x,
+                                                  y+1,
+                                                  border)
                         degrees = 90
                     else:
                         tail = None
@@ -146,6 +163,8 @@ class Board(object):
 
         # Track dominoes that aren't on the regular grid.
         self.offset_dominoes = []  # [(domino, x, y)]
+        self.markers = {}
+        self.cycles_remaining = 0
 
     def __eq__(self, other):
         for x in range(self.width):
@@ -161,6 +180,18 @@ class Board(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+    def process_pips(self,
+                     pips: str,
+                     marker_pips: dict,
+                     x: int,
+                     y: int,
+                     border: int) -> str:
+        new_pips = marker_pips.get(pips)
+        if new_pips is None:
+            return pips
+        self.markers[(x+border, y+border)] = pips
+        return new_pips
 
     def add(self, item: typing.Union['Domino', Cell], x: int, y: int):
         try:
@@ -294,7 +325,7 @@ class Board(object):
                 row = (height - y - 1)*2
                 col = x*2
                 cell = self[x+xmin][y+ymin]
-                cell_display = 'x' if cell is None else str(cell.pips)
+                cell_display = self.display_cell(cell, x+xmin, y+ymin)
                 display[row][col] = cell_display
                 if (cell is not None and
                         cell.domino is not None and
@@ -303,7 +334,24 @@ class Board(object):
                     divider = '|' if dx else '-'
                     display[row-dy][col+dx] = divider
         self.adjust_display(display)
-        return ''.join(''.join(row).rstrip() + '\n' for row in display)
+        main_display = ''.join(''.join(row).rstrip() + '\n' for row in display)
+        if self.markers:
+            marker_items = sorted((y, x, name)
+                                  for (x, y), name in self.markers.items())
+            marker_display = ''
+            for y, x, name in marker_items:
+                cell = self[x][y]
+                pips = cell.pips if cell else 'x'
+                marker_display += f'{name}{pips}'
+            main_display = f'{main_display}---\n{marker_display}\n'
+        return main_display
+
+    def display_cell(self, cell, x, y):
+        if cell is None:
+            display = 'x'
+        else:
+            display = str(cell.pips)
+        return self.markers.get((x, y), display)
 
     def adjust_display(self, display: typing.List[typing.List[str]]):
         """ Adjust the display grid before it gets assembled. """
@@ -316,12 +364,15 @@ class Board(object):
             xmin = self.width + 1
             ymin = self.height + 1
             xmax = ymax = 0
-            for domino in self.dominoes:
-                for cell in (domino.head, domino.tail):
-                    xmin = min(xmin, cell.x)
-                    xmax = max(xmax, cell.x)
-                    ymin = min(ymin, cell.y)
-                    ymax = max(ymax, cell.y)
+            positions = chain(((cell.x, cell.y)
+                               for domino in self.dominoes
+                               for cell in (domino.head, domino.tail)),
+                              self.markers)
+            for x, y in positions:
+                xmin = min(xmin, x)
+                xmax = max(xmax, x)
+                ymin = min(ymin, y)
+                ymax = max(ymax, y)
         return xmin, xmax, ymin, ymax
 
     def choose_extra_dominoes(self, random):
@@ -354,6 +405,8 @@ class Board(object):
 
         @param random: random number generator for choosing dominoes
         @param matches_allowed: True if neighbouring dominoes can match
+        @param reset_cycles: True if the infinite loop detection should start
+            again.
         @return: True if the board is now filled.
         """
         if reset_cycles:
@@ -361,13 +414,13 @@ class Board(object):
         for y in range(self.height):
             for x in range(self.width):
                 if self[x][y] is None:
-                    return self.fillSpace(x,
-                                          y,
-                                          random,
-                                          matches_allowed)
+                    return self.fill_space(x,
+                                           y,
+                                           random,
+                                           matches_allowed)
         return True
 
-    def fillSpace(self, x, y, random, matches_allowed):
+    def fill_space(self, x, y, random, matches_allowed):
         """ Try all possible dominoes and positions starting at x, y. """
         rotation = random.randint(0, 3) * 90
         for _ in range(4):
@@ -564,9 +617,14 @@ class Domino(object):
             raise
 
     def describe_move(self, dx, dy):
+        direction_name = Domino.describe_direction(dx, dy)
+        return self.get_name() + direction_name
+
+    @staticmethod
+    def describe_direction(dx, dy):
         direction_index = Domino.directions.index((dx, dy))
         direction_name = Domino.direction_names[direction_index]
-        return self.get_name() + direction_name
+        return direction_name
 
     def describe_add(self, x, y):
         head, tail = self.head, self.tail
@@ -788,8 +846,8 @@ class CaptureBoardGraph(BoardGraph):
         matching_dominoes = set()
         complement_found = False
         domino.move(dx, dy)
+        board = domino.head.board
         try:
-            board = domino.head.board
             if not board.isConnected():
                 raise BadPositionError('Board is not connected after move.')
             for cell in (domino.head, domino.tail):
