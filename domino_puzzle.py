@@ -29,6 +29,7 @@ class Cell(object):
         self.board = None
         self.x = None
         self.y = None
+        self.visited = False
 
     def __repr__(self):
         return 'Cell({})'.format(self.pips)
@@ -66,15 +67,30 @@ class BadPositionError(BoardError):
     pass
 
 
+class MarkerSet:
+    def __init__(self, marker_text: str, border: int):
+        markers = iter(marker_text.rstrip())
+        self.marker_pips = dict(zip(markers, markers))  # {marker: pips}
+        self.marker_locations = {}  # {(x, y): marker}
+        self.border = border
+
+    def check_markers(self, pips_or_marker: str, x: int, y: int) -> str:
+        new_pips = self.marker_pips.get(pips_or_marker)
+        if new_pips is None:
+            return pips_or_marker
+        self.marker_locations[(x+self.border, y+self.border)] = pips_or_marker
+        return new_pips
+
+
 class Board(object):
     @classmethod
     def create(cls, state, border=0, max_pips=None):
         sections = state.split('\n---\n')
         if len(sections) <= 1:
-            marker_pips = {}
+            marker_text = ''
         else:
-            marker_text = iter(sections[1].rstrip())
-            marker_pips = dict(zip(marker_text, marker_text))
+            marker_text = sections[1]
+        marker_set = MarkerSet(marker_text, border)
         lines = sections[0].splitlines(False)
         lines.reverse()
         height = (len(lines)+1) // 2
@@ -86,7 +102,7 @@ class Board(object):
         for x in range(width):
             for y in range(height):
                 head = lines[y*2][x*2]
-                head = board.process_pips(head, marker_pips, x, y, border)
+                head = marker_set.check_markers(head, x, y)
                 if head not in ' x#':
                     right_joint = x+1 < width and lines[y*2][x*2+1] or ' '
                     left_joint = 0 < x and lines[y*2][x*2-1] or ' '
@@ -98,19 +114,11 @@ class Board(object):
                     lower_joint = board.add_joint(lower_joint, x, y-1, x, y)
                     if right_joint != ' ':
                         tail = lines[y*2][x*2+2]
-                        tail = board.process_pips(tail,
-                                                  marker_pips,
-                                                  x+1,
-                                                  y,
-                                                  border)
+                        tail = marker_set.check_markers(tail, x+1, y)
                         degrees = 0
                     elif upper_joint != ' ':
                         tail = lines[y*2+2][x*2]
-                        tail = board.process_pips(tail,
-                                                  marker_pips,
-                                                  x,
-                                                  y+1,
-                                                  border)
+                        tail = marker_set.check_markers(tail, x, y+1)
                         degrees = 90
                     else:
                         tail = None
@@ -121,6 +129,7 @@ class Board(object):
                     elif left_joint == ' ' and lower_joint == ' ':
                         cell = Cell(int(head))
                         board.add(cell, x+border, y+border)
+        board.markers = marker_set.marker_locations
         for i, line in enumerate(lines):
             for j, c in enumerate(line):
                 if c != '#':
@@ -180,18 +189,6 @@ class Board(object):
 
     def __ne__(self, other):
         return not (self == other)
-
-    def process_pips(self,
-                     pips: str,
-                     marker_pips: dict,
-                     x: int,
-                     y: int,
-                     border: int) -> str:
-        new_pips = marker_pips.get(pips)
-        if new_pips is None:
-            return pips
-        self.markers[(x+border, y+border)] = pips
-        return new_pips
 
     def add(self, item: typing.Union['Domino', Cell], x: int, y: int):
         try:
@@ -454,7 +451,7 @@ class Board(object):
             rotation = (rotation + 90) % 360
         return False
 
-    def visitConnected(self, cell):
+    def visit_connected(self, cell):
         cell.visited = True
         for dx, dy in Domino.directions:
             x = cell.x + dx
@@ -462,9 +459,9 @@ class Board(object):
             if 0 <= x < self.width and 0 <= y < self.height:
                 neighbour = self[x][y]
                 if neighbour is not None and not neighbour.visited:
-                    self.visitConnected(neighbour)
+                    self.visit_connected(neighbour)
 
-    def isConnected(self):
+    def is_connected(self):
         domino = None
         for domino in self.dominoes:
             domino.head.visited = False
@@ -472,10 +469,29 @@ class Board(object):
         if domino is None:
             return True
 
-        self.visitConnected(domino.head)
+        self.visit_connected(domino.head)
 
         return all(domino.head.visited and domino.tail.visited
                    for domino in self.dominoes)
+
+    @property
+    def are_markers_connected(self):
+        unvisited_markers = set(self.markers)
+        if not unvisited_markers:
+            return False
+        x, y = unvisited_markers.pop()
+        self.visit_connected_markers(x, y, unvisited_markers)
+        return not unvisited_markers
+
+    def visit_connected_markers(self, x: int, y: int, unvisited_markers: set):
+        for dx, dy in Domino.directions:
+            x2 = x + dx
+            y2 = y + dy
+            try:
+                unvisited_markers.remove((x2, y2))
+                self.visit_connected_markers(x2, y2, unvisited_markers)
+            except KeyError:
+                pass
 
     def hasLoner(self):
         for domino in self.dominoes:
@@ -719,7 +735,7 @@ class BoardGraph(object):
         self.min_domino_count = None
         self.board_class = board_class
 
-    def walk(self, board, size_limit=maxsize):
+    def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
         pending_nodes = []
         self.graph = DiGraph()
         self.start = board.display(cropped=True)
@@ -779,7 +795,7 @@ class BoardGraph(object):
         domino.move(dx, dy)
         try:
             board = domino.head.board
-            if not board.isConnected():
+            if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
             if board.hasLoner():
                 raise BadPositionError('Board has a lonely domino.')
@@ -848,7 +864,7 @@ class CaptureBoardGraph(BoardGraph):
         domino.move(dx, dy)
         board = domino.head.board
         try:
-            if not board.isConnected():
+            if not board.is_connected():
                 raise BadPositionError('Board is not connected after move.')
             for cell in (domino.head, domino.tail):
                 for neighbour in cell.find_neighbours():
@@ -865,7 +881,7 @@ class CaptureBoardGraph(BoardGraph):
                     'A legal move must have captures or complements.')
             for matching_domino, _, _ in matching_dominoes:
                 board.remove(matching_domino)
-            if not board.isConnected():
+            if not board.is_connected():
                 raise BadPositionError('Board is not connected after capture.')
             cropping_bounds = [] if offset is not None else None
             new_state = board.display(cropped=True,

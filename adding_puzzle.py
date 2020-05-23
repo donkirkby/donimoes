@@ -29,7 +29,7 @@ class AddingBoardGraph(BoardGraph):
         try:
             self.check_matches(domino, is_complement_allowed=True)
             board = domino.head.board
-            if not board.isConnected():
+            if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
             return board.display(cropped=True)
         finally:

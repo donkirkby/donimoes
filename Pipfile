@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
+coverage = "*"
 
 [packages]
 matplotlib = "==2.0.0"

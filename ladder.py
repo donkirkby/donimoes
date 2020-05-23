@@ -1,6 +1,6 @@
 from enum import Enum
 
-from domino_puzzle import Board, BadPositionError, Domino
+from domino_puzzle import Board, BadPositionError, Domino, BoardGraph
 
 LadderMoveType = Enum('LadderMoveType', 'MARKER DOMINO')
 
@@ -39,22 +39,63 @@ class LadderBoard(Board):
         return f'{domino_display}---\n{move_char}{self.target}\n'
 
 
-class LadderGraph:
-    def __init__(self):
-        self.is_started = False
+class LadderGraph(BoardGraph):
+    def __init__(self, board_class=LadderBoard):
+        super().__init__(board_class)
 
     def generate_moves(self, board: LadderBoard):
-        self.is_started = True
+        if board.are_markers_connected:
+            if self.last is None:
+                self.last = '0|0\n---\nM1'
+            yield 'SOLVED', self.last
+        elif board.move_type == LadderMoveType.MARKER:
+            for x, y in list(board.markers.keys()):
+                for dx, dy in Domino.directions:
+                    yield from self.try_move_marker(board, x, y, dx, dy)
+        else:
+            # Passing is always a legal domino move.
+            board.move_type = LadderMoveType.MARKER
+            yield 'D...', board.display(cropped=True)
+            board.move_type = LadderMoveType.DOMINO
 
-        # Passing is always a legal domino move.
-        board.move_type = LadderMoveType.MARKER
-        yield 'D...', board.display(cropped=True)
+            for domino in board.dominoes[:]:
+                dx, dy = domino.direction
+                yield from self.try_move_domino(domino, dx, dy)
+                yield from self.try_move_domino(domino, -dx, -dy)
+
+    def try_move_marker(self, board: LadderBoard, x: int, y: int, dx: int, dy: int):
+        try:
+            move, new_state = self.move_marker(board, x, y, dx, dy)
+            yield move, new_state
+        except BadPositionError:
+            pass
+
+    @staticmethod
+    def move_marker(board: LadderBoard, x: int, y: int, dx: int, dy: int):
+        x2 = x+dx
+        y2 = y+dy
+        new_cell = board[x2][y2]
+        if new_cell is None:
+            raise BadPositionError('Marker cannot move off the board.')
+        if new_cell.pips != board.target:
+            raise BadPositionError(f'Marker must move onto a {board.target}.')
+        if (x2, y2) in board.markers:
+            raise BadPositionError(f'A marker is already on {x2}, {y2}.')
+        direction_name = Domino.describe_direction(dx, dy).upper()
+        marker = board.markers.pop((x, y))
+        original_target = board.target
+        board.markers[(x2, y2)] = marker
         board.move_type = LadderMoveType.DOMINO
+        board.target = board.target % 6 + 1
 
-        for domino in board.dominoes:
-            dx, dy = domino.direction
-            yield from self.try_move_domino(domino, dx, dy)
-            yield from self.try_move_domino(domino, -dx, -dy)
+        new_state = board.display(cropped=True)
+        move = f'M{marker}{direction_name}'
+
+        board.target = original_target
+        board.move_type = LadderMoveType.MARKER
+        del board.markers[(x2, y2)]
+        board.markers[(x, y)] = marker
+        return move, new_state
 
     def try_move_domino(self, domino: Domino, dx: int, dy: int):
         try:
@@ -84,7 +125,7 @@ class LadderGraph:
             if marker is not None:
                 board.markers[(x+dx, y+dy)] = marker
         try:
-            if not board.isConnected():
+            if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
             direction_name = domino.describe_direction(dx, dy).upper()
             marker, *_ = domino_markers.values()

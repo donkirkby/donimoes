@@ -26,7 +26,7 @@ class BlockingBoardGraph(BoardGraph):
         domino.move(dx, dy)
         try:
             board = domino.head.board
-            if not board.isConnected():
+            if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
             if board.hasMatch():
                 raise BadPositionError('Board has a match.')

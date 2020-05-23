@@ -563,7 +563,7 @@ def test_is_connected():
 """
     board = Board.create(state)
 
-    assert board.isConnected()
+    assert board.is_connected()
 
 
 def test_is_not_connected():
@@ -574,7 +574,7 @@ def test_is_not_connected():
 """
     board = Board.create(state)
 
-    assert not board.isConnected()
+    assert not board.is_connected()
 
 
 def test_has_no_loner():
@@ -1041,3 +1041,29 @@ P5N3Rx
     board = Board.create(start_state, border=1)
 
     assert board.display(cropped=True) == start_state
+
+
+def test_markers_not_connected():
+    start_state = '''\
+0|R 2 N
+    - -
+4|P 6 0
+---
+P5R1N3
+'''
+    board = Board.create(start_state, border=1)
+
+    assert not board.are_markers_connected
+
+
+def test_markers_are_connected():
+    start_state = '''\
+0|R N 3
+    - -
+4|P 6 0
+---
+P5R1N2
+'''
+    board = Board.create(start_state, border=1)
+
+    assert board.are_markers_connected
