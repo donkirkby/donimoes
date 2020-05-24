@@ -118,60 +118,23 @@ A6
     assert moves == expected_moves
 
 
-def test_markers_collide():
-    start_state = '''\
-x x x x x x
-
-x 0|1 2 B x
-      - -
-x P|5 6 R x
-
-x x x x x x
----
-P4R5B3
----
-M5
-'''
-    board = LadderBoard.create(start_state)
-    graph = LadderGraph()
-    expected_moves = {
-        ('MPR', '''\
-0|1 2 B
-    - -
-4|P 6 R
----
-P5R5B3
----
-D6
-''')}
-
-    moves = set(graph.generate_moves(board))
-
-    assert moves == expected_moves
-
-
 def test_board_stays_connected():
     start_state = '''\
-x N|2 x x x
+x x x x x x x
 
-x x 3|4 5|P
+x N|2 x x x x
+
+x x 3|4 5|P x
+
+x x x x x x x
 ---
 P6N1
 ---
-D1
+A1
 '''
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
     expected_moves = {
-        ('D...', '''\
-N|2 x x x
-
-x 3|4 5|P
----
-P6N1
----
-M1
-'''),
         ('DNR', '''\
 N|2 x x
 
@@ -197,7 +160,7 @@ P0R5N0B3
 ---
 M1
 '''
-    expected_solution = ['MNR', 'DPU', 'MBL', 'DRU', 'SOLVED']
+    expected_solution = ['MNR1', 'DPU', 'MBL2', 'DRU', 'SOLVED']
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
 
@@ -213,7 +176,7 @@ def test_walk_adds_markers():
 -     -
 0 3|4 5
 '''
-    expected_solution = ['MNR', 'DPU', 'MBL', 'DRU', 'SOLVED']
+    expected_solution = ['MNR1', 'DPU', 'MBL2', 'DRU', 'SOLVED']
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
 
