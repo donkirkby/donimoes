@@ -585,7 +585,7 @@ def test_has_no_loner():
 """
     board = Board.create(state)
 
-    assert not board.hasLoner()
+    assert not board.has_loner()
 
 
 def test_has_loner():
@@ -596,7 +596,7 @@ def test_has_loner():
 """
     board = Board.create(state)
 
-    assert board.hasLoner()
+    assert board.has_loner()
 
 
 def test_has_no_match():
@@ -1067,3 +1067,16 @@ P5R1N2
     board = Board.create(start_state, border=1)
 
     assert board.are_markers_connected
+
+
+def test_marker_area():
+    start_state = '''\
+0|R 2 N
+    - -
+4|P 6 0
+---
+P5R1N3
+'''
+    board = Board.create(start_state)
+
+    assert board.marker_area == 6

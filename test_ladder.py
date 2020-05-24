@@ -205,3 +205,34 @@ M1
     solution = graph.get_solution()
 
     assert solution == expected_solution
+
+
+def test_walk_adds_markers():
+    start_state = '''\
+0 1|2 3
+-     -
+0 3|4 5
+'''
+    expected_solution = ['MNR', 'DPU', 'MBL', 'DRU', 'SOLVED']
+    board = LadderBoard.create(start_state)
+    graph = LadderGraph()
+
+    graph.walk(board)
+    solution = graph.get_solution()
+
+    assert solution == expected_solution
+
+
+def test_walk_sets_smallest_area():
+    start_state = '''\
+6 1 0 3 0
+- - - - -
+6 2 0 4 6
+'''
+    board = LadderBoard.create(start_state)
+    graph = LadderGraph()
+
+    graph.walk(board)
+
+    assert graph.last is None
+    assert graph.min_marker_area == 5

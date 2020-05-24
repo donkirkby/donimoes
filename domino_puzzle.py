@@ -493,7 +493,23 @@ class Board(object):
             except KeyError:
                 pass
 
-    def hasLoner(self):
+    @property
+    def marker_area(self):
+        if not self.markers:
+            return 0
+        min_x = min_y = max_x = max_y = None
+        for x, y in self.markers:
+            if min_x is None:
+                min_x = max_x = x
+                min_y = max_y = y
+            else:
+                min_x = min(x, min_x)
+                max_x = max(x, max_x)
+                min_y = min(y, min_y)
+                max_y = max(y, max_y)
+        return (max_x - min_x + 1) * (max_y - min_y + 1)
+
+    def has_loner(self):
         for domino in self.dominoes:
             neighbours = domino.find_neighbours()
             has_matching_neighbour = any(domino.isMatch(neighbour)
@@ -797,7 +813,7 @@ class BoardGraph(object):
             board = domino.head.board
             if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
-            if board.hasLoner():
+            if board.has_loner():
                 raise BadPositionError('Board has a lonely domino.')
             return board.display(cropped=True)
         finally:
