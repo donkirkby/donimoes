@@ -23,7 +23,7 @@ M5
     assert board.move_type == LadderMoveType.MARKER
 
 
-def test_generate_domino_moves():
+def test_generate_any_moves():
     start_state = '''\
 x x x x x x
 
@@ -35,20 +35,11 @@ x x x x x x
 ---
 P4R0B3
 ---
-D5
+A5
 '''
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
     expected_moves = {
-        ('D...', '''\
-0|1 2 B
-    - -
-P|5 6 R
----
-P4R0B3
----
-M5
-'''),
         ('DPL', '''\
 x 0|1 2 B
       - -
@@ -79,6 +70,15 @@ x x x R
 R0P4B3
 ---
 M5
+'''),
+        ('MPR5', '''\
+0|1 2 B
+    - -
+4|P 6 R
+---
+P5R0B3
+---
+A6
 ''')}
 
     moves = set(graph.generate_moves(board))
@@ -103,14 +103,14 @@ M5
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
     expected_moves = {
-        ('MPR', '''\
+        ('MPR5', '''\
 0|1 2 B
     - -
 4|P 6 R
 ---
 P5R0B3
 ---
-D6
+A6
 ''')}
 
     moves = set(graph.generate_moves(board))

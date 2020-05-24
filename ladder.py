@@ -4,12 +4,12 @@ import random
 from domino_puzzle import Board, BadPositionError, Domino, BoardGraph, GraphLimitExceeded
 from evo import Evolution, Individual
 
-LadderMoveType = Enum('LadderMoveType', 'MARKER DOMINO')
+LadderMoveType = Enum('LadderMoveType', 'ANY MARKER DOMINO')
 
 
 class LadderBoard(Board):
     @classmethod
-    def create(cls, state, border=0, max_pips: int = None):
+    def create(cls, state, border=0, max_pips: int = 6):
         """ Create a ladder board.
 
         :param state: Standard board state, plus '---' and an extra status line
@@ -29,7 +29,7 @@ class LadderBoard(Board):
         board = super().create(board_state, border, max_pips)
         board.move_type = (LadderMoveType.MARKER
                            if move_state[0] == 'M'
-                           else LadderMoveType.DOMINO)
+                           else LadderMoveType.ANY)
         board.target = int(move_state[1:])
         if not board.markers and len(board.dominoes) > 1:
             board.markers[(0, 0)] = 'P'
@@ -63,20 +63,14 @@ class LadderGraph(BoardGraph):
         marker_area = board.marker_area
         if self.min_marker_area is None or marker_area < self.min_marker_area:
             self.min_marker_area = marker_area
-        if board.move_type == LadderMoveType.MARKER:
-            for x, y in list(board.markers.keys()):
-                for dx, dy in Domino.directions:
-                    yield from self.try_move_marker(board, x, y, dx, dy)
-        else:
-            # Passing is always a legal domino move.
-            board.move_type = LadderMoveType.MARKER
-            yield 'D...', board.display(cropped=True)
-            board.move_type = LadderMoveType.DOMINO
-
+        if board.move_type == LadderMoveType.ANY:
             for domino in board.dominoes[:]:
                 dx, dy = domino.direction
                 yield from self.try_move_domino(domino, dx, dy)
                 yield from self.try_move_domino(domino, -dx, -dy)
+        for x, y in list(board.markers.keys()):
+            for dx, dy in Domino.directions:
+                yield from self.try_move_marker(board, x, y, dx, dy)
 
     def try_move_marker(self, board: LadderBoard, x: int, y: int, dx: int, dy: int):
         try:
@@ -100,11 +94,11 @@ class LadderGraph(BoardGraph):
         marker = board.markers.pop((x, y))
         original_target = board.target
         board.markers[(x2, y2)] = marker
-        board.move_type = LadderMoveType.DOMINO
-        board.target = board.target % 6 + 1
+        board.move_type = LadderMoveType.ANY
+        board.target = board.target % board.max_pips + 1
 
         new_state = board.display(cropped=True)
-        move = f'M{marker}{direction_name}'
+        move = f'M{marker}{direction_name}{original_target}'
 
         board.target = original_target
         board.move_type = LadderMoveType.MARKER
@@ -205,7 +199,7 @@ class FitnessCalculator:
 
 
 def main():
-    max_pips = 6
+    max_pips = 4
     fitness_calculator = FitnessCalculator()
     init_params = dict(max_pips=max_pips, width=5, height=4)
     evo = Evolution(
