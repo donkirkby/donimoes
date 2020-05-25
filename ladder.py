@@ -24,13 +24,10 @@ class LadderBoard(Board):
         if len(sections) > 1:
             move_state = sections.pop()
         else:
-            move_state = 'M1'
+            move_state = '1'
         board_state = divider.join(sections)
         board = super().create(board_state, border, max_pips)
-        board.move_type = (LadderMoveType.MARKER
-                           if move_state[0] == 'M'
-                           else LadderMoveType.ANY)
-        board.target = int(move_state[1:])
+        board.target = int(move_state)
         if not board.markers and len(board.dominoes) > 1:
             board.markers[(0, 0)] = 'P'
             board.markers[(board.width-1, 0)] = 'R'
@@ -41,12 +38,16 @@ class LadderBoard(Board):
     def __init__(self, width, height, max_pips=None):
         super().__init__(width, height, max_pips)
         self.target = 1
-        self.move_type = LadderMoveType.MARKER
 
     def display(self, cropped=False, cropping_bounds=None):
         domino_display = super().display(cropped, cropping_bounds)
-        move_char = self.move_type.name[0]
-        return f'{domino_display}---\n{move_char}{self.target}\n'
+        return f'{domino_display}---\n{self.target}\n'
+
+    def advance_target(self):
+        self.target = self.target % self.max_pips + 1
+
+    def revert_target(self):
+        self.target = (self.target + self.max_pips - 2) % self.max_pips + 1
 
 
 class LadderGraph(BoardGraph):
@@ -57,17 +58,18 @@ class LadderGraph(BoardGraph):
     def generate_moves(self, board: LadderBoard):
         if board.are_markers_connected:
             if self.last is None:
-                self.last = '0|0\n---\nM1'
+                self.last = '0|0\n---\n1'
             yield 'SOLVED', self.last
             return
         marker_area = board.marker_area
         if self.min_marker_area is None or marker_area < self.min_marker_area:
             self.min_marker_area = marker_area
-        if board.move_type == LadderMoveType.ANY:
-            for domino in board.dominoes[:]:
-                dx, dy = domino.direction
-                yield from self.try_move_domino(domino, dx, dy)
-                yield from self.try_move_domino(domino, -dx, -dy)
+        for domino in board.dominoes[:]:
+            if board.target not in (domino.head.pips, domino.tail.pips):
+                continue
+            dx, dy = domino.direction
+            yield from self.try_move_domino(domino, dx, dy)
+            yield from self.try_move_domino(domino, -dx, -dy)
         for x, y in list(board.markers.keys()):
             for dx, dy in Domino.directions:
                 yield from self.try_move_marker(board, x, y, dx, dy)
@@ -92,16 +94,13 @@ class LadderGraph(BoardGraph):
             raise BadPositionError(f'A marker is already on {x2}, {y2}.')
         direction_name = Domino.describe_direction(dx, dy).upper()
         marker = board.markers.pop((x, y))
-        original_target = board.target
         board.markers[(x2, y2)] = marker
-        board.move_type = LadderMoveType.ANY
-        board.target = board.target % board.max_pips + 1
+        move = f'{marker}{direction_name}{board.target}'
+        board.advance_target()
 
         new_state = board.display(cropped=True)
-        move = f'M{marker}{direction_name}{original_target}'
 
-        board.target = original_target
-        board.move_type = LadderMoveType.MARKER
+        board.revert_target()
         del board.markers[(x2, y2)]
         board.markers[(x, y)] = marker
         return move, new_state
@@ -121,28 +120,21 @@ class LadderGraph(BoardGraph):
         domino_markers = {position: marker
                           for position, marker in domino_markers.items()
                           if marker is not None}
-        if not domino_markers:
-            raise BadPositionError('Cannot move domino without marker.')
+        if domino_markers:
+            raise BadPositionError('Cannot move domino with marker.')
         board = domino.head.board
-        original_markers = board.markers.copy()
+        direction_name = domino.describe_direction(dx, dy).upper()
+        move = (f'{domino.head.pips}{domino.tail.pips}'
+                f'{direction_name}{board.target}')
         domino.move(dx, dy)
-        board.move_type = LadderMoveType.MARKER
-        for position, marker in domino_markers.items():
-            if marker is not None:
-                del board.markers[position]
-        for (x, y), marker in domino_markers.items():
-            if marker is not None:
-                board.markers[(x+dx, y+dy)] = marker
         try:
+            board.advance_target()
             if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
-            direction_name = domino.describe_direction(dx, dy).upper()
-            marker, *_ = domino_markers.values()
-            return 'D'+marker+direction_name, board.display(cropped=True)
+            return move, board.display(cropped=True)
         finally:
-            board.move_type = LadderMoveType.DOMINO
+            board.revert_target()
             domino.move(-dx, -dy)
-            board.markers = original_markers
 
 
 class LadderProblem(Individual):
