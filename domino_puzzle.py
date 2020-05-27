@@ -1,4 +1,6 @@
+import math
 import typing
+from collections import defaultdict
 from datetime import datetime, timedelta
 from functools import partial
 from itertools import chain
@@ -18,6 +20,8 @@ import numpy as np
 import hall_of_fame
 
 # Avoid loading Tkinter back end when we won't use it.
+from priority import PriorityQueue
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # @IgnorePep8
 
@@ -752,31 +756,58 @@ class BoardGraph(object):
         self.board_class = board_class
 
     def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
-        pending_nodes = []
         self.graph = DiGraph()
         self.start = board.display(cropped=True)
         self.graph.add_node(self.start)
+
+        # len of shortest path known from start to a state.
+        g_score = defaultdict(lambda: math.inf)
+
         max_pips = board.max_pips
-        pending_nodes.append(self.start)
+
+        start_h = self.calculate_heuristic(board)
+        g_score[self.start] = 0
+        pending_nodes = PriorityQueue()
+        pending_nodes.add(self.start, start_h)
         while pending_nodes:
             if len(self.graph) >= size_limit:
                 raise GraphLimitExceeded(size_limit)
             state = pending_nodes.pop()
+            state_g_score = g_score[state]
             board = self.board_class.create(state, border=1, max_pips=max_pips)
-            for move, new_state, *edge in self.generate_moves(board):
+            for move, new_state, *extras in self.generate_moves(board):
+                edge_attrs = None
+                heuristic = 0
+                if extras:
+                    edge_attrs = extras[0]
+                    if len(extras) > 1:
+                        heuristic = extras[1]
+
+                new_g_score = state_g_score + 1
+                known_g_score = g_score[new_state]
                 if not self.graph.has_node(new_state):
                     # new node
                     self.graph.add_node(new_state)
-                    pending_nodes.append(new_state)
-                edge_attrs = edge and edge[0] or None
+                    is_improved = True
+                else:
+                    is_improved = new_g_score < known_g_score
+                if is_improved:
+                    g_score[new_state] = new_g_score
+                    f = new_g_score + heuristic
+
+                    pending_nodes.add(new_state, f)
                 self.graph.add_edge(state, new_state, edge_attrs, move=move)
         return set(self.graph.nodes())
+
+    def calculate_heuristic(self, board: Board) -> float:
+        return 0
 
     def generate_moves(self, board):
         """ Generate all moves from the board's current state.
 
         :param Board board: the current state
-        :return: a generator of (move_description, state) tuples
+        :return: a generator of (move_description, state, edge_attrs, heuristic)
+            tuples, where the last two are optional
         """
         self.check_progress(board)
         dominoes = set(board.dominoes)

@@ -1,4 +1,5 @@
-from ladder import LadderBoard, LadderMoveType, LadderGraph
+from domino_puzzle import GraphLimitExceeded
+from ladder import LadderBoard, LadderGraph
 
 
 def test_create():
@@ -49,7 +50,7 @@ P|5 x R
 P4R0B3
 ---
 3
-'''),
+''', None, 2),
         ('62D2', '''\
 0|1 x B
       -
@@ -60,7 +61,7 @@ x x 6 x
 P4R0B3
 ---
 3
-'''),
+''', None, 2),
         ('BL2', '''\
 0|1 B 3
     - -
@@ -69,7 +70,7 @@ P|5 6 R
 P4R0B2
 ---
 3
-''')}
+''', None, 2)}
 
     moves = set(graph.generate_moves(board))
 
@@ -101,7 +102,7 @@ N|4 5|P
 N3P6
 ---
 2
-''')}
+''', None, 1)}
 
     moves = set(graph.generate_moves(board))
 
@@ -133,7 +134,7 @@ x 3|4 5|P
 P6N1
 ---
 2
-''')}
+''', None, 3)}
     moves = set(graph.generate_moves(board))
 
     assert moves == expected_moves
@@ -188,3 +189,43 @@ def test_walk_sets_smallest_area():
 
     assert graph.last is None
     assert graph.min_marker_area == 5
+
+
+def test_calculate_heuristic():
+    board = LadderBoard.create('''\
+0|1 0|B 0|3
+
+N|2 1|3 R|4
+
+2|P 2|4 2|5
+---
+P3N1R1B2
+---
+1
+''')
+    expected_heuristic = 4
+    graph = LadderGraph()
+
+    heuristic = graph.calculate_heuristic(board)
+
+    assert heuristic == expected_heuristic
+
+
+def test_fast_walker():
+    board = LadderBoard.create('''\
+2 2|3 2
+-     -
+1 0|0 2
+
+0|3 3|3
+''', max_pips=3)
+    graph = LadderGraph()
+
+    try:
+        graph.walk(board, size_limit=1000)
+    except GraphLimitExceeded:
+        pass
+
+    solution = graph.get_solution()
+
+    assert len(solution) == 36

@@ -76,13 +76,12 @@ class LadderGraph(BoardGraph):
 
     def try_move_marker(self, board: LadderBoard, x: int, y: int, dx: int, dy: int):
         try:
-            move, new_state = self.move_marker(board, x, y, dx, dy)
-            yield move, new_state
+            move, new_state, heuristic = self.move_marker(board, x, y, dx, dy)
+            yield move, new_state, None, heuristic
         except BadPositionError:
             pass
 
-    @staticmethod
-    def move_marker(board: LadderBoard, x: int, y: int, dx: int, dy: int):
+    def move_marker(self, board: LadderBoard, x: int, y: int, dx: int, dy: int):
         x2 = x+dx
         y2 = y+dy
         new_cell = board[x2][y2]
@@ -99,21 +98,21 @@ class LadderGraph(BoardGraph):
         board.advance_target()
 
         new_state = board.display(cropped=True)
+        heuristic = self.calculate_heuristic(board)
 
         board.revert_target()
         del board.markers[(x2, y2)]
         board.markers[(x, y)] = marker
-        return move, new_state
+        return move, new_state, heuristic
 
     def try_move_domino(self, domino: Domino, dx: int, dy: int):
         try:
-            move, new_state = self.move_domino(domino, dx, dy)
-            yield move, new_state
+            move, new_state, heuristic = self.move_domino(domino, dx, dy)
+            yield move, new_state, None, heuristic
         except BadPositionError:
             pass
 
-    @staticmethod
-    def move_domino(domino, dx, dy):
+    def move_domino(self, domino, dx, dy):
         domino_markers = {
             (cell.x, cell.y): domino.head.board.markers.get((cell.x, cell.y))
             for cell in (domino.head, domino.tail)}
@@ -131,10 +130,29 @@ class LadderGraph(BoardGraph):
             board.advance_target()
             if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
-            return move, board.display(cropped=True)
+            heuristic = self.calculate_heuristic(board)
+            return move, board.display(cropped=True), heuristic
         finally:
             board.revert_target()
             domino.move(-dx, -dy)
+
+    def calculate_heuristic(self, board):
+        # Calculate centre of mass for markers.
+        x_sum = y_sum = 0
+        for x, y in board.markers:
+            x_sum += x
+            y_sum += y
+        cx = x_sum // len(board.markers)
+        cy = y_sum // len(board.markers)
+
+        # Count moves to centre.
+        total_moves = 0
+        for x, y in board.markers:
+            total_moves += abs(x - cx) + abs(y-cy)
+
+        # Not all pieces have to get all the way to the centre.
+        total_moves -= len(board.markers)
+        return total_moves
 
 
 class LadderProblem(Individual):
