@@ -850,33 +850,40 @@ class BoardGraph(object):
         finally:
             domino.move(-dx, -dy)
 
-    def get_solution(self, return_partial=False):
+    def get_solution(self, return_partial=False, solution_nodes=None):
         """ Find a solution from the graph of moves.
 
         @param return_partial: If True, a partial solution will be returned if no
         solution exists.
+        @param solution_nodes: Returned from get_solution_nodes().
         @return: a list of strings describing each move. Each string is two
         digits describing the domino that moved plus a letter to show the
         direction.
         """
         solution = []
-        goal = self.closest if return_partial else self.last or ''
-        solution_nodes = shortest_path(self.graph, self.start, goal)
+        if solution_nodes is None:
+            solution_nodes = self.get_solution_nodes(return_partial)
         for i in range(len(solution_nodes)-1):
             source, target = solution_nodes[i:i+2]
             solution.append(self.graph[source][target]['move'])
         return solution
 
-    def get_choice_counts(self):
-        solution_nodes = shortest_path(self.graph, self.start, self.last)
+    def get_solution_nodes(self, return_partial=False):
+        goal = self.closest if return_partial else self.last or ''
+        solution_nodes = shortest_path(self.graph, self.start, goal)
+        return solution_nodes
+
+    def get_choice_counts(self, solution_nodes=None):
+        if solution_nodes is None:
+            solution_nodes = self.get_solution_nodes()
         return [len(self.graph[node]) for node in solution_nodes[:-1]]
 
-    def get_average_choices(self):
-        choices = self.get_choice_counts()
+    def get_average_choices(self, solution_nodes=None):
+        choices = self.get_choice_counts(solution_nodes)
         return sum(choices) / float(len(choices)) if choices else maxsize
 
-    def get_max_choices(self):
-        choices = self.get_choice_counts()
+    def get_max_choices(self, solution_nodes=None):
+        choices = self.get_choice_counts(solution_nodes)
         return max(choices) if choices else maxsize
 
 

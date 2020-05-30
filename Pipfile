@@ -8,13 +8,13 @@ pytest = "*"
 coverage = "*"
 
 [packages]
-matplotlib = "==2.0.0"
-deap = "==1.2.2"
-networkx = "==1.11"
+matplotlib = "*"
+deap = "*"
+networkx = "<2"
 reportlab = "*"
-numpy = "==1.13.3"
+numpy = "*"
 svgwrite = "*"
 svglib = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"

@@ -73,8 +73,8 @@ s s
 s s
 1 2 2 2
 """
-    expected_moves = [('1:00j10', expected_display1),
-                      ('1:02j12', expected_display2)]
+    expected_moves = [('1:02j12', expected_display2),
+                      ('1:00j10', expected_display1)]
 
     moves = list(generate_moves_from_single_neighbours(board))
     final_state = board.display()

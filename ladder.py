@@ -65,8 +65,6 @@ class LadderGraph(BoardGraph):
         if self.min_marker_area is None or marker_area < self.min_marker_area:
             self.min_marker_area = marker_area
         for domino in board.dominoes[:]:
-            if board.target not in (domino.head.pips, domino.tail.pips):
-                continue
             dx, dy = domino.direction
             yield from self.try_move_domino(domino, dx, dy)
             yield from self.try_move_domino(domino, -dx, -dy)
@@ -113,19 +111,35 @@ class LadderGraph(BoardGraph):
             pass
 
     def move_domino(self, domino, dx, dy):
-        domino_markers = {
-            (cell.x, cell.y): domino.head.board.markers.get((cell.x, cell.y))
-            for cell in (domino.head, domino.tail)}
-        domino_markers = {position: marker
-                          for position, marker in domino_markers.items()
-                          if marker is not None}
-        if domino_markers:
-            raise BadPositionError('Cannot move domino with marker.')
+        domino_markers = [
+            domino.head.board.markers.get((cell.x, cell.y))
+            for cell in (domino.head, domino.tail)]
+        marker = domino_markers[0]
+        if marker is None:
+            marker = domino_markers[1]
+            marker_cell = domino.tail
+            domino_pips = domino.head.pips
+        else:
+            marker_cell = domino.head
+            if domino_markers[1] is not None:
+                raise BadPositionError('Cannot move a domino with two markers.')
+            domino_pips = domino.tail.pips
+        if marker is None:
+            raise BadPositionError('Cannot move a domino without a marker.')
         board = domino.head.board
+        if domino_pips != board.target:
+            raise BadPositionError(f'Cannot move a domino showing {domino_pips}'
+                                   f' when the target is {board.target}')
         direction_name = domino.describe_direction(dx, dy).upper()
-        move = (f'{domino.head.pips}{domino.tail.pips}'
-                f'{direction_name}{board.target}')
-        domino.move(dx, dy)
+        move = f'{marker}D{direction_name}{board.target}'
+        original_markers = board.markers.copy()
+        try:
+            del board.markers[(marker_cell.x, marker_cell.y)]
+            domino.move(dx, dy)
+            board.markers[(marker_cell.x, marker_cell.y)] = marker
+        except Exception:
+            board.markers = original_markers
+            raise
         try:
             board.advance_target()
             if not board.is_connected():
@@ -135,6 +149,7 @@ class LadderGraph(BoardGraph):
         finally:
             board.revert_target()
             domino.move(-dx, -dy)
+            board.markers = original_markers
 
     def calculate_heuristic(self, board):
         # Calculate centre of mass for markers.
@@ -142,8 +157,9 @@ class LadderGraph(BoardGraph):
         for x, y in board.markers:
             x_sum += x
             y_sum += y
-        cx = x_sum // len(board.markers)
-        cy = y_sum // len(board.markers)
+        marker_count = len(board.markers)
+        cx = x_sum // marker_count
+        cy = y_sum // marker_count
 
         # Count moves to centre.
         total_moves = 0
@@ -151,7 +167,7 @@ class LadderGraph(BoardGraph):
             total_moves += abs(x - cx) + abs(y-cy)
 
         # Not all pieces have to get all the way to the centre.
-        total_moves -= len(board.markers)
+        total_moves -= min(total_moves, marker_count)
         return total_moves
 
 
@@ -179,12 +195,16 @@ class LadderProblem(Individual):
 
 
 class FitnessCalculator:
-    @staticmethod
-    def calculate(problem):
+    def __init__(self, target_length=None):
+        self.target_length = target_length
+
+    def calculate(self, problem):
         """ Calculate fitness score based on the solution length.
 
-        -100,000 if the move graph is too big to explore.
-        -10,000 if there's no solution.
+        -100,000 if there's no solution.
+        -1000 * abs(solution_length-target_length)
+        -10*max_choices
+        -avg_choices
         """
         value = problem.value
         fitness = value.get('fitness')
@@ -196,22 +216,33 @@ class FitnessCalculator:
         try:
             graph.walk(board, size_limit=10_000)
         except GraphLimitExceeded:
-            fitness -= 10_000
+            pass
         if graph.last is None:
             fitness -= 100_000
             fitness -= graph.min_marker_area
         else:
-            solution = graph.get_solution()
-            fitness += len(solution)
+            solution_nodes = graph.get_solution_nodes()
+            solution_moves = graph.get_solution(solution_nodes=solution_nodes)
+            domino_move_count = sum(len(move) == 4 for move in solution_moves)
+            fitness += 1000*domino_move_count
+            if self.target_length is None:
+                fitness += len(solution_nodes)*1000
+            else:
+                fitness -= 1000*abs(len(solution_nodes) - self.target_length)
+
+            max_choices = graph.get_max_choices(solution_nodes)
+            average_choices = graph.get_average_choices(solution_nodes)
+            fitness -= max_choices*10
+            fitness -= average_choices
 
         value['fitness'] = fitness
         return fitness
 
 
 def main():
-    max_pips = 4
-    fitness_calculator = FitnessCalculator()
-    init_params = dict(max_pips=max_pips, width=5, height=4)
+    max_pips = 5
+    fitness_calculator = FitnessCalculator(target_length=20)
+    init_params = dict(max_pips=max_pips, width=max_pips+1, height=max_pips)
     evo = Evolution(
         pool_size=100,
         fitness=fitness_calculator.calculate,

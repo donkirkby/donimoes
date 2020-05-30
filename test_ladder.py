@@ -27,50 +27,59 @@ def test_generate_moves():
     start_state = '''\
 x x x x x x
 
-x 0|1 2 B x
+x 0|2 2 B x
       - -
-x P|5 6 R x
+x P|5 R 0 x
 
 x x x x x x
 ---
-P4R0B3
+P4R6B3
 ---
 2
 '''
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
     expected_moves = {
-        ('62U2', '''\
+        ('RDU2', '''\
 x x 2 x
     -
-0|1 6 B
+0|2 R B
       -
-P|5 x R
+P|5 x 0
 ---
-P4R0B3
+P4R6B3
 ---
 3
-''', None, 2),
-        ('62D2', '''\
-0|1 x B
+''', None, 3),
+        ('RDD2', '''\
+0|2 x B
       -
-P|5 2 R
+P|5 2 0
     -
-x x 6 x
+x x R x
 ---
-P4R0B3
+R6P4B3
 ---
 3
-''', None, 2),
+''', None, 3),
         ('BL2', '''\
-0|1 B 3
+0|2 B 3
     - -
-P|5 6 R
+P|5 R 0
 ---
-P4R0B2
+P4R6B2
 ---
 3
-''', None, 2)}
+''', None, 1),
+        ('RU2', '''\
+0|2 R B
+    - -
+P|5 6 0
+---
+P4R2B3
+---
+3
+''', None, 3)}
 
     moves = set(graph.generate_moves(board))
 
@@ -81,51 +90,28 @@ def test_board_stays_connected():
     start_state = '''\
 x x x x x x x
 
-x 1|2 x x x x
-
-x x N|4 5|P x
-
-x x x x x x x
----
-N3P6
----
-1
-'''
-    board = LadderBoard.create(start_state)
-    graph = LadderGraph()
-    expected_moves = {
-        ('12R1', '''\
-1|2 x x
-
-N|4 5|P
----
-N3P6
----
-2
-''', None, 1)}
-
-    moves = set(graph.generate_moves(board))
-
-    assert moves == expected_moves
-
-
-def test_only_empty_dominoes_move():
-    start_state = '''\
-x x x x x x x
-
 x 1|N x x x x
 
 x x 3|4 5|P x
 
 x x x x x x x
 ---
-N2P6
+P6N2
 ---
 1
 '''
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
     expected_moves = {
+        ('NDR1', '''\
+1|N x x
+
+3|4 5|P
+---
+P6N2
+---
+2
+''', None, 1),
         ('NL1', '''\
 N|2 x x x
 
@@ -134,7 +120,69 @@ x 3|4 5|P
 P6N1
 ---
 2
+''', None, 3)
+    }
+
+    moves = set(graph.generate_moves(board))
+
+    assert moves == expected_moves
+
+
+def test_two_markers_stop_move():
+    start_state = '''\
+x x x x x x x
+
+x 2|0 2|3 x x
+
+x 3|0 0|1 x x
+
+x N|P x B|R x
+
+x x x x x x x
+---
+N3P3B2R2
+---
+3
+'''
+    board = LadderBoard.create(start_state)
+    graph = LadderGraph()
+    expected_moves = {
+        ('NU3', '''\
+2|0 2|3 x
+
+N|0 0|1 x
+
+3|P x B|R
+---
+P3B2R2N3
+---
+4
 ''', None, 3)}
+
+    moves = set(graph.generate_moves(board))
+
+    assert moves == expected_moves
+
+
+def test_markers_not_lost():
+    start_state = '''\
+P|3 2|R
+---
+P3R2
+---
+3
+'''
+    board = LadderBoard.create(start_state, border=1)
+    graph = LadderGraph()
+    expected_moves = {
+        ('PR3', '''\
+3|P 2|R
+---
+P3R2
+---
+4
+''', None, 0)}
+
     moves = set(graph.generate_moves(board))
 
     assert moves == expected_moves
@@ -150,7 +198,7 @@ P0R0N2B4
 ---
 1
 '''
-    expected_solution = ['NR1', 'PU2', 'BL3', 'RU4', 'SOLVED']
+    expected_solution = ['NR1', 'PDU2', 'BL3', 'RDU4', 'SOLVED']
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
 
@@ -166,7 +214,7 @@ def test_walk_adds_markers():
 -     -
 0 0|0 0
 '''
-    expected_solution = ['NR1', 'PU2', 'BL3', 'RU4', 'SOLVED']
+    expected_solution = ['NR1', 'PDU2', 'BL3', 'RDU4', 'SOLVED']
     board = LadderBoard.create(start_state)
     graph = LadderGraph()
 
@@ -228,4 +276,4 @@ def test_fast_walker():
 
     solution = graph.get_solution()
 
-    assert len(solution) == 36
+    assert len(solution) == 13
