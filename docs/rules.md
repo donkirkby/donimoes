@@ -15,9 +15,10 @@ puzzles by other designers:
 
 * **Unmatched Donimoes** is a puzzle I designed where you have to slide all the
     dominoes into a rectangular shape, without sliding any matching numbers next
-    to each other.
+    to each other. (1 player, double-six dominoes)
 * **Capturing Donimoes** is a puzzle I designed where you have to collect all the
-    dominoes by sliding matching numbers next to each other.
+    dominoes by sliding matching numbers next to each other.  (1 player,
+    double-six dominoes)
 * **Tetradominoes** is a game I designed for one to four players where you play
     matching dominoes in a grid, then try to play the tetromino shapes on top.
     (1-4 players, double-six dominoes, 7 cardboard tetrominoes, and some beads,
@@ -1605,7 +1606,11 @@ numbers.
 ## Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different
 pawns, the top left is labelled as a (P)awn, the bottom is a k(N)ight, the top
-right is a (B)ishop, and the bottom right is a (R)ook.
+right is a (B)ishop, and the bottom right is a (R)ook. The direction of each
+move is (L)eft, (R)ight, (U)p, or (Down), and the numbers say how far to move.
+PR3 means move the pawn three steps to the right, without hopping over any other
+pieces.  PR3(+2) means move the pawn three steps to the right, including hopping
+over two other pieces, meaning that it moves five spaces in total.
 
 1. NR4, NR2, PR2, PR1, PD, PR3(+1), BL1, BL2, BD, RL5(+3), RU, RR1, PU, BL3
 2. NR1, NU, BL1, BD, BL3, RL4(+1), RU, BU, BL5(+1), RL5(+1), PR1(+3), NR2(+3),

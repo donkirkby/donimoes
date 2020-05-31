@@ -5,8 +5,43 @@ title: New Rules for Donimoes
 These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 
+* **Partner Donimoes** is a puzzle I designed where chess pieces walk around on
+    top of the dominoes. (1 player, double-six dominoes, 4 pawns)
 * **Adding Donimoes** is a puzzle I designed where you add dominoes in the given
-    order.
+    order. (1 player, double-six dominoes)
+
+## Partner Donimoes
+
+### Goal
+Move all the pawns into one connected group. Diagonal connection don't count.
+
+### Start
+Place the dominoes in the starting position shown in the problem, then put a
+pawn on top of each corner space.
+
+### Moves
+There are two possible moves for each turn:
+
+1. Domino move - if a domino has a pawn on it, you can slide the domino one
+    space along its long axis. The domino goes along for the ride. You can only
+    move one domino at a time, and all the dominoes must stay connected in one
+    group before and after the move. Diagonal connections don't count.
+2. Pawn move - you can move a pawn one space up, down, or sideways, with a few
+    restrictions.
+    * Moving to the other end of the same domino is allowed.
+    * The number at the other end of a pawn's domino is the pawn's partner. The
+        pawn's partner before the move must match the pawn's partner after the
+        move.
+    * A domino cannot have two pawns on it.
+    * Diagonal moves are not allowed.
+
+### Problems
+#### Problem 1
+    2|3 0|3
+    
+    2 2|2 0
+    -     -
+    0 1|3 1
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.
@@ -102,6 +137,11 @@ solutions are listed at the end.
     1 5 1 5 5 4
 
 # Solutions
+## Partner Donimoes Solutions
+Here are the solutions to the Partner Donimoes problems.
+
+1. BDR, NDR, PDU, PR, PR, NR, RU, BL
+
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Adding moves contain the domino

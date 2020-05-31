@@ -1,58 +1,28 @@
 import random
+import typing
+from sys import maxsize
 
-from domino_puzzle import Board, BadPositionError, Domino, BoardGraph, GraphLimitExceeded
-from evo import Evolution, Individual
-
-
-class LadderBoard(Board):
-    @classmethod
-    def create(cls, state, border=0, max_pips: int = 6):
-        """ Create a ladder board.
-
-        :param state: Standard board state, plus '---' and an extra status line
-            that holds the move type and the target number. Move type is 'M' for
-            marker and 'D' for domino, so 'D2' means a domino move with a target
-            of 2.
-        :param border: number of blank rows and columns to add around the edge
-        :param max_pips: maximum number of pips in the full set of dominoes
-        """
-        divider = '\n---\n'
-        sections = state.split(divider)
-        if len(sections) > 1:
-            move_state = sections.pop()
-        else:
-            move_state = '1'
-        board_state = divider.join(sections)
-        board = super().create(board_state, border, max_pips)
-        board.target = int(move_state)
-        if not board.markers and len(board.dominoes) > 1:
-            board.markers[(0, 0)] = 'P'
-            board.markers[(board.width-1, 0)] = 'R'
-            board.markers[(0, board.height-1)] = 'N'
-            board.markers[(board.width-1, board.height-1)] = 'B'
-        return board
-
-    def __init__(self, width, height, max_pips=None):
-        super().__init__(width, height, max_pips)
-        self.target = 1
-
-    def display(self, cropped=False, cropping_bounds=None):
-        domino_display = super().display(cropped, cropping_bounds)
-        return f'{domino_display}---\n{self.target}\n'
-
-    def advance_target(self):
-        self.target = self.target % self.max_pips + 1
-
-    def revert_target(self):
-        self.target = (self.target + self.max_pips - 2) % self.max_pips + 1
+from domino_puzzle import Board, BadPositionError, Domino, BoardGraph, Cell, GraphLimitExceeded
+from evo import Individual, Evolution
 
 
-class LadderGraph(BoardGraph):
-    def __init__(self, board_class=LadderBoard):
+def get_domino_marker(domino: Domino) -> (Cell, str):
+    board = domino.head.board
+    for cell in (domino.head, domino.tail):
+        try:
+            marker = board.markers[(cell.x, cell.y)]
+            return cell, marker
+        except KeyError:
+            pass
+    raise KeyError('Domino has no markers on it.')
+
+
+class PartnerGraph(BoardGraph):
+    def __init__(self, board_class=Board):
         super().__init__(board_class)
         self.min_marker_area = None
 
-    def generate_moves(self, board: LadderBoard):
+    def generate_moves(self, board: Board):
         if board.are_markers_connected:
             if self.last is None:
                 self.last = '0|0\n---\n1'
@@ -69,33 +39,49 @@ class LadderGraph(BoardGraph):
             for dx, dy in Domino.directions:
                 yield from self.try_move_marker(board, x, y, dx, dy)
 
-    def try_move_marker(self, board: LadderBoard, x: int, y: int, dx: int, dy: int):
+    def try_move_marker(self, board: Board, x: int, y: int, dx: int, dy: int):
         try:
             move, new_state, heuristic = self.move_marker(board, x, y, dx, dy)
             yield move, new_state, None, heuristic
         except BadPositionError:
             pass
 
-    def move_marker(self, board: LadderBoard, x: int, y: int, dx: int, dy: int):
+    @staticmethod
+    def get_partner(board: Board, x: int, y: int) -> int:
+        start_cell = board[x][y]
+        domino = start_cell.domino
+        if start_cell is domino.head:
+            partner_cell = domino.tail
+        else:
+            partner_cell = domino.head
+        if (partner_cell.x, partner_cell.y) in board.markers:
+            raise BadPositionError(f'No empty partner for {x}, {y}.')
+        return partner_cell.pips
+
+    def move_marker(self, board: Board, x: int, y: int, dx: int, dy: int):
         x2 = x+dx
         y2 = y+dy
         new_cell = board[x2][y2]
         if new_cell is None:
             raise BadPositionError('Marker cannot move off the board.')
-        if new_cell.pips != board.target:
-            raise BadPositionError(f'Marker must move onto a {board.target}.')
         if (x2, y2) in board.markers:
             raise BadPositionError(f'A marker is already on {x2}, {y2}.')
+        start_cell = board[x][y]
+        if new_cell.domino is not start_cell.domino:
+            current_partner = self.get_partner(board, x, y)
+            new_partner = self.get_partner(board, x2, y2)
+            if new_partner != current_partner:
+                raise BadPositionError(
+                    f"Marker's new partner {new_partner} does not match old "
+                    f"partner {current_partner}.")
         direction_name = Domino.describe_direction(dx, dy).upper()
         marker = board.markers.pop((x, y))
         board.markers[(x2, y2)] = marker
-        move = f'{marker}{direction_name}{board.target}'
-        board.advance_target()
+        move = f'{marker}{direction_name}'
 
         new_state = board.display(cropped=True)
         heuristic = self.calculate_heuristic(board)
 
-        board.revert_target()
         del board.markers[(x2, y2)]
         board.markers[(x, y)] = marker
         return move, new_state, heuristic
@@ -107,28 +93,14 @@ class LadderGraph(BoardGraph):
         except BadPositionError:
             pass
 
-    def move_domino(self, domino, dx, dy):
-        domino_markers = [
-            domino.head.board.markers.get((cell.x, cell.y))
-            for cell in (domino.head, domino.tail)]
-        marker = domino_markers[0]
-        if marker is None:
-            marker = domino_markers[1]
-            marker_cell = domino.tail
-            domino_pips = domino.head.pips
-        else:
-            marker_cell = domino.head
-            if domino_markers[1] is not None:
-                raise BadPositionError('Cannot move a domino with two markers.')
-            domino_pips = domino.tail.pips
-        if marker is None:
-            raise BadPositionError('Cannot move a domino without a marker.')
-        board = domino.head.board
-        if domino_pips != board.target:
-            raise BadPositionError(f'Cannot move a domino showing {domino_pips}'
-                                   f' when the target is {board.target}')
+    def move_domino(self, domino: Domino, dx, dy):
+        try:
+            marker_cell, marker = get_domino_marker(domino)
+        except KeyError:
+            raise BadPositionError('Cannot move a domino with no markers on it.')
+        board: Board = domino.head.board
         direction_name = domino.describe_direction(dx, dy).upper()
-        move = f'{marker}D{direction_name}{board.target}'
+        move = f'{marker}D{direction_name}'
         original_markers = board.markers.copy()
         try:
             del board.markers[(marker_cell.x, marker_cell.y)]
@@ -138,13 +110,11 @@ class LadderGraph(BoardGraph):
             board.markers = original_markers
             raise
         try:
-            board.advance_target()
             if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
             heuristic = self.calculate_heuristic(board)
             return move, board.display(cropped=True), heuristic
         finally:
-            board.revert_target()
             domino.move(-dx, -dy)
             board.markers = original_markers
 
@@ -167,23 +137,37 @@ class LadderGraph(BoardGraph):
         total_moves -= min(total_moves, marker_count)
         return total_moves
 
+    def get_solution(self, return_partial=False, solution_nodes=None):
+        solution = super().get_solution(return_partial, solution_nodes)
+        assert solution[-1] == 'SOLVED'
+        return solution[:-1]
 
-class LadderProblem(Individual):
+    def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
+        if not board.markers and len(board.dominoes) > 1:
+            board.markers[(0, 0)] = 'P'
+            board.markers[(board.width-1, 0)] = 'R'
+            board.markers[(0, board.height-1)] = 'N'
+            board.markers[(board.width-1, board.height-1)] = 'B'
+
+        return super().walk(board, size_limit)
+
+
+class PartnerProblem(Individual):
     def __repr__(self):
-        return f'LadderProblem({self.value!r}'
+        return f'PartnerProblem({self.value!r}'
 
     def pair(self, other, pair_params):
-        return LadderProblem(self.value)
+        return PartnerProblem(self.value)
 
     def mutate(self, mutate_params):
         max_pips = self.value['max_pips']
-        board = LadderBoard.create(self.value['start'], max_pips=max_pips)
-        new_board = board.mutate(random, LadderBoard)
+        board = Board.create(self.value['start'], max_pips=max_pips)
+        new_board = board.mutate(random, Board)
         self.value = dict(start=new_board.display(), max_pips=max_pips)
 
     def _random_init(self, init_params):
         max_pips = init_params['max_pips']
-        board = LadderBoard(**init_params)
+        board = Board(**init_params)
         while True:
             if board.fill(random):
                 break
@@ -207,8 +191,8 @@ class FitnessCalculator:
         fitness = value.get('fitness')
         if fitness is not None:
             return fitness
-        board = LadderBoard.create(value['start'], max_pips=value['max_pips'])
-        graph = LadderGraph()
+        board = Board.create(value['start'], max_pips=value['max_pips'])
+        graph = PartnerGraph()
         fitness = 0
         try:
             graph.walk(board, size_limit=10_000)
@@ -220,7 +204,7 @@ class FitnessCalculator:
         else:
             solution_nodes = graph.get_solution_nodes()
             solution_moves = graph.get_solution(solution_nodes=solution_nodes)
-            domino_move_count = sum(len(move) == 4 for move in solution_moves)
+            domino_move_count = sum(len(move) == 3 for move in solution_moves)
             fitness += 1000*domino_move_count
             if self.target_length is None:
                 fitness += len(solution_nodes)*1000
@@ -243,7 +227,7 @@ def main():
     evo = Evolution(
         pool_size=100,
         fitness=fitness_calculator.calculate,
-        individual_class=LadderProblem,
+        individual_class=PartnerProblem,
         n_offsprings=30,
         pair_params=None,
         mutate_params=None,
