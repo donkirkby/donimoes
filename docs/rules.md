@@ -1605,9 +1605,9 @@ numbers.
 
 ## Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different
-pawns, the top left is labelled as a (P)awn, the bottom is a k(N)ight, the top
-right is a (B)ishop, and the bottom right is a (R)ook. The direction of each
-move is (L)eft, (R)ight, (U)p, or (Down), and the numbers say how far to move.
+pawns, the top left is labelled as a (P)awn, the bottom left is a k(N)ight, the
+top right is a (B)ishop, and the bottom right is a (R)ook. The direction of each
+move is (L)eft, (R)ight, (U)p, or (D)own, and the numbers say how far to move.
 PR3 means move the pawn three steps to the right, without hopping over any other
 pieces.  PR3(+2) means move the pawn three steps to the right, including hopping
 over two other pieces, meaning that it moves five spaces in total.

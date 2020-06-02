@@ -1,5 +1,5 @@
 from domino_puzzle import Board, GraphLimitExceeded
-from partners import PartnerGraph
+from mirror import MirrorGraph
 
 
 def test_generate_moves():
@@ -13,7 +13,7 @@ B|1 0|P
 B1P2
 '''
     board = Board.create(start_state, border=1)
-    graph = PartnerGraph()
+    graph = MirrorGraph()
     expected_moves = {
         ('PDR', '''\
 0|0 1|2 x
@@ -42,14 +42,14 @@ B1P2
 ---
 B1P2
 ''', None, 0),
-        ('PD', '''\
-0|0 1|2
+        ('PU', '''\
+0|0 1|P
 
 B|1 0|2
 
-2|2 0|P
+2|2 0|1
 ---
-P1B1
+B1P2
 ''', None, 2),
         ('PL', '''\
 0|0 1|2
@@ -75,7 +75,7 @@ x 3|4 5|P
 P6N2
 '''
     board = Board.create(start_state, border=1)
-    graph = PartnerGraph()
+    graph = MirrorGraph()
     expected_moves = {
         ('NDR', '''\
 1|N x x
@@ -106,70 +106,70 @@ P5N2
 
 def test_markers_block_each_other():
     start_state = '''\
-0|0 1|2
+0|0 1|0
 
 B|1 0|P
 
-2|2 0|N
+2|2 1|N
 ---
-N1B1P2
+N2B1P2
 '''
     board = Board.create(start_state, border=1)
-    graph = PartnerGraph()
+    graph = MirrorGraph()
     expected_moves = {
         ('PDR', '''\
-0|0 1|2 x
+0|0 1|0 x
 
 B|1 x 0|P
 
-2|2 0|N x
+2|2 1|N x
 ---
-N1B1P2
+N2B1P2
 ''', None, 4),
         ('BDL', '''\
-x 0|0 1|2
+x 0|0 1|0
 
 B|1 x 0|P
 
-x 2|2 0|N
+x 2|2 1|N
 ---
-N1B1P2
+N2B1P2
 ''', None, 5),
         ('NDR', '''\
-0|0 1|2 x
+0|0 1|0 x
 
 B|1 0|P x
 
-2|2 x 0|N
+2|2 x 1|N
 ---
-N1B1P2
+N2B1P2
 ''', None, 4),
         ('BR', '''\
-0|0 1|2
+0|0 1|0
 
 1|B 0|P
 
-2|2 0|N
+2|2 1|N
 ---
-N1B1P2
+N2B1P2
 ''', None, 2),
         ('PL', '''\
-0|0 1|2
+0|0 1|0
 
 B|1 P|2
 
-2|2 0|N
+2|2 1|N
 ---
-N1B1P0
+N2B1P0
 ''', None, 3),
         ('NL', '''\
-0|0 1|2
+0|0 1|0
 
 B|1 0|P
 
-2|2 N|1
+2|2 N|2
 ---
-N0B1P2
+N1B1P2
 ''', None, 3)}
 
     moves = set(graph.generate_moves(board))
@@ -177,73 +177,39 @@ N0B1P2
     assert moves == expected_moves
 
 
-def test_one_marker_per_domino():
+def test_domino_moves_both_markers():
     start_state = '''\
-0|0 1|2
+2 0|1 B
+-     -
+2 P|1 R
 
-B|1 0|P
-
-2|2 N|1
+2|0 1|2
 ---
-N0B1P2
+P1R0B0
 '''
     board = Board.create(start_state, border=1)
-    graph = PartnerGraph()
+    graph = MirrorGraph()
     expected_moves = {
-        ('PDR', '''\
-0|0 1|2 x
+        ('RDU', '''\
+x x x B
+      -
+2 0|1 R
+-
+2 P|1 x
 
-B|1 x 0|P
-
-2|2 N|1 x
+2|0 1|2
 ---
-N0B1P2
-''', None, 3),
-        ('BDL', '''\
-x 0|0 1|2
+P1R0B0
+''', None, 2),
+        ('PR', '''\
+2 0|1 B
+-     -
+2 1|P R
 
-B|1 x 0|P
-
-x 2|2 N|1
+2|0 1|2
 ---
-N0B1P2
-''', None, 4),
-        ('NDR', '''\
-0|0 1|2 x
-
-B|1 0|P x
-
-2|2 x N|1
----
-N0B1P2
-''', None, 3),
-        ('NR', '''\
-0|0 1|2
-
-B|1 0|P
-
-2|2 0|N
----
-N1B1P2
-''', None, 3),
-        ('BR', '''\
-0|0 1|2
-
-1|B 0|P
-
-2|2 N|1
----
-N0B1P2
-''', None, 1),
-        ('PL', '''\
-0|0 1|2
-
-B|1 P|2
-
-2|2 N|1
----
-N0B1P0
-''', None, 2)}
+P1R0B0
+''', None, 0)}
 
     moves = set(graph.generate_moves(board))
 
@@ -252,19 +218,18 @@ N0B1P0
 
 def test_walk():
     start_state = '''\
-N|0 2|B
-
-1 0 1|2
-- -
-P 1 0|R
+P 1 B
+- - -
+N 1 R
 ---
-P1R2N0B2
+N0R0P1B0
 '''
-    expected_solution = ['PU', 'PR', 'NR', 'RL', 'RU', 'BL']
+    expected_solution = ['PR', 'NDU']
     board = Board.create(start_state)
-    graph = PartnerGraph()
+    graph = MirrorGraph()
 
     graph.walk(board)
+
     solution = graph.get_solution()
 
     assert solution == expected_solution
@@ -272,15 +237,13 @@ P1R2N0B2
 
 def test_walk_adds_markers():
     start_state = '''\
-0|0 2|2
-
-1 0 1|2
-- -
-1 1 0|2
+1 1 0
+- - -
+0 1 0
 '''
-    expected_solution = ['PU', 'PR', 'NR', 'RL', 'RU', 'BL']
+    expected_solution = ['PR', 'NDU']
     board = Board.create(start_state)
-    graph = PartnerGraph()
+    graph = MirrorGraph()
 
     graph.walk(board)
     solution = graph.get_solution()
@@ -290,16 +253,12 @@ def test_walk_adds_markers():
 
 def test_walk_sets_smallest_area():
     start_state = '''\
-6 4 1 2 3
+1 1 0 2 2
 - - - - -
-6 6 1 3 3
-
-5 4 0 2 4
-- - - - -
-5 5 0 4 4
+0 1 0 2 0
 '''
     board = Board.create(start_state)
-    graph = PartnerGraph()
+    graph = MirrorGraph()
 
     try:
         graph.walk(board, size_limit=1000)
@@ -307,7 +266,7 @@ def test_walk_sets_smallest_area():
         pass
 
     assert graph.last is None
-    assert graph.min_marker_area == 6
+    assert graph.min_marker_area == 5
 
 
 def test_calculate_heuristic():
@@ -323,7 +282,7 @@ P3N1R1B2
 1
 ''')
     expected_heuristic = 4
-    graph = PartnerGraph()
+    graph = MirrorGraph()
 
     heuristic = graph.calculate_heuristic(board)
 

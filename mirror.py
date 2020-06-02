@@ -6,18 +6,12 @@ from domino_puzzle import Board, BadPositionError, Domino, BoardGraph, Cell, Gra
 from evo import Individual, Evolution
 
 
-def get_domino_marker(domino: Domino) -> (Cell, str):
-    board = domino.head.board
-    for cell in (domino.head, domino.tail):
-        try:
-            marker = board.markers[(cell.x, cell.y)]
-            return cell, marker
-        except KeyError:
-            pass
-    raise KeyError('Domino has no markers on it.')
+def get_cell_marker(cell: Cell) -> str:
+    board = cell.board
+    return board.markers.get((cell.x, cell.y))
 
 
-class PartnerGraph(BoardGraph):
+class MirrorGraph(BoardGraph):
     def __init__(self, board_class=Board):
         super().__init__(board_class)
         self.min_marker_area = None
@@ -46,18 +40,6 @@ class PartnerGraph(BoardGraph):
         except BadPositionError:
             pass
 
-    @staticmethod
-    def get_partner(board: Board, x: int, y: int) -> int:
-        start_cell = board[x][y]
-        domino = start_cell.domino
-        if start_cell is domino.head:
-            partner_cell = domino.tail
-        else:
-            partner_cell = domino.head
-        if (partner_cell.x, partner_cell.y) in board.markers:
-            raise BadPositionError(f'No empty partner for {x}, {y}.')
-        return partner_cell.pips
-
     def move_marker(self, board: Board, x: int, y: int, dx: int, dy: int):
         x2 = x+dx
         y2 = y+dy
@@ -68,12 +50,11 @@ class PartnerGraph(BoardGraph):
             raise BadPositionError(f'A marker is already on {x2}, {y2}.')
         start_cell = board[x][y]
         if new_cell.domino is not start_cell.domino:
-            current_partner = self.get_partner(board, x, y)
-            new_partner = self.get_partner(board, x2, y2)
-            if new_partner != current_partner:
+            start_pips = start_cell.pips
+            new_pips = new_cell.pips
+            if new_pips != start_pips:
                 raise BadPositionError(
-                    f"Marker's new partner {new_partner} does not match old "
-                    f"partner {current_partner}.")
+                    f"Marker cannot move from {start_pips} to {new_pips}.")
         direction_name = Domino.describe_direction(dx, dy).upper()
         marker = board.markers.pop((x, y))
         board.markers[(x2, y2)] = marker
@@ -94,18 +75,26 @@ class PartnerGraph(BoardGraph):
             pass
 
     def move_domino(self, domino: Domino, dx, dy):
-        try:
-            marker_cell, marker = get_domino_marker(domino)
-        except KeyError:
+        head_marker = get_cell_marker(domino.head)
+        tail_marker = get_cell_marker(domino.tail)
+        marker = head_marker or tail_marker
+        if marker is None:
             raise BadPositionError('Cannot move a domino with no markers on it.')
         board: Board = domino.head.board
         direction_name = domino.describe_direction(dx, dy).upper()
         move = f'{marker}D{direction_name}'
         original_markers = board.markers.copy()
         try:
-            del board.markers[(marker_cell.x, marker_cell.y)]
+            if head_marker:
+                del board.markers[(domino.head.x, domino.head.y)]
+            if tail_marker:
+                del board.markers[(domino.tail.x, domino.tail.y)]
+
             domino.move(dx, dy)
-            board.markers[(marker_cell.x, marker_cell.y)] = marker
+            if head_marker:
+                board.markers[(domino.head.x, domino.head.y)] = head_marker
+            if tail_marker:
+                board.markers[(domino.tail.x, domino.tail.y)] = tail_marker
         except Exception:
             board.markers = original_markers
             raise
@@ -144,20 +133,20 @@ class PartnerGraph(BoardGraph):
 
     def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
         if not board.markers and len(board.dominoes) > 1:
-            board.markers[(0, 0)] = 'P'
+            board.markers[(0, 0)] = 'N'
             board.markers[(board.width-1, 0)] = 'R'
-            board.markers[(0, board.height-1)] = 'N'
+            board.markers[(0, board.height-1)] = 'P'
             board.markers[(board.width-1, board.height-1)] = 'B'
 
         return super().walk(board, size_limit)
 
 
-class PartnerProblem(Individual):
+class MirrorProblem(Individual):
     def __repr__(self):
-        return f'PartnerProblem({self.value!r}'
+        return f'MirrorProblem({self.value!r}'
 
     def pair(self, other, pair_params):
-        return PartnerProblem(self.value)
+        return MirrorProblem(self.value)
 
     def mutate(self, mutate_params):
         max_pips = self.value['max_pips']
@@ -192,7 +181,7 @@ class FitnessCalculator:
         if fitness is not None:
             return fitness
         board = Board.create(value['start'], max_pips=value['max_pips'])
-        graph = PartnerGraph()
+        graph = MirrorGraph()
         fitness = 0
         try:
             graph.walk(board, size_limit=10_000)
@@ -205,7 +194,7 @@ class FitnessCalculator:
             solution_nodes = graph.get_solution_nodes()
             solution_moves = graph.get_solution(solution_nodes=solution_nodes)
             domino_move_count = sum(len(move) == 3 for move in solution_moves)
-            fitness += 1000*domino_move_count
+            fitness += 300*domino_move_count
             if self.target_length is None:
                 fitness += len(solution_nodes)*1000
             else:
@@ -222,12 +211,12 @@ class FitnessCalculator:
 
 def main():
     max_pips = 5
-    fitness_calculator = FitnessCalculator(target_length=20)
+    fitness_calculator = FitnessCalculator(target_length=50)
     init_params = dict(max_pips=max_pips, width=max_pips+1, height=max_pips)
     evo = Evolution(
         pool_size=100,
         fitness=fitness_calculator.calculate,
-        individual_class=PartnerProblem,
+        individual_class=MirrorProblem,
         n_offsprings=30,
         pair_params=None,
         mutate_params=None,
