@@ -754,6 +754,7 @@ class BoardGraph(object):
         self.graph = self.start = self.last = self.closest = None
         self.min_domino_count = None
         self.board_class = board_class
+        self.is_debugging = False
 
     def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
         self.graph = DiGraph()
@@ -767,10 +768,11 @@ class BoardGraph(object):
 
         start_h = self.calculate_heuristic(board)
         g_score[self.start] = 0
+        min_heuristic = start_h
         pending_nodes = PriorityQueue()
         pending_nodes.add(self.start, start_h)
         while pending_nodes:
-            if len(self.graph) >= size_limit:
+            if size_limit is not None and len(self.graph) >= size_limit:
                 raise GraphLimitExceeded(size_limit)
             state = pending_nodes.pop()
             state_g_score = g_score[state]
@@ -789,6 +791,15 @@ class BoardGraph(object):
                     # new node
                     self.graph.add_node(new_state)
                     is_improved = True
+                    min_heuristic = min(heuristic, min_heuristic)
+                    if self.is_debugging:
+                        if len(self.graph) % 1000 == 0:
+                            print(len(self.graph),
+                                  heuristic,
+                                  'min is',
+                                  min_heuristic)
+                        if heuristic == 0:
+                            print(new_state)
                 else:
                     is_improved = new_g_score < known_g_score
                 if is_improved:

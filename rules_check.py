@@ -5,22 +5,27 @@ from adding_puzzle import AddingBoardGraph
 from book_parser import parse, Styles
 from domino_puzzle import BoardAnalysis, Board
 from dominosa import DominosaBoard, FitnessCalculator, LEVEL_WEIGHTS, DominosaProblem
+from mirror import MirrorFitnessCalculator, MirrorProblem
 
 
 def main():
-    rules_path = Path(__file__).parent / 'docs' / 'rules.md'
+    rules_path = Path(__file__).parent / 'docs' / 'new_rules.md'
     rules_text = rules_path.read_text()
 
     states = parse(rules_text)
     summaries = []
     heading = ''
     is_dominosa = False
+    is_mirror = False
     for state in states:
         if state.style == 'Heading2':
             is_dominosa = 'Dominosa' in state.text
+            is_mirror = 'Mirror' in state.text
         if state.style == Styles.Diagram and heading.startswith('Problem'):
             if is_dominosa:
                 summary = check_dominosa(state, heading)
+            elif is_mirror:
+                summary = check_mirror(state, heading)
             else:
                 summary = check_other(state, heading)
             summaries.append(summary)
@@ -72,6 +77,19 @@ def check_dominosa(state, heading):
     fitness_calculator.calculate(problem)
     print(n_text + '.', fitness_calculator.format_details())
     return n_text + '. ' + fitness_calculator.format_summaries()
+
+
+def check_mirror(state, heading):
+    n = heading.split(' ')[-1]
+    if n == '13':
+        size_limit = 1_000_000
+    else:
+        size_limit = 20_000
+    fitness_calculator = MirrorFitnessCalculator(size_limit=size_limit)
+    problem = MirrorProblem(dict(start=state.text, max_pips=6))
+    fitness_calculator.calculate(problem)
+    print(n + '.', fitness_calculator.format_details())
+    return n + '. ' + fitness_calculator.format_summaries()
 
 
 def check_other(state, heading):

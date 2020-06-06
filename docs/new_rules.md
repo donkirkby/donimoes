@@ -143,6 +143,66 @@ solutions are listed at the end.
     
     0|5 2|4 1|5
 
+#### Problem 10
+Designed by hand.
+
+    0 0 5 5 4 4 1
+    - - - - - - -
+    5 6 6 1 1 3 6
+    
+    5|3 3|6 6 2|6
+            -
+    2|4 4|4 6 0|2
+    
+    5|5 2|5 6 1|0
+            -
+    1|2 0|4 4 3|1
+
+#### Problem 11
+    5 6 0|5 1|4 5
+    - -         -
+    1 3 3 0|6 5 3
+        -     -
+    1 6 2 2|4 5 3
+    - -         -
+    1 1 6 3 3|4 0
+        - -
+    4|6 2 3 0|0 5
+                -
+    0|4 2|2 6|5 2
+
+#### Problem 12
+    1|4 4|6 6|6 1|3
+    
+    4 3|4 1|5 0 6|1
+    -         -
+    2 0|4 6|0 0 5 6
+                - -
+    2 2|6 5|5 4 3 5
+    -         -
+    2 0|3 3|6 4 1|1
+    
+    2|5 3|3 0|5 2 1
+                - -
+    4|5 1|2 2|3 0 0
+
+#### Problem 13
+Hand tweaked version of Problem 12
+
+    1|4 4|6 6|6 1|3
+    
+    4 3|4 1|5 4 6|1
+    -         -
+    2 0|0 6|3 5 5|6
+    
+    2|2 2|6 5|5 4|4
+    
+    2|3 3|0 0|4 2 0
+                - -
+    2|5 3|3 5|0 0 1
+    
+    5|3 0|6 1|2 1|1
+
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.
 
@@ -252,6 +312,23 @@ Here are the Mirror Donimoes solutions:
 
 1. NR, NU, NDU, BL, RU, RL
 2. NDL, RDL, PDU, BDD, PD, RU, RDL, RDL, NU, NDR, NDR, PDD
+3. NR, NR, PD, PD, PR, NU, RL, BD, BD, BL
+4. PDL, BDU, RDU, NU, NU, NU, PDR, RU, RL, RL, BD, BL, BL
+5. RDR, NR, NR, NDR, PD, PR, PR, PDU, PR, NR, NU, PR, NU, NDR, RL, ND, NDR, NL,
+    NU, NDR, BDD, ND, NDR, BDD, RU, RDU, NDL, PDR, NDL
+6. BDU, PR, BD, BL, BL, BL, BDU, PR, PDD, PD, PD, PL, BD, BD, BD, PL, NDL, PD,
+    NDR, PR, NR, RL, PR, NR
+7. NR, PR, RU, RU, RDR, BD, BD, BDL, BL, BU, BL, BD, BD, BDD, BD, NR, BDU, NU,
+    BU, RL, RL, NU, BU, RU, NL, BU
+8. PDU, NR, NR, NDD, PD, PR, PD, PR, NU, BL, RL, RL, RU, RDL, RU, RR, RU, RDU,
+    RU, BL, BDD, BD, RD, BL, RD, BD, RL
+9. BDU, NU, NR, NR, PD, PR, PR, NR, NU, NL, RL, RU, RDR, RU, RDR, NDR, RDR, NDR,
+    NU, NDR, PDR, NDR, PDR, NDR, PDR, BD, RL, NL
+10. NR, PR, PD, PR, PU, PR, PD, PR, PU, PR, RL, BD, BD, BDR, PDD, BL, BD, BL,
+    BDR, BD, BL, PDD, BDR, BD, PDD, RDR, PDD, RL, RDD, PL, RDU, BL, RU, BL, PL,
+    BDD, RL, BU, PL, RL, BL
+11. NDL, NR, NU, NDL, NR, PD, PD, PD, PR, PDD, PDD, NR, PDU, NR, PU, ND, PR, BD,
+    BD, BD, ND, PD, NR, PD, RU, RDD, RL, RL, BDD, BL, BL
 
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the

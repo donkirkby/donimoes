@@ -21,7 +21,7 @@ class MirrorGraph(BoardGraph):
             if self.last is None:
                 self.last = '0|0\n---\n1'
             yield 'SOLVED', self.last
-            return
+            raise GraphLimitExceeded(len(self.graph))
         marker_area = board.marker_area
         if self.min_marker_area is None or marker_area < self.min_marker_area:
             self.min_marker_area = marker_area
@@ -133,12 +133,18 @@ class MirrorGraph(BoardGraph):
 
     def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
         if not board.markers and len(board.dominoes) > 1:
-            board.markers[(0, 0)] = 'N'
-            board.markers[(board.width-1, 0)] = 'R'
-            board.markers[(0, board.height-1)] = 'P'
-            board.markers[(board.width-1, board.height-1)] = 'B'
+            marker_names = 'NRPB'
+            board.markers[(0, 0)] = marker_names[0]
+            board.markers[(board.width-1, 0)] = marker_names[1]
+            board.markers[(0, board.height-1)] = marker_names[2]
+            board.markers[(board.width-1, board.height-1)] = marker_names[3]
 
-        return super().walk(board, size_limit)
+        try:
+            return super().walk(board, size_limit)
+        except GraphLimitExceeded as ex:
+            if size_limit is not None and ex.limit >= size_limit:
+                raise
+            return set(self.graph.nodes())
 
 
 class MirrorProblem(Individual):
@@ -164,9 +170,22 @@ class MirrorProblem(Individual):
         return dict(start=board.display(), max_pips=max_pips)
 
 
-class FitnessCalculator:
-    def __init__(self, target_length=None):
+class MirrorFitnessCalculator:
+    def __init__(self, target_length=None, size_limit=10_000):
         self.target_length = target_length
+        self.size_limit = size_limit
+        self.details = []
+        self.summaries = []
+
+    def format_summaries(self):
+        display = '\n'.join(self.summaries)
+        self.summaries.clear()
+        return display
+
+    def format_details(self):
+        display = '\n\n'.join(self.details)
+        self.details.clear()
+        return display
 
     def calculate(self, problem):
         """ Calculate fitness score based on the solution length.
@@ -184,12 +203,13 @@ class FitnessCalculator:
         graph = MirrorGraph()
         fitness = 0
         try:
-            graph.walk(board, size_limit=10_000)
+            graph.walk(board, size_limit=self.size_limit)
         except GraphLimitExceeded:
             pass
         if graph.last is None:
             fitness -= 100_000
             fitness -= graph.min_marker_area
+            self.summaries.append('unsolved')
         else:
             solution_nodes = graph.get_solution_nodes()
             solution_moves = graph.get_solution(solution_nodes=solution_nodes)
@@ -204,15 +224,22 @@ class FitnessCalculator:
             average_choices = graph.get_average_choices(solution_nodes)
             fitness -= max_choices*10
             fitness -= average_choices
+            self.summaries.append(', '.join(solution_moves))
+            self.details.append(
+                f'{board.width}x{board.height}: {len(solution_moves)} moves, '
+                f'max {max_choices}, avg {average_choices}, '
+                f'{len(graph.graph)} states')
 
         value['fitness'] = fitness
+
         return fitness
 
 
 def main():
-    max_pips = 5
-    fitness_calculator = FitnessCalculator(target_length=50)
-    init_params = dict(max_pips=max_pips, width=max_pips+1, height=max_pips)
+    max_pips = 6
+    fitness_calculator = MirrorFitnessCalculator(target_length=50,
+                                                 size_limit=250_000)
+    init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
     evo = Evolution(
         pool_size=100,
         fitness=fitness_calculator.calculate,

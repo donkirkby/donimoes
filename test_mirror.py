@@ -224,7 +224,7 @@ N 1 R
 ---
 N0R0P1B0
 '''
-    expected_solution = ['PR', 'NDU']
+    expected_solution = ['PR', 'PD']
     board = Board.create(start_state)
     graph = MirrorGraph()
 
@@ -241,7 +241,7 @@ def test_walk_adds_markers():
 - - -
 0 1 0
 '''
-    expected_solution = ['PR', 'NDU']
+    expected_solution = ['PR', 'PD']
     board = Board.create(start_state)
     graph = MirrorGraph()
 
@@ -278,8 +278,6 @@ N|2 1|3 R|4
 2|P 2|4 2|5
 ---
 P3N1R1B2
----
-1
 ''')
     expected_heuristic = 4
     graph = MirrorGraph()
