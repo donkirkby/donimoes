@@ -251,7 +251,7 @@ def test_walk_adds_markers():
     assert solution == expected_solution
 
 
-def test_walk_sets_smallest_area():
+def test_walk_sets_min_heuristic():
     start_state = '''\
 1 1 0 2 2
 - - - - -
@@ -266,7 +266,7 @@ def test_walk_sets_smallest_area():
         pass
 
     assert graph.last is None
-    assert graph.min_marker_area == 5
+    assert graph.min_heuristic == 2
 
 
 def test_calculate_heuristic():

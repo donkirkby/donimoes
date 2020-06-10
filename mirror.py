@@ -14,7 +14,7 @@ def get_cell_marker(cell: Cell) -> str:
 class MirrorGraph(BoardGraph):
     def __init__(self, board_class=Board):
         super().__init__(board_class)
-        self.min_marker_area = None
+        self.min_heuristic = None
 
     def generate_moves(self, board: Board):
         if board.are_markers_connected:
@@ -22,9 +22,6 @@ class MirrorGraph(BoardGraph):
                 self.last = '0|0\n---\n1'
             yield 'SOLVED', self.last
             raise GraphLimitExceeded(len(self.graph))
-        marker_area = board.marker_area
-        if self.min_marker_area is None or marker_area < self.min_marker_area:
-            self.min_marker_area = marker_area
         for domino in board.dominoes[:]:
             dx, dy = domino.direction
             yield from self.try_move_domino(domino, dx, dy)
@@ -124,6 +121,8 @@ class MirrorGraph(BoardGraph):
 
         # Not all pieces have to get all the way to the centre.
         total_moves -= min(total_moves, marker_count)
+        if self.min_heuristic is None or total_moves < self.min_heuristic:
+            self.min_heuristic = total_moves
         return total_moves
 
     def get_solution(self, return_partial=False, solution_nodes=None):
@@ -176,6 +175,7 @@ class MirrorFitnessCalculator:
         self.size_limit = size_limit
         self.details = []
         self.summaries = []
+        self.is_debugging = False
 
     def format_summaries(self):
         display = '\n'.join(self.summaries)
@@ -201,6 +201,7 @@ class MirrorFitnessCalculator:
             return fitness
         board = Board.create(value['start'], max_pips=value['max_pips'])
         graph = MirrorGraph()
+        graph.is_debugging = self.is_debugging
         fitness = 0
         try:
             graph.walk(board, size_limit=self.size_limit)
@@ -208,7 +209,7 @@ class MirrorFitnessCalculator:
             pass
         if graph.last is None:
             fitness -= 100_000
-            fitness -= graph.min_marker_area
+            fitness -= graph.min_heuristic
             self.summaries.append('unsolved')
         else:
             solution_nodes = graph.get_solution_nodes()
