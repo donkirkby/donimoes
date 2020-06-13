@@ -1,6 +1,5 @@
 from functools import partial
 import math
-from turtle import done, Turtle
 
 from domino_puzzle import Board, CaptureBoardGraph, Domino, Cell
 
@@ -39,14 +38,13 @@ OOO|
 
 
 def draw_pips(turtle, pips, cell_size=DEFAULT_CELL_SIZE):
-    turtle.fillcolor('black')
     pip_pattern = PIP_PATTERNS.splitlines()[pips*4+1:pips*4+4]
     pip_radius = cell_size*0.09
     turtle.up()
     pos = turtle.pos()
     turtle.back(pip_radius*5)
     turtle.left(90)
-    turtle.forward(pip_radius*5)
+    turtle.forward(pip_radius*4)
     turtle.right(90)
     for i in range(3):
         turtle.forward(pip_radius*2)
@@ -55,11 +53,7 @@ def draw_pips(turtle, pips, cell_size=DEFAULT_CELL_SIZE):
         turtle.left(90)
         for j in range(3):
             if pip_pattern[i][j] == 'O':
-                turtle.down()
-                turtle.begin_fill()
-                turtle.circle(-pip_radius)
-                turtle.end_fill()
-                turtle.up()
+                turtle.dot(pip_radius*2)
             turtle.forward(pip_radius*3)
         turtle.back(pip_radius*11)
         turtle.right(90)
@@ -69,10 +63,14 @@ def draw_pips(turtle, pips, cell_size=DEFAULT_CELL_SIZE):
 
 
 def draw_domino(turtle, domino, cell_size=DEFAULT_CELL_SIZE):
-    if domino.head.pips == '#':
-        draw_domino_outline(turtle, cell_size, fill='black', margin=0)
-        return
-    draw_domino_outline(turtle, cell_size)
+    start_fill = turtle.fillcolor()
+    try:
+        if domino.head.pips == '#':
+            draw_domino_outline(turtle, cell_size, fill='black', margin=0)
+            return
+        draw_domino_outline(turtle, cell_size)
+    finally:
+        turtle.fillcolor(start_fill)
 
     turtle.up()
     turtle.forward(cell_size * 0.5)
@@ -189,6 +187,8 @@ def draw_neighbour_path(turtle, cell, neighbour, cell_size):
 
 def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
     start_x, start_y = turtle.pos()
+    start_colour = turtle.color()
+    start_heading = turtle.heading()
     for y in range(board.height):
         for x in range(board.width):
             cell = board[x][y]
@@ -211,7 +211,24 @@ def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
         turtle.left(domino.degrees)
         draw_domino(turtle, domino, cell_size)
         turtle.right(domino.degrees)
+    for (x, y), marker in board.markers.items():
+        turtle.setheading(start_heading+90)
+        turtle.setpos(start_x + x*cell_size, start_y + y*cell_size)
+        turtle.color(start_colour)
+        turtle.dot(0.75*cell_size)
+        turtle.back(0.05*cell_size)
+        turtle.color('white')
+        turtle.write(marker,
+                     align='center',
+                     font=('Arial', 0.20*cell_size, 'normal'))
+        turtle.back(0.10*cell_size)
+        cell = board[x][y]
+        domino = cell.domino
+        turtle.setheading(domino.degrees)
+        draw_pips(turtle, cell.pips, int(0.30*cell_size))
+    turtle.color(start_colour)
     turtle.setpos((start_x, start_y))
+    turtle.setheading(start_heading)
 
 
 def draw_arrow(turtle, cell_size, rotation=0):
@@ -390,7 +407,8 @@ def draw_diagram(turtle,
              '+': partial(draw_cross, turtle, cell_size, 0),
              '*': partial(draw_cross, turtle, cell_size, 45)}
     pos = turtle.pos()
-    lines = state.splitlines()
+    sections = state.split('\n---\n')
+    lines = sections[0].splitlines()
     turtle.up()
     turtle.forward(cell_size*0.5)
     turtle.right(90)
@@ -400,6 +418,7 @@ def draw_diagram(turtle,
     board = Board.create(state)
     draw_board(turtle, board, cell_size)
     turtle.up()
+    turtle.pencolor('white')
     for y, line in enumerate(reversed(lines)):
         for x, c in enumerate(line):
             if (x+y) % 2:
@@ -538,17 +557,3 @@ def draw_demo(turtle):
     else:
         draw_fuji(turtle, 8, cell_size)
         draw_diagram(turtle, demo_state, cell_size, solution=False)
-
-
-if __name__ in ('__main__', '__live_coding__'):
-    t = Turtle()
-    try:
-        t.screen.tracer(0)
-    except AttributeError:
-        pass
-    draw_demo(t)
-    try:
-        t.screen.update()
-    except AttributeError:
-        pass
-    done()

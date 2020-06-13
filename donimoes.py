@@ -45,7 +45,8 @@ class Diagram:
         self.page_height = page_height
         self.board_state = board_state
         self.show_path = show_path
-        lines = board_state.splitlines(True)
+        sections = board_state.split('\n---\n')
+        lines = sections[0].splitlines(True)
         self.row_count = (len(lines) + 1)/2
         self.col_count = max(map(len, lines))/2
         self.cell_size = self.page_width / Diagram.MAX_COLUMN_COUNT

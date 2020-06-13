@@ -1,5 +1,5 @@
 from diagram import draw_pips, draw_domino, draw_cell, draw_board, draw_paths, \
-    draw_diagram, draw_fuji, draw_domino_outline
+    draw_diagram, draw_fuji, draw_domino_outline, draw_arrow
 from domino_puzzle import Domino, Cell, Board
 from svg_diagram import SvgDiagram
 
@@ -12,14 +12,7 @@ def test_draw_one_pip(drawing_differ):
     actual = SvgDiagram()
 
     t = expected.turtle
-    t.up()
-    t.left(90)
-    t.forward(9)
-    t.right(90)
-    t.down()
-    t.begin_fill()
-    t.circle(-9.0)
-    t.end_fill()
+    t.dot(18)
 
     draw_pips(actual.turtle, 1)
 
@@ -196,6 +189,7 @@ def test_draw_arrow(drawing_differ):
     t.forward(30)
     t.left(90)
     t.down()
+    t.pencolor('white')
     t.begin_fill()
     t.forward(5)
     t.right(90)
@@ -232,6 +226,7 @@ def test_draw_cross(drawing_differ):
     t.left(90)
     t.back(5)
     t.down()
+    t.pencolor('white')
     t.begin_fill()
     for _ in range(4):
         t.forward(10)
@@ -245,6 +240,81 @@ def test_draw_cross(drawing_differ):
     draw_diagram(actual.turtle, "1+2")
 
     drawing_differ.assert_equal(actual, expected, 'draw_cross')
+
+
+# noinspection DuplicatedCode
+def test_draw_marker(drawing_differ):
+    state = """\
+1|P
+---
+P2
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(50, -50)
+    draw_domino(t, Domino(1, 2))
+    t.forward(100)
+    t.left(90)
+    t.down()
+    t.dot(75)
+    t.color('black')
+
+    t.up()
+    t.back(5)
+    t.color('white')
+    t.write('P', align='center', font=('Arial', 20, 'normal'))
+    t.fillcolor('white')
+    t.back(10)
+    t.right(90)
+    draw_pips(t, 2, 30)
+    t.forward(25)
+
+    draw_diagram(actual.turtle, state)
+
+    drawing_differ.assert_equal(actual, expected, 'draw_marker')
+
+
+# noinspection DuplicatedCode
+def test_draw_marker_with_arrow(drawing_differ):
+    state = """\
+1>P
+---
+P2
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(50, -50)
+    draw_domino(t, Domino(1, 2))
+    t.forward(100)
+    t.left(90)
+    t.down()
+    t.dot(75)
+    t.color('black')
+
+    t.up()
+    t.back(5)
+    t.color('white')
+    t.write('P', align='center', font=('Arial', 20, 'normal'))
+    t.fillcolor('white')
+    t.back(10)
+    t.right(90)
+    draw_pips(t, 2, 30)
+    t.back(50)
+    t.left(90)
+    t.forward(15)
+    t.right(90)
+    t.fillcolor('black')
+    draw_arrow(t, 100)
+
+    draw_diagram(actual.turtle, state)
+
+    drawing_differ.assert_equal(actual, expected, 'draw_marker_with_arrow')
 
 
 def test_draw_fuji(drawing_differ):

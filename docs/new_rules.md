@@ -48,9 +48,56 @@ few restrictions.
 * Diagonal moves are not allowed.
 
 ### Example
+Here's a small problem to start with. First, set up the dominoes as shown in the
+starting position.
+
     1 0 2
     - - -
     1 2 1
+
+Then put a pawn on each corner. You can use four identical pawns, but for this
+example and the solutions at the end, we use a (P)awn, a (B)ishop, a k(N)ight,
+and a (R)ook, so you can keep track of which is which. The small white dots show
+you the number under the pawn.
+
+    P 0 B
+    - - -
+    N 2 R
+    ---
+    N1R1P1B2
+
+In this position, none of the numbers match their neighbours, so there are no
+mirrors for the pawns to move between dominoes. However, the 2 under the
+bishop could match the 2 in the middle, so the first move is to slide the
+bishop's domino down.
+
+    P 0 x
+    - -
+    N 2 B
+        v
+    x x R
+    ---
+    N1R1P1B2
+
+Now that there's a mirror to move through, the bishop can move to the left.
+
+    P 0 x
+    - -
+    N B 2
+        -
+    x x R
+    ---
+    N1R1P1B2
+
+The last move is to join the ghosts into a single, connected group, and there
+are two choices. We can just move the rook to the other end of its domino, or
+we can slide the rook's domino back up, and the rook comes along for the ride.
+
+    P 0 2
+    - - ^
+    N B R
+    ---
+    N1R1P1B2
 
 ### Problems
 Here are the starting positions for several Mirror Donimoes problems. The
@@ -251,17 +298,30 @@ Designed by hand.
     1|2 0|4 4 3|1
 
 #### Problem 21
-    5 6 0|5 1|4 5
-    - -         -
-    1 3 3 0|6 5 3
-        -     -
-    1 6 2 2|4 5 3
-    - -         -
-    1 1 6 3 3|4 0
+    5 3 3|6 0 5 3
+    - -     - - -
+    1 4 1|2 6 0 5
+    
+    1 6 4|2 5 6 2
+    - -     - - -
+    1 1 6 3 4 6 0
         - -
     4|6 2 3 0|0 5
                 -
     0|4 2|2 6|5 2
+
+#### Problem 22
+    6 0 4 3 3 5 1
+    - - - - - - -
+    3 2 4 4 2 2 5
+    
+    6|4 0 4 0|1 2
+        - -     -
+    6|2 5 5 1|4 4
+    
+    6 6 1 1 1 3|3
+    - - - - -
+    0 6 6 1 2 0|3
 
 #### Problem 23
     1|4 4|6 6|6 1|3
@@ -277,6 +337,21 @@ Designed by hand.
     2|5 1|2 3|3 0 1
     
     5|3 0|6 5|0 1|1
+
+#### Problem 24
+    0 1 4 3 1 2 4|6
+    - - - - - -
+    1 4 3 1 2 4 0|6
+    
+    0|3 2|5 5|5 5|1
+    
+    3|6 0|2 2|6 6|1
+    
+    6|5 6|6 0|4 3|3
+    
+    5 2 0|0 4|4 2|2
+    - -
+    3 3 1|1 0|5 5|4
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.

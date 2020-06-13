@@ -34,6 +34,9 @@ class SvgTurtle(TNavigator, TPen):
         self._path = None
         self._lines_to_draw = None
         self.screen = None
+
+        # Explicitly initiate some attributes from base classes to avoid warnings.
+        self._drawing = self._pencolor = self._pensize = self._fillcolor = None
         TNavigator.__init__(self)
         TPen.__init__(self)
         self.screen = self._Screen(drawing, width, height)
@@ -75,8 +78,25 @@ class SvgTurtle(TNavigator, TPen):
                                                stroke_width=pensize,
                                                stroke_linecap='round'))
 
+    def dot(self, size=None, *color):
+        x, y = self._convert_position(self._position)
+        if size is not None:
+            diameter = size
+        else:
+            pensize = self._pensize or 0
+            diameter = max(pensize+4, 2*pensize)
+        if len(color):
+            pencolor = self._colorstr(color)
+        else:
+            pencolor = self._pencolor or 0
+        self.screen.cv.add(self.screen.cv.circle((x, y),
+                                                 diameter/2,
+                                                 stroke=pencolor,
+                                                 fill=pencolor))
+
     def to_svg(self) -> str:
         self._path = None  # Cancel incomplete fill.
+        # noinspection PyUnresolvedReferences
         self._newLine()
         self._flush_lines()
         self._draw_stamps()
@@ -177,6 +197,7 @@ class SvgTurtle(TNavigator, TPen):
                                                style=style,
                                                fill=self._pencolor))
 
+    # noinspection PyMethodMayBeStatic
     def _colorstr(self, color):
         """Return color string corresponding to args.
 
