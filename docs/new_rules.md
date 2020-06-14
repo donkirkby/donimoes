@@ -104,13 +104,6 @@ Here are the starting positions for several Mirror Donimoes problems. The
 solutions are listed at the end.
 
 #### Problem 1
-    2 0 2|2
-    - -
-    0 3 1 1
-        - -
-    3|3 1 0
-
-#### Problem 1b
     1|2 0|2
     
     1 0 0 1
@@ -118,20 +111,18 @@ solutions are listed at the end.
     1 0 3 0
 
 #### Problem 2
+    0 1 2|3
+    - -
+    2 0 3 3
+        - -
+    1|3 0 3
+
+#### Problem 3
     3 0|2 1
     -     -
     3 2|3 1
     
     2|1 0|3
-
-#### Problem 3
-    4 3|3 3 0
-    -     - -
-    2 0|0 0 1
-    
-    2|2 3 2|1
-        -
-    1|4 4 0|2
 
 #### Problem 4
     1|4 3|1 2
@@ -179,8 +170,6 @@ solutions are listed at the end.
     1|4 2|2 3
 
 #### Problem 9
-Hand off between two ferries.
-
     0|0 1|2 1
             -
     1|3 3|3 0
@@ -199,37 +188,6 @@ Hand off between two ferries.
     0 0 1|2 1
 
 #### Problem 11
-    1|2 4|3 0
-            -
-    2|2 1|4 0
-    
-    2|4 0|2 3
-            -
-    0|1 4|4 2
-
-#### Problem 12
-    1|4 0|2 3
-            -
-    1 0|0 4 2
-    -     -
-    1 3|1 2 2
-            -
-    4|4 3|3 2
-
-#### Problem 13
-Tough one!
-
-    0|2 2|2 3
-            -
-    0|1 4|1 4
-    
-    1|2 1|3 2
-            -
-    0|3 4|2 3
-
-#### Problem 14
-The sea cucumber
-
     0|4 2|2 4
             -
     0 1 0|2 1
@@ -238,7 +196,7 @@ The sea cucumber
         - - -
     2|3 1 3 0
 
-#### Problem 15
+#### Problem 12
     2 3 5 0|0 5
     - - -     -
     0 0 0 4|3 1
@@ -249,7 +207,7 @@ The sea cucumber
     
     0|1 1|2 1|3
 
-#### Problem 16
+#### Problem 13
     5|5 1 1|2 3
         -     -
     1 1 5 0 4 2
@@ -260,18 +218,7 @@ The sea cucumber
     
     4|2 2|5 1|3
 
-#### Problem 17
-    4|4 0|3 0 2
-            - -
-    3|5 5 5 4 2
-        - -
-    1 2 5 2 2|4
-    - -
-    1 3 5 1|0 4
-        -     -
-    0|5 4 2|1 3
-
-#### Problem 18
+#### Problem 14
     4 2 4 2 5|5
     - - - -
     2 1 1 5 1|1
@@ -282,9 +229,7 @@ The sea cucumber
         -     -
     0|2 2 0|0 0
 
-#### Problem 20
-Designed by hand.
-
+#### Problem 15
     0 0 5 5 4 4 1
     - - - - - - -
     5 6 6 1 1 3 6
@@ -297,7 +242,7 @@ Designed by hand.
             -
     1|2 0|4 4 3|1
 
-#### Problem 21
+#### Problem 16
     5 3 3|6 0 5 3
     - -     - - -
     1 4 1|2 6 0 5
@@ -310,7 +255,7 @@ Designed by hand.
                 -
     0|4 2|2 6|5 2
 
-#### Problem 22
+#### Problem 17
     6 0 4 3 3 5 1
     - - - - - - -
     3 2 4 4 2 2 5
@@ -323,7 +268,7 @@ Designed by hand.
     - - - - -
     0 6 6 1 2 0|3
 
-#### Problem 23
+#### Problem 18
     1|4 4|6 6|6 1|3
     
     4 3|4 1|5 4 6|1
@@ -338,7 +283,7 @@ Designed by hand.
     
     5|3 0|6 5|0 1|1
 
-#### Problem 24
+#### Problem 19
     0 1 4 3 1 2 4|6
     - - - - - -
     1 4 3 1 2 4 0|6
@@ -460,28 +405,22 @@ each domino move has three letters.
 
 Here are the Mirror Donimoes solutions:
 
-1. PD, NR, RU, RL, NU, BL
-2. NDL, PD, BD, RDL, RU, PDU, RDL, RDL, NU, NDR, NDR, PDD
-3. PD, PD, BD, BD, PR, NR, NR, RL, BL, NU
+1. PD, BL, BD, BDD, BL, RL
+2. PD, BD, BL, BDD, BL, RL
+3. NDL, PD, BD, RDL, RU, PDU, RDL, RDL, NU, NDR, NDR, PDD
 4. PDL, PR, PD, BD, NR, NR, PD, PD, PR, NR, PR, RU, RDD, BDD
 5. BDR, NU, NR, PR, NU, RU, BL, BD, RL, BDR, RDU, RDU, RD, RDU, BDL, BL, BL, BDU
 6. PDL, BDU, RDU, PR, NR, RL, BD, RL, RU, RL, RDU, RDU, PR, PDD, BL, PDD, BDL, BL
 7. NDD, PDD, PR, BL, BL, BDL, BDL, PDU, PDU, BR, BDD, BDD, PR, PD, NU, NR, NR, RL
 8. NR, NU, RU, RL, NDL, RDL, RU, PDU, RDL, RDL, NL, NU, NDR, NDR, PDD, PR, PR, BL
 9. RDD, PR, RU, RL, RL, BD, RU, RR, RDR, RDR, BD, BDL, BDL, NU, BD, RDR, NDR, RDR, NDR, BR, BU, NDL, RDL, NDL, RDL, NU, NR, RL
-10. RDD, NR, NU, NR, NDR, NDR, RU, NR, RU, RDL, RDL, RL, NDR, BD, NDR, BD, BDL, BDL, RD, BL, RL, BDD, NDL, BU, RDD, BDL, RU, NU, NL
-11. PR, PD, PDL, PD, BD, PR, BDU, RDU, RL, PDL, RDL, PDL, RDL, NU, NDR, PDR, NDR, RR, RDD, BDD, RU, PDR, RDD, NDR, PDR, NDR, PDR
-12. RDD, BDD, RU, RU, RDU, RDU, RL, BDD, BD, BDD, BL, BU, RDR, PDR, RDR, PDR, BU, PDL, RDL, PDL, PD, RDL, RL, RD, PD, BL, BD, RL
-13. NR, PD, PDL, PR, BD, PD, PR, BDU, RDU, RL, PDL, RDL, PDL, RDL, RL, NU, RDR, PDR, RDR, NR, NDD, BDD, NU, PDR, NDD, RDR, PDR, RDR, PDR
-14. NDL, RDD, BDD, NR, PD, PD, PR, PDD, PDD, PU, PR, PDD, PU, PL, PDD, NDR, BD, PR, PDU, RU, RL, RU, RDD, RR, RDD, RL, RU, BDD
-15. RDR, NR, NR, NDR, PD, PR, PR, PDU, PR, NR, NU, PR, NU, NDR, ND, NL, NDR, NU, RL, NDR, BDD, ND, NDR, BDD, RU, RDU, NDL, PDR, NDL
-16. BDU, PR, BD, BL, BL, BL, BDU, PR, PDD, PD, BD, PD, BD, PL, BD, PL, NDL, PD, NDR, PR, NR, RL, PR, NR
-17. NR, PR, RU, RU, RDR, BD, BD, BDL, BL, BU, BL, BD, BD, BD, BDD, NR, BDU, NU, BU, RL, RL, NU, BU, RU, NL, BU
-18. PDU, NR, NR, NDD, PD, PR, PD, PR, RL, RL, RU, RDL, NU, RU, BL, RR, RU, RDU, RU, BL, BDD, BD, RD, BL, RD, BD, RL
-19. NU, NR, NR, PD, PR, PR, NR, BD, RL, RU, RDR, RU, NU, RDR, NDR, NL, RDR, NDR, NU, BDU, NDR, PDR, RL, NDR, PDR, NL, NDR, PDR
-20. NR, PR, PD, PR, PU, PR, PD, PR, PU, PR, RL, BD, BD, BDR, PDD, BL, BD, BL, BDR, BD, BL, PDD, BDR, BD, PDD, RDR, PDD, RL, RDD, PL, RDU, BL, RU, BL, PL, BDD, RL, BU, PL, RL, BL
-21. NDL, RDD, NR, NU, NDL, NR, PD, PD, PD, PR, PDD, PDD, BD, BD, BD, NR, PDU, NR, ND, PU, PR, ND, PD, NR, PD, RU, RL, RL, BDD, BL, BL
-22. NR, NU, NL, NU, NU, RU, RU, NU, NU, PDL, NU, PDR, NR, PR, NR, PR, NR, PR, NR, PR, BDR, PDR, ND, PR, BL, BD, NDR, ND, BDL, PD, PDR, ND, PD, BDL
+10. RDD, NR, NU, NR, NDR, NDR, RU, NR, RU, RDL, RDL, RL, BD, NDR, NDR, BD, BDL, BDL, RD, BL, RL, BDD, NDL, BU, RDD, BDL, RU, NU, NL
+11. NDL, RDD, BDD, NR, PD, PD, PR, PDD, PDD, PU, PR, PDD, PU, PL, PDD, NDR, BD, PR, PDU, RU, RL, RU, RDD, RR, RDD, RL, RU, BDD
+12. RDR, NR, NR, NDR, PD, PR, PR, PDU, PR, NR, NU, PR, NU, NDR, ND, NL, NDR, NU, RL, NDR, BDD, ND, NDR, BDD, RU, RDU, NDL, PDR, NDL
+13. BDU, PR, BD, BL, BL, BL, BDU, PR, PDD, PD, BD, PD, BD, PL, BD, PL, NDL, PD, NDR, PR, NR, RL, PR, NR
+14. PDU, NR, NR, NDD, PD, PR, PD, PR, RL, RL, RU, RDL, NU, RU, BL, RR, RU, RDU, RU, BL, BDD, BD, RD, BL, RD, BD, RL
+15. NR, PR, PD, PR, PU, PR, PD, PR, PU, PR, RL, BD, BD, BDR, PDD, BL, BD, BL, BDR, BD, BL, PDD, BDR, BD, PDD, RDR, PDD, RL, RDD, PL, RDU, BL, RU, BL, PL, BDD, RL, BU, PL, RL, BL
+16. NDL, BDU, NR, NU, NDL, PD, PD, PD, PR, PDD, BD, BL, BDU, BD, BL, BDU, BD, BL, BL, BL, BDD, BD, BR, NR, BR, BU, BDR, BDR, BDR, BD, BD, PDD, NR, PDU, NR, ND, PU, PR, ND, PD, NR, PD, RU, RDD, RL, RL, BDD, BL, BL
 
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the

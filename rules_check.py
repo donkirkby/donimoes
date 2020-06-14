@@ -83,28 +83,22 @@ def check_mirror(state, heading):
     """ Check solution to a mirror problem.
 
     Current details:
-    1. 4x3: 6 moves, max 10, avg 8.0, 118 states
-    2. 4x3: 12 moves, max 9, avg 7.230769230769231, 1032 states
-    3. 5x4: 10 moves, max 10, avg 8.636363636363637, 621 states
+    1. 4x3: 6 moves, max 9, avg 6.571428571428571, 48 states
+    2. 4x3: 6 moves, max 9, avg 7.285714285714286, 72 states
+    3. 4x3: 12 moves, max 9, avg 7.230769230769231, 1032 states
     4. 5x4: 14 moves, max 10, avg 7.466666666666667, 1582 states
     5. 5x4: 18 moves, max 9, avg 7.578947368421052, 7461 states
     6. 5x4: 18 moves, max 10, avg 7.473684210526316, 3823 states
     7. 5x4: 18 moves, max 10, avg 8.210526315789474, 3933 states
     8. 5x4: 18 moves, max 11, avg 7.7368421052631575, 2513 states
     9. 5x4: 28 moves, max 11, avg 8.482758620689655, 23139 states
-    10. 5x4: 29 moves, max 11, avg 8.2, 45086 states
-    11. 5x4: 27 moves, max 10, avg 7.642857142857143, 11137 states
-    12. 5x4: 28 moves, max 11, avg 7.793103448275862, 21180 states
-    13. 5x4: 29 moves, max 11, avg 7.8, 6251 states
-    14. 5x4: 28 moves, max 10, avg 7.482758620689655, 15961 states
-    15. 6x5: 29 moves, max 10, avg 7.766666666666667, 8086 states
-    16. 6x5: 24 moves, max 9, avg 7.48, 7996 states
-    17. 6x5: 26 moves, max 10, avg 8.0, 7681 states
-    18. 6x5: 27 moves, max 10, avg 8.464285714285714, 8339 states
-    19. 6x5: 28 moves, max 10, avg 8.137931034482758, 8396 states
-    20. 7x6: 41 moves, max 11, avg 8.357142857142858, 109348 states
-    21. 7x6: 31 moves, max 11, avg 7.8125, 9576 states
-    22. 8x7: 34 moves, max 10, avg 8.228571428571428, 98814 states
+    10. 5x4: 29 moves, max 10, avg 8.0, 25404 states
+    11. 5x4: 28 moves, max 10, avg 7.482758620689655, 15961 states
+    12. 6x5: 29 moves, max 10, avg 7.766666666666667, 8086 states
+    13. 6x5: 24 moves, max 9, avg 7.48, 7996 states
+    14. 6x5: 27 moves, max 10, avg 8.464285714285714, 8339 states
+    15. 7x6: 41 moves, max 11, avg 8.357142857142858, 109348 states
+    16. 7x6: 49 moves, max 10, avg 7.38, 96395 states
     """
     n = heading.split(' ')[-1]
     size_limit = 1_000_000

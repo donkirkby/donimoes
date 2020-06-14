@@ -237,10 +237,10 @@ class MirrorFitnessCalculator:
 
 
 def main():
-    max_pips = 6
-    fitness_calculator = MirrorFitnessCalculator(target_length=50,
-                                                 size_limit=250_000)
-    init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
+    max_pips = 3
+    fitness_calculator = MirrorFitnessCalculator(target_length=8,
+                                                 size_limit=10_000)
+    init_params = dict(max_pips=max_pips, width=max_pips+1, height=max_pips)
     evo = Evolution(
         pool_size=100,
         fitness=fitness_calculator.calculate,
