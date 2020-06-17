@@ -99,6 +99,10 @@ def check_mirror(state, heading):
     14. 6x5: 27 moves, max 10, avg 8.464285714285714, 8339 states
     15. 7x6: 41 moves, max 11, avg 8.357142857142858, 109348 states
     16. 7x6: 49 moves, max 10, avg 7.38, 96395 states
+    17. 7x6: 95 moves
+    18. 8x7: 84 moves
+    19. 8x7: 92 moves
+    20. 8x7: 393 moves
     """
     n = heading.split(' ')[-1]
     size_limit = 1_000_000

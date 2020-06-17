@@ -269,6 +269,21 @@ solutions are listed at the end.
     0 6 6 1 2 0|3
 
 #### Problem 18
+    1 0 4 1 4 4|2 2
+    - - - - -     -
+    1 5 4 4 0 3|6 5
+    
+    3|1 0 4 3|3 6|5
+        - -
+    0|0 1 6 0|3 5|5
+    
+    3|5 5|1 6|2 2|2
+    
+    5 3 3 1 6 6 6 2
+    - - - - - - - -
+    4 4 2 2 6 1 0 0
+
+#### Problem 19
     1|4 4|6 6|6 1|3
     
     4 3|4 1|5 4 6|1
@@ -283,20 +298,22 @@ solutions are listed at the end.
     
     5|3 0|6 5|0 1|1
 
-#### Problem 19
-    0 1 4 3 1 2 4|6
-    - - - - - -
-    1 4 3 1 2 4 0|6
+#### Problem 20
+    2|5 4 3 2|2 1|1
+        - -
+    4|6 0 0 6 0 3|6
+            - -
+    6 2 0 0 5 0 6|1
+    - - - -
+    6 3 5 6 4 2 2|1
+            - -
+    5|5 5|4 4 4 4|3
     
-    0|3 2|5 5|5 5|1
+    3|1 1|0 0|2 2|6
     
-    3|6 0|2 2|6 6|1
-    
-    6|5 6|6 0|4 3|3
-    
-    5 2 0|0 4|4 2|2
-    - -
-    3 3 1|1 0|5 5|4
+    3|3 3|5 5|1 1|4
+
+You'll need patience for this one. Did I go too far?
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.
@@ -403,6 +420,8 @@ each domino move has three letters.
 * For a domino move, the second letter is "D" for (D)omino.
 * The last letter shows the direction: (L)eft, (R)ight, (U)p, or (D)own.
 
+For the small example given in the rules, the solution is BDD, BL, RDU.
+
 Here are the Mirror Donimoes solutions:
 
 1. PD, BL, BD, BDD, BL, RL
@@ -413,15 +432,65 @@ Here are the Mirror Donimoes solutions:
 6. PDL, BDU, RDU, PR, NR, RL, BD, RL, RU, RL, RDU, RDU, PR, PDD, BL, PDD, BDL, BL
 7. NDD, PDD, PR, BL, BL, BDL, BDL, PDU, PDU, BR, BDD, BDD, PR, PD, NU, NR, NR, RL
 8. NR, NU, RU, RL, NDL, RDL, RU, PDU, RDL, RDL, NL, NU, NDR, NDR, PDD, PR, PR, BL
-9. RDD, PR, RU, RL, RL, BD, RU, RR, RDR, RDR, BD, BDL, BDL, NU, BD, RDR, NDR, RDR, NDR, BR, BU, NDL, RDL, NDL, RDL, NU, NR, RL
-10. RDD, NR, NU, NR, NDR, NDR, RU, NR, RU, RDL, RDL, RL, BD, NDR, NDR, BD, BDL, BDL, RD, BL, RL, BDD, NDL, BU, RDD, BDL, RU, NU, NL
-11. NDL, RDD, BDD, NR, PD, PD, PR, PDD, PDD, PU, PR, PDD, PU, PL, PDD, NDR, BD, PR, PDU, RU, RL, RU, RDD, RR, RDD, RL, RU, BDD
-12. RDR, NR, NR, NDR, PD, PR, PR, PDU, PR, NR, NU, PR, NU, NDR, ND, NL, NDR, NU, RL, NDR, BDD, ND, NDR, BDD, RU, RDU, NDL, PDR, NDL
-13. BDU, PR, BD, BL, BL, BL, BDU, PR, PDD, PD, BD, PD, BD, PL, BD, PL, NDL, PD, NDR, PR, NR, RL, PR, NR
-14. PDU, NR, NR, NDD, PD, PR, PD, PR, RL, RL, RU, RDL, NU, RU, BL, RR, RU, RDU, RU, BL, BDD, BD, RD, BL, RD, BD, RL
-15. NR, PR, PD, PR, PU, PR, PD, PR, PU, PR, RL, BD, BD, BDR, PDD, BL, BD, BL, BDR, BD, BL, PDD, BDR, BD, PDD, RDR, PDD, RL, RDD, PL, RDU, BL, RU, BL, PL, BDD, RL, BU, PL, RL, BL
-16. NDL, BDU, NR, NU, NDL, PD, PD, PD, PR, PDD, BD, BL, BDU, BD, BL, BDU, BD, BL, BL, BL, BDD, BD, BR, NR, BR, BU, BDR, BDR, BDR, BD, BD, PDD, NR, PDU, NR, ND, PU, PR, ND, PD, NR, PD, RU, RDD, RL, RL, BDD, BL, BL
-
+9. RDD, PR, RU, RL, RL, BD, RU, RR, RDR, RDR, BD, BDL, BDL, NU, BD, RDR, NDR,
+    RDR, NDR, BR, BU, NDL, RDL, NDL, RDL, NU, NR, RL
+10. RDD, NR, NU, NR, NDR, NDR, RU, NR, RU, RDL, RDL, RL, BD, NDR, NDR, BD, BDL,
+    BDL, RD, BL, RL, BDD, NDL, BU, RDD, BDL, RU, NU, NL
+11. NDL, RDD, BDD, NR, PD, PD, PR, PDD, PDD, PU, PR, PDD, PU, PL, PDD, NDR, BD,
+    PR, PDU, RU, RL, RU, RDD, RR, RDD, RL, RU, BDD
+12. RDR, NR, NR, NDR, PD, PR, PR, PDU, PR, NR, NU, PR, NU, NDR, ND, NL, NDR, NU,
+    RL, NDR, BDD, ND, NDR, BDD, RU, RDU, NDL, PDR, NDL
+13. BDU, PR, BD, BL, BL, BL, BDU, PR, PDD, PD, BD, PD, BD, PL, BD, PL, NDL, PD,
+    NDR, PR, NR, RL, PR, NR
+14. PDU, NR, NR, NDD, PD, PR, PD, PR, RL, RL, RU, RDL, NU, RU, BL, RR, RU, RDU,
+    RU, BL, BDD, BD, RD, BL, RD, BD, RL
+15. NR, PR, PD, PR, PU, PR, PD, PR, PU, PR, RL, BD, BD, BDR, PDD, BL, BD, BL,
+    BDR, BD, BL, PDD, BDR, BD, PDD, RDR, PDD, RL, RDD, PL, RDU, BL, RU, BL, PL,
+    BDD, RL, BU, PL, RL, BL
+16. NDL, BDU, NR, NU, NDL, PD, PD, PD, PR, PDD, BD, BL, BDU, BD, BL, BDU, BD,
+    BL, BL, BL, BDD, BD, BR, NR, BR, BU, BDR, BDR, BDR, BD, BD, PDD, NR, PDU,
+    NR, ND, PU, PR, ND, PD, NR, PD, RU, RDD, RL, RL, BDD, BL, BL
+17. NU, NR, NDD, NR, NDD, NU, NR, NU, NR, NU, NL, NDD, NU, NR, NU, RL, RU, RDL,
+    RR, RD, NL, NU, NL, ND, NL, NDD, NU, NR, NDD, NU, NR, NDD, RDL, RU, RDL, RR,
+    RD, RDL, RU, RDL, RR, RD, RDL, RL, RL, RU, RU, RU, NDU, NR, NDU, NDU, NU,
+    NR, NR, NU, BDU, BD, NDU, NL, NL, NU, NL, ND, ND, BL, BD, BL, BU, BL, BD,
+    BDU, BL, BDU, BDU, ND, NL, NDU, NDU, NU, NL, ND, RDL, NDD, ND, NDL, RD, RDR,
+    NU, NU, RR, RU, RDU, RDU, BD
+18. RU, RU, RDR, RL, RD, RD, RL, RU, RL, RL, RU, RDR, RR, RR, RD, RD, RL, RU,
+    RL, RL, RDU, BD, BD, BD, BDR, BL, BU, BL, BU, BL, BD, BD, BDR, RDU, RL, NR,
+    NU, NR, ND, NR, NU, NU, NL, NL, NDL, ND, ND, NR, NU, NR, ND, NR, NU, NU,
+    NDL, RDD, RR, RDD, RU, RL, RDU, RU, RU, RL, RDU, NU, NDU, NL, NL, NDL, PD,
+    PD, NDR, PR, PU, NR, NR, NDD, RDD, RR, RD, RD, BDL, BL
+19. PDL, PR, PD, PD, PD, PD, PD, PDL, NU, PDR, PU, PU, PR, PR, NL, NU, NU, NDL
+    PDL, PL, PD, PR, PR, PR, NR, ND, NR, NDL, PDL, NR, NDR, PR, NDL, PDL, NL,
+    NL, NU, NR, NU, NU, NU, NL, PL, PL, PL, PL, PU, PR, PU, PU, PU, NDR, PR, PR,
+    PR, PR, NR, NR, NR, NR, BDR, NDR, PD, PR, NR, ND, NDR, ND, NNL, NL, ND, NDL,
+    PL, PDL, BL, BD, PDR, PD, PL, PL, PU, PDD, NR, PDD, PR, PR, NU, NR, BL, BD,
+    RU, RU
+20. NU, NR, NR, NR, NR, NR, NR, RL, RL, RL, RL, RL, RL, RL, RU, RR, RR, RR, RR,
+    NDR, RDR, NL, RDL, RL, RL, NDR, RDR, NL, NL, RDL, RL, RL, NDR, RDR, RD, RR,
+    RR, RR, RR, RR, NL, NL, NL, ND, NR, NR, NR, RDR, RDR, NDR, NDR, RL, NDL,
+    NDL, NL, NL, RDR, RDR, NDR, NDR, NDR, RL, NDL, NDL, NL, NL, RDR, RDR, NDR,
+    NDR, RL, RL, NDL, NDL, NL, NL, RDR, RDR, NDR, NDR, RL, RL, NDL, NU, NR, NR,
+    NR, NR, NR, NR, RL, RU, RR, RR, RR, RR, NDR, NDR, RDR, RDR, NL, RDL, RDL,
+    RL, RL, NDR, NDR, RDR, RDR, NL, NL, RDL, RDL, RL, RL, NDR, NDR, RDR, RD,
+    RDR, RL, RU, RDR, RD, RR, RR, RR, RR, RR, NL, NL, NL, ND, NR, NR, NR, RDR,
+    RDR, NDR, NDR, RL, NDL, NDL, NL, NL, RDR, RDR, NDL, NDL, RL, RL, NDL, NDL,
+    NL, NL, RDR, RDR, NDR, NDR, RL, RL, NDL, NU, NR, NR, NR, NR, NR, NR, RL, RU,
+    RR, RR, RR, RR, NDR, NDR, RDR, RDR, NL, RDL, RDL, RL, RL, NDR, NDR, RDR,
+    RDR, NL, NL, RDL, RDL, RL, RL, NDR, NDR, RDR, RD, RDR, RL, RU, RDR, RD, RR,
+    RR, RR, RR, RR, NL, NL, NL, ND, NR, NR, NR, RDR, NDR, RL, NDL, NL, NL, RDR,
+    NDR, RL, RL, NDL, NL, NL, RDR, NDR, NU, NR, NR, NR, NR, NR, NR, RL, RL, RL,
+    RU, RR, RR, RR, RR, NDR, RDR, NL, RDL, RL, RL, NDR, RDR, NL, NL, RDL, RL,
+    RL, NDR, RDR, RD, RR, RR, RR, RR, RR, NL, NL, NL, ND, NR, NR, NR, RDR, NDR,
+    RL, NDL, NL, NL, RDR, NDR, RL, RL, NDL, NL, NL, RDR, NDR, NU, NR, NR, NR,
+    NR, NR, NR, RL, RL, RL, RU, RR, RR, RR, RR, NDR, RDR, NL, RDL, RL, RL, NDR,
+    RDR, NL, NL, RDL, RL, RL, NDR, RDR, RU, RL, RL, RL, RL, RL, RU, RU, NL, NL,
+    NL, NU, NL, NL, NL, NL, NL, NU, NU, RDU, NDU, NR, ND, RD, RR, RDU, RDU, NDU,
+    NDU, NL, ND, RD, RL, RDU, RDU, NDU, NDU, PR, PR, PDD, PDD, PDD, RDD, RDD,
+    RDD, PD, PR, PR, PR, PU, PR, PR, PU, PL, ND, ND, NR, NR, NR, NU, NR, NR, NU,
+    PDR, PU, NL, RD, RD, RD, RL, RL, RL, RU, RR, RR!
+    
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Adding moves contain the domino
