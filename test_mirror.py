@@ -1,5 +1,5 @@
 from domino_puzzle import Board, GraphLimitExceeded
-from mirror import MirrorGraph
+from mirror import MirrorGraph, MirrorProblem, MirrorFitnessCalculator
 
 
 def test_generate_moves():
@@ -15,7 +15,7 @@ B1P2
     board = Board.create(start_state, border=1)
     graph = MirrorGraph()
     expected_moves = {
-        ('PDR', '''\
+        ('PdR', '''\
 0|0 1|2 x
 
 B|1 x 0|P
@@ -24,7 +24,7 @@ B|1 x 0|P
 ---
 B1P2
 ''', None, 2),
-        ('BDL', '''\
+        ('BdL', '''\
 x 0|0 1|2
 
 B|1 x 0|P
@@ -77,7 +77,7 @@ P6N2
     board = Board.create(start_state, border=1)
     graph = MirrorGraph()
     expected_moves = {
-        ('NDR', '''\
+        ('NdR', '''\
 1|N x x
 
 3|4 5|P
@@ -117,7 +117,7 @@ N2B1P2
     board = Board.create(start_state, border=1)
     graph = MirrorGraph()
     expected_moves = {
-        ('PDR', '''\
+        ('PdR', '''\
 0|0 1|0 x
 
 B|1 x 0|P
@@ -126,7 +126,7 @@ B|1 x 0|P
 ---
 N2B1P2
 ''', None, 4),
-        ('BDL', '''\
+        ('BdL', '''\
 x 0|0 1|0
 
 B|1 x 0|P
@@ -135,7 +135,7 @@ x 2|2 1|N
 ---
 N2B1P2
 ''', None, 5),
-        ('NDR', '''\
+        ('NdR', '''\
 0|0 1|0 x
 
 B|1 0|P x
@@ -190,7 +190,7 @@ P1R0B0
     board = Board.create(start_state, border=1)
     graph = MirrorGraph()
     expected_moves = {
-        ('RDU', '''\
+        ('RdU', '''\
 x x x B
       -
 2 0|1 R
@@ -285,3 +285,32 @@ P3N1R1B2
     heuristic = graph.calculate_heuristic(board)
 
     assert heuristic == expected_heuristic
+
+
+def test_fitness_calculator():
+    start_state = '''\
+1 1 0
+- - -
+0 1 0
+'''
+    problem = MirrorProblem(dict(start=start_state, max_pips=1))
+    calculator = MirrorFitnessCalculator()
+    calculator.calculate(problem)
+
+    summaries = calculator.format_summaries()
+    details = calculator.format_details()
+    assert summaries == 'PR, PD'
+    assert details == '3x2: 2 moves, max 9, avg 5.0, 15 states'
+
+
+def test_repeated_moves_in_summary():
+    start_state = '''\
+2|2 0 2
+    - -
+1|0 0 1
+'''
+    problem = MirrorProblem(dict(start=start_state, max_pips=2))
+    calculator = MirrorFitnessCalculator()
+    calculator.calculate(problem)
+
+    assert calculator.format_summaries() == 'PR, NR2, RdU, NdU'

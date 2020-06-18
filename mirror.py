@@ -1,5 +1,6 @@
 import random
 import typing
+from itertools import groupby
 from sys import maxsize
 
 from domino_puzzle import Board, BadPositionError, Domino, BoardGraph, Cell, GraphLimitExceeded
@@ -87,7 +88,7 @@ class MirrorGraph(BoardGraph):
             raise BadPositionError('Cannot move a domino with no markers on it.')
         board: Board = domino.head.board
         direction_name = domino.describe_direction(dx, dy).upper()
-        move = f'{marker}D{direction_name}'
+        move = f'{marker}d{direction_name}'
         original_markers = board.markers.copy()
         try:
             if head_marker:
@@ -173,6 +174,17 @@ class MirrorProblem(Individual):
         return dict(start=board.display(), max_pips=max_pips)
 
 
+def group_moves(solution_moves):
+    terms = []
+    for move, repeats in groupby(solution_moves):
+        repeat_count = sum(1 for _ in repeats)
+        if repeat_count > 1:
+            move += str(repeat_count)
+        terms.append(move)
+    summary = ', '.join(terms)
+    return summary
+
+
 class MirrorFitnessCalculator:
     def __init__(self, target_length=None, size_limit=10_000):
         self.target_length = target_length
@@ -229,7 +241,8 @@ class MirrorFitnessCalculator:
             average_choices = graph.get_average_choices(solution_nodes)
             fitness -= max_choices*10
             fitness -= average_choices
-            self.summaries.append(', '.join(solution_moves))
+            summary = group_moves(solution_moves)
+            self.summaries.append(summary)
             self.details.append(
                 f'{board.width}x{board.height}: {len(solution_moves)} moves, '
                 f'max {max_choices}, avg {average_choices}, '

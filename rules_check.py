@@ -105,6 +105,8 @@ def check_mirror(state, heading):
     20. 8x7: 393 moves
     """
     n = heading.split(' ')[-1]
+    if int(n) >= 17:
+        return ''
     size_limit = 1_000_000
     fitness_calculator = MirrorFitnessCalculator(size_limit=size_limit)
     problem = MirrorProblem(dict(start=state.text, max_pips=6))
