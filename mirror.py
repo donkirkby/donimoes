@@ -11,6 +11,14 @@ def get_cell_marker(cell: Cell) -> str:
     return board.markers.get((cell.x, cell.y))
 
 
+def add_start_markers(board):
+    marker_names = 'NRPB'
+    board.markers[(0, 0)] = marker_names[0]
+    board.markers[(board.width - 1, 0)] = marker_names[1]
+    board.markers[(0, board.height - 1)] = marker_names[2]
+    board.markers[(board.width - 1, board.height - 1)] = marker_names[3]
+
+
 class MirrorGraph(BoardGraph):
     def __init__(self, board_class=Board):
         super().__init__(board_class)
@@ -132,11 +140,7 @@ class MirrorGraph(BoardGraph):
 
     def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
         if not board.markers and len(board.dominoes) > 1:
-            marker_names = 'NRPB'
-            board.markers[(0, 0)] = marker_names[0]
-            board.markers[(board.width-1, 0)] = marker_names[1]
-            board.markers[(0, board.height-1)] = marker_names[2]
-            board.markers[(board.width-1, board.height-1)] = marker_names[3]
+            add_start_markers(board)
 
         try:
             return super().walk(board, size_limit)

@@ -450,7 +450,7 @@ Here are the Mirror Donimoes solutions:
 16. NDL, BDU, NR, NU, NDL, PD, PD, PD, PR, PDD, BD, BL, BDU, BD, BL, BDU, BD,
     BL, BL, BL, BDD, BD, BR, NR, BR, BU, BDR, BDR, BDR, BD, BD, PDD, NR, PDU,
     NR, ND, PU, PR, ND, PD, NR, PD, RU, RDD, RL, RL, BDD, BL, BL
-17. NU, NR, NDD, NR, NDD, NU, NR, NU, NR, NU, NL, NDD, NU, NR, NU, RL, RU, RDL,
+17. NU, NR, NDD, NR, NDD, NU, NR, NU, NR, NDD, NL, NDD, NU, NR, NDD, RDL, RU, RDL,
     RR, RD, NL, NU, NL, ND, NL, NDD, NU, NR, NDD, NU, NR, NDD, RDL, RU, RDL, RR,
     RD, RDL, RU, RDL, RR, RD, RDL, RL, RL, RU, RU, RU, NDU, NR, NDU, NDU, NU,
     NR, NR, NU, BDU, BD, NDU, NL, NL, NU, NL, ND, ND, BL, BD, BL, BU, BL, BD,
@@ -461,21 +461,21 @@ Here are the Mirror Donimoes solutions:
     NU, NR, ND, NR, NU, NU, NL, NL, NDL, ND, ND, NR, NU, NR, ND, NR, NU, NU,
     NDL, RDD, RR, RDD, RU, RL, RDU, RU, RU, RL, RDU, NU, NDU, NL, NL, NDL, PD,
     PD, NDR, PR, PU, NR, NR, NDD, RDD, RR, RD, RD, BDL, BL
-19. PDL, PR, PD, PD, PD, PD, PD, PDL, NU, PDR, PU, PU, PR, PR, NL, NU, NU, NDL
+19. PDL, PR, PD, PD, PD, PD, PD, PDL, NU, PDR, PU, PU, PR, PR, NL, NU, NU, NDL,
     PDL, PL, PD, PR, PR, PR, NR, ND, NR, NDL, PDL, NR, NDR, PR, NDL, PDL, NL,
     NL, NU, NR, NU, NU, NU, NL, PL, PL, PL, PL, PU, PR, PU, PU, PU, NDR, PR, PR,
-    PR, PR, NR, NR, NR, NR, BDR, NDR, PD, PR, NR, ND, NDR, ND, NNL, NL, ND, NDL,
-    PL, PDL, BL, BD, PDR, PD, PL, PL, PU, PDD, NR, PDD, PR, PR, NU, NR, BL, BD,
+    PR, PR, NR, NR, NR, NR, BDR, NDR, PD, PR, NR, ND, NDR, ND, NL, NL, ND, NDL,
+    PL, PDL, BL, BD, PDR, PD, PL, PL, PU, PDD, NR, NDD, PR, PR, NU, NR, BL, BD,
     RU, RU
 20. NU, NR, NR, NR, NR, NR, NR, RL, RL, RL, RL, RL, RL, RL, RU, RR, RR, RR, RR,
     NDR, RDR, NL, RDL, RL, RL, NDR, RDR, NL, NL, RDL, RL, RL, NDR, RDR, RD, RR,
     RR, RR, RR, RR, NL, NL, NL, ND, NR, NR, NR, RDR, RDR, NDR, NDR, RL, NDL,
-    NDL, NL, NL, RDR, RDR, NDR, NDR, NDR, RL, NDL, NDL, NL, NL, RDR, RDR, NDR,
-    NDR, RL, RL, NDL, NDL, NL, NL, RDR, RDR, NDR, NDR, RL, RL, NDL, NU, NR, NR,
+    NDL, NL, NL, RDR, RDR, NDR, NDR, RL, RL, NDL, NDL, NL, NL, RDR, RDR, NDR,
+    NDR, RL, RL, NDL, NU, NR, NR,
     NR, NR, NR, NR, RL, RU, RR, RR, RR, RR, NDR, NDR, RDR, RDR, NL, RDL, RDL,
     RL, RL, NDR, NDR, RDR, RDR, NL, NL, RDL, RDL, RL, RL, NDR, NDR, RDR, RD,
     RDR, RL, RU, RDR, RD, RR, RR, RR, RR, RR, NL, NL, NL, ND, NR, NR, NR, RDR,
-    RDR, NDR, NDR, RL, NDL, NDL, NL, NL, RDR, RDR, NDL, NDL, RL, RL, NDL, NDL,
+    RDR, NDR, NDR, RL, NDL, NDL, NL, NL, RDR, RDR, NDR, NDR, RL, RL, NDL, NDL,
     NL, NL, RDR, RDR, NDR, NDR, RL, RL, NDL, NU, NR, NR, NR, NR, NR, NR, RL, RU,
     RR, RR, RR, RR, NDR, NDR, RDR, RDR, NL, RDL, RDL, RL, RL, NDR, NDR, RDR,
     RDR, NL, NL, RDL, RDL, RL, RL, NDR, NDR, RDR, RD, RDR, RL, RU, RDR, RD, RR,
@@ -485,11 +485,11 @@ Here are the Mirror Donimoes solutions:
     RL, NDR, RDR, RD, RR, RR, RR, RR, RR, NL, NL, NL, ND, NR, NR, NR, RDR, NDR,
     RL, NDL, NL, NL, RDR, NDR, RL, RL, NDL, NL, NL, RDR, NDR, NU, NR, NR, NR,
     NR, NR, NR, RL, RL, RL, RU, RR, RR, RR, RR, NDR, RDR, NL, RDL, RL, RL, NDR,
-    RDR, NL, NL, RDL, RL, RL, NDR, RDR, RU, RL, RL, RL, RL, RL, RU, RU, NL, NL,
+    RDR, NL, NL, RDL, RL, RL, NDR, RDR, RU, RL, RL, RL, RL, RL, RU, RU, RU, NL, NL,
     NL, NU, NL, NL, NL, NL, NL, NU, NU, RDU, NDU, NR, ND, RD, RR, RDU, RDU, NDU,
     NDU, NL, ND, RD, RL, RDU, RDU, NDU, NDU, PR, PR, PDD, PDD, PDD, RDD, RDD,
     RDD, PD, PR, PR, PR, PU, PR, PR, PU, PL, ND, ND, NR, NR, NR, NU, NR, NR, NU,
-    PDR, PU, NL, RD, RD, RD, RL, RL, RL, RU, RR, RR!
+    PDR, PU, NL, RD, RD, RD, RR, RR, RR, RU, RR, RR!
     
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the
