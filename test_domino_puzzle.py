@@ -1,11 +1,8 @@
 import unittest
 
-from unittest.mock import patch
 from networkx.exception import NetworkXNoPath
 
-from domino_puzzle import Domino, Cell, Board, BoardError, BoardGraph,\
-    CaptureBoardGraph
-from random import Random
+from domino_puzzle import Domino, Cell, Board, BoardGraph, CaptureBoardGraph
 
 
 class DummyRandom(object):

@@ -1,9 +1,14 @@
 from networkx import DiGraph
 
+from diagram import draw_diagram
 from dominosa import DominosaBoard, PairState, DominosaGraph, DominosaProblem, \
     generate_moves_from_unique_pairs, generate_moves_from_single_neighbours, \
     generate_moves_from_newly_joined, generate_moves_from_newly_split, \
     generate_moves_from_duplicate_neighbours, FitnessCalculator, strip_solution
+from svg_diagram import SvgDiagram
+
+# noinspection PyUnresolvedReferences
+from diagram_differ import drawing_differ
 
 
 def test_rule6_unique_pairs_vertical():
@@ -443,3 +448,74 @@ def test_strip_solution():
     stripped = strip_solution(solution)
 
     assert stripped == expected_stripped
+
+
+# noinspection DuplicatedCode
+def test_draw_vertical_split(drawing_differ):
+    state_without_split = """\
+0 0 1
+
+1 1 0
+"""
+    state_with_split = """\
+0 0S1
+
+1 1 0
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(-125, 100)
+    draw_diagram(t, state_without_split)
+    t.forward(200)
+    t.right(90)
+    t.forward(15)
+    t.down()
+    t.pencolor('black')
+    t.pensize(5)
+    t.forward(70)
+
+    t = actual.turtle
+    t.up()
+    t.goto(-125, 100)
+    draw_diagram(t, state_with_split, board_class=DominosaBoard)
+
+    drawing_differ.assert_equal(actual, expected, 'draw_split_vertical')
+
+
+# noinspection DuplicatedCode
+def test_draw_horizontal_split(drawing_differ):
+    state_without_split = """\
+0 0 1
+
+1 1 0
+"""
+    state_with_split = """\
+0 0 1
+  ~
+1 1 0
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(-125, 100)
+    draw_diagram(t, state_without_split)
+    t.right(90)
+    t.forward(100)
+    t.left(90)
+    t.forward(115)
+    t.down()
+    t.pencolor('black')
+    t.pensize(5)
+    t.forward(70)
+
+    t = actual.turtle
+    t.up()
+    t.goto(-125, 100)
+    draw_diagram(t, state_with_split, board_class=DominosaBoard)
+
+    drawing_differ.assert_equal(actual, expected, 'draw_split_horizontal')

@@ -12,7 +12,8 @@ from reportlab.lib.units import inch
 from reportlab.rl_config import defaultPageSize
 
 from diagram import draw_diagram, draw_fuji
-from domino_puzzle import BoardError
+from domino_puzzle import Board
+from dominosa import DominosaBoard
 from footer import FooterCanvas
 from book_parser import parse, Styles
 from svg_diagram import SvgDiagram
@@ -40,11 +41,17 @@ def parse_args():
 class Diagram:
     MAX_COLUMN_COUNT = 14
 
-    def __init__(self, page_width, page_height, board_state, show_path=False):
+    def __init__(self,
+                 page_width,
+                 page_height,
+                 board_state,
+                 show_path=False,
+                 board_class=Board):
         self.page_width = page_width
         self.page_height = page_height
         self.board_state = board_state
         self.show_path = show_path
+        self.board_class = board_class
         sections = board_state.split('\n---\n')
         lines = sections[0].splitlines(True)
         self.row_count = (len(lines) + 1)/2
@@ -75,8 +82,9 @@ class Diagram:
             draw_diagram(t,
                          self.board_state,
                          self.cell_size,
-                         show_path=self.show_path)
-        except BoardError:
+                         show_path=self.show_path,
+                         board_class=self.board_class)
+        except Exception:
             print(self.board_state)
             raise
 
@@ -140,6 +148,11 @@ def main():
                 flowable = FujisanDiagram(doc.width,
                                           doc.height,
                                           state.text).build()
+            elif 'Dominosa' in headings:
+                flowable = Diagram(doc.width,
+                                   doc.height,
+                                   state.text,
+                                   board_class=DominosaBoard).build()
             else:
                 if 'Mountains and Valleys' in headings:
                     diagram_width = (len(state.text.splitlines()[0]) + 1)//2

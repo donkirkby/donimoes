@@ -1544,9 +1544,53 @@ in your hand.
 
 ## Dominosa
 The domino puzzle I most often see in books or online is called either Dominosa
-or Domino Solitaire. Given a grid of numbers, you have to lay out the dominoes
-so they match the numbers, without duplicated or missing dominoes. Dominosa was
-invented by O.S. Adler in 1874. I took a long time to add this puzzle to the
+or Domino Solitaire. It was invented by O.S. Adler in 1874, and each problem
+starts with a grid of numbers, you have to lay out the dominoes so they match
+the numbers, without duplicated or missing dominoes.
+
+### Example
+Here's a small problem to start with.
+
+    0 0 1
+    
+    1 1 0
+
+Every problem uses a complete set of dominoes up to the highest number you see.
+In this small problem, the highest number is one, so there are three dominoes:
+
+    0 x 0 x 1
+    -   -   -
+    0 x 1 x 1
+
+When you start solving, most dominoes will usually have more than one place they
+could go. For example, the blank/one domino could go in a few different places,
+including these three:
+
+    0 0 1 x 0 0|1 x 0 0 1
+    -                 -
+    1 1 0 x 1 1 0 x 1 1 0
+
+However, some of the dominoes will only have one possible place, like the double
+blank:
+
+    0|0 1
+    
+    1 1 0
+
+Once you've placed a domino, check to see if it forces any other dominoes. In
+this case, the top right corner only has one space it can connect to:
+
+    0|0 1
+        -
+    1 1 0
+
+That makes the final domino obvious, and the solution looks like this:
+
+    0|0 1
+        -
+    1|1 0
+
+I took a long time to add this puzzle to the
 collection, because I found it tedious to keep searching for unique numbers.
 After some research, though, I learned that people have found many other
 techniques for solving that aren't as tedious. Try to work out your own
@@ -1806,35 +1850,116 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
 ### Dominosa Strategy
 There are several methods to deduce where the dominoes must be placed, and it's
 helpful to write notes on the puzzle. Often, you can tell where a domino can't
-be before you know where it must be. Here are some rules to help you make
-progress:
+be before you know where it must be. The following are some rules to help you
+make progress. The easiest puzzles in this collection only require a couple of
+these rules, and then the later puzzles require more and more different rules to
+solve.
 
-1. Look for a number that only has one neighbour, and join it with its
-    neighbour. Particularly check near the last pair you joined.
-2. If you have a newly joined pair of numbers, check if the same pair appears
-    elsewhere. Split the other location, because you can't have two dominoes
-    the same. Also check all of the other neighbours that the newly joined pair
-    might have joined with. Those pairs of numbers might now be unique.
-3. If you have a newly split pair of numbers, look for the same pair elsewhere
-    on the board to see if there is only one pair like them. If so, join them.
-4. If all of a space's available neighbours are the same, you know it will join
-    one of them. Look for the same pair of numbers elsewhere on the board, and
-    mark them as split.
-5. If a pair of numbers appears more than once on the board, but all of the
-    pairs share one space, then you know that space must join to the other
-    number. Mark any other available neighbours as split.
-6. Look for unique pairs of numbers, and mark them as joined. (This is the
-    tedious part, so I try to only require it a few times in each puzzle.)
-7. If two unsolved areas are joined by a narrow neck, you know that both areas
-    must have an even number of spaces in them. That will tell you where you can
-    split or join the spaces in the neck.
-8. If none of the other rules apply, guess at a domino's placement by marking a
-    pair as joined.  If it later causes a contradiction, backtrack and mark it
-    split. (This would be very frustrating when solving, so none of the problems
-    in this collection require it.)
+In each section below are two diagrams. The one on the left shows a puzzle in
+progress where some of the dominoes have been placed using some combination of
+rules, and the diagram on the right shows the next step that uses that section's
+rule.
 
-The easiest puzzles in this collection only require a couple of these rules, and
-then the later puzzles require more and more different rules to solve.
+#### Rule 1: One Neighbour
+    0|0 1 x 0|0 1
+                -
+    1 1 0 x 1 1 0
+
+Look for a number that only has one neighbour, and join it with its neighbour.
+Particularly check near the last pair you joined. In this example, the top right
+corner only has one neighbour.
+
+#### Rule 2: Newly Joined
+    2|1 0 2 x 2|1 0 2
+                    ~
+    0|0 2 1 x 0|0 2S1
+    
+    1 1 2 0 x 1 1S2 0
+
+If you have a newly joined pair of numbers, check if the same pair appears
+elsewhere. Split the other locations, because you can't have two dominoes
+the same. Also check all of the other neighbours that the newly joined pair
+might have joined with, and treat those pairs as newly split. In this
+example, the two/one domino in the top left corner has just been joined based
+on rule 1. That means that the two and one in the top right corner cannot be
+joined, along with a few other two and one pairs. The easiest way to remember
+that is to draw the boundary between the dominoes there. Fill in the gap between
+the two grey lines.
+
+#### Rule 3: Newly Split
+    1 1 1 2 x 1 1 1 2
+    
+    1 0|0 2 x 1 0|0 2
+              -
+    0 2 2 0 x 0 2 2 0
+
+If you have a newly split pair of numbers, look for the same pair elsewhere
+on the board to see if there is only one pair like them. If so, join them. In
+this example, the double blank domino has just been joined, because there's only
+one position for it. After that, you can treat all of its neighbours as newly
+split. Several of the neighbours form one/blank pairs, so look to see if there
+is only one pair like that left. In fact, the only one/blank pair left is in the
+bottom left corner, so you can join them.
+
+#### Rule 4: Duplicate Neighbours
+    0 2 1 2 x 0 2S1 2
+    
+    0 2 0 1 x 0 2 0 1
+                ~
+    0 1 2 1 x 0 1S2S1
+
+If all of a space's available neighbours are the same, you know it will join
+one of them and use up the domino with those two numbers. Look for the same pair
+of numbers elsewhere on the board, and mark them as split. In this example, the
+top right corner is a two with a one on either side of it. You know that the
+two/one domino is going to go in that corner, either vertically or horizontally.
+Therefore, you can split the two and one in the bottom right corner, as well as
+several other two/one pairs.
+
+#### Rule 5: Shared Space
+    0 1 0 2 x 0 1 0 2
+                ~
+    2 2 2 1 x 2 2 2 1
+                ~
+    1 0 0 1 x 1 0 0 1
+
+If a pair of numbers appears more than once on the board, but all of the pairs
+share one space, then you know that space must join to the other number. Mark
+any other available neighbours as split. In this example, the double two domino
+must be in the group of three twos in the middle row. The two possible positions
+both use the middle two, so you know it won't join to the blank below or the one
+above, and you can mark those as split.
+
+#### Rule 6: Unique Pairs
+    0 0 1 x 0|0 1
+    
+    1 1 0 x 1 1 0
+
+Look for unique pairs of numbers, and mark them as joined. (This is the tedious
+part, so I try to only require it a few times in each problem.) In this example,
+the only place with two blanks next to each other is in the top left corner, so
+you can join them. All problems will start solving with this rule or rule 4, but
+once you've started solving, it's faster to try the other rules before this one.
+
+#### Rule 7: Neck
+    0 3 1 1 3 x 0 3 1 1 3
+    
+    2 2 1 0|0 x 2 2 1 0|0
+                    ~
+    3|3 2 2 2 x 3|3 2 2 2
+    
+    0 1 0 1 3 x 0 1 0 1 3
+
+If two unsolved areas are joined by a narrow neck, you know that both areas must
+have an even number of spaces in them. That will tell you where you can split or
+join the spaces in the neck. In this example, the unsolved areas at the top and
+bottom both have eight spaces in them, so the centre must be split.
+
+#### Rule 8: Guess
+If none of the other rules apply, guess at a domino's placement by marking a
+pair as joined.  If it later causes a contradiction, backtrack and mark it
+split. (This would be very frustrating when solving, so none of the problems in
+this collection require it.)
 
 # Solutions
 ## Unmatched Donimoes Solutions ##
@@ -2308,8 +2433,8 @@ over two other pieces, meaning that it moves five spaces in total.
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [donkirkby.github.com/donimoes][github].
 
-Capturing and Unmatched Donimoes, as well as Tetradominoes and Domino Finder are
-original puzzles and games designed by [Don Kirkby][don].
+Unmatched, Capturing, and Mirror Donimoes, as well as Tetradominoes and Domino
+Finder are original puzzles and games designed by [Don Kirkby][don].
 
 [github]: https://donkirkby.github.io/donimoes
 [don]: https://donkirkby.github.io/

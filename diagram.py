@@ -2,6 +2,7 @@ from functools import partial
 import math
 
 from domino_puzzle import Board, CaptureBoardGraph, Domino, Cell
+from dominosa import PairState
 
 DEFAULT_CELL_SIZE = 100
 PIP_PATTERNS = """\
@@ -399,7 +400,8 @@ def draw_diagram(turtle,
                  state,
                  cell_size=DEFAULT_CELL_SIZE,
                  solution=False,
-                 show_path=False):
+                 show_path=False,
+                 board_class=Board):
     marks = {'>': partial(draw_arrow, turtle, cell_size),
              '^': partial(draw_arrow, turtle, cell_size, 90),
              '<': partial(draw_arrow, turtle, cell_size, 180),
@@ -415,7 +417,7 @@ def draw_diagram(turtle,
     turtle.forward(cell_size*len(lines)*0.5)
     turtle.left(90)
     origin = turtle.pos()
-    board = Board.create(state)
+    board = board_class.create(state)
     draw_board(turtle, board, cell_size)
     turtle.up()
     turtle.pencolor('white')
@@ -432,6 +434,7 @@ def draw_diagram(turtle,
         turtle.forward(cell_size*.5)
         turtle.right(90)
     turtle.setpos(pos)
+    draw_dominosa_hints(turtle, board, cell_size)
     if show_path:
         draw_paths(turtle, board, cell_size)
     if solution:
@@ -484,6 +487,59 @@ def draw_diagram(turtle,
             turtle.setpos(origin)
             draw_capture_circle(turtle, cell_size, offset, domino)
         turtle.setpos(pos)
+
+
+def draw_dominosa_hints(turtle, board, cell_size):
+    if not hasattr(board, 'get_pair_state'):
+        return
+    old_color = turtle.pencolor()
+    old_size = turtle.pensize()
+    turtle.pencolor('black')
+    turtle.pensize(cell_size*0.05)
+    turtle.up()
+
+    # Draw splits between cells in the same row.
+    for x in range(1, board.width):
+        turtle.forward(cell_size)
+        turtle.right(90)
+        for y in reversed(range(board.height)):
+            pair_state = board.get_pair_state(x-1, y, x, y)
+            if pair_state != PairState.SPLIT:
+                turtle.forward(cell_size)
+            else:
+                draw_split(turtle, cell_size)
+        turtle.back(cell_size*board.height)
+        turtle.left(90)
+    turtle.back(cell_size*(board.width-1))
+
+    # Draw splits between cells in the same column.
+    turtle.right(90)
+    for y in reversed(range(1, board.height)):
+        turtle.forward(cell_size)
+        turtle.left(90)
+        for x in range(board.width):
+            try:
+                pair_state = board.get_pair_state(x, y-1, x, y)
+            except KeyError:
+                pair_state = PairState.UNDECIDED
+            if pair_state != PairState.SPLIT:
+                turtle.forward(cell_size)
+            else:
+                draw_split(turtle, cell_size)
+        turtle.back(cell_size * board.width)
+        turtle.right(90)
+    turtle.back(cell_size*board.width)
+
+    turtle.pencolor(old_color)
+    turtle.pensize(old_size)
+
+
+def draw_split(turtle, cell_size):
+    turtle.forward(0.15 * cell_size)
+    turtle.down()
+    turtle.forward(0.7 * cell_size)
+    turtle.up()
+    turtle.forward(0.15 * cell_size)
 
 
 def draw_joined_block(turtle, width, height):
