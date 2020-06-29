@@ -1540,7 +1540,8 @@ Particularly in a two-player game, there is a painful rhythm where your opponent
 repeatedly scores and you can't. The key to breaking out of that rhythm is to be
 able to score on a scoring position. Usually, that means playing a domino with
 a difference of 5. Those dominoes are 61, 50, and 55, so they are useful to keep
-in your hand.
+in your hand. The double blank can also be played without changing the total, so
+it's useful to keep.
 
 ## Dominosa
 The domino puzzle I most often see in books or online is called either Dominosa
