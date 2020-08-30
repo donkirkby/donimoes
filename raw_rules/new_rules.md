@@ -21,15 +21,21 @@ in the same position relative to each other.
 
 For example, if this is the queue:
 
-![Diagram](images/diagram1.png)
+    2 3 5
+    - - -
+    1 5 1
 
 Then the start position is like this:
 
-![Diagram](images/diagram2.png)
+    2 3
+    - -
+    1 5
 
 Not like this:
 
-![Diagram](images/diagram3.png)
+    2 5
+    - -
+    1 3
 
 ### Moves
 There are only two ways a domino can move.
@@ -42,12 +48,20 @@ numbers can match the two ends of the domino, or both match one end.
 In this example, the 13 can be added, because it matches the 1 below and the 3
 below.
 
-![Diagram](images/diagram4.png)
+    1+3
+    
+    1 3
+    - -
+    5 5
 
 In this example, the 52 can be added, because it matches the 5 beside and the 5
 above. The 52 could also be added in the vertical position.
 
-![Diagram](images/diagram5.png)
+      3
+      -
+    1 5
+    -
+    5 5+2
 
 #### Sliding
 Move a domino one space along its long axis so that it ends up with at least
@@ -57,12 +71,22 @@ matches at least two of the adjacent numbers on neighbouring dominoes.
 In this example, the left domino can move down, because the 1 and the 5 add to
 six.
 
-![Diagram](images/diagram6.png)
+    1|3
+    
+      3
+      -
+    1 5
+    v
+    5
 
 The left domino can move back up, because the 1 matches the 1 above, and the 5
 matches the 5 to the right.
 
-![Diagram](images/diagram7.png)
+    1|3
+    
+    1 3
+    ^ -
+    5 5
 
 #### Stay Connected
 All the dominoes on the board must stay in one connected group, you can't split the group
@@ -73,7 +97,9 @@ Here are the starting positions for several Adding Donimoes problems. The
 solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/diagram8.png)
+    2 3 5 4 5 2
+    - - - - - -
+    1 5 1 5 5 4
 
 # Solutions
 ## Adding Donimoes Solutions

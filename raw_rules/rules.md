@@ -56,7 +56,9 @@ can move to the right, because the three doesn't match the two, and the four
 doesn't match the 3. You couldn't move it another space to the right, because
 then the threes would be right next to each other.
 
-![Diagram](images/diagram1.png)
+      2|3     2|3
+    
+    3|4       3>4
 
 ### Stay Connected
 All the dominoes in the puzzle have to be connected in one solid group, diagonal
@@ -69,64 +71,260 @@ Here are the starting positions for several Unmatched Donimoes problems. The
 solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/diagram2.png)
+      2    
+      -
+      3 1|2
+    
+    2|4    
 
 #### Problem 2
-![Diagram](images/diagram3.png)
+          4  
+          -
+    2|3 2 6  
+        -
+        4 0|2
 
 #### Problem 3
-![Diagram](images/diagram4.png)
+      3|0     5|3
+    
+        3 6 2|4  
+        - -
+    4|6 4 3      
 
 #### Problem 4
-![Diagram](images/diagram5.png)
+    0|4 0 5      
+        - -
+        5 4   2|0
+    
+          6|3 6|2
 
 #### Problem 5
-![Diagram](images/diagram6.png)
+            1  
+            -
+    0|4 3 5 4  
+        - -
+      6 4 3 5  
+      -     -
+      0     2  
+    
+      1     6|5
+      -
+      0        
 
 #### Problem 6
-![Diagram](images/diagram7.png)
+        0      
+        -
+    4|3 4      
+    
+      5     0|2
+      -
+      0   0|6  
+    
+      5 2|2 0  
+      -     -
+      1     0  
 
 #### Problem 7
-![Diagram](images/diagram8.png)
+    1           0|6
+    -
+    0     4   5|4
+          -
+    6     3 4|6
+    -
+    3 6|5 1
+          -
+          6
 
 #### Problem 8
-![Diagram](images/diagram9.png)
+          5     2
+          -     -
+          0 3|3 5
+    
+          3   5|4
+          -
+      4|6 4     2
+                -
+    2|2         0
 
 #### Problem 9
-![Diagram](images/diagram10.png)
+              0  
+              -
+    1|6 0|6   3  
+    
+        2|1   1  
+              -
+        6|2   3  
+    
+      6 2|4 0 1|1
+      -     -
+      4     4
 
 #### Problem 10
-![Diagram](images/diagram11.png)
+      5
+      -
+      4   6|3 6|0
+    
+    1|2     6   1|6
+            -
+      6 5|5 2 1
+      -       -
+      5 6|6   0
 
 #### Problem 11
-![Diagram](images/diagram12.png)
+        0 1|0 4|5 6|0
+        -
+        5   4|0 4|1  
+    
+        2|3     6|4  
+    
+    3|4 1|2 5|2   6  
+                  -
+                  5  
 
 #### Problem 12
-![Diagram](images/diagram13.png)
+      2|6 3 4|0
+          -
+      6   6    
+      -
+      1        
+    
+    0|0 3|0    
+    
+        5      
+        -
+        3 2    
+          -
+          5 3  
+            -
+            1 4
+              -
+              3
 
 #### Problem 13
-![Diagram](images/diagram14.png)
+      6         2
+      -         -
+      1 5|0 4|0 2
+    
+      2 0 2|0 6 1
+      - -     - -
+      3 1 3|1 3 1
+    
+    2|1     3|5
 
 #### Problem 14
-![Diagram](images/diagram15.png)
+                4  
+                -
+    3|1   4|6 4 1  
+              -
+      2 4     4 2|5
+      - -
+      3 2   4|0 5  
+                -
+      5 0|0 1|1 4  
+      -
+      6 5|5 3|3 6|3
 
 #### Problem 15
-![Diagram](images/diagram16.png)
+        6          
+        -
+    3|3 5   2|2 0|5
+    
+      4 2|1 5|5    
+      -
+      3       0 4|4
+              -
+      6   2|5 0 1  
+      -         -
+      6 4|5 3|5 1  
+    
+    4|0 3|2 1|3 6  
+                -
+                1  
 
 #### Problem 16
-![Diagram](images/diagram17.png)
+      4|2 4|6 5|0  
+    
+        1|2 5|6 5  
+                -
+      3 0|4 2|0 2  
+      -
+      2 1 3 6|3 5  
+        - -     -
+    5|5 3 4     3  
+    
+      6 2|6 3|3 4|5
+      -
+      6            
 
 #### Problem 17
-![Diagram](images/diagram18.png)
+      6            
+      -
+      4 1|1 5|1 6|6
+    
+    0|6 4|2     1  
+                -
+      0   0|0 1 0  
+      -       -
+      2   2|5 4 6  
+                -
+      4|5   3|5 1  
+    
+    4|0 6   6|2 3|3
+        -
+        5          
 
 #### Problem 18
-![Diagram](images/diagram19.png)
+    6|0   1|5 4|3
+    
+      4 2|5 2|6  
+      -
+      0 4 2|1 2  
+        -     -
+      4 6 0|0 2 5
+      -         -
+      2 0|5 4|1 3
+    
+    0|3 6|1 3|2 1
+                -
+                3
 
 #### Problem 19
-![Diagram](images/diagram20.png)
+                      4  
+                      -
+          1|0 6|2 6|0 3  
+    
+      6|4 0     5|2 5 4  
+          -         - -
+    4|5   5       1 5 0  
+                  -
+          6 0|3 4 5   6  
+          -     -     -
+          1 2|0 1 2|2 6  
+    
+          2|1 2|3   3 1|3
+                    -
+                    5    
 
 #### Problem 20
-![Diagram](images/diagram21.png)
+                    2  
+                    -
+    4|2 5|0 4|4 6|0 2  
+    
+      3   6|6 2|3   5|3
+      -
+      3 5 3|1 0 2|6    
+        -     -
+      5 1 4|3 0 1|2    
+      -
+      2 5 3|0 2|0 1    
+        -         -
+    5|5 4     6|3 6 4  
+                    -
+      1 0|1 6|5 6|4 0  
+      -
+      1             4  
+                    -
+                    1  
 
 ## Capturing Donimoes
 A puzzle I designed to feel like a safari in heavy traffic.
@@ -145,7 +343,9 @@ collect the domino you moved and any dominoes that match it, by removing them
 from the pattern. In this example, the threes match, so you collect both
 dominoes: solution found!
 
-![Diagram](images/diagram22.png)
+    2|3     2|3       2*3
+    
+    3|4       3>4       3*4
 
 #### Adding
 Move a domino one space along its long axis so that it ends up with at least
@@ -153,14 +353,24 @@ one of its numbers next to an adjacent number that adds up to six. With an
 adding move, no dominoes are removed. In this example, the two adds up with the
 four above it to make six.
 
-![Diagram](images/diagram23.png)
+    3|4     3|4
+    
+    2|1       2>1
 
 Sometimes, you can collect more than two dominoes at once. In the first
 example, the two matches twos on both of the other dominoes, and you collect
 all three dominoes. In the second example, the two matches the two to the left,
 and the four matches the four above it. You collect all three dominoes.
 
-![Diagram](images/diagram24.png)
+    5 2|4     5 2|4   5 2*4
+    -         -       *
+    2   2|6   2 2<6   2 2*6
+    
+    
+    
+    5 3|4     5 3|4   5 3*4
+    -         -       *
+    2   2|4   2 2<4   2 2*4
 
 #### Stay Connected
 All the dominoes must stay in one connected group, you can't split the group
@@ -171,64 +381,222 @@ Here are the starting positions for several Capturing Donimoes problems. The
 solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/diagram25.png)
+    2 1|4 1
+    -     -
+    3 2|5 0
 
 #### Problem 2
-![Diagram](images/diagram26.png)
+    1 0|5 3
+    -     -
+    2 5|3 6
+    
+    1|0 6|0
+
 
 #### Problem 3
-![Diagram](images/diagram27.png)
+    3|3 2|1
+    
+    1 6 0|2
+    - -
+    6 2 3 1
+        - -
+    4|5 4 5
 
 #### Problem 4
-![Diagram](images/diagram28.png)
+    0|3 4|6
+    
+    3 6 0|5
+    - -
+    3 2 3 0
+        - -
+    4|5 4 6
 
 #### Problem 5
-![Diagram](images/diagram29.png)
+    4 3|6 5|4
+    -
+    6 4 3 6 5
+      - - - -
+    2 4 3 6 5
+    -
+    0 2|6 0|6
 
 #### Problem 6
-![Diagram](images/diagram30.png)
+    3|4 6|4 6
+            -
+    4 6 1|6 0
+    - -
+    1 2 5|5 3
+            -
+    5|0 1|3 5
 
 #### Problem 7
-![Diagram](images/diagram31.png)
+    3|6 2|0 2
+            -
+    5 3 1|2 3
+    - -
+    3 1 4|3 6
+            -
+    5|5 6|6 1
 
 #### Problem 8
-![Diagram](images/diagram32.png)
+    0|2 0|0 2|6
+    
+    6 0|1 5 0 2
+    -     - - -
+    4 2|5 0 6 2
+    
+    2|4 6|5 3|0
 
 #### Problem 9
-![Diagram](images/diagram33.png)
+    2 3|5 6 5|4
+    -     -
+    3 2|2 5 0 3
+            - -
+    1|5 3 4 1 0
+        - -
+    4|3 6 0 4|4
 
 #### Problem 10
-![Diagram](images/diagram34.png)
+    2|5 3 6|4 1
+        -     -
+    6 2 0 5|6 5
+    - -
+    0 2 6|3 1 3
+            - -
+    4|1 0|2 0 3
+    
+    0|0 2|4 1|2
 
 #### Problem 11
-![Diagram](images/diagram35.png)
+    2|1 3|0 6|4
+    
+    1 0|1 4|2 3
+    -         -
+    6 2|3 6|0 3
+    
+    1|3 0|5 6|5
+    
+    0|0 5|1 4|3
 
 #### Problem 12
-![Diagram](images/diagram36.png)
+    5|3 1|2 4|2
+    
+    6 1|5 1 2|5
+    -     -
+    4 6|3 6 3|2
+    
+    2 1|4 3 2|0
+    -     -
+    2 3|3 0 5|4
 
 #### Problem 13
-![Diagram](images/diagram37.png)
+    4|4 6|5 2|4
+    
+    0 1|5 4|0 6
+    -         -
+    3 4 6|6 2 4
+      -     -
+    1 3 5|2 1 2
+    -         -
+    3 6|1 0|6 3
+    
+    6|3 0|1 5|0
 
 #### Problem 14
-![Diagram](images/diagram38.png)
+    2 1|2 5|2 0
+    -         -
+    2 3 1 2|6 1
+      - -
+    3 2 1 6 3|0
+    -     -
+    6 3|5 0 2|4
+    
+    3 4 6 4|6 5
+    - - -     -
+    4 5 6 5|5 0
 
 #### Problem 15
-![Diagram](images/diagram39.png)
+    0 2 1|3 1|2
+    - -
+    6 0 4|4 6|1
+    
+    0 5|5 3 2|4
+    -     -
+    5 3|0 3 4|5
+    
+    4 0|4 2|3 1
+    -         -
+    6 5|6 3|6 5
 
 #### Problem 16
-![Diagram](images/diagram40.png)
+    3|5 6|0 3|3 6
+                -
+    4 0|1 5|2 1 2
+    -         -
+    6 3 4|4 3 5 4
+      -     -   -
+    1 2 6|5 4 2 1
+    -         -
+    1 3|1 4|2 0 3
+                -
+    2|1 6|1 0|4 0
 
 #### Problem 17
-![Diagram](images/diagram41.png)
+    2 0|2 0|1 2|3 1
+    -             -
+    5 4|1 5|5 6|2 5
+    
+    3 0|5 6 2|4 1 0
+    -     -     - -
+    0 3|1 6 4|0 1 0
+    
+    5 6|0 1|6 1|2 4
+    -             -
+    4 5|6 2|2 4|6 4
 
 #### Problem 18
-![Diagram](images/diagram42.png)
+    0 1|0 2 5 3|2 3
+    -     - -     -
+    4 6|5 4 1 2|0 6
+    
+    0 5 2|6 4 5 4|1
+    - -     - -
+    3 4 5|5 4 0 2 6
+                - -
+    6 0|0 3|1 3 2 6
+    -         -
+    1 6|4 6|0 4 1|2
 
 #### Problem 19
-![Diagram](images/diagram43.png)
+    4|2 5|6 3|3 5|4
+    
+    6 3|4 5|5 6|4 0
+    -             -
+    6 1|5 3 1|1 0 1
+          -     -
+    2|3 2 5 6|3 6 0
+        -         -
+    1|2 6 2|2 1|3 0
+    
+    6 5|2 0|4 0|5 4
+    -             -
+    1 2|0 3|0 4|4 1
 
 #### Problem 20
-![Diagram](images/diagram44.png)
+    4|1 5|3 6 5|5 2
+            -     -
+    3|4 0 5 2 6|6 5
+        - -
+    4|2 5 4 6|5 2|2
+    
+    5|1 3 2|1 2|0 1
+        -         -
+    0 3 1 3|3 1|1 0
+    - -
+    3 2 6|1 6 0|0 4
+            -     -
+    6|0 4|6 3 4|4 0
+
 
 ## Mirror Donimoes
 Help four ghosts find each other in a haunted house. Each domino is a room in
@@ -271,95 +639,267 @@ few restrictions.
 Here's a small problem to start with. First, set up the dominoes as shown in the
 starting position.
 
-![Diagram](images/diagram45.png)
+    1 0 2
+    - - -
+    1 2 1
 
 Then put a pawn on each corner. You can use four identical pawns, but for this
 example and the solutions at the end, we use a regular (P)awn, a (B)ishop, a
 k(N)ight, and a (R)ook as four different types of pawn, so you can keep track of
 which is which. The small white dots show you the number under each pawn.
 
-![Diagram](images/diagram46.png)
+    P 0 B
+    - - -
+    N 2 R
+    ---
+    N1R1P1B2
 
 In this position, none of the numbers match their neighbours, so there are no
 mirrors for the pawns to move between dominoes. However, the 2 under the
 bishop could match the 2 in the middle, so the first move is to slide the
 bishop's domino down.
 
-![Diagram](images/diagram47.png)
+    P 0 x
+    - -
+    N 2 B
+        v
+    x x R
+    ---
+    N1R1P1B2
 
 Now that there's a mirror to move through, the bishop can move to the left.
 
-![Diagram](images/diagram48.png)
+    P 0 x
+    - -
+    N B 2
+        -
+    x x R
+    ---
+    N1R1P1B2
 
 The last move is to join the ghosts into a single, connected group, and there
 are two choices. We can just move the rook to the other end of its domino, or
 we can slide the rook's domino back up, and the rook comes along for the ride.
 
-![Diagram](images/diagram49.png)
+    P 0 2
+    - - ^
+    N B R
+    ---
+    N1R1P1B2
 
 ### Problems
 Here are the starting positions for several Mirror Donimoes problems. The
 solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/diagram50.png)
+    1|2 0|2
+    
+    1 0 0 1
+    - - - -
+    1 0 3 0
 
 #### Problem 2
-![Diagram](images/diagram51.png)
+    0 1 2|3
+    - -
+    2 0 3 3
+        - -
+    1|3 0 3
 
 #### Problem 3
-![Diagram](images/diagram52.png)
+    3 0|2 1
+    -     -
+    3 2|3 1
+    
+    2|1 0|3
 
 #### Problem 4
-![Diagram](images/diagram53.png)
+    1|4 3|1 2
+            -
+    4 2 0|3 1
+    - -
+    0 2 2|4 3
+            -
+    0|0 0|2 3
 
 #### Problem 5
-![Diagram](images/diagram54.png)
+    1|1 0 1|3
+        -
+    0 4 0 0|1
+    - -
+    4 4 2 3 3
+        - - -
+    4|2 0 3 2
 
 #### Problem 6
-![Diagram](images/diagram55.png)
+    3|3 2|2 3
+            -
+    4 4 4 0 2
+    - - - -
+    4 3 0 0 1
+            -
+    1|1 0|2 0
 
 #### Problem 7
-![Diagram](images/diagram56.png)
+    4 0|0 0|3
+    -
+    1 4 4|3 2
+      -     -
+    3 0 4|4 2
+    -
+    2 3|3 1|2
 
 #### Problem 8
-![Diagram](images/diagram57.png)
+    2 2|3 0|2
+    -
+    1 0|3 4|4
+    
+    0|4 1|3 3
+            -
+    1|4 2|2 3
 
 #### Problem 9
-![Diagram](images/diagram58.png)
+    0|0 1|2 1
+            -
+    1|3 3|3 0
+    
+    1|4 0|2 4
+            -
+    1|1 0|4 4
 
 #### Problem 10
-![Diagram](images/diagram59.png)
+    2|3 1|1 3
+            -
+    4|4 0|0 3
+    
+    1 3 3|4 3
+    - -     -
+    0 0 1|2 1
 
 #### Problem 11
-![Diagram](images/diagram60.png)
+    0|4 2|2 4
+            -
+    0 1 0|2 1
+    - -
+    0 0 1 3 3
+        - - -
+    2|3 1 3 0
 
 #### Problem 12
-![Diagram](images/diagram61.png)
+    2 3 5 0|0 5
+    - - -     -
+    0 0 0 4|3 1
+    
+    3|3 5|5 2|5
+    
+    3|5 2|4 2|2
+    
+    0|1 1|2 1|3
 
 #### Problem 13
-![Diagram](images/diagram62.png)
+    5|5 1 1|2 3
+        -     -
+    1 1 5 0 4 2
+    - -   - -
+    4 1 5 3 0 5
+        -     -
+    2|0 0 4|4 4
+    
+    4|2 2|5 1|3
 
 #### Problem 14
-![Diagram](images/diagram63.png)
+    4 2 4 2 5|5
+    - - - -
+    2 1 1 5 1|1
+    
+    4|5 0|5 4|4
+    
+    0|4 3 0|1 3
+        -     -
+    0|2 2 0|0 0
 
 #### Problem 15
-![Diagram](images/diagram64.png)
+    0 0 5 5 4 4 1
+    - - - - - - -
+    5 6 6 1 1 3 6
+    
+    5|3 3|6 6 2|6
+            -
+    2|4 4|4 6 0|2
+    
+    5|5 2|5 6 1|0
+            -
+    1|2 0|4 4 3|1
 
 #### Problem 16
-![Diagram](images/diagram65.png)
+    5 3 3|6 0 5 3
+    - -     - - -
+    1 4 1|2 6 0 5
+    
+    1 6 4|2 5 6 2
+    - -     - - -
+    1 1 6 3 4 6 0
+        - -
+    4|6 2 3 0|0 5
+                -
+    0|4 2|2 6|5 2
 
 #### Problem 17
-![Diagram](images/diagram66.png)
+    6 0 4 3 3 5 1
+    - - - - - - -
+    3 2 4 4 2 2 5
+    
+    6|4 0 4 0|1 2
+        - -     -
+    6|2 5 5 1|4 4
+    
+    6 6 1 1 1 3|3
+    - - - - -
+    0 6 6 1 2 0|3
 
 #### Problem 18
-![Diagram](images/diagram67.png)
+    1 0 4 1 4 4|2 2
+    - - - - -     -
+    1 5 4 4 0 3|6 5
+    
+    3|1 0 4 3|3 6|5
+        - -
+    0|0 1 6 0|3 5|5
+    
+    3|5 5|1 6|2 2|2
+    
+    5 3 3 1 6 6 6 2
+    - - - - - - - -
+    4 4 2 2 6 1 0 0
 
 #### Problem 19
-![Diagram](images/diagram68.png)
+    1|4 4|6 6|6 1|3
+    
+    4 3|4 1|5 4 6|1
+    -         -
+    2 0|0 6|3 5 5|6
+    
+    2|2 2|6 5|5 4|4
+    
+    2|3 3|0 0|4 2 0
+                - -
+    2|5 1|2 3|3 0 1
+    
+    5|3 0|6 5|0 1|1
 
 #### Problem 20
-![Diagram](images/diagram69.png)
+    2|5 4 3 2|2 1|1
+        - -
+    4|6 0 0 6 0 3|6
+            - -
+    6 2 0 0 5 0 6|1
+    - - - -
+    6 3 5 6 4 2 2|1
+            - -
+    5|5 5|4 4 4 4|3
+    
+    3|1 1|0 0|2 2|6
+    
+    3|3 3|5 5|1 1|4
 
 You'll need patience for this one. Did I go too far?
 
@@ -388,7 +928,15 @@ plain cardboard, and cut them out. Use a marker to colour one side of each
 shape. Each shape should be big enough fit on top of four domino numbers, with a
 small gap around the outside.
 
-![Diagram](images/diagram70.png)
+    #|#|#     #|#     #|#|#|#
+    -         -
+    #       #|#
+    
+                      #
+                      -
+    #       #|#     #|#   #|#
+    -         -       -   - -
+    #|#|#     #|#     #   #|#
 
 ### Object
 Play the most tetrominoes.
@@ -411,16 +959,28 @@ play a domino so that at least one of its numbers is adjacent to a matching
 number on a domino that was already played, and isn't covered. For example,
 the 36 domino can be added as shown, because the 3 matches its neighbour.
 
-![Diagram](images/diagram71.png)
+    2|3 3
+        +
+    2 4 6
+    - -
+    5 5
 
 In this example, the 46 cannot be added in this position, but it could be
 flipped to make the 4 match its neighbour.
 
-![Diagram](images/diagram72.png)
+    2|3 4
+        *
+    2 4 6
+    - -
+    5 5
 
 You don't have to match along the long side, you could also play it like this.
 
-![Diagram](images/diagram73.png)
+    2|3
+       
+    2 4 4+6
+    - -
+    5 5
 
 If there are no numbers uncovered at the start of your turn, play a domino so
 that at least one of its numbers is adjacent to a covered number (they don't
@@ -444,7 +1004,11 @@ each other. (Diagonal is allowed.)
 For example, if you just played the 46 domino, you could play an L-shaped
 tetromino on the 4, 4, 4, and 6 numbers.
 
-![Diagram](images/diagram74.png)
+    2|4
+    
+      4 4+6
+      -
+      5
 
 With 2 or 4 players, if you have a light token, you must play tetrominoes with
 the light side up. If you have a dark token, you must play with the dark side
@@ -558,12 +1122,32 @@ cliffs.)
 
 For example, this set of 18 dominoes:
 
-![Diagram](images/diagram75.png)
+    4 1 3   2 5 2
+    - - -   - - -
+    2 0 1   0 4 2
+    
+    3 6 5   5 6 4
+    - - -   - - -
+    0 0 5   1 3 4
+    
+    6 1 3   0 1 1
+    - - -   - - -
+    5 4 3   4 6 2
 
 can be arranged into this solution, where the grey lines show the paths you can
 walk along:
 
-![Diagram](images/diagram76.png)
+    0|1 2|1 0|4
+    
+    2 1|5 4|1 4
+    -         -
+    0 0|6 4|2 4
+    
+    0|3 3|3 4|5
+    
+    1 2 3|6 5|5
+    - -
+    3 2 1|6 5|6
 
 I like this solitaire, because it can almost always be solved, though finding a
 solution can be very difficult. There's usually more than one solution. For
@@ -618,7 +1202,9 @@ twelve face-up dominoes side by side. Leave the three remaining dominoes face
 down, and use them to lift up the two middle dominoes as the peak of Mount Fuji.
 Here's an example layout:
 
-![Diagram](images/diagram77.png)
+    5 5 4 3 5 1 2 1 1 2 4 0
+    - - - - - - - - - - - -
+    3 0 1 4 2 2 0 0 3 4 5 3
 
 Place a Priest (pawn) beside each number at both ends of the mountain.
 
@@ -661,64 +1247,104 @@ length was 14, with half of them between 12 and 16. Here are some more
 challenging problems for you to try. The solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/diagram78.png)
+    3 2 1 0 0 1 0 3 1 2 3 1
+    - - - - - - - - - - - -
+    4 0 0 4 5 2 3 2 5 5 1 4
 
 #### Problem 2
-![Diagram](images/diagram79.png)
+    2 5 5 1 0 2 3 3 1 4 5 1
+    - - - - - - - - - - - -
+    1 1 2 4 5 0 2 4 3 0 4 0
 
 #### Problem 3
-![Diagram](images/diagram80.png)
+    5 1 0 3 1 1 2 2 0 4 0 0
+    - - - - - - - - - - - -
+    2 2 5 5 5 3 0 4 4 3 1 3
 
 #### Problem 4
-![Diagram](images/diagram81.png)
+    3 1 2 3 4 2 0 1 0 1 5 0
+    - - - - - - - - - - - -
+    4 3 1 5 2 0 5 0 4 4 2 3
 
 #### Problem 5
-![Diagram](images/diagram82.png)
+    5 5 0 1 3 1 1 0 1 1 4 4
+    - - - - - - - - - - - -
+    2 0 2 2 5 4 5 3 0 3 0 2
 
 #### Problem 6
-![Diagram](images/diagram83.png)
+    5 5 2 0 1 1 3 2 0 0 3 4
+    - - - - - - - - - - - -
+    2 1 4 4 2 4 2 0 1 5 1 5
 
 #### Problem 7
-![Diagram](images/diagram84.png)
+    3 2 5 4 3 1 4 0 1 2 2 1
+    - - - - - - - - - - - -
+    4 5 0 1 0 0 0 2 2 4 3 3
 
 #### Problem 8
-![Diagram](images/diagram85.png)
+    4 3 1 5 2 2 0 1 1 0 3 3
+    - - - - - - - - - - - -
+    0 1 0 4 0 3 5 4 2 3 5 4
 
 #### Problem 9
-![Diagram](images/diagram86.png)
+    5 0 4 2 4 5 4 1 2 4 3 5
+    - - - - - - - - - - - -
+    3 3 5 1 0 0 1 0 5 2 1 1
 
 #### Problem 10
-![Diagram](images/diagram87.png)
+    5 3 1 1 0 2 0 0 1 0 5 2
+    - - - - - - - - - - - -
+    4 5 5 3 2 3 1 4 2 3 0 5
 
 #### Problem 11
-![Diagram](images/diagram88.png)
+    2 3 1 0 2 0 0 2 1 0 4 0
+    - - - - - - - - - - - -
+    3 4 4 2 5 5 4 4 3 1 5 3
 
 #### Problem 12
-![Diagram](images/diagram89.png)
+    5 3 1 1 0 0 0 1 1 0 4 3
+    - - - - - - - - - - - -
+    4 4 5 3 2 5 1 4 2 3 0 5
 
 #### Problem 13
-![Diagram](images/diagram90.png)
+    1 0 0 2 3 5 5 2 0 0 1 1
+    - - - - - - - - - - - -
+    4 3 4 0 2 2 3 1 5 1 3 5
 
 #### Problem 14
-![Diagram](images/diagram91.png)
+    4 3 1 5 0 2 4 1 0 1 1 2
+    - - - - - - - - - - - -
+    1 4 3 2 2 3 0 2 5 0 5 4
 
 #### Problem 15
-![Diagram](images/diagram92.png)
+    2 4 3 3 3 0 0 2 0 5 4 3
+    - - - - - - - - - - - -
+    5 5 0 2 1 5 4 1 1 1 1 5
 
 #### Problem 16
-![Diagram](images/diagram93.png)
+    4 3 3 2 0 4 3 3 5 1 1 5
+    - - - - - - - - - - - -
+    5 4 1 5 2 0 0 2 0 4 0 3
 
 #### Problem 17
-![Diagram](images/diagram94.png)
+    4 4 5 1 0 0 1 0 0 1 3 5
+    - - - - - - - - - - - -
+    5 3 2 2 1 5 4 2 4 3 0 1
 
 #### Problem 18
-![Diagram](images/diagram95.png)
+    2 4 2 5 3 5 1 2 4 2 3 4
+    - - - - - - - - - - - -
+    5 5 1 0 1 1 0 0 1 4 0 0
 
 #### Problem 19
-![Diagram](images/diagram96.png)
+    2 4 1 0 0 5 1 2 4 2 4 0
+    - - - - - - - - - - - -
+    5 5 2 5 3 1 0 0 1 4 3 4
 
 #### Problem 20
-![Diagram](images/diagram97.png)
+    5 5 0 2 0 1 1 0 1 5 4 0
+    - - - - - - - - - - - -
+    1 3 3 4 2 4 2 1 3 2 0 5
 
 ## Cobra Paw
 Derek Weston is a new game designer who designed this cute quick-reaction game
@@ -783,18 +1409,22 @@ On your turn, you must play a domino with a matching number. In this example,
 the 24 domino has just been played. It's a valid move, because its 2 matches the
 2 on the open end.
 
-![Diagram](images/diagram98.png)
+    6|3 3|2 2+4
 
 This example is not valid, because the 4 is played against a number that doesn't
 match.
 
-![Diagram](images/diagram99.png)
+    6|3 3|2 4*2
 
 Dominoes must either be played against an end of the line, or against the sniff.
 (The sniff is explained below in the rules for doubles.) This example is not
 valid, because the 34 domino wasn't played against one of the ends.
 
-![Diagram](images/diagram100.png)
+    6|3 3|2
+    
+        3
+        *
+        4
 
 ### Draw
 You may draw extra dominoes before you play one, to give you more options. If
@@ -806,14 +1436,22 @@ play any, then pass your turn.
 There are special rules for doubles, and there are extra special rules for the
 first double. Most doubles have to be played across the line, like this:
 
-![Diagram](images/diagram101.png)
+            2         4
+    6|3 3|2 - 2|5 5|4 - 4|6
+            2         4
 
 Whichever double gets played first is called the sniff, and it has some
 differences from the other doubles. You can play against all four sides of the
 sniff, so if the 22 domino is the sniff, then a 24 domino could be played on
 the 22 domino, but not on the 44 domino.
 
-![Diagram](images/diagram102.png)
+            2         4
+    6|3 3|2 - 2|5 5|4 - 4|6
+            2         4
+    
+            2
+            +
+            4
 
 The other difference with the sniff is that doesn't have to be played across the
 line, you can choose which way to play it. That can make a difference to the
@@ -824,40 +1462,52 @@ After playing a domino, add up the numbers on the ends. If the total is a
 multiple of 5, then add it to your score. This example adds up to 5, and scores
 5 points.
 
-![Diagram](images/diagram103.png)
+        3|2
 
 The next player adds a 63 domino, and the total is 8, no score. You don't count
 the 3's, because they're not on the ends.
 
-![Diagram](images/diagram104.png)
+    6|3 3|2
 
 Now the first double gets played (the sniff). It's played across the line, so
 you count both numbers, and the total is 10. Score 10 points!
 
-![Diagram](images/diagram105.png)
+            2
+    6|3 3|2 -
+            2
 
 A few turns later, a second double is played. It has to be played across the
 line, so you count both numbers. The sniff's ends are still open to play on, so
 you count them, and the total is 18. No score.
 
-![Diagram](images/diagram106.png)
+            2         4
+    6|3 3|2 - 2|5 5|4 -
+            2         4
 
 The next play is on the regular double, so we stop counting it. The total is
 6 + 2 + 2 + 0 = 10. Score 10 points.
 
-![Diagram](images/diagram107.png)
+            2         4
+    6|3 3|2 - 2|5 5|4 - 4|0
+            2         4
 
 Don't forget you can play off the sniff. Now the total is 6 + 2 + 1 + 0 = 9. No
 score.
 
-![Diagram](images/diagram108.png)
+            2         4
+    6|3 3|2 - 2|5 5|4 - 4|0
+            2         4
+    
+            2
+            -
+            1
 
 Here's an example where the sniff should be played in line instead of across
 the line. Playing across the line would make a total of 14, but playing in line
 makes 10 and scores. Don't forget, you can still play off all four sides of the
 sniff.
 
-![Diagram](images/diagram109.png)
+    6|4 4+4
 
 Always keep track of which ends need to be counted: there can be 2, 3, or 4. If
 you run out of room on the table, you can bend a line of dominoes around a
@@ -885,7 +1535,7 @@ your dominoes. If the current total is 7, then you can score by raising the
 total by 3 or dropping it by 2. In this example, the difference between 3 and
 6 is 3, so playing it changes the total from 7 to 10.
 
-![Diagram](images/diagram110.png)
+    4|3 3+6
 
 Particularly in a two-player game, there is a painful rhythm where your opponent
 repeatedly scores and you can't. The key to breaking out of that rhythm is to be
@@ -903,32 +1553,44 @@ the numbers, without duplicated or missing dominoes.
 ### Example
 Here's a small problem to start with.
 
-![Diagram](images/diagram111.png)
+    0 0 1
+    
+    1 1 0
 
 Every problem uses a complete set of dominoes up to the highest number you see.
 In this small problem, the highest number is one, so there are three dominoes:
 
-![Diagram](images/diagram112.png)
+    0 x 0 x 1
+    -   -   -
+    0 x 1 x 1
 
 When you start solving, most dominoes will usually have more than one place they
 could go. For example, the blank/one domino could go in a few different places,
 including these three:
 
-![Diagram](images/diagram113.png)
+    0 0 1 x 0 0|1 x 0 0 1
+    -                 -
+    1 1 0 x 1 1 0 x 1 1 0
 
 However, some of the dominoes will only have one possible place, like the double
 blank:
 
-![Diagram](images/diagram114.png)
+    0|0 1
+    
+    1 1 0
 
 Once you've placed a domino, check to see if it forces any other dominoes. In
 this case, the top right corner only has one space it can connect to:
 
-![Diagram](images/diagram115.png)
+    0|0 1
+        -
+    1 1 0
 
 That makes the final domino obvious, and the solution looks like this:
 
-![Diagram](images/diagram116.png)
+    0|0 1
+        -
+    1|1 0
 
 I took a long time to add this puzzle to the
 collection, because I found it tedious to keep searching for unique numbers.
@@ -948,64 +1610,244 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
 [knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
 
 ### Problem 1
-![Diagram](images/diagram117.png)
+    2 2 1 2
+           
+    0 0 1 0
+    
+    1 2 0 1
 
 ### Problem 2
-![Diagram](images/diagram118.png)
+    0 1 0 1 3
+    
+    3 1 0 2 2
+    
+    3 2 1 0 3
+    
+    2 3 1 0 2
 
 ### Problem 3
-![Diagram](images/diagram119.png)
+    3 0 1 1 0 4
+    
+    2 4 4 1 1 2
+    
+    2 4 2 2 1 4
+    
+    3 3 4 0 0 3
+    
+    3 0 2 1 3 0
 
 ### Problem 4
-![Diagram](images/diagram120.png)
+    0 2 1 1 2
+    
+    0 0 1 3 2
+    
+    0 0 3 1 3
+    
+    3 3 1 2 2
 
 ### Problem 5
-![Diagram](images/diagram121.png)
+    3 4 0 1 1 2
+    
+    1 2 2 2 4 4
+    
+    1 0 0 3 2 3
+    
+    1 4 2 4 0 4
+    
+    0 0 3 3 1 3
 
 ### Problem 6
-![Diagram](images/diagram122.png)
+    1 2 3 3 0 3
+    
+    0 3 0 4 4 4
+    
+    0 2 4 2 3 3
+    
+    1 4 1 4 1 2
+    
+    2 2 1 0 0 1
 
 ### Problem 7
-![Diagram](images/diagram123.png)
+    2 5 0 0 2 4 3
+    
+    4 1 5 0 3 3 2
+    
+    0 1 2 2 4 1 4
+    
+    4 1 0 5 1 5 3
+    
+    4 0 2 0 1 5 5
+    
+    3 3 1 2 3 5 4
 
 ### Problem 8
-![Diagram](images/diagram124.png)
+    3 5 0 1 3 4 5
+    
+    3 1 4 1 3 3 0
+    
+    3 1 5 0 0 2 4
+    
+    0 4 0 2 5 5 2
+    
+    2 2 1 5 2 4 4
+    
+    3 0 1 5 1 2 4
 
 ### Problem 9
-![Diagram](images/diagram125.png)
+    1 2 4 2 3 4
+    
+    1 4 4 1 3 3
+    
+    2 2 0 1 0 3
+    
+    0 4 0 3 3 1
+    
+    2 4 0 1 0 2
 
 ### Problem 10
-![Diagram](images/diagram126.png)
+    1 2 4 2 3 1
+    
+    1 3 2 0 0 1
+    
+    4 4 3 3 2 2
+    
+    3 0 4 0 1 4
+    
+    0 2 4 0 3 1
 
 ### Problem 11
-![Diagram](images/diagram127.png)
+    5 1 3 2 3 1 1
+    
+    0 5 4 5 2 2 5
+    
+    4 2 4 1 2 4 3
+    
+    3 4 2 0 0 4 3
+    
+    5 0 1 4 0 3 3
+    
+    5 1 5 2 0 0 1
 
 ### Problem 12
-![Diagram](images/diagram128.png)
+    3 4 3 3 1 5 2
+    
+    0 4 0 0 2 3 0
+    
+    0 5 2 2 4 1 5
+    
+    3 4 5 4 3 5 2
+    
+    2 1 0 3 1 5 5
+    
+    4 4 1 2 0 1 1
 
 ### Problem 13
-![Diagram](images/diagram129.png)
+    6 0 6 4 1 3 4 5
+    
+    4 6 4 4 1 2 2 2
+    
+    6 2 2 0 2 0 3 3
+    
+    3 5 6 6 0 4 5 1
+    
+    5 1 2 6 5 5 3 0
+    
+    0 3 3 2 3 1 6 0
+    
+    1 5 5 4 0 1 1 4
 
 ### Problem 14
-![Diagram](images/diagram130.png)
+    1 5 6 2 2 2 6 2
+    
+    4 1 5 5 3 3 2 6
+    
+    3 0 2 2 0 3 5 4
+    
+    1 3 1 4 4 3 6 3
+    
+    0 5 4 5 3 1 1 6
+    
+    4 0 6 4 0 0 0 6
+    
+    0 5 5 1 1 6 2 4
 
 ### Problem 15
-![Diagram](images/diagram131.png)
+    0 0 1 3 1 1
+    
+    4 0 2 2 3 2
+    
+    3 4 3 3 3 2
+    
+    4 4 2 4 0 4
+    
+    0 0 1 1 2 1
 
 ### Problem 16
-![Diagram](images/diagram132.png)
+    2 3 2 2 3 3
+    
+    3 0 1 4 1 1
+    
+    0 2 3 4 4 1
+    
+    2 1 0 4 2 0
+    
+    0 4 4 1 3 0
 
 ### Problem 17
-![Diagram](images/diagram133.png)
+    0 2 3 1 2 5 5
+    
+    3 5 0 4 1 1 3
+    
+    4 4 4 2 0 5 3
+    
+    1 1 3 2 3 2 5
+    
+    4 5 0 0 0 4 2
+    
+    1 5 3 4 0 1 2
 
 ### Problem 18
-![Diagram](images/diagram134.png)
+    3 4 0 5 2 3 3
+    
+    0 0 2 4 5 0 3
+    
+    3 0 4 1 3 0 5
+    
+    5 5 3 5 1 1 2
+    
+    4 4 1 2 2 2 4
+    
+    1 5 1 4 2 0 1
 
 ### Problem 19
-![Diagram](images/diagram135.png)
+    2 3 4 4 1 3 2 5
+    
+    6 6 0 5 5 5 3 3
+    
+    6 4 3 6 1 4 6 0
+    
+    2 3 2 4 2 5 1 1
+    
+    5 6 5 4 1 2 6 0
+    
+    0 0 5 0 2 2 4 6
+    
+    1 1 3 3 0 1 4 0
 
 ### Problem 20
-![Diagram](images/diagram136.png)
+    0 6 0 1 4 4 3 6
+    
+    2 6 6 0 5 2 6 3
+    
+    3 4 1 1 2 2 5 0
+    
+    3 5 5 3 6 6 0 4
+    
+    1 1 1 3 4 2 3 6
+    
+    1 5 0 2 1 5 4 4
+    
+    0 0 3 5 2 4 2 5
 
 ### Dominosa Strategy
 There are several methods to deduce where the dominoes must be placed, and it's
@@ -1021,14 +1863,20 @@ rules, and the diagram on the right shows the next step that uses that section's
 rule.
 
 #### Rule 1: One Neighbour
-![Diagram](images/diagram137.png)
+    0|0 1 x 0|0 1
+                -
+    1 1 0 x 1 1 0
 
 Look for a number that only has one neighbour, and join it with its neighbour.
 Particularly check near the last pair you joined. In this example, the top right
 corner only has one neighbour.
 
 #### Rule 2: Newly Joined
-![Diagram](images/diagram138.png)
+    2|1 0 2 x 2|1 0 2
+                    ~
+    0|0 2 1 x 0|0 2S1
+    
+    1 1 2 0 x 1 1S2 0
 
 If you have a newly joined pair of numbers, check if the same pair appears
 elsewhere. Split the other locations, because you can't have two dominoes
@@ -1041,7 +1889,11 @@ that is to draw the boundary between the dominoes there. Fill in the gap between
 the two grey lines.
 
 #### Rule 3: Newly Split
-![Diagram](images/diagram139.png)
+    1 1 1 2 x 1 1 1 2
+    
+    1 0|0 2 x 1 0|0 2
+              -
+    0 2 2 0 x 0 2 2 0
 
 If you have a newly split pair of numbers, look for the same pair elsewhere
 on the board to see if there is only one pair like them. If so, join them. In
@@ -1052,7 +1904,11 @@ is only one pair like that left. In fact, the only one/blank pair left is in the
 bottom left corner, so you can join them.
 
 #### Rule 4: Duplicate Neighbours
-![Diagram](images/diagram140.png)
+    0 2 1 2 x 0 2S1 2
+    
+    0 2 0 1 x 0 2 0 1
+                ~
+    0 1 2 1 x 0 1S2S1
 
 If all of a space's available neighbours are the same, you know it will join
 one of them and use up the domino with those two numbers. Look for the same pair
@@ -1063,7 +1919,11 @@ Therefore, you can split the two and one in the bottom right corner, as well as
 several other two/one pairs.
 
 #### Rule 5: Shared Space
-![Diagram](images/diagram141.png)
+    0 1 0 2 x 0 1 0 2
+                ~
+    2 2 2 1 x 2 2 2 1
+                ~
+    1 0 0 1 x 1 0 0 1
 
 If a pair of numbers appears more than once on the board, but all of the pairs
 share one space, then you know that space must join to the other number. Mark
@@ -1073,7 +1933,9 @@ both use the middle two, so you know it won't join to the blank below or the one
 above, and you can mark those as split.
 
 #### Rule 6: Unique Pairs
-![Diagram](images/diagram142.png)
+    0 0 1 x 0|0 1
+    
+    1 1 0 x 1 1 0
 
 Look for unique pairs of numbers, and mark them as joined. (This is the tedious
 part, so I try to only require it a few times in each problem.) In this example,
@@ -1082,7 +1944,13 @@ you can join them. All problems will start solving with this rule or rule 4, but
 once you've started solving, it's faster to try the other rules before this one.
 
 #### Rule 7: Neck
-![Diagram](images/diagram143.png)
+    0 3 1 1 3 x 0 3 1 1 3
+    
+    2 2 1 0|0 x 2 2 1 0|0
+                    ~
+    3|3 2 2 2 x 3|3 2 2 2
+    
+    0 1 0 1 3 x 0 1 0 1 3
 
 If two unsolved areas are joined by a narrow neck, you know that both areas must
 have an even number of spaces in them. That will tell you where you can split or
@@ -1324,64 +2192,244 @@ over two other pieces, meaning that it moves five spaces in total.
 
 ## Dominosa Solutions
 ### Solution 1
-![Diagram](images/diagram144.png)
+    2|2 1 2
+        - -
+    0|0 1 0
+    
+    1|2 0|1
 
 ### Solution 2
-![Diagram](images/diagram145.png)
+    0|1 0 1|3
+        -
+    3 1 0 2|2
+    - -
+    3 2 1 0|3
+        -
+    2|3 1 0|2
 
 ### Solution 3
-![Diagram](images/diagram146.png)
+    3 0|1 1 0|4
+    -     -
+    2 4|4 1 1|2
+    
+    2|4 2|2 1|4
+    
+    3 3|4 0|0 3
+    -         -
+    3 0|2 1|3 0
 
 ### Solution 4
-![Diagram](images/diagram147.png)
+    0|2 1|1 2
+            -
+    0 0|1 3 2
+    -     -
+    0 0|3 1 3
+            -
+    3|3 1|2 2
 
 ### Solution 5
-![Diagram](images/diagram148.png)
+    3|4 0|1 1|2
+    
+    1 2 2|2 4|4
+    - -
+    1 0 0|3 2|3
+    
+    1|4 2|4 0|4
+    
+    0|0 3|3 1|3
 
 ### Solution 6
-![Diagram](images/diagram149.png)
+    1 2 3|3 0|3
+    - -
+    0 3 0 4|4 4
+        -     -
+    0|2 4 2 3 3
+          - -
+    1|4 1 4 1 2
+        -     -
+    2|2 1 0|0 1
 
 ### Solution 7
-![Diagram](images/diagram150.png)
+    2|5 0|0 2|4 3
+                -
+    4 1|5 0|3 3 2
+    -         -
+    0 1 2|2 4 1 4
+      -     -   -
+    4 1 0|5 1 5 3
+    -         -
+    4 0|2 0|1 5 5
+                -
+    3|3 1|2 3|5 4
 
 ### Solution 8
-![Diagram](images/diagram151.png)
+    3|5 0|1 3|4 5
+                -
+    3 1|4 1|3 3 0
+    -         -
+    3 1|5 0|0 2 4
+                -
+    0|4 0|2 5 5 2
+            - -
+    2|2 1 5 2 4 4
+        - -     -
+    3|0 1 5 1|2 4
 
 ### Solution 9
-![Diagram](images/diagram152.png)
+    1|2 4 2|3 4
+        -     -
+    1|4 4 1 3 3
+          - -
+    2|2 0 1 0 3
+        -     -
+    0|4 0 3|3 1
+    
+    2|4 0|1 0|2
 
 ### Solution 10
-![Diagram](images/diagram153.png)
+    1|2 4 2|3 1
+        -     -
+    1|3 2 0|0 1
+    
+    4 4 3|3 2|2
+    - -
+    3 0 4 0|1 4
+        -     -
+    0|2 4 0|3 1
 
 ### Solution 11
-![Diagram](images/diagram154.png)
+    5 1|3 2|3 1|1
+    -
+    0 5 4|5 2|2 5
+      -         -
+    4 2 4 1|2 4 3
+    -   -     -
+    3 4 2 0|0 4 3
+      -         -
+    5 0 1|4 0|3 3
+    -
+    5 1|5 2|0 0|1
 
 ### Solution 12
-![Diagram](images/diagram155.png)
+    3|4 3|3 1|5 2
+                -
+    0|4 0|0 2 3 0
+            - -
+    0|5 2|2 4 1 5
+                -
+    3 4 5|4 3|5 2
+    - -
+    2 1 0|3 1 5|5
+            -
+    4|4 1|2 0 1|1
 
 ### Solution 13
-![Diagram](images/diagram156.png)
+    6 0|6 4 1 3|4 5
+    -     - -     -
+    4 6 4 4 1 2|2 2
+      - -
+    6 2 2 0|2 0|3 3
+    -             -
+    3 5|6 6 0|4 5 1
+          -     -
+    5 1|2 6 5|5 3 0
+    -             -
+    0 3|3 2|3 1|6 0
+    
+    1|5 5|4 0|1 1|4
 
 ### Solution 14
-![Diagram](images/diagram157.png)
+    1|5 6 2|2 2 6|2
+        -     -
+    4 1 5 5|3 3 2 6
+    - -         - -
+    3 0 2 2|0 3 5 4
+        -     -
+    1|3 1 4|4 3 6|3
+    
+    0|5 4|5 3 1|1 6
+            -     -
+    4 0|6 4 0 0|0 6
+    -     -
+    0 5|5 1 1|6 2|4
 
 ### Solution 15
-![Diagram](images/diagram158.png)
+    0|0 1|3 1|1
+    
+    4 0|2 2|3 2
+    -         -
+    3 4 3|3 3 2
+      -     -
+    4 4 2|4 0 4
+    -         -
+    0 0|1 1|2 1
 
 ### Solution 16
-![Diagram](images/diagram159.png)
+    2|3 2|2 3|3
+    
+    3 0|1 4|1 1
+    -         -
+    0 2 3|4 4 1
+      -     -
+    2 1 0|4 2 0
+    -         -
+    0 4|4 1|3 0
 
 ### Solution 17
-![Diagram](images/diagram160.png)
+    0|2 3 1|2 5|5
+        -
+    3|5 0 4 1|1 3
+          -     -
+    4 4|4 2 0|5 3
+    -
+    1 1|3 2|3 2|5
+    
+    4|5 0|0 0|4 2
+                -
+    1|5 3|4 0|1 2
 
 ### Solution 18
-![Diagram](images/diagram161.png)
+    3|4 0|5 2|3 3
+                -
+    0 0|2 4|5 0 3
+    -         -
+    3 0|4 1|3 0 5
+                -
+    5|5 3|5 1|1 2
+    
+    4|4 1|2 2 2|4
+            -
+    1|5 1|4 2 0|1
 
 ### Solution 19
-![Diagram](images/diagram162.png)
+    2|3 4|4 1|3 2|5
+    
+    6|6 0|5 5 5|3 3
+            -     -
+    6 4 3|6 1 4 6 0
+    - -       - -
+    2 3 2|4 2 5 1 1
+            -     -
+    5|6 5 4 1 2 6 0
+        - -   - -
+    0|0 5 0 2 2 4 6
+            -     -
+    1|1 3|3 0 1|4 0
 
 ### Solution 20
-![Diagram](images/diagram163.png)
+    0|6 0|1 4|4 3|6
+    
+    2|6 6 0|5 2 6 3
+        -     - - -
+    3|4 1 1|2 2 5 0
+    
+    3 5|5 3 6|6 0|4
+    -     -
+    1 1|1 3 4 2|3 6
+            -     -
+    1|5 0|2 1 5|4 4
+    
+    0|0 3|5 2|4 2|5
 
 # Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at
