@@ -5,7 +5,7 @@ from enum import Enum, IntEnum
 from itertools import chain
 from sys import maxsize
 
-from networkx import shortest_path, DiGraph, edges, NetworkXNoPath
+from networkx import shortest_path, DiGraph, edges, NetworkXNoPath, NodeNotFound
 
 from domino_puzzle import Board, Cell, BoardGraph, GraphLimitExceeded
 from evo import Individual, Evolution
@@ -153,7 +153,7 @@ class FitnessCalculator:
                     remaining_graph.add_edge(a, b, **edge_attrs)
             try:
                 shortest_path(remaining_graph, graph.start, graph.last, 'weight')
-            except (NetworkXNoPath, KeyError):
+            except (NodeNotFound, NetworkXNoPath, KeyError):
                 required_moves.append(excluded_move_num)
         fitness -= 10_000 * (len(self.move_weights) - len(required_moves))
         required_moves.sort()
