@@ -12,6 +12,7 @@ from reportlab.lib.units import inch
 from reportlab.rl_config import defaultPageSize
 
 from diagram import draw_diagram, draw_fuji
+from diagram_differ import diagram_to_image
 from domino_puzzle import Board
 from dominosa import DominosaBoard
 from footer import FooterCanvas
@@ -64,7 +65,7 @@ class Diagram:
     def resize(self):
         pass
 
-    def build(self):
+    def build(self) -> SvgDiagram:
         diagram = SvgDiagram(self.width, self.height)
         t = diagram.turtle
         t.up()
@@ -75,7 +76,7 @@ class Diagram:
         t.down()
         self.draw_background(t)
         self.draw_foreground(t)
-        return diagram.to_reportlab()
+        return diagram
 
     def draw_foreground(self, t):
         try:
@@ -101,15 +102,34 @@ class FujisanDiagram(Diagram):
         self.height += self.cell_size
 
 
+class DiagramWriter:
+    def __init__(self, target_folder: Path, images_folder: Path):
+        self.diagram_count = 0
+        self.target_folder = target_folder
+        self.images_folder = images_folder
+
+    def add_diagram(self, diagram: Diagram) -> Path:
+        self.diagram_count += 1
+        svg_diagram = diagram.build()
+        image = diagram_to_image(svg_diagram)
+        file_name = f'diagram{self.diagram_count}.png'
+        target_path = self.images_folder / file_name
+        with target_path.open('wb') as f:
+            image.save(f, 'png')
+        return target_path.relative_to(self.target_folder)
+
+
 def main():
     args = parse_args()
     markdown_path = Path(args.markdown.name)
-    pdf_stem = markdown_path.stem
-    if pdf_stem == 'rules':
-        pdf_stem = 'donimoes'
-    pdf_path = markdown_path.parent / (pdf_stem + '.pdf')
+    rules_stem = markdown_path.stem
+    pdf_stem = 'donimoes' if rules_stem == 'rules' else rules_stem
+    pdf_path = Path(__file__).parent / 'docs' / (pdf_stem + '.pdf')
+    merged_path = pdf_path.parent / (rules_stem + '.md')
+    images_path = pdf_path.parent / 'images'
     with args.markdown:
         states = parse(args.markdown.read())
+    diagram_writer = DiagramWriter(pdf_path.parent, images_path)
 
     doc = SimpleDocTemplate(str(pdf_path),
                             author='Don Kirkby',
@@ -139,6 +159,8 @@ def main():
     bulleted = []
     headings = []
     first_bullet = None
+    image_width = 800
+    image_height = 600
     for state in states:
         if state.style == Styles.Metadata:
             doc.title = state.text
@@ -147,12 +169,22 @@ def main():
             if 'Fujisan' in headings or 'Fujisan Problems' in headings:
                 flowable = FujisanDiagram(doc.width,
                                           doc.height,
-                                          state.text).build()
+                                          state.text).build().to_reportlab()
+                state.image_path = diagram_writer.add_diagram(FujisanDiagram(
+                    image_width,
+                    image_height,
+                    state.text))
             elif 'Dominosa' in headings:
-                flowable = Diagram(doc.width,
-                                   doc.height,
-                                   state.text,
-                                   board_class=DominosaBoard).build()
+                flowable = Diagram(
+                    doc.width,
+                    doc.height,
+                    state.text,
+                    board_class=DominosaBoard).build().to_reportlab()
+                state.image_path = diagram_writer.add_diagram(Diagram(
+                    image_width,
+                    image_height,
+                    state.text,
+                    board_class=DominosaBoard))
             else:
                 if 'Mountains and Valleys' in headings:
                     diagram_width = (len(state.text.splitlines()[0]) + 1)//2
@@ -162,12 +194,12 @@ def main():
                 flowable = Diagram(doc.width,
                                    doc.height,
                                    state.text,
-                                   show_path).build()
-                if show_path:
-                    group.append(flowable)
-                    flowable = Paragraph(
-                        'The grey lines show the paths you can walk along.',
-                        styles[Styles.Normal])
+                                   show_path).build().to_reportlab()
+                state.image_path = diagram_writer.add_diagram(Diagram(
+                    image_width,
+                    image_height,
+                    state.text,
+                    show_path))
         else:
             flowable = Paragraph(state.text,
                                  styles[state.style])
@@ -218,6 +250,9 @@ def main():
                              bulleted_list_style,
                              numbered_list_style)
     doc.build(story, canvasmaker=partial(FooterCanvas, is_booklet=args.booklet))
+    with merged_path.open('w') as merged_file:
+        for state in states:
+            state.write_markdown(merged_file)
 
     call(["evince", pdf_path])
 

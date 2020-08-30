@@ -1,4 +1,7 @@
+import os
 import re
+
+import typing
 
 
 class Styles(object):
@@ -22,27 +25,33 @@ def parse(source):
 
     links = {}
     unlinked_states = []
+    last_linked = None
     for s in states:
         try:
             name, address = s.get_link()
         except AttributeError:
             unlinked_states.append(s)
+            last_linked = s
             continue
+        last_linked.raw_text += s.raw_text
         links[name] = address
     printed_states = []
+    last_printed = None
     for s in unlinked_states:
         if not s.is_printed():
+            last_printed.raw_text += s.raw_text
             continue
         s.text = replace_links(s.text, links)
         s.text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', s.text)
         printed_states.append(s)
+        last_printed = s
     return printed_states
 
 
 def replace_links(text, links):
     replacement = ''
     index = 0
-    for match in re.finditer(r'\[([^\]]+)\]\[([^\]]+)\]', text):
+    for match in re.finditer(r'\[([^]]+)]\[([^]]+)]', text):
         block = text[index:match.start()]
         replacement += block
         link_name = match.group(2)
@@ -59,33 +68,44 @@ def replace_links(text, links):
 
 
 class ParsingState(object):
-    def __init__(self, text=None, style=Styles.Normal, bullet=None):
+    def __init__(self,
+                 text: str = None,
+                 style: str = Styles.Normal,
+                 bullet: str = None,
+                 raw_text: str = None):
         self.text = text
+        if raw_text is None:
+            raw_text = text
+        self.raw_text = '' if raw_text is None else raw_text + os.linesep
         self.style = style
         self.bullet = bullet
+        self.image_path = None
 
     def add(self, line):
         if line.startswith('    '):
             return DiagramState('').add(line)
         if line == '---':
-            return MetadataState()
-        match = re.match(r'^\[([^\]]+)\]:\s*(.*)$', line)
+            return MetadataState(line)
+        match = re.match(r'^\[([^]]+)]:\s*(.*)$', line)
         if match:
             link_name = match.group(1)
             address = match.group(2)
-            return LinkState(link_name, address)
+            return LinkState(link_name, address, line)
         match = re.match(r'^(#+)\s*(.*?)\s*#*$', line)
         if match:
             level = len(match.group(1))
             heading_text = match.group(2)
-            return ParsingState(heading_text, Styles.Heading + str(level))
+            return ParsingState(heading_text,
+                                Styles.Heading + str(level),
+                                raw_text=line)
         match = re.match(r'^((\*)|(\d+)\.)\s+(.*)$', line)
         if match:
             bullet = match.group(2) or match.group(3)
             text = match.group(4)
-            return BulletedState(text, bullet=bullet)
+            return BulletedState(text, bullet=bullet, raw_text=line)
         if line:
             return ParagraphState(line)
+        self.raw_text += line + os.linesep
         return self
 
     def is_printed(self):
@@ -100,6 +120,13 @@ class ParsingState(object):
         return (self.text == other.text and
                 self.style == other.style and
                 self.bullet == other.bullet)
+
+    def write_markdown(self, markdown_file: typing.TextIO):
+        """ Write the markdown for this state.
+
+        :param markdown_file: the destination to write the markdown to
+        """
+        markdown_file.write(self.raw_text)
 
 
 class StartState(ParsingState):
@@ -121,6 +148,7 @@ class MetadataState(ParsingState):
         return f'MetadataState({self.text!r})'
 
     def add(self, line):
+        self.raw_text += line + os.linesep
         if line == '---':
             return StartState()
         match = re.match('title: *', line)
@@ -131,6 +159,7 @@ class MetadataState(ParsingState):
 
 class ParagraphState(ParsingState):
     def add(self, line):
+        self.raw_text += line + os.linesep
         if line:
             self.text = self.text + ' ' + line
             return self
@@ -144,6 +173,7 @@ class BulletedState(ParsingState):
     def add(self, line):
         if not line.startswith('  '):
             return StartState().add(line)
+        self.raw_text += line + os.linesep
         self.text = self.text + ' ' + line.strip()
         return self
 
@@ -153,8 +183,8 @@ class BulletedState(ParsingState):
 
 
 class LinkState(ParsingState):
-    def __init__(self, name, address):
-        super().__init__()
+    def __init__(self, name: str, address: str, raw_text: str):
+        super().__init__(raw_text=raw_text)
         self.name = name
         self.address = address
 
@@ -177,6 +207,10 @@ class DiagramState(ParsingState):
             self.text = self.text + line[4:] + '\n'
             return self
         return StartState().add(line)
+
+    def write_markdown(self, markdown_file: typing.TextIO):
+        print(f'![Diagram]({self.image_path})', file=markdown_file)
+        print(file=markdown_file)
 
     def __repr__(self):
         return 'DiagramState({!r})'.format(self.text)

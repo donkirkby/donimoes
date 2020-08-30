@@ -1,4 +1,5 @@
 import unittest
+from io import StringIO
 
 from book_parser import parse, Styles, ParagraphState, BulletedState, \
     ParsingState, DiagramState, MetadataState
@@ -177,3 +178,87 @@ Some text.
         tree = parse(source)
 
         self.assertEqual(expected_tree, tree)
+
+
+def test_raw_text_paragraph(tmpdir):
+    source = """\
+Some text
+on two lines.
+
+More text.
+"""
+    tree = parse(source)
+    converted = StringIO()
+    for state in tree:
+        state.write_markdown(converted)
+
+    assert converted.getvalue() == source
+
+
+def test_bullet_list(tmpdir):
+    source = """\
+A paragraph.
+
+* A list item.
+* Another item.
+
+More text.
+"""
+    tree = parse(source)
+    converted = StringIO()
+    for state in tree:
+        state.write_markdown(converted)
+
+    assert converted.getvalue() == source
+
+
+def test_linked(tmpdir):
+    source = """\
+A paragraph with a [Link][link] in the middle.
+
+[link]: https://example.com/
+"""
+    tree = parse(source)
+    converted = StringIO()
+    for state in tree:
+        state.write_markdown(converted)
+
+    assert converted.getvalue() == source
+
+
+def test_rule_diagrams():
+    source = """\
+One paragraph
+
+    1|2 3
+        -
+    5|6 4
+
+Another paragraph
+
+    0|0 1
+        -
+    2|2 1
+
+Last paragraph
+"""
+    expected_text = """\
+One paragraph
+
+![Diagram](images/diagram1.png)
+
+Another paragraph
+
+![Diagram](images/diagram2.png)
+
+Last paragraph
+"""
+    tree = parse(source)
+    assert len(tree) == 5
+    tree[1].image_path = 'images/diagram1.png'
+    tree[3].image_path = 'images/diagram2.png'
+    converted = StringIO()
+    for state in tree:
+        state.write_markdown(converted)
+
+    assert converted.getvalue() == expected_text
