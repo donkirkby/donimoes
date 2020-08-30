@@ -10,7 +10,7 @@ coverage = "*"
 [packages]
 matplotlib = "*"
 deap = "*"
-networkx = "<2"
+networkx = "<3"
 reportlab = "*"
 numpy = "*"
 svgwrite = "*"

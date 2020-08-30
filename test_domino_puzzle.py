@@ -1,6 +1,6 @@
 import unittest
 
-from networkx.exception import NetworkXNoPath
+from networkx.exception import NodeNotFound
 
 from domino_puzzle import Domino, Cell, Board, BoardGraph, CaptureBoardGraph
 
@@ -497,7 +497,7 @@ x 4|3
         graph.walk(board)
 
         self.assertEqual(expected_closest, graph.closest)
-        self.assertRaises(NetworkXNoPath, graph.get_solution)
+        self.assertRaises(NodeNotFound, graph.get_solution)
 
     def testPartialSolution(self):
         graph = CaptureBoardGraph()

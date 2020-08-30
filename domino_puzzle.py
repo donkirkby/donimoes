@@ -784,6 +784,8 @@ class BoardGraph(object):
                     edge_attrs = extras[0]
                     if len(extras) > 1:
                         heuristic = extras[1]
+                if edge_attrs is None:
+                    edge_attrs = {}
 
                 new_g_score = state_g_score + 1
                 known_g_score = g_score[new_state]
@@ -807,7 +809,7 @@ class BoardGraph(object):
                     f = new_g_score + heuristic
 
                     pending_nodes.add(new_state, f)
-                self.graph.add_edge(state, new_state, edge_attrs, move=move)
+                self.graph.add_edge(state, new_state, move=move, **edge_attrs)
         return set(self.graph.nodes())
 
     def calculate_heuristic(self, board: Board) -> float:
