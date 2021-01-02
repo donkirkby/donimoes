@@ -126,7 +126,8 @@ def main():
     pdf_stem = 'donimoes' if rules_stem == 'rules' else rules_stem
     pdf_path = Path(__file__).parent / 'docs' / (pdf_stem + '.pdf')
     merged_path = pdf_path.parent / (rules_stem + '.md')
-    images_path = pdf_path.parent / 'images'
+    images_path = pdf_path.parent / 'images' / rules_stem
+    images_path.mkdir(parents=True, exist_ok=True)
     with args.markdown:
         states = parse(args.markdown.read())
     diagram_writer = DiagramWriter(pdf_path.parent, images_path)
