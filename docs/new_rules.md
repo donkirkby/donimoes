@@ -64,10 +64,12 @@ need, and start the timer. The other players have until the timer ends to find
 a better solution.
 
 A solution with fewer moves is always better. If two players find solutions with
-the same number of moves, then the player with fewer points counts as a better
-solution. If they have the same points, then the player who claimed it first
-counts as a better solution. It is a valid solution to say that it's impossible,
-but any other solution is better.
+the same number of moves, then the player with fewer points wins the tie. If
+they have the same points, then the player who said it first wins the tie.
+
+If there is no solution, then the first player to say it's impossible starts the
+timer. They win the round if no other player can find a solution before the
+timer ends.
 
 ### Demonstrate
 Whichever player has claimed the best solution when the timer goes now has to
