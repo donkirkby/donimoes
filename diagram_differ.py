@@ -4,6 +4,7 @@ from pathlib import Path
 from turtle import Turtle
 
 import pytest
+import typing
 from PIL import Image
 from reportlab.graphics.renderPM import drawToString
 
@@ -56,6 +57,33 @@ class DiagramDiffer:
         self.test_names.add(name)
         actual_png = diagram_to_image(actual_diagram)
         expected_png = diagram_to_image(expected_diagram)
+        png_diff = self.compare_pngs(actual_png, expected_png)
+
+        if png_diff is None:
+            return
+
+        actual_svg = StringIO()
+        actual_diagram.svg_drawing.write(actual_svg, pretty=True)
+        actual_text = actual_svg.getvalue()
+        expected_svg = StringIO()
+        expected_diagram.svg_drawing.write(expected_svg, pretty=True)
+        expected_text = expected_svg.getvalue()
+        (self.work_dir / (name+'_actual.svg')).write_text(actual_text)
+        (self.work_dir / (name+'_expected.svg')).write_text(expected_text)
+        png_diff.save(self.work_dir / (name+'_diff.png'))
+        assert actual_text == expected_text
+        assert not self.mismatch_found
+
+    def compare_pngs(self,
+                     actual_png: Image.Image,
+                     expected_png: Image.Image) -> typing.Optional[Image.Image]:
+        """ Compare two PNG images, and return the difference.
+
+        Also sets self.mismatch_found to True if there's a difference.
+        :param actual_png: PNG produced by code under test
+        :param expected_png: PNG expected from code
+        :return: PNG of the difference, or None if they match
+        """
         w = max(actual_png.width, expected_png.width)
         h = max(actual_png.height, expected_png.height)
 
@@ -75,7 +103,9 @@ class DiagramDiffer:
         if display_image is not None:
             t = Turtle()
             try:
+                # noinspection PyUnresolvedReferences
                 w = t.screen.cv.cget('width')
+                # noinspection PyUnresolvedReferences
                 h = t.screen.cv.cget('height')
                 ox, oy = w/2, h/2
                 text_height = 20
@@ -100,19 +130,8 @@ class DiagramDiffer:
             except Exception as ex:
                 t.write(str(ex))
 
-        if not self.mismatch_found:
-            return
-        actual_svg = StringIO()
-        actual_diagram.svg_drawing.write(actual_svg, pretty=True)
-        actual_text = actual_svg.getvalue()
-        expected_svg = StringIO()
-        expected_diagram.svg_drawing.write(expected_svg, pretty=True)
-        expected_text = expected_svg.getvalue()
-        (self.work_dir / (name+'_actual.svg')).write_text(actual_text)
-        (self.work_dir / (name+'_expected.svg')).write_text(expected_text)
-        png_diff.save(self.work_dir / (name+'_diff.png'))
-        assert actual_text == expected_text
-        assert not self.mismatch_found
+        if self.mismatch_found:
+            return png_diff
 
 
 def diagram_to_image(diagram: SvgDiagram) -> Image.Image:
@@ -122,7 +141,7 @@ def diagram_to_image(diagram: SvgDiagram) -> Image.Image:
     return image.convert('RGBA')
 
 
-def encode_image(image: Image.Image) -> bytes:
+def encode_image(image: Image.Image) -> str:
     writer = BytesIO()
     image.save(writer, format='PNG')
     encoded = standard_b64encode(writer.getvalue())

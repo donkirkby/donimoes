@@ -3,6 +3,7 @@ from functools import partial
 from pathlib import Path
 from subprocess import call
 
+from PIL import Image
 from reportlab.lib import pagesizes
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.platypus.flowables import Spacer, KeepTogether, ListFlowable
@@ -12,7 +13,7 @@ from reportlab.lib.units import inch
 from reportlab.rl_config import defaultPageSize
 
 from diagram import draw_diagram, draw_fuji
-from diagram_differ import diagram_to_image
+from diagram_differ import diagram_to_image, DiagramDiffer
 from domino_puzzle import Board
 from dominosa import DominosaBoard
 from footer import FooterCanvas
@@ -107,6 +108,7 @@ class DiagramWriter:
         self.diagram_count = 0
         self.target_folder = target_folder
         self.images_folder = images_folder
+        self.diagram_differ = DiagramDiffer()
 
     def add_diagram(self, diagram: Diagram) -> Path:
         self.diagram_count += 1
@@ -114,9 +116,16 @@ class DiagramWriter:
         image = diagram_to_image(svg_diagram)
         file_name = f'diagram{self.diagram_count}.png'
         target_path = self.images_folder / file_name
+        relative_path = target_path.relative_to(self.target_folder)
+        try:
+            old_image = Image.open(target_path)
+            if self.diagram_differ.compare_pngs(old_image, image) is None:
+                return relative_path
+        except IOError:
+            pass
         with target_path.open('wb') as f:
             image.save(f, 'png')
-        return target_path.relative_to(self.target_folder)
+        return relative_path
 
 
 def main():
