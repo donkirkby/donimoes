@@ -539,3 +539,18 @@ x x 6|2 3
         states = graph.walk(board)
 
         self.assertEqual(expected_states, states)
+
+
+def test_dice_set():
+    board = Board.create("""\
+1|2 3
+    -
+4|5 6
+---
+dice:3(2,1),4(0,0)
+""")
+    dice_set = board.dice_set
+
+    assert repr(dice_set) == "DiceSet('3(2,1),4(0,0)')"
+    assert dice_set[2, 1] == 3
+    assert dice_set[1, 1] is None

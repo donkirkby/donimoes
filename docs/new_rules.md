@@ -34,6 +34,10 @@ to form a sequence of numbers starting with 1. Place the 1 die on the
 1 in the 1 / blank domino. Place the 2 on the 2 / blank, the 3 on the 3 / blank,
 and so on.
 
+For example, here's one possible setup:
+
+![Diagram](images/new_rules/diagram1.png)
+
 ### Play
 The game is played in rounds, and each round starts by choosing which die is the
 queen bee. If you put aside a die, roll it to choose the queen, otherwise roll
@@ -99,15 +103,15 @@ in the same position relative to each other.
 
 For example, if this is the queue:
 
-![Diagram](images/new_rules/diagram1.png)
+![Diagram](images/new_rules/diagram2.png)
 
 Then the start position is like this:
 
-![Diagram](images/new_rules/diagram2.png)
+![Diagram](images/new_rules/diagram3.png)
 
 Not like this:
 
-![Diagram](images/new_rules/diagram3.png)
+![Diagram](images/new_rules/diagram4.png)
 
 ### Moves
 There are only two ways a domino can move.
@@ -120,12 +124,12 @@ numbers can match the two ends of the domino, or both match one end.
 In this example, the 13 can be added, because it matches the 1 below and the 3
 below.
 
-![Diagram](images/new_rules/diagram4.png)
+![Diagram](images/new_rules/diagram5.png)
 
 In this example, the 52 can be added, because it matches the 5 beside and the 5
 above. The 52 could also be added in the vertical position.
 
-![Diagram](images/new_rules/diagram5.png)
+![Diagram](images/new_rules/diagram6.png)
 
 #### Sliding
 Move a domino one space along its long axis so that it ends up with at least
@@ -135,12 +139,12 @@ matches at least two of the adjacent numbers on neighbouring dominoes.
 In this example, the left domino can move down, because the 1 and the 5 add to
 six.
 
-![Diagram](images/new_rules/diagram6.png)
+![Diagram](images/new_rules/diagram7.png)
 
 The left domino can move back up, because the 1 matches the 1 above, and the 5
 matches the 5 to the right.
 
-![Diagram](images/new_rules/diagram7.png)
+![Diagram](images/new_rules/diagram8.png)
 
 #### Stay Connected
 All the dominoes on the board must stay in one connected group, you can't split the group
@@ -151,7 +155,7 @@ Here are the starting positions for several Adding Donimoes problems. The
 solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/new_rules/diagram8.png)
+![Diagram](images/new_rules/diagram9.png)
 
 # Solutions
 ## Adding Donimoes Solutions

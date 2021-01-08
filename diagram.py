@@ -1,5 +1,6 @@
 from functools import partial
 import math
+from turtle import Turtle
 
 from domino_puzzle import Board, CaptureBoardGraph, Domino, Cell
 from dominosa import PairState
@@ -38,7 +39,7 @@ OOO|
 """
 
 
-def draw_pips(turtle, pips, cell_size=DEFAULT_CELL_SIZE):
+def draw_pips(turtle, pips, cell_size: float = DEFAULT_CELL_SIZE):
     pip_pattern = PIP_PATTERNS.splitlines()[pips*4+1:pips*4+4]
     pip_radius = cell_size*0.09
     turtle.up()
@@ -146,6 +147,31 @@ def draw_domino_outline(turtle,
     turtle.forward(cell_size/2-margin_size)
     turtle.left(90)
     turtle.forward(cell_size/2-r-margin_size)
+
+
+def draw_die_outline(turtle,
+                     die_size: float = DEFAULT_CELL_SIZE,
+                     fill='white'):
+    turtle.up()
+    r = die_size / 12
+    turtle.back(die_size / 2 - r)
+    turtle.left(90)
+    turtle.forward(die_size / 2)
+    turtle.right(90)
+    turtle.down()
+    turtle.fillcolor(fill)
+
+    turtle.begin_fill()
+    for _ in range(4):
+        turtle.forward(die_size - 2 * r)
+        turtle.circle(-r, 90)
+    turtle.end_fill()
+
+    turtle.up()
+    turtle.right(90)
+    turtle.forward(die_size / 2)
+    turtle.left(90)
+    turtle.forward(die_size / 2 - r)
 
 
 def draw_paths(turtle, board: Board, cell_size=DEFAULT_CELL_SIZE):
@@ -435,6 +461,7 @@ def draw_diagram(turtle,
         turtle.right(90)
     turtle.setpos(pos)
     draw_dominosa_hints(turtle, board, cell_size)
+    draw_dice(turtle, board, cell_size)
     if show_path:
         draw_paths(turtle, board, cell_size)
     if solution:
@@ -552,6 +579,38 @@ def draw_joined_block(turtle, width, height):
         turtle.right(90)
     turtle.end_fill()
     turtle.up()
+
+
+def draw_dice(turtle: Turtle, board: Board, cell_size: int):
+    dice_set = board.dice_set
+    if dice_set is None:
+        return
+    turtle.color('black', 'white')
+    turtle.right(90)
+    turtle.forward(int(cell_size * (board.height-0.5)))
+    turtle.left(90)
+    turtle.forward(cell_size/2)
+    die_size = cell_size * 0.6
+    for y in range(board.height):
+        for x in range(board.width):
+            die_pips = dice_set[x, y]
+            if die_pips is not None:
+                draw_die_outline(turtle, die_size)
+                cell = board[x][y]
+                if cell is None or cell.domino is None:
+                    dy = 0
+                else:
+                    dx, dy = cell.domino.direction
+                if dy:
+                    turtle.left(90)
+                draw_pips(turtle, die_pips, die_size)
+                if dy:
+                    turtle.right(90)
+            turtle.forward(cell_size)
+        turtle.back(cell_size*board.width)
+        turtle.left(90)
+        turtle.forward(cell_size)
+        turtle.right(90)
 
 
 def draw_demo(turtle):

@@ -389,3 +389,72 @@ def test_draw_tetromino(drawing_differ):
 """)
 
     drawing_differ.assert_equal(actual, expected, 'draw_tetromino')
+
+
+# noinspection DuplicatedCode
+def test_dice_diagram(drawing_differ):
+    state = """\
+1|2 3
+    -
+6|5 4
+---
+dice:3(2,1),6(0,0)
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(-50, -50)
+    draw_domino(t, Domino(6, 5))
+
+    t.back(30)
+    t.left(90)
+    t.forward(25)
+    t.down()
+    t.fillcolor('white')
+    t.begin_fill()
+    for _ in range(4):
+        t.circle(-5, 90)
+        t.forward(50)
+    t.end_fill()
+
+    t.up()
+    t.back(25)
+    t.right(90)
+    t.forward(30)
+    draw_pips(t, 6, 60)
+
+    t.forward(200)
+    t.left(90)
+    draw_domino(t, Domino(4, 3))
+
+    t.forward(100)
+    t.back(30)
+    t.left(90)
+    t.forward(25)
+    t.down()
+    t.fillcolor('white')
+    t.begin_fill()
+    for _ in range(4):
+        t.circle(-5, 90)
+        t.forward(50)
+    t.end_fill()
+
+    t.up()
+    t.back(25)
+    t.right(90)
+    t.forward(30)
+    draw_pips(t, 3, 60)
+
+    t.left(90)
+    t.forward(100)
+    draw_domino(t, Domino(2, 1))
+
+    t = actual.turtle
+    t.up()
+    t.goto(-100, 100)
+    draw_diagram(actual.turtle, state)
+
+    drawing_differ.tolerance = 10
+    drawing_differ.assert_equal(actual, expected, 'draw_dice')

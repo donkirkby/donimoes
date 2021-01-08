@@ -1,4 +1,5 @@
 import math
+import re
 import typing
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -86,14 +87,40 @@ class MarkerSet:
         return new_pips
 
 
+class DiceSet:
+    def __init__(self, dice_text: str):
+
+        self.dice = {}  # {(x, y): pips}
+        for match in re.finditer(r'(\d+)\((\d+),(\d+)\)', dice_text):
+            die_pips = int(match.group(1))
+            row = int(match.group(2))
+            column = int(match.group(3))
+            self.dice[row, column] = die_pips
+
+    def __repr__(self):
+        text = ','.join(f'{die_pips}({x},{y})'
+                        for (x, y), die_pips in self.dice.items())
+        return f'DiceSet({text!r})'
+
+    def __getitem__(self, coordinates):
+        x, y = coordinates
+        return self.dice.get((x, y))
+
+
 class Board(object):
     @classmethod
     def create(cls, state, border=0, max_pips=None):
         sections = state.split('\n---\n')
         if len(sections) <= 1:
             marker_text = ''
+            dice_set = None
+        elif sections[1].startswith('dice:'):
+            marker_text = ''
+            dice_text = sections[1][5:].rstrip()
+            dice_set = DiceSet(dice_text)
         else:
             marker_text = sections[1]
+            dice_set = None
         marker_set = MarkerSet(marker_text, border)
         lines = sections[0].splitlines(False)
         lines.reverse()
@@ -101,7 +128,10 @@ class Board(object):
         line_length = height and max(map(len, lines))
         width = height and (line_length+1) // 2
         lines = [line + ((line_length-len(line)) * ' ') for line in lines]
-        board = cls(width + 2*border, height + 2*border, max_pips=max_pips)
+        board = cls(width + 2*border,
+                    height + 2*border,
+                    max_pips=max_pips,
+                    dice_set=dice_set)
         degrees = None
         for x in range(width):
             for y in range(height):
@@ -160,17 +190,22 @@ class Board(object):
                     board.offset_dominoes.append((domino, j/2, i/2))
         return board
 
-    def __init__(self, width, height, max_pips=None):
+    def __init__(self,
+                 width: int,
+                 height: int,
+                 max_pips: int = None,
+                 dice_set: DiceSet = None):
         self.width = width
         self.height = height
         self.dominoes = []
         self.max_pips = max_pips
+        self.dice_set = dice_set
         self.add_count = 0
         if max_pips is None:
             self.extra_dominoes = []
         else:
             self.extra_dominoes = Domino.create(max_pips)
-        self.cells: typing.List[typing.List[Cell]] = []
+        self.cells: typing.List[typing.List[typing.Optional[Cell]]] = []
         for _ in range(width):
             self.cells.append([None] * height)
 

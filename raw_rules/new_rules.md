@@ -34,6 +34,24 @@ to form a sequence of numbers starting with 1. Place the 1 die on the
 1 in the 1 / blank domino. Place the 2 on the 2 / blank, the 3 on the 3 / blank,
 and so on.
 
+For example, here's one possible setup:
+
+    0|2 0|4 2|2 6|4
+    
+    2 6 0|0 4|4 2|3
+    - -
+    4 3 1|4 2|1 3|0
+    
+    5|0 5|5 0|6 3 4
+                - -
+    6|2 5|3 3|3 4 5
+    
+    1|6 2|5 1|1 6|5
+    
+    6|6 5|1 3|1 0|1
+    ---
+    dice:1(7,0),2(1,6),3(6,4),4(3,6),5(0,3),6(5,3)
+
 ### Play
 The game is played in rounds, and each round starts by choosing which die is the
 queen bee. If you put aside a die, roll it to choose the queen, otherwise roll
