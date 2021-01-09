@@ -53,7 +53,7 @@ class SvgTurtle(TNavigator, TPen):
         if self.screen:
             x1, y1 = self._convert_position(self._position)
             x2, y2 = self._convert_position(end)
-            if self._drawing:
+            if self._drawing and (x1, y1) != (x2, y2):
                 pencolor = self._pencolor or 0
                 pensize = self._pensize or 0
                 # May draw line twice when filling, but it makes sure that we

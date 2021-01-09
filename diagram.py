@@ -624,7 +624,7 @@ def draw_arrows(turtle: Turtle, board: Board, cell_size: int):
         return
     start_pos = turtle.pos()
     turtle.up()
-    turtle.color('black')
+    turtle.color('grey50')
     line_width = cell_size / 20
     turtle.right(90)
     turtle.forward(cell_size * (board.height - 0.5))

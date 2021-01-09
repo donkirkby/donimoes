@@ -495,6 +495,7 @@ arrows:(0,1)R2D1
     t.forward(100)
     t.right(180)
     t.width(5)
+    t.color('grey50')
     t.down()
     t.forward(200)
     t.right(90)
@@ -504,7 +505,6 @@ arrows:(0,1)R2D1
     t.forward(5)
     t.right(150)
     t.down()
-    t.color('black')
     t.begin_fill()
     for _ in range(3):
         t.forward(15)
