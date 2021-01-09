@@ -89,16 +89,15 @@ class MarkerSet:
 
 class DiceSet:
     def __init__(self, dice_text: str):
-
         self.dice = {}  # {(x, y): pips}
-        for match in re.finditer(r'(\d+)\((\d+),(\d+)\)', dice_text):
-            die_pips = int(match.group(1))
-            row = int(match.group(2))
-            column = int(match.group(3))
+        for match in re.finditer(r'\((\d+),(\d+)\)(\d+)', dice_text):
+            row = int(match.group(1))
+            column = int(match.group(2))
+            die_pips = int(match.group(3))
             self.dice[row, column] = die_pips
 
     def __repr__(self):
-        text = ','.join(f'{die_pips}({x},{y})'
+        text = ','.join(f'({x},{y}){die_pips}'
                         for (x, y), die_pips in self.dice.items())
         return f'DiceSet({text!r})'
 
@@ -107,20 +106,49 @@ class DiceSet:
         return self.dice.get((x, y))
 
 
+class ArrowSet:
+    directions = dict(r=(1, 0),
+                      u=(0, 1),
+                      l=(-1, 0),
+                      d=(0, -1))
+
+    def __init__(self, text: str):
+        self.text = text
+        self.positions = []  # [[(x1, y1), (x2, y2), ...], ...]
+        for match in re.finditer(r'\((\d+),(\d+)\)(([UDLR]\d+)+)', text):
+            x = int(match.group(1))
+            y = int(match.group(2))
+            position = [(x, y)]
+            moves = match.group(3)
+            for move_match in re.finditer(r'([UDLR])(\d+)', moves):
+                direction = move_match.group(1)
+                distance = int(move_match.group(2))
+                dx, dy = self.directions[direction.lower()]
+                x += dx*distance
+                y += dy*distance
+                position.append((x, y))
+            self.positions.append(position)
+
+    def __repr__(self):
+        return f'ArrowSet({self.text!r})'
+
+
 class Board(object):
     @classmethod
     def create(cls, state, border=0, max_pips=None):
         sections = state.split('\n---\n')
-        if len(sections) <= 1:
-            marker_text = ''
-            dice_set = None
-        elif sections[1].startswith('dice:'):
-            marker_text = ''
-            dice_text = sections[1][5:].rstrip()
-            dice_set = DiceSet(dice_text)
-        else:
-            marker_text = sections[1]
-            dice_set = None
+        dice_set = arrows = None
+        marker_text = ''
+        if len(sections) > 1:
+            for line in sections[1].splitlines():
+                if line.startswith('dice:'):
+                    dice_text = line[5:].rstrip()
+                    dice_set = DiceSet(dice_text)
+                elif line.startswith('arrows:'):
+                    arrows_text = line[7:].rstrip()
+                    arrows = ArrowSet(arrows_text)
+                else:
+                    marker_text = line
         marker_set = MarkerSet(marker_text, border)
         lines = sections[0].splitlines(False)
         lines.reverse()
@@ -131,7 +159,8 @@ class Board(object):
         board = cls(width + 2*border,
                     height + 2*border,
                     max_pips=max_pips,
-                    dice_set=dice_set)
+                    dice_set=dice_set,
+                    arrows=arrows)
         degrees = None
         for x in range(width):
             for y in range(height):
@@ -194,12 +223,14 @@ class Board(object):
                  width: int,
                  height: int,
                  max_pips: int = None,
-                 dice_set: DiceSet = None):
+                 dice_set: DiceSet = None,
+                 arrows: ArrowSet = None):
         self.width = width
         self.height = height
         self.dominoes = []
         self.max_pips = max_pips
         self.dice_set = dice_set
+        self.arrows = arrows
         self.add_count = 0
         if max_pips is None:
             self.extra_dominoes = []

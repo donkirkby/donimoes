@@ -50,7 +50,7 @@ For example, here's one possible setup:
     
     6|6 5|1 3|1 0|1
     ---
-    dice:1(7,0),2(1,6),3(6,4),4(3,6),5(0,3),6(5,3)
+    dice:(7,0)1,(1,6)2,(6,4)3,(3,6)4,(0,3)5,(5,3)6
 
 ### Play
 The game is played in rounds, and each round starts by choosing which die is the
@@ -73,6 +73,8 @@ two ways:
 
 The blank on the other end of the queen bee's domino is wild. Any die can land
 there. A die may also leave the wild space on a later move.
+
+See the example solution after the rules.
 
 ### Solve
 As soon as the queen bee is chosen, all players try to solve the puzzle at the
@@ -103,6 +105,68 @@ score is 9 minus the number of players.
 Remove the queen bee from the board. If that leaves fewer than 3 dice, shuffle
 all the dominoes and set up again. Otherwise, place all the other dice on the
 board back in their starting places. Roll to choose the next queen bee.
+
+### Example Solution
+Let's solve the set up above if the 1 die is the queen bee. There are a few
+options, but it seems best to make the first two moves by moving the 5
+and 3 into positions where they can help the other dice get to the queen:
+
+    0|2 0|4 2|2 6|4
+    
+    2 6 0|0 4|4 2|3
+    - -
+    4 3 1|4 2|1 3|0
+    
+    5|0 5|5 0|6 3 4
+                - -
+    6|2 5|3 3|3 4 5
+    
+    1|6 2|5 1|1 6|5
+    
+    6|6 5|1 3|1 0|1
+    ---
+    dice:(7,0)1,(1,6)2,(6,3)3,(3,6)4,(3,3)5,(5,3)6
+    arrows:(6,4)D1,(0,3)R3
+
+There are no 2's near the queen, so the two needs to go on the wild space. It's
+also the farthest away, so it should move next.
+
+    0|2 0|4 2|2 6|4
+    
+    2 6 0|0 4|4 2|3
+    - -
+    4 3 1|4 2|1 3|0
+    
+    5|0 5|5 0|6 3 4
+                - -
+    6|2 5|3 3|3 4 5
+    
+    1|6 2|5 1|1 6|5
+    
+    6|6 5|1 3|1 0|1
+    ---
+    dice:(7,0)1,(6,0)2,(6,3)3,(3,6)4,(3,3)5,(5,3)6
+    arrows:(1,6)R2D3R3D3
+
+The 4 and the 6 follow the same path to their places, and then there are two
+options for the 5. Here's one of them, and the round's solution after 6 moves.
+
+    0|2 0|4 2|2 6|4
+    
+    2 6 0|0 4|4 2|3
+    - -
+    4 3 1|4 2|1 3|0
+    
+    5|0 5|5 0|6 3 4
+                - -
+    6|2 5|3 3|3 4 5
+    
+    1|6 2|5 1|1 6|5
+    
+    6|6 5|1 3|1 0|1
+    ---
+    dice:(7,0)1,(6,0)2,(6,3)3,(6,2)4,(7,1)5,(6,1)6
+    arrows:(3,3)R3D2R1
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.

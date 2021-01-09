@@ -547,10 +547,25 @@ def test_dice_set():
     -
 4|5 6
 ---
-dice:3(2,1),4(0,0)
+dice:(2,1)3,(0,0)4
 """)
     dice_set = board.dice_set
 
-    assert repr(dice_set) == "DiceSet('3(2,1),4(0,0)')"
+    assert repr(dice_set) == "DiceSet('(2,1)3,(0,0)4')"
     assert dice_set[2, 1] == 3
     assert dice_set[1, 1] is None
+
+
+def test_arrow_set():
+    board = Board.create("""\
+1|2 3
+    -
+4|5 6
+---
+arrows:(2,1)L2D1,(1,0)R1
+""")
+    arrows = board.arrows
+
+    assert repr(arrows) == "ArrowSet('(2,1)L2D1,(1,0)R1')"
+    assert arrows.positions == [[(2, 1), (0, 1), (0, 0)],
+                                [(1, 0), (2, 0)]]

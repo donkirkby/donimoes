@@ -60,6 +60,8 @@ two ways:
 The blank on the other end of the queen bee's domino is wild. Any die can land
 there. A die may also leave the wild space on a later move.
 
+See the example solution after the rules.
+
 ### Solve
 As soon as the queen bee is chosen, all players try to solve the puzzle at the
 same time. Do not touch the dominoes or dice while you are trying to solve the
@@ -90,6 +92,23 @@ Remove the queen bee from the board. If that leaves fewer than 3 dice, shuffle
 all the dominoes and set up again. Otherwise, place all the other dice on the
 board back in their starting places. Roll to choose the next queen bee.
 
+### Example Solution
+Let's solve the set up above if the 1 die is the queen bee. There are a few
+options, but it seems best to make the first two moves by moving the 5
+and 3 into positions where they can help the other dice get to the queen:
+
+![Diagram](images/new_rules/diagram2.png)
+
+There are no 2's near the queen, so the two needs to go on the wild space. It's
+also the farthest away, so it should move next.
+
+![Diagram](images/new_rules/diagram3.png)
+
+The 4 and the 6 follow the same path to their places, and then there are two
+options for the 5. Here's one of them, and the round's solution after 6 moves.
+
+![Diagram](images/new_rules/diagram4.png)
+
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.
 
@@ -103,15 +122,15 @@ in the same position relative to each other.
 
 For example, if this is the queue:
 
-![Diagram](images/new_rules/diagram2.png)
+![Diagram](images/new_rules/diagram5.png)
 
 Then the start position is like this:
 
-![Diagram](images/new_rules/diagram3.png)
+![Diagram](images/new_rules/diagram6.png)
 
 Not like this:
 
-![Diagram](images/new_rules/diagram4.png)
+![Diagram](images/new_rules/diagram7.png)
 
 ### Moves
 There are only two ways a domino can move.
@@ -124,12 +143,12 @@ numbers can match the two ends of the domino, or both match one end.
 In this example, the 13 can be added, because it matches the 1 below and the 3
 below.
 
-![Diagram](images/new_rules/diagram5.png)
+![Diagram](images/new_rules/diagram8.png)
 
 In this example, the 52 can be added, because it matches the 5 beside and the 5
 above. The 52 could also be added in the vertical position.
 
-![Diagram](images/new_rules/diagram6.png)
+![Diagram](images/new_rules/diagram9.png)
 
 #### Sliding
 Move a domino one space along its long axis so that it ends up with at least
@@ -139,12 +158,12 @@ matches at least two of the adjacent numbers on neighbouring dominoes.
 In this example, the left domino can move down, because the 1 and the 5 add to
 six.
 
-![Diagram](images/new_rules/diagram7.png)
+![Diagram](images/new_rules/diagram10.png)
 
 The left domino can move back up, because the 1 matches the 1 above, and the 5
 matches the 5 to the right.
 
-![Diagram](images/new_rules/diagram8.png)
+![Diagram](images/new_rules/diagram11.png)
 
 #### Stay Connected
 All the dominoes on the board must stay in one connected group, you can't split the group
@@ -155,7 +174,7 @@ Here are the starting positions for several Adding Donimoes problems. The
 solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/new_rules/diagram9.png)
+![Diagram](images/new_rules/diagram12.png)
 
 # Solutions
 ## Adding Donimoes Solutions

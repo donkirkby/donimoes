@@ -1,9 +1,14 @@
-from domino_puzzle import Board, Domino
+from domino_puzzle import Board, Domino, DiceSet, ArrowSet
 
 
 class QueuedBoard(Board):
-    def __init__(self, width, height, max_pips=None):
-        super().__init__(width, height, max_pips)
+    def __init__(self,
+                 width: int,
+                 height: int,
+                 max_pips: int = None,
+                 dice_set: DiceSet = None,
+                 arrows: ArrowSet = None):
+        super().__init__(width, height, max_pips, dice_set, arrows)
         self.queue = []
 
     @classmethod

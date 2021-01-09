@@ -1,5 +1,5 @@
 from diagram import draw_pips, draw_domino, draw_cell, draw_board, draw_paths, \
-    draw_diagram, draw_fuji, draw_domino_outline, draw_arrow
+    draw_diagram, draw_fuji, draw_domino_outline, draw_arrow, draw_die_outline
 from domino_puzzle import Domino, Cell, Board
 from svg_diagram import SvgDiagram
 
@@ -398,7 +398,7 @@ def test_dice_diagram(drawing_differ):
     -
 6|5 4
 ---
-dice:3(2,1),6(0,0)
+dice:(2,1)3,(0,0)6
 """
     expected = SvgDiagram(500, 250)
     actual = SvgDiagram(500, 250)
@@ -458,3 +458,63 @@ dice:3(2,1),6(0,0)
 
     drawing_differ.tolerance = 10
     drawing_differ.assert_equal(actual, expected, 'draw_dice')
+
+
+# noinspection DuplicatedCode
+def test_arrows_diagram(drawing_differ):
+    state = """\
+4|2 3
+    -
+6|5 4
+---
+dice:(2,0)4,(2,1)3
+arrows:(0,1)R2D1
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(-50, -50)
+    draw_domino(t, Domino(6, 5))
+
+    t.forward(200)
+    t.left(90)
+    draw_domino(t, Domino(4, 3))
+
+    draw_die_outline(t, 60)
+    draw_pips(t, 4, 60)
+
+    t.forward(100)
+    draw_die_outline(t, 60)
+    draw_pips(t, 3, 60)
+
+    t.left(90)
+    t.forward(100)
+    draw_domino(t, Domino(2, 4))
+    t.forward(100)
+    t.right(180)
+    t.width(5)
+    t.down()
+    t.forward(200)
+    t.right(90)
+    t.forward(95)
+    t.up()
+    t.width(1)
+    t.forward(5)
+    t.right(150)
+    t.down()
+    t.color('black')
+    t.begin_fill()
+    for _ in range(3):
+        t.forward(15)
+        t.right(120)
+    t.end_fill()
+
+    t = actual.turtle
+    t.up()
+    t.goto(-100, 100)
+    draw_diagram(actual.turtle, state)
+
+    drawing_differ.tolerance = 10
+    drawing_differ.assert_equal(actual, expected, 'draw_arrows')

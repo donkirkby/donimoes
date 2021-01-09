@@ -7,7 +7,7 @@ from sys import maxsize
 
 from networkx import shortest_path, DiGraph, edges, NetworkXNoPath, NodeNotFound
 
-from domino_puzzle import Board, Cell, BoardGraph, GraphLimitExceeded
+from domino_puzzle import Board, Cell, BoardGraph, GraphLimitExceeded, DiceSet, ArrowSet
 from evo import Individual, Evolution
 
 MoveType = IntEnum('MoveType', ('SINGLE_NEIGHBOUR',
@@ -270,8 +270,13 @@ class DominosaBoard(Board):
         # We never want borders for Dominosa boards, because nothing moves.
         return super().create(state, border=0, max_pips=max_pips)
 
-    def __init__(self, width, height, max_pips=None):
-        super().__init__(width, height, max_pips)
+    def __init__(self,
+                 width: int,
+                 height: int,
+                 max_pips: int = None,
+                 dice_set: DiceSet = None,
+                 arrows: ArrowSet = None):
+        super().__init__(width, height, max_pips, dice_set, arrows)
         self.pair_states = {}
 
     def get_pair_state(self, x1: int, y1: int, x2: int, y2: int):
