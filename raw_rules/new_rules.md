@@ -6,7 +6,7 @@ These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 
 * **Bee Donimoes** is a puzzle race game I designed where a swarm of dice bring
-  nectar back to the hive. (1-6 players, double-six dominoes, 3-7 dice, and a
+  nectar back to the hive. (1-6 players, double-six dominoes, 3-6 dice, and a
   timer)
 * **Adding Donimoes** is a puzzle I designed where you add dominoes in the given
     order. (1 player, double-six dominoes)
@@ -19,7 +19,7 @@ A puzzle race game where a swarm of dice bring nectar back to the hive.
 
 ### Equipment
 * a set of dominoes from double blank to double six
-* 3-7 six-sided dice
+* 3 to 6 six-sided dice
 * a one-minute timer
 
 ### Object
@@ -28,35 +28,37 @@ other players. One die is chosen as the queen bee and doesn't move, the others
 have to form a connected group around her.
 
 ### Setup
-Shuffle the dominoes, and place them face up to form an 8x7 rectangle of
-numbers. If you have seven dice, put one aside. Then rotate the remaining dice
-to form a sequence of numbers starting with 1. Place the 1 die on the
-1 in the 1 / blank domino. Place the 2 on the 2 / blank, the 3 on the 3 / blank,
-and so on.
+Decide how many dice you want to use: 3 or 4 are good for learning the game, and
+5 or 6 make more challenging puzzles. Put aside all the dominoes with numbers
+higher than the number of dice, and shuffle the rest. Then place the shuffled
+dominoes face up to form a rectangle of numbers.
 
-For example, here's one possible setup:
+Look for the dominoes with a number at one end and a blank at the other. The
+number on each of those dominoes is the starting space for the die with the
+matching number. You can't have two of those dominoes next to each other, so
+swap them with their neighbours until none of them are touching.
 
-    0|2 0|4 2|2 6|4
+Roll 2 dice, and place each one on its starting space. If a die matches the
+other die or doesn't match any dominoes, reroll it.
+
+For example, here's one possible setup for four dice:
+
+    4|4 0|1 3|3
     
-    2 6 0|0 4|4 2|3
-    - -
-    4 3 1|4 2|1 3|0
+    2|2 2|1 0|4
     
-    5|0 5|5 0|6 3 4
-                - -
-    6|2 5|3 3|3 4 5
+    2|3 0|2 1|4
     
-    1|6 2|5 1|1 6|5
+    0|3 4|2 1|1
     
-    6|6 5|1 3|1 0|1
+    4|3 1|3 0|0
     ---
-    dice:(7,0)1,(1,6)2,(6,4)3,(3,6)4,(0,3)5,(5,3)6
+    dice:(3,2)2,(3,4)1
 
 ### Play
-The game is played in rounds, and each round starts by choosing which die is the
-queen bee. If you put aside a die, roll it to choose the queen, otherwise roll
-one of the dice on the board and then put it back where it was with the number
-it had before. If you roll a number that's not on the board, reroll.
+The game is played in rounds, and each round starts by adding a die to be the
+queen bee. Take one of the dice that's not on the board, and roll it until it
+matches one of the empty starting spaces. Place it on the starting space.
 
 The queen bee never moves during a round, and all the other bees have to bring
 their nectar back to her in one connected group. (Diagonal connections don't
@@ -77,7 +79,7 @@ there. A die may also leave the wild space on a later move.
 See the example solution after the rules.
 
 ### Solve
-As soon as the queen bee is chosen, all players try to solve the puzzle at the
+As soon as the queen bee is placed, all players try to solve the puzzle at the
 same time. Do not touch the dominoes or dice while you are trying to solve the
 puzzle! Once a player has found a solution, they say the number of moves they
 need, and start the timer. The other players have until the timer ends to find
@@ -98,75 +100,81 @@ demonstrate with no more than a few seconds of hesitation. If they made a
 mistake or can't remember the solution, let the player who claimed the next best
 solution demonstrate it.
 
-The player who successfully demonstrates a solution scores one point. A winning
-score is 9 minus the number of players.
+The player who successfully demonstrates a solution scores one point.
 
 ### Next Round
-Remove the queen bee from the board. If that leaves fewer than 3 dice, shuffle
-all the dominoes and set up again. Otherwise, place all the other dice on the
-board back in their starting places. Roll to choose the next queen bee.
+Put the dice back on their starting spaces. If there are any empty starting
+spaces, start the next round by adding a queen bee on one of them. Otherwise,
+shuffle all the dominoes and set up again.
 
 ### Example Solution
-Let's solve the set up above if the 1 die is the queen bee. There are a few
-options, but it seems best to make the first two moves by moving the 5
-and 3 into positions where they can help the other dice get to the queen:
+Let's solve the set up above if the 3 die is the queen bee. The first thing to
+do is check whether there are enough places for the bees to land around the
+queen bee. The queen is surrounded on three sides by 3s and 4s, so something has
+to land on the wild space. Next to that is a 4 and a 2, so you know that the
+1 has to end up on the wild space with the 2 next to it.
 
-    0|2 0|4 2|2 6|4
+Now that we know where we're going, it seems best to start by moving the 2 where
+it can guide the 1 onto the wild spot:
+
+    4|4 0|1 3|3
     
-    2 6 0|0 4|4 2|3
-    - -
-    4 3 1|4 2|1 3|0
+    2|2 2|1 0|4
     
-    5|0 5|5 0|6 3 4
-                - -
-    6|2 5|3 3|3 4 5
+    2|3 0|2 1|4
     
-    1|6 2|5 1|1 6|5
+    0|3 4|2 1|1
     
-    6|6 5|1 3|1 0|1
+    4|3 1|3 0|0
     ---
-    dice:(7,0)1,(1,6)2,(6,3)3,(3,6)4,(3,3)5,(5,3)6
-    arrows:(6,4)D1,(0,3)R3
+    dice:(1,1)3,(3,1)2,(3,4)1
+    arrows:(3,2)D1
 
-There are no 2's near the queen, so the two needs to go on the wild space. It's
-also the farthest away, so it should move next.
+With the 2 in place, the 1 can get to its target.
 
-    0|2 0|4 2|2 6|4
+    4|4 0|1 3|3
     
-    2 6 0|0 4|4 2|3
-    - -
-    4 3 1|4 2|1 3|0
+    2|2 2|1 0|4
     
-    5|0 5|5 0|6 3 4
-                - -
-    6|2 5|3 3|3 4 5
+    2|3 0|2 1|4
     
-    1|6 2|5 1|1 6|5
+    0|3 4|2 1|1
     
-    6|6 5|1 3|1 0|1
+    4|3 1|3 0|0
     ---
-    dice:(7,0)1,(6,0)2,(6,3)3,(3,6)4,(3,3)5,(5,3)6
-    arrows:(1,6)R2D3R3D3
+    dice:(1,1)3,(3,1)2,(0,1)1
+    arrows:(3,4)D3L3
 
-The 4 and the 6 follow the same path to their places, and then there are two
-options for the 5. Here's one of them, and the round's solution after 6 moves.
+Finally, the 2 can get to its target with the help of the 1, in a nice leapfrog
+pattern.
 
-    0|2 0|4 2|2 6|4
+    4|4 0|1 3|3
     
-    2 6 0|0 4|4 2|3
-    - -
-    4 3 1|4 2|1 3|0
+    2|2 2|1 0|4
     
-    5|0 5|5 0|6 3 4
-                - -
-    6|2 5|3 3|3 4 5
+    2|3 0|2 1|4
     
-    1|6 2|5 1|1 6|5
+    0|3 4|2 1|1
     
-    6|6 5|1 3|1 0|1
+    4|3 1|3 0|0
     ---
-    dice:(7,0)1,(6,0)2,(6,3)3,(6,2)4,(7,1)5,(6,1)6
-    arrows:(3,3)R3D2R1
+    dice:(1,1)3,(0,2)2,(0,1)1
+    arrows:(3,1)L3U1
+
+### End Game
+Play for an agreed number of rounds, the player with the most points wins. In
+case of a tie, play an extra round.
+
+To play a series of games, start with 3 dice and play 1 round. Add in another
+die and all the dominoes with numbers up to 4, then play 2 rounds. Continue with
+5 and 6 dice for a total of 10 rounds.
+
+### Variants
+If you find the race too stressful, play cooperatively. Choose a player each
+turn to move the dice, and have the other players give suggestions for how to
+solve it.
+
+It can also be played solitaire, either with or without a timer.
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.

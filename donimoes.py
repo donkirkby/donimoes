@@ -109,6 +109,7 @@ class DiagramWriter:
         self.target_folder = target_folder
         self.images_folder = images_folder
         self.diagram_differ = DiagramDiffer()
+        self.diagram_differ.tolerance = 10
 
     def add_diagram(self, diagram: Diagram) -> Path:
         self.diagram_count += 1
