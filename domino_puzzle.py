@@ -59,6 +59,13 @@ class Cell(object):
             self.find_neighbour_cells(0, -1, exclude_sibling=exclude_sibling),
             self.find_neighbour_cells(-1, 0, exclude_sibling=exclude_sibling))
 
+    @property
+    def partner(self):
+        domino = self.domino
+        if domino.head is self:
+            return domino.tail
+        return domino.head
+
     def dominates_neighbours(self):
         return all(self.pips >= neighbour.pips
                    for neighbour in self.find_neighbours())
@@ -88,7 +95,7 @@ class MarkerSet:
 
 
 class DiceSet:
-    def __init__(self, dice_text: str):
+    def __init__(self, dice_text: str = ''):
         self.dice = {}  # {(x, y): pips}
         for match in re.finditer(r'\((\d+),(\d+)\)(\d+)', dice_text):
             row = int(match.group(1))
@@ -97,9 +104,48 @@ class DiceSet:
             self.dice[row, column] = die_pips
 
     def __repr__(self):
-        text = ','.join(f'({x},{y}){die_pips}'
+        return f'DiceSet({self.text!r})'
+
+    @property
+    def text(self):
+        return ','.join(f'({x},{y}){die_pips}'
                         for (x, y), die_pips in self.dice.items())
-        return f'DiceSet({text!r})'
+
+    def items(self):
+        return self.dice.items()
+
+    def move(self, *positions) -> str:
+        """ Move a die through a list of positions.
+
+        :param positions: ((x, y), ...) the starting position of the die,
+            followed by one or more positions for it to turn on or stop at.
+        :return: a description of the move described by the positions
+        """
+        move_parts = []
+        move_count = len(positions)
+        pips = prev_x = prev_y = 0
+        for i, (x, y) in enumerate(positions):
+            if i == 0:
+                pips = self.dice.pop((x, y))
+            else:
+                dx = x - prev_x
+                dy = y - prev_y
+                if 0 < dx:
+                    move_part = f'R{dx}'
+                elif dx < 0:
+                    move_part = f'L{-dx}'
+                elif 0 < dy:
+                    move_part = f'U{dy}'
+                else:
+                    move_part = f'D{-dy}'
+                if i == 1:
+                    move_part = f'{pips}{move_part}'
+                if i == move_count - 1:
+                    self.dice[x, y] = pips
+                move_parts.append(move_part)
+            prev_x = x
+            prev_y = y
+        return ''.join(move_parts)
 
     def __getitem__(self, coordinates):
         x, y = coordinates
@@ -411,6 +457,9 @@ class Board(object):
                 pips = cell.pips if cell else 'x'
                 marker_display += f'{name}{pips}'
             main_display = f'{main_display}---\n{marker_display}\n'
+        if self.dice_set:
+            main_display = f'{main_display}---\ndice:{self.dice_set.text}\n'
+
         return main_display
 
     def display_cell(self, cell, x, y):
