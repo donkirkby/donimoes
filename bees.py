@@ -102,10 +102,10 @@ class BeesFitnessCalculator:
             move_display = ', '.join(moves)
             round_summaries.append(f'Moves for {queen_pips}: {move_display}.')
         if len(solution_lengths) == max_pips - 2:
-            total_moves = sum(solution_lengths)
-            fitness = (1_000_000 * max(solution_lengths) +
-                       10_000 * total_moves +
-                       reduce(mul, solution_lengths))
+            move_product = reduce(mul, solution_lengths)
+            total_moves = sum(solution_lengths)  # < 100?
+            fitness = (1_000 * move_product +
+                       total_moves)
             round_summaries.insert(0, f'Total moves: {total_moves}.')
         self.summaries.append('\n    '.join(round_summaries))
         self.details.append(f'{board.width}x{board.height} {fitness} ')
@@ -279,7 +279,11 @@ def main():
         top_individual = evo.pool.individuals[-1]
         top_fitness = evo.pool.fitness(top_individual)
         mid_fitness = evo.pool.fitness(evo.pool.individuals[-len(evo.pool.individuals)//5])
-        print(i, top_fitness, mid_fitness, repr(top_individual.value['start']))
+        print(i,
+              top_fitness,
+              mid_fitness,
+              repr(top_individual.value['start']),
+              top_fitness % 1000)
         hist.append(top_fitness)
         evo.step()
 
