@@ -1074,11 +1074,10 @@ dominoes face up to form a rectangle of numbers.
 
 Look for the dominoes with a number at one end and a blank at the other. The
 number on each of those dominoes is the starting space for the die with the
-matching number. You can't have two of those dominoes next to each other, so
-swap them with their neighbours until none of them are touching.
-
-Roll 2 dice, and place each one on its starting space. If a die matches the
-other die or doesn't match any dominoes, reroll it.
+matching number. The board will be easier to solve if none of those dominoes
+touch each other, so you may swap them with their neighbours until none of them
+are touching. Take 3 dice, turn them so the numbers 1, 2, and 3 are on top, then
+place them on their starting spaces.
 
 For example, here's one possible setup for four dice:
 
@@ -1092,16 +1091,12 @@ For example, here's one possible setup for four dice:
     
     4|3 1|3 0|0
     ---
-    dice:(3,2)2,(3,4)1
+    dice:(1,1)3,(3,2)2,(3,4)1
 
 ### Play
-The game is played in rounds, and each round starts by adding a die to be the
-queen bee. Take one of the dice that's not on the board, and roll it until it
-matches one of the empty starting spaces. Place it on the starting space.
-
-The queen bee never moves during a round, and all the other bees have to bring
-their nectar back to her in one connected group. (Diagonal connections don't
-count.)
+The die with the largest number is the queen bee, which never moves during the
+round. All the smaller bees have to bring their nectar back to her in one
+connected group. (Diagonal connections don't count.)
 
 The dice can only land on their own numbers. They can move between numbers in
 two ways:
@@ -1133,7 +1128,7 @@ timer. They win the round if no other player can find a solution before the
 timer ends.
 
 ### Demonstrate
-Whichever player has claimed the best solution when the timer goes now has to
+Whichever player has claimed the best solution when the timer ends has to
 demonstrate that solution, counting the moves out loud. Players should
 demonstrate with no more than a few seconds of hesitation. If they made a
 mistake or can't remember the solution, let the player who claimed the next best
@@ -1143,11 +1138,11 @@ The player who successfully demonstrates a solution scores one point.
 
 ### Next Round
 Put the dice back on their starting spaces. If there are any empty starting
-spaces, start the next round by adding a queen bee on one of them. Otherwise,
-shuffle all the dominoes and set up again.
+spaces, start the next round by adding the next bigger die on its starting
+space. Otherwise, shuffle all the dominoes and set up again.
 
 ### Example Solution
-Let's solve the set up above if the 3 die is the queen bee. The first thing to
+Let's solve the set up above, where the 3 die is the queen bee. The first thing to
 do is check whether there are enough places for the bees to land around the
 queen bee. The queen is surrounded on three sides by 3s and 4s, so something has
 to land on the wild space. Next to that is a 4 and a 2, so you know that the
@@ -1208,12 +1203,45 @@ To play a series of games, start with 3 dice and play 1 round. Add in another
 die and all the dominoes with numbers up to 4, then play 2 rounds. Continue with
 5 and 6 dice for a total of 10 rounds.
 
+For experienced players, play 3 cycles with 6 dice for a total of 12 rounds.
+
 ### Variants
 If you find the race too stressful, play cooperatively. Choose a player each
 turn to move the dice, and have the other players give suggestions for how to
 solve it.
 
 It can also be played solitaire, either with or without a timer.
+
+### Problems
+When you randomly lay out the dominoes, most solutions will take between 3 and
+6 moves. Here are some carefully chosen layouts that range from easy to very
+challenging. Record how many moves you used for each queen bee, and then compare
+to the solutions at the end.
+
+#### Problem 5
+    0|4 3|2 1|2
+    
+    4 0|0 3|4 3
+    -         -
+    1 1|0 4|4 0
+    
+    1|3 2|0 3 4
+            - -
+    2|2 1|1 3 2
+
+#### Problem 6
+    2|3 1|4 3 4 0
+            - - -
+    1|1 1|3 5 5 0
+    
+    4 0|2 4|4 0|5
+    -
+    2 2 4 3|3 2|2
+      - -
+    4 1 3 2|5 1|5
+    -
+    0 5|5 0|1 0|3
+
 
 ## Domino Finder
 A memory game with hidden traps.
@@ -2274,6 +2302,15 @@ Here are the Mirror Donimoes solutions:
     RL5, RU3, NL3, NU, NL5, NU2, RdU, NdU, NR, ND, RD, RR, RdU2, NdU2, NL, ND,
     RD, RL, RdU2, NdU2, PR2, PdD3, RdD3, PD, PR3, PU, PR2, PU, PL, ND2, NR3, NU,
     NR2, NU, PdR, PU, NL, RD3, RR3, RU, RR2!
+
+## Bee Donimoes Solutions
+5. Total moves: 13.
+   Moves for 3: 1L1, 1D1, 1R2D1, 2D1R3, 1R3U2, 2U4.
+   Moves for 4: 1U2L1, 3L2, 1D3, 2L2U3, 2R3, 3U1L1, 1U3.
+6. Total moves: 23.
+   Moves for 3: 1R1, 1U1, 1L4, 1U3, 1R1, 1U1, 2U2L2, 1L2D1, 2D3, 1R1, 2R5, 1D3, 2D2, 1R4.
+   Moves for 4: 1L4, 3L6U1R2, 2D2L2U1, 1U1R1.
+   Moves for 5: 3U3L1, 2R3D1, 3D1L1, 1U2R1D1, 4R5U2.
 
 ## Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different

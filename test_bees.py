@@ -175,3 +175,71 @@ dice:(2,0)2,(0,2)1
     solution = graph.get_solution()
 
     assert solution == expected_solution
+
+
+def test_solution_uses_direct():
+    start_state = """\
+4 3 0|3
+- -
+0 1 0|2
+
+0|1 0|0
+---
+dice:(0,2)4,(0,1)2,(1,0)1,(1,2)3
+"""
+    board = BeesBoard.create(start_state, max_pips=4)
+    expected_solution = ['1U1']
+    graph = BeesGraph()
+
+    graph.walk(board)
+    solution = graph.get_solution()
+
+    assert solution == expected_solution
+
+
+def test_place_dice():
+    start_state = """\
+1|0 3|3
+
+2|2 2|0
+
+3|0 1|1
+---
+dice:
+"""
+    board = BeesBoard.create(start_state, max_pips=3)
+    expected_display0 = start_state
+    expected_display2 = """\
+1|0 3|3
+
+2|2 2|0
+
+3|0 1|1
+---
+dice:(0,2)1,(2,1)2
+"""
+    expected_display3 = """\
+1|0 3|3
+
+2|2 2|0
+
+3|0 1|1
+---
+dice:(0,0)3,(0,2)1,(2,1)2
+"""
+
+    display0 = board.display()
+    queen_pips0 = board.queen_pips
+    board.place_dice(2)
+    display2 = board.display()
+    queen_pips2 = board.queen_pips
+    board.place_dice()
+    display3 = board.display()
+    queen_pips3 = board.queen_pips
+
+    assert display0 == expected_display0
+    assert queen_pips0 == 0
+    assert display2 == expected_display2
+    assert queen_pips2 == 2
+    assert display3 == expected_display3
+    assert queen_pips3 == 3
