@@ -1218,40 +1218,120 @@ When you randomly lay out the dominoes, most solutions will take between 3 and
 challenging. Record how many moves you used for each queen bee, and then compare
 to the solutions at the end.
 
-#### Problem 5
-    0|4 3|2 1|2
-    
-    4 0|0 3|4 3
-    -         -
-    1 1|0 4|4 0
-    
-    1|3 2|0 3 4
-            - -
-    2|2 1|1 3 2
+#### Problem 1
+    0|2 2|3 0
+            -
+    1 2 1|1 0
+    - -
+    0 2 1 3 3
+        - - -
+    3|3 2 1 0
 
-#### Problem 6
-    0|0 2 1|3 3
+#### Problem 2
+    0|1 2|3 2
+            -
+    3 0|3 0 1
+    -     -
+    3 2|2 0 1
+            -
+    1|3 0|2 1
+
+#### Problem 3
+    2|3 1 2 1
+        - - -
+    3 0 1 2 2
+    - -
+    0 0 0|1 3
+            -
+    0|2 3|3 1
+
+#### Problem 4
+    2|4 0|2 2|3
+    
+    0|0 3|3 0|1
+    
+    0|3 1 1|3 2
         -     -
-    0|3 0 1|1 2
+    4|4 1 1|4 1
     
-    1|0 3|4 2|4
-    
-    1 2 4|4 3 4
-    - -     - -
-    2 2 1|4 3 0
+    3|4 0|4 2|2
 
-#### Problem 7
-    2|3 1|4 3 4 0
-            - - -
-    1|1 1|3 5 5 0
+#### Problem 5
+    3|4 4 1 2|2
+        - -
+    0|2 2 0 4|4
     
-    4 0|2 4|4 0|5
-    -
-    2 2 4 3|3 2|2
-      - -
-    4 1 3 2|5 1|5
-    -
-    0 5|5 0|1 0|3
+    1|1 3 0 1|2
+        - -
+    3 4 0 0 1|3
+    - -
+    2 0 1|4 3|3
+#### Problem 6
+    0|1 2|2 0|0
+    
+    3|3 1 1|2 4
+        -     -
+    2|4 1 1|3 3
+    
+    3 4|4 1|4 2
+    -         -
+    2 0|3 0|4 0
+
+#### Problem 8
+    1|1 0|1 4 3|5
+            -
+    2|5 1|5 4 1|2
+    
+    2|4 0|0 1|3 0
+                -
+    3 0|4 5 3|2 3
+    -     -
+    3 4|5 5 2 4 2
+            - - -
+    0|5 1|4 0 3 2
+
+#### Problem 9
+    3|3 1|1 0|4 5
+                -
+    1|5 5|5 2|2 4
+    
+    4 3|5 4 2|3 1
+    -     -     -
+    1 0|3 4 4 4 0
+            - -
+    0|5 0|2 3 2 0
+                -
+    1|2 2|5 1|3 0
+
+#### Problem 14
+    4|4 4|5 0|6 0|1
+    
+    3 6 0|4 6|6 1|5
+    - -
+    2 3 3 3|4 3|3 5
+        -         -
+    2|2 1 2|6 0|5 2
+    
+    1|6 5|5 1|4 4|6
+    
+    2|4 1 0|2 0|0 6
+        -         -
+    1|2 1 0|3 3|5 5
+
+#### Problem 15
+    5|6 5|5 1|3 0|4
+    
+    3|5 2|3 0|0 0|5
+    
+    1|5 0|1 0|6 4|5
+    
+    4|4 3|4 3 2|2 2
+            -     -
+    6 0|2 6 0 3|3 1
+    -     -
+    3 1|4 6 2|6 6 1
+                - -
+    2|5 4|6 4|2 1 1
 
 
 ## Domino Finder
@@ -2315,16 +2395,35 @@ Here are the Mirror Donimoes solutions:
     NR2, NU, PdR, PU, NL, RD3, RR3, RU, RR2!
 
 ## Bee Donimoes Solutions
-5. Total moves: 13.
-   Moves for 3: 1L1, 1D1, 1R2D1, 2D1R3, 1R3U2, 2U4.
-   Moves for 4: 1U2L1, 3L2, 1D3, 2L2U3, 2R3, 3U1L1, 1U3.
-6. Total moves: 14.
-   Moves for 3: 1U1, 1R3, 1U1, 1L1D4, 2D4L2, 1L2U2, 2U3.
-   Moves for 4: 1D1, 1R5D1, 1L3, 2D4L1, 1L1U3R3, 2U3R3D1, 3R3D2.
-7. Total moves: 23.
-   Moves for 3: 1R1, 1U1, 1L4, 1U3, 1R1, 1U1, 2U2L2, 1L2D1, 2D3, 1R1, 2R5, 1D3, 2D2, 1R4.
-   Moves for 4: 1L4, 3L6U1R2, 2D2L2U1, 1U1R1.
-   Moves for 5: 3U3L1, 2R3D1, 3D1L1, 1U2R1D1, 4R5U2.
+1. Total moves: 4.
+   Moves for 3: 1R3, 2D2, 1D2, 2R3D1.
+2. Total moves: 6.
+   Moves for 3: 1D1, 1R3, 1D2, 2R1U3, 1U3L3, 2L3D1.
+3. Total moves: 8.
+   Moves for 3: 1L3, 1U1R2, 1U1, 1R2, 1D3, 2R3U2, 1U2L4D1, 2L4U1.
+4. Total moves: 10.
+   Moves for 3: 2L3, 1D2, 2D2, 1L3, 1U1.
+   Moves for 4: 3R3, 2D4R1, 1D2, 3D2L2, 1L3.
+5. Total moves: 14.
+   Moves for 3: 2R1, 2D1R3, 2U2, 2L1, 1R1D3, 2D3L2, 1L2U1L1.
+   Moves for 4: 2R1, 2D1R3, 3R3D2, 2D2L5, 3L5U4, 1L3D2, 3D3.
+6. Total moves: 18.
+   Moves for 3: 1D4, 1R1U2, 1R1, 1D1, 2L2U3, 1U3L2, 2L1, 1D4, 2D4L2.
+   Moves for 4: 3R2U2, 3R1, 2U1L5, 3L1, 2R4D2L1, 3D2L2, 2U4, 1R2D3, 2D4.
+8. Total moves: 18.
+   Moves for 3: 1L3, 2R2, 2U2, 2L6, 1D2R6, 2R6D1L1.
+   Moves for 4: 1L2, 1D3, 3L6, 3D1, 2L4U2, 3U1.
+   Moves for 5: 3L2, 4R2D1L3, 3D1L4, 2L3D1L1, 1L3, 1D4R1D1R1.
+14. Total moves: 26.
+    Moves for 3: 2D1L3, 2U3, 2R6, 1D3L5, 2L4, 1D3, 2D3.
+    Moves for 4: 2D1L3, 3L3U4, 2U3, 2R6, 1D3L5, 2L5U2, 3R1.
+    Moves for 5: 2D1L3, 3L3U4, 2U4L1, 3R5, 2R6D1R1, 1D3L1U2, 4R3D2L1.
+    Moves for 6: 5D3, 1L3, 5L2U6L1, 2U5L1D3, 3U6L1D2.
+15. Total moves: 28.
+    Moves for 3: 2R2, 1L3, 2U1R1, 2D3, 2L5, 1D4R6, 2R6U3, 1U3L2D1, 2L2D2.
+    Moves for 4: 1L3, 3L2, 2U1R3, 3R2, 2L1D2, 3D2L4, 1D3R4U5, 3R4U5R1, 2U5R2.
+    Moves for 5: 3L2, 4D1L1, 4D1, 2U1R4, 1R3U1, 3R4D1.
+    Moves for 6: 3L2, 5U1L5, 4L5D3R1, 5D3R1U1R1.
 
 ## Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different

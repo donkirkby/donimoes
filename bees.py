@@ -1,8 +1,7 @@
 import random
 import sys
 import typing
-from functools import reduce
-from operator import mul
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from sys import maxsize
 
 from networkx import Graph, is_connected
@@ -49,7 +48,8 @@ class BeesProblem(Individual):
 
 
 class BeesFitnessCalculator:
-    def __init__(self, size_limit=10_000):
+    def __init__(self, target_length=100, size_limit=10_000):
+        self.target_length = target_length
         self.size_limit = size_limit
         self.details = []
         self.summaries = []
@@ -102,9 +102,13 @@ class BeesFitnessCalculator:
             move_display = ', '.join(moves)
             round_summaries.append(f'Moves for {queen_pips}: {move_display}.')
         if len(solution_lengths) == max_pips - 2:
-            move_product = reduce(mul, solution_lengths)
+            move_product = 1000
+            for solution_length in solution_lengths:
+                move_product *= abs(solution_length - self.target_length + 0.1)
+            move_product = round(move_product)
             total_moves = sum(solution_lengths)  # < 100?
-            fitness = (1_000 * move_product +
+            fitness = (100_000_000_000 +
+                       -1_000 * move_product +
                        total_moves)
             round_summaries.insert(0, f'Total moves: {total_moves}.')
         self.summaries.append('\n    '.join(round_summaries))
@@ -254,15 +258,34 @@ class BeesGraph(BoardGraph):
             self.last = board.display()
 
 
+def parse_args():
+    parser = ArgumentParser(description='Search for Bee Donimoes problems.',
+                            formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--max_pips',
+                        '-p',
+                        type=int,
+                        default=3,
+                        help='Maximum number of pips to include on dominoes.')
+    parser.add_argument('--target_length',
+                        '-l',
+                        type=int,
+                        default=25,
+                        help='Highest scoring solution length for each queen.')
+    return parser.parse_args()
+
+
 def main():
     # Suggested sizes:
-    # easy (1-3) 3
-    # medium (4-7) 4
-    # hard (8-13) 5
-    # tricky (14-20) 6
+    # easy (1-3) 3 targets 4-8
+    # medium (4-7) 4 targets 5-11
+    # hard (8-13) 5 targets 6-16
+    # tricky (14-20) 6 targets 7-19
 
-    max_pips = 4
-    fitness_calculator = BeesFitnessCalculator()
+    args = parse_args()
+    max_pips = args.max_pips
+    print(f'Searching for solutions of length {args.target_length} '
+          f'with up to {max_pips} pips.')
+    fitness_calculator = BeesFitnessCalculator(target_length=args.target_length)
     init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
     evo = Evolution(
         pool_size=100,

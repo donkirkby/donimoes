@@ -119,17 +119,7 @@ def check_mirror(state, heading):
 
 
 def check_bees(state, heading):
-    """ Check solution to a Bee Donimoes problem.
-
-    Current details:
-    5. Total moves: 13.
-       Moves for 3: 1L1, 1D1, 1R2D1, 2D1R3, 1R3U2, 2U4.
-       Moves for 4: 1U2L1, 3L2, 1D3, 2L2U3, 2R3, 3U1L1, 1U3.
-    6. Total moves: 23.
-       Moves for 3: 1R1, 1U1, 1L4, 1U3, 1R1, 1U1, 2U2L2, 1L2D1, 2D3, 1R1, 2R5, 1D3, 2D2, 1R4.
-       Moves for 4: 1L4, 3L6U1R2, 2D2L2U1, 1U1R1.
-       Moves for 5: 3U3L1, 2R3D1, 3D1L1, 1U2R1D1, 4R5U2.
-    """
+    """ Check solution to a Bee Donimoes problem. """
     n = heading.split(' ')[-1]
     size_limit = 100_000
     fitness_calculator = BeesFitnessCalculator(size_limit=size_limit)
