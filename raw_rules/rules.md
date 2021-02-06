@@ -1319,6 +1319,21 @@ to the solutions at the end.
     1|2 1 0|3 3|5 5
 
 #### Problem 15
+    1 0|1 3|5 5 3|3
+    -         -
+    3 6|3 0|2 4 4 5
+                - -
+    2|1 4|6 4 5 2 0
+            - -
+    6 2|3 4 1 5 2|5
+    -     -
+    5 0|6 0 6|6 2|2
+    
+    1|5 4|4 6 2|6 1
+            -     -
+    0|3 0|0 1 3|4 1
+
+#### Problem 16
     5|6 5|5 1|3 0|4
     
     3|5 2|3 0|0 0|5
@@ -2419,7 +2434,12 @@ Here are the Mirror Donimoes solutions:
     Moves for 4: 2D1L3, 3L3U4, 2U3, 2R6, 1D3L5, 2L5U2, 3R1.
     Moves for 5: 2D1L3, 3L3U4, 2U4L1, 3R5, 2R6D1R1, 1D3L1U2, 4R3D2L1.
     Moves for 6: 5D3, 1L3, 5L2U6L1, 2U5L1D3, 3U6L1D2.
-15. Total moves: 28.
+15. Total moves: 26.
+    Moves for 3: 1L2, 1D6, 1R4, 2D5L4, 1L4U1.
+    Moves for 4: 1L2, 1D5, 1R7, 1D1, 1L3, 1U3, 2D2L3, 3U3R1.
+    Moves for 5: 4D2, 4L1, 1D5R5, 4R5U4L1, 2R2D1, 1U4L1D1L5, 3U4R5U2, 1R6.
+    Moves for 6: 2R3D3, 5D3L7, 1D4L2D1, 2L6, 3U2R1U1.
+16. Total moves: 28.
     Moves for 3: 2R2, 1L3, 2U1R1, 2D3, 2L5, 1D4R6, 2R6U3, 1U3L2D1, 2L2D2.
     Moves for 4: 1L3, 3L2, 2U1R3, 3R2, 2L1D2, 3D2L4, 1D3R4U5, 3R4U5R1, 2U5R2.
     Moves for 5: 3L2, 4D1L1, 4D1, 2U1R4, 1R3U1, 3R4D1.

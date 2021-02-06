@@ -285,6 +285,7 @@ def main():
     max_pips = args.max_pips
     print(f'Searching for solutions of length {args.target_length} '
           f'with up to {max_pips} pips.')
+    target_total = args.target_length * (max_pips - 2)
     fitness_calculator = BeesFitnessCalculator(target_length=args.target_length)
     init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
     evo = Evolution(
@@ -294,7 +295,8 @@ def main():
         n_offsprings=30,
         pair_params=None,
         mutate_params=None,
-        init_params=init_params)
+        init_params=init_params,
+        pool_count=2)
     n_epochs = 1000
 
     hist = []
@@ -302,11 +304,16 @@ def main():
         top_individual = evo.pool.individuals[-1]
         top_fitness = evo.pool.fitness(top_individual)
         mid_fitness = evo.pool.fitness(evo.pool.individuals[-len(evo.pool.individuals)//5])
+        summaries = []
+        for pool in evo.pools:
+            pool_fitness = pool.fitness(pool.individuals[-1])
+            total = pool_fitness % 1000
+            summaries.append(f'{total}/{target_total}')
         print(i,
               top_fitness,
               mid_fitness,
               repr(top_individual.value['start']),
-              top_fitness % 1000)
+              ', '.join(summaries))
         hist.append(top_fitness)
         evo.step()
 
