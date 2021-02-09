@@ -243,3 +243,45 @@ dice:(0,0)3,(0,2)1,(2,1)2
     assert queen_pips2 == 2
     assert display3 == expected_display3
     assert queen_pips3 == 3
+
+
+def test_check_progress_min_gaps():
+    start_state = """\
+1|0 2|2
+
+1|3 2|0
+"""
+    expected_gap = 2
+    board = BeesBoard.create(start_state, max_pips=3)
+    graph = BeesGraph()
+
+    graph.check_progress(board)
+
+    assert graph.min_gaps == expected_gap
+    assert graph.last is None
+
+
+def test_check_progress_win():
+    start_state = """\
+3|5 5|5 4|4 2
+            -
+0|1 4|3 2|2 0
+
+1|2 3 2|5 5 4
+    -     - -
+1|3 0 2|4 4 1
+
+1|1 3|3 0|4 0
+            -
+2|3 0|5 1|5 0
+---
+dice:(2,3)3,(3,2)2,(2,2)1
+"""
+    expected_gap = 0
+    board = BeesBoard.create(start_state, max_pips=5)
+    graph = BeesGraph()
+
+    graph.check_progress(board)
+
+    assert graph.min_gaps == expected_gap
+    assert graph.last.startswith(start_state)

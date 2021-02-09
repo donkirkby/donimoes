@@ -2,9 +2,8 @@ import random
 import sys
 import typing
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+from datetime import datetime
 from sys import maxsize
-
-from networkx import Graph, is_connected
 
 from domino_puzzle import Board, BoardGraph, GraphLimitExceeded, DiceSet, ArrowSet
 from evo import Individual, Evolution
@@ -41,10 +40,9 @@ class BeesProblem(Individual):
         while True:
             if board.fill(random):
                 break
-        board.place_dice()
 
         return dict(start=board.display(),
-                    max_pips=board.queen_pips)
+                    max_pips=board.max_pips)
 
 
 class BeesFitnessCalculator:
@@ -241,20 +239,34 @@ class BeesGraph(BoardGraph):
 
     def check_progress(self, board):
         """ Keep track of which board state was the closest to a solution. """
-        neighbour_graph = Graph()
-        total_gaps = 0
-        queen_pips = board.queen_pips
-        for (x1, y1), pips1 in board.dice_set.dice.items():
-            neighbour_graph.add_edge(pips1, pips1)
-            for (x2, y2), pips2 in board.dice_set.dice.items():
-                gap = abs(x1-x2) + abs(y1-y2) - 1
-                if gap >= 0 and pips1 == queen_pips:
-                    total_gaps += gap
-                if gap == 0:
-                    neighbour_graph.add_edge(pips1, pips2)
+        unvisited = set(board.dice_set.dice)
+        max_gap = board.width + board.height
+        old_total = max_gap * len(unvisited)
+        grouped = set()
+        grouped.add(unvisited.pop())
+        while True:
+            total_gaps = 0
+            while unvisited:
+                x1, y1 = unvisited.pop()
+                min_gap = board.width + board.height
+                for x2, y2 in grouped:
+                    gap = abs(x1-x2) + abs(y1-y2) - 1
+                    if gap == 0:
+                        break
+                    elif gap < min_gap:
+                        min_gap = gap
+                else:
+                    total_gaps += min_gap
+                    continue
+                grouped.add((x1, y1))
+            if total_gaps == 0 or total_gaps == old_total:
+                break
+            old_total = total_gaps
+            unvisited = set(board.dice_set.dice) - grouped
+
         if self.min_gaps is None or total_gaps < self.min_gaps:
             self.min_gaps = total_gaps
-        if self.last is None and is_connected(neighbour_graph):
+        if self.last is None and total_gaps == 0:
             self.last = board.display()
 
 
@@ -271,6 +283,26 @@ def parse_args():
                         type=int,
                         default=25,
                         help='Highest scoring solution length for each queen.')
+    parser.add_argument('--pool_size',
+                        '-s',
+                        type=int,
+                        default=100,
+                        help='Number of items in each evolutionary pool.')
+    parser.add_argument('--offspring',
+                        '-o',
+                        type=int,
+                        default=30,
+                        help='Number of offspring to generate in each pool per epoch.')
+    parser.add_argument('--num_pools',
+                        '-n',
+                        type=int,
+                        default=2,
+                        help='Number of evolutionary pools.')
+    parser.add_argument('--epochs',
+                        '-e',
+                        type=int,
+                        default=1000,
+                        help='Number of evolutionary epochs.')
     return parser.parse_args()
 
 
@@ -281,6 +313,7 @@ def main():
     # hard (8-13) 5 targets 6-16
     # tricky (14-20) 6 targets 7-19
 
+    start_time = datetime.now()
     args = parse_args()
     max_pips = args.max_pips
     print(f'Searching for solutions of length {args.target_length} '
@@ -289,15 +322,15 @@ def main():
     fitness_calculator = BeesFitnessCalculator(target_length=args.target_length)
     init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
     evo = Evolution(
-        pool_size=100,
+        pool_size=args.pool_size,
         fitness=fitness_calculator.calculate,
         individual_class=BeesProblem,
-        n_offsprings=30,
+        n_offsprings=args.offspring,
         pair_params=None,
         mutate_params=None,
         init_params=init_params,
-        pool_count=2)
-    n_epochs = 1000
+        pool_count=args.num_pools)
+    n_epochs = args.epochs
 
     hist = []
     for i in range(n_epochs):
@@ -324,6 +357,8 @@ def main():
     # plt.show()
     solution = best.value['start']
     print(solution)
+    duration = datetime.now() - start_time
+    print(f'Finished {n_epochs} epochs in {duration}.')
 
 
 if __name__ == '__main__':

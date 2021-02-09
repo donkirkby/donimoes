@@ -213,14 +213,8 @@ class Board(object):
                 head = lines[y*2][x*2]
                 head = marker_set.check_markers(head, x, y)
                 if head not in ' x#':
-                    right_joint = x+1 < width and lines[y*2][x*2+1] or ' '
-                    left_joint = 0 < x and lines[y*2][x*2-1] or ' '
-                    upper_joint = y+1 < height and lines[y*2+1][x*2] or ' '
-                    lower_joint = 0 < y and lines[y*2-1][x*2] or ' '
-                    right_joint = board.add_joint(right_joint, x, y, x+1, y)
-                    left_joint = board.add_joint(left_joint, x-1, y, x, y)
-                    upper_joint = board.add_joint(upper_joint, x, y, x, y+1)
-                    lower_joint = board.add_joint(lower_joint, x, y-1, x, y)
+                    right_joint = board.get_joint(x, y, x+1, y, border, lines)
+                    upper_joint = board.get_joint(x, y, x, y+1, border, lines)
                     if right_joint != ' ':
                         tail = lines[y*2][x*2+2]
                         tail = marker_set.check_markers(tail, x+1, y)
@@ -235,34 +229,10 @@ class Board(object):
                         domino = Domino(int(head), int(tail))
                         domino.rotate(degrees)
                         board.add(domino, x+border, y+border)
-                    elif left_joint == ' ' and lower_joint == ' ':
+                    elif board[x+border][y+border] is None:
                         cell = Cell(int(head))
                         board.add(cell, x+border, y+border)
-        board.markers = marker_set.marker_locations
-        for i, line in enumerate(lines):
-            for j, c in enumerate(line):
-                if c != '#':
-                    if not ('0' <= c <= '9'):
-                        continue
-                    if i % 2 == 0 and j % 2 == 0:
-                        continue
-                head = c if c == '#' else int(c)
-                right_joint = j + 1 < line_length and lines[i][j + 1] or ' '
-                upper_joint = i + 1 < len(lines) and lines[i + 1][j] or ' '
-                neighbours = []  # [(tail, degrees)]
-                if right_joint != ' ':
-                    tail = lines[i][j + 2]
-                    degrees = 0
-                    neighbours.append((tail, degrees))
-                if upper_joint != ' ':
-                    tail = lines[i+2][j]
-                    degrees = 90
-                    neighbours.append((tail, degrees))
-                for tail, degrees in neighbours:
-                    tail = tail if tail == '#' else int(tail)
-                    domino = Domino(head, tail)
-                    domino.rotate(degrees)
-                    board.offset_dominoes.append((domino, j/2, i/2))
+        board.place_markers(line_length, lines, marker_set)
         return board
 
     def __init__(self,
@@ -333,6 +303,46 @@ class Board(object):
             item.board = self
             item.x = x
             item.y = y
+
+    def get_joint(self,
+                  x1: int,
+                  y1: int,
+                  x2: int,
+                  y2: int,
+                  border: int,
+                  lines: typing.List[str]) -> str:
+        if y1 == y2:
+            return ((0 < x2 < self.width-2*border) and
+                    lines[y1 * 2][x1 * 2 + 1] or ' ')
+        return ((0 < y2 < self.height-2*border) and
+                lines[y1 * 2 + 1][x1 * 2] or ' ')
+
+    def place_markers(self, line_length, lines, marker_set):
+        self.markers = marker_set.marker_locations
+        for i, line in enumerate(lines):
+            for j, c in enumerate(line):
+                if c != '#':
+                    if not ('0' <= c <= '9'):
+                        continue
+                    if i % 2 == 0 and j % 2 == 0:
+                        continue
+                head = c if c == '#' else int(c)
+                right_joint = j + 1 < line_length and lines[i][j + 1] or ' '
+                upper_joint = i + 1 < len(lines) and lines[i + 1][j] or ' '
+                neighbours = []  # [(tail, degrees)]
+                if right_joint != ' ':
+                    tail = lines[i][j + 2]
+                    degrees = 0
+                    neighbours.append((tail, degrees))
+                if upper_joint != ' ':
+                    tail = lines[i + 2][j]
+                    degrees = 90
+                    neighbours.append((tail, degrees))
+                for tail, degrees in neighbours:
+                    tail = tail if tail == '#' else int(tail)
+                    domino = Domino(head, tail)
+                    domino.rotate(degrees)
+                    self.offset_dominoes.append((domino, j / 2, i / 2))
 
     # noinspection PyUnusedLocal
     @staticmethod

@@ -296,6 +296,23 @@ class DominosaBoard(Board):
             y1, y2 = y2, y1
         self.pair_states[(x1, y1, x2, y2)] = pair_state
 
+    def get_joint(self,
+                  x1: int,
+                  y1: int,
+                  x2: int,
+                  y2: int,
+                  border: int,
+                  lines: typing.List[str]) -> str:
+        joint1 = super().get_joint(x1, y1, x2, y2, border, lines)
+        joint1 = self.add_joint(joint1, x1, y1, x2, y2)
+        if x1 == x2:
+            x0, y0 = x1, y1-1
+        else:
+            x0, y0 = x1-1, y1
+        joint0 = super().get_joint(x0, y0, x1, y1, border, lines)
+        self.add_joint(joint0, x0, y0, x1, y1)
+        return joint1
+
     def add_joint(self, joint: str, x1: int, y1: int, x2: int, y2: int) -> str:
         if not self.is_in_bounds(x1, y1, x2, y2):
             assert joint == ' ', joint

@@ -1,5 +1,8 @@
 import re
+from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
 from pathlib import Path
+
+import typing
 
 from adding_puzzle import AddingBoardGraph
 from bees import BeesFitnessCalculator, BeesProblem
@@ -9,20 +12,41 @@ from dominosa import DominosaBoard, FitnessCalculator, LEVEL_WEIGHTS, DominosaPr
 from mirror import MirrorFitnessCalculator, MirrorProblem
 
 
+def parse_args():
+    parser = ArgumentParser(description='Check solutions in rules file.',
+                            formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--patterns', '-p',
+                        help='Regex patterns for each heading level to filter '
+                             'which solutions to check, separated by colons.',
+                        default='.*:.*:.*:problem .*')
+    parser.add_argument('rules',
+                        help='Rules file to check.',
+                        type=FileType(),
+                        nargs='?',
+                        default=str(Path(__file__).parent / 'raw_rules' /
+                                    'rules.md'))
+    args = parser.parse_args()
+    args.patterns = args.patterns.split(':')
+    return args
+
+
 def main():
-    rules_path = Path(__file__).parent / 'raw_rules' / 'rules.md'
-    rules_text = rules_path.read_text()
+    args = parse_args()
+    rules_text = args.rules.read()
 
     states = parse(rules_text)
     summaries = []
-    heading = ''
+    level_count = 4
+    headings = ['']*level_count
     is_dominosa = is_mirror = is_bees = False
     for state in states:
-        if state.style == 'Heading2':
+        if state.style == Styles.Heading2:
             is_dominosa = 'Dominosa' in state.text
             is_mirror = 'Mirror' in state.text
             is_bees = 'Bee' in state.text
-        if state.style == Styles.Diagram and heading.startswith('Problem'):
+        if state.style == Styles.Diagram and headings_match(headings,
+                                                            args.patterns):
+            heading = headings[-1]
             if is_dominosa:
                 summary = check_dominosa(state, heading)
             elif is_mirror:
@@ -33,8 +57,17 @@ def main():
                 summary = check_other(state, heading)
             summaries.append(summary)
         if state.style.startswith(Styles.Heading):
-            heading = state.text
+            heading_level = int(state.style[len(Styles.Heading):])
+            headings[heading_level-1] = state.text
+            headings[heading_level:] = ['']*(level_count-heading_level)
     print(*summaries, sep='\n')
+
+
+def headings_match(headings: typing.List[str], patterns: typing.List[str]) -> bool:
+    for heading, pattern in zip(headings, patterns):
+        if not re.match(pattern, heading, re.RegexFlag.IGNORECASE):
+            return False
+    return True
 
 
 def check_dominosa(state, heading):

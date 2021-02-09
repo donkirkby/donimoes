@@ -1266,7 +1266,19 @@ to the solutions at the end.
     3 4 0 0 1|3
     - -
     2 0 1|4 3|3
+
 #### Problem 6
+    0|2 2|4 4|4
+    
+    2 4 1|1 3 4
+    - -     - -
+    2 1 2|3 0 3
+    
+    2 0|0 3 0|1
+    -     -
+    1 0|4 3 1|3
+
+#### Problem 7
     0|1 2|2 0|0
     
     3|3 1 1|2 4
@@ -1291,6 +1303,19 @@ to the solutions at the end.
     0|5 1|4 0 3 2
 
 #### Problem 9
+    3|5 5|5 4|4 2
+                -
+    0|1 4|3 2|2 0
+    
+    1|2 3 2|5 5 4
+        -     - -
+    1|3 0 2|4 4 1
+    
+    1|1 3|3 0|4 0
+                -
+    2|3 0|5 1|5 0
+
+#### Problem 10
     3|3 1|1 0|4 5
                 -
     1|5 5|5 2|2 4
@@ -1302,6 +1327,34 @@ to the solutions at the end.
     0|5 0|2 3 2 0
                 -
     1|2 2|5 1|3 0
+
+#### Problem 11
+    3 3|3 4|4 0|5
+    -
+    1 2|4 3|4 1|2
+    
+    2|3 0|2 1|4 5
+                -
+    0|4 2|5 1|5 3
+    
+    0|0 2 5|5 5 1
+        -     - -
+    1|1 2 0|3 4 0
+
+#### Problem 13
+    4 6 5|5 1|5 4|4
+    - -
+    0 3 6 2|2 3 1|2
+        -     -
+    2|4 6 0|3 2 3|3
+    
+    2|6 5 6 0|5 1|6
+        - -
+    0 3 2 0 5|4 2 4
+    - -         - -
+    0 1 0|1 5|6 0 6
+    
+    3|5 3|4 1|1 1|4
 
 #### Problem 14
     4|4 4|5 0|6 0|1
@@ -2422,13 +2475,33 @@ Here are the Mirror Donimoes solutions:
 5. Total moves: 14.
    Moves for 3: 2R1, 2D1R3, 2U2, 2L1, 1R1D3, 2D3L2, 1L2U1L1.
    Moves for 4: 2R1, 2D1R3, 3R3D2, 2D2L5, 3L5U4, 1L3D2, 3D3.
-6. Total moves: 18.
+6. Total moves: 16.
+   Moves for 3: 2R1, 2D2, 2L2, 2D1, 1L5D1, 2U2, 1U3R3, 2R4D1.
+   Moves for 4: 2R1, 2D2, 2L2, 2D1, 1L5D1, 2U2, 3L4D3R1, 2D2.
+7. Total moves: 18.
    Moves for 3: 1D4, 1R1U2, 1R1, 1D1, 2L2U3, 1U3L2, 2L1, 1D4, 2D4L2.
    Moves for 4: 3R2U2, 3R1, 2U1L5, 3L1, 2R4D2L1, 3D2L2, 2U4, 1R2D3, 2D4.
 8. Total moves: 18.
    Moves for 3: 1L3, 2R2, 2U2, 2L6, 1D2R6, 2R6D1L1.
    Moves for 4: 1L2, 1D3, 3L6, 3D1, 2L4U2, 3U1.
    Moves for 5: 3L2, 4R2D1L3, 3D1L4, 2L3D1L1, 1L3, 1D4R1D1R1.
+9. Total moves: 20.
+   Moves for 3: 1D3, 1L1, 1U1, 1R6, 2D3L3, 1L4.
+   Moves for 4: 1D3, 3D2, 1L1, 3L2U4, 2L6D4R4, 3D4R3, 1R4D1.
+   Moves for 5: 4U4, 2L1D1, 4D4, 1R4D3L5, 2D3L5D1, 4L5D1R2, 3D3L1.
+10. Total moves: 22.
+    Moves for 3: 2R2, 2U3, 2L1, 2D1, 1L2D3, 2D3L2, 1L2U2L2, 2U2L1.
+    Moves for 4: 2R2, 2U4L1, 2D2, 1L2U2, 2U1, 1L2, 3U3R2, 1R1.
+    Moves for 5: 2L3, 4D3, 3R3U1, 1L1D1L5, 4U1L5, 3L4.
+11. Total moves: 27.
+    Moves for 3: 2D3, 2L1, 2U1, 2R4U3, 1U3L6, 2L6D1, 1D4, 2D3R2, 1R3.
+    Moves for 4: 2L3, 2D1, 2R1U2, 2R5, 1U3L6, 1D4, 3L4U2, 1U4, 2L6D1.
+    Moves for 5: 2L3, 1U4L1, 1D1, 1L5, 2U1R1, 4U2R3, 3U4L1, 2R5, 1R5.
+13. Total moves: 22.
+    Moves for 3: 1U3, 1R1D4, 1R2, 1U5, 2U3L3, 1L3D1.
+    Moves for 4: 1L2, 3R2, 2U2L6, 3L6U1, 3R1, 1U4L1.
+    Moves for 5: 4R7, 4D6, 4L4, 1D1R1, 4R1U3, 1U3R2.
+    Moves for 6: 4R6, 4D4L1, 5D1L1, 3D2L1.
 14. Total moves: 26.
     Moves for 3: 2D1L3, 2U3, 2R6, 1D3L5, 2L4, 1D3, 2D3.
     Moves for 4: 2D1L3, 3L3U4, 2U3, 2R6, 1D3L5, 2L5U2, 3R1.
