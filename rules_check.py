@@ -152,7 +152,26 @@ def check_mirror(state, heading):
 
 
 def check_bees(state, heading):
-    """ Check solution to a Bee Donimoes problem. """
+    """ Check solution to a Bee Donimoes problem.
+
+    Current summaries:
+    1. 5x4 4 = 4
+    2. 5x4 6 = 6
+    3. 5x4 8 = 8
+    4. 6x5 5 + 5 = 10
+    5. 6x5 7 + 7 = 14
+    6. 6x5 8 + 8 = 16
+    7. 6x5 9 + 9 = 18
+    8. 7x6 6 + 6 + 6 = 18
+    9. 7x6 6 + 7 + 7 = 20
+    10. 7x6 8 + 8 + 6 = 22
+    11. 7x6 9 + 9 + 9 = 27
+    12. 7x6 9 + 10 + 6 = 25
+    13. 8x7 6 + 6 + 6 + 4 = 22
+    14. 8x7 7 + 7 + 7 + 5 = 26
+    15. 8x7 5 + 8 + 8 + 5 = 26
+    16. 8x7 9 + 9 + 6 + 4 = 28
+    """
     n = heading.split(' ')[-1]
     size_limit = 100_000
     fitness_calculator = BeesFitnessCalculator(size_limit=size_limit)

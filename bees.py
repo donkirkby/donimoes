@@ -99,7 +99,9 @@ class BeesFitnessCalculator:
 
             move_display = ', '.join(moves)
             round_summaries.append(f'Moves for {queen_pips}: {move_display}.')
-        if len(solution_lengths) == max_pips - 2:
+        if len(solution_lengths) != max_pips - 2:
+            lengths_display = 'some unsolved'
+        else:
             move_product = 1000
             for solution_length in solution_lengths:
                 move_product *= abs(solution_length - self.target_length + 0.1)
@@ -109,8 +111,11 @@ class BeesFitnessCalculator:
                        -1_000 * move_product +
                        total_moves)
             round_summaries.insert(0, f'Total moves: {total_moves}.')
+            lengths_display = ' + '.join(str(length)
+                                             for length in solution_lengths)
+            lengths_display += f' = {total_moves}'
         self.summaries.append('\n    '.join(round_summaries))
-        self.details.append(f'{board.width}x{board.height} {fitness} ')
+        self.details.append(f'{board.width}x{board.height} {lengths_display}')
 
         value['fitness'] = fitness
         return fitness
