@@ -1414,6 +1414,65 @@ to the solutions at the end.
                 - -
     2|5 4|6 4|2 1 1
 
+#### Problem 17
+    3|3 3 2|5 1|6 4
+        -         -
+    6|6 0 3|6 0|1 4
+    
+    2|6 6 2|3 6 2|4
+        -     -
+    4|5 4 4|1 5 0|6
+    
+    1|3 5|5 0|5 0|2
+    
+    3|5 5 0|4 2 0|0
+        -     -
+    1|1 1 1|2 2 3|4
+
+#### Problem 18
+    5 1|4 3 3|4 5|0
+    -     -
+    1 0|1 3 4|4 4|6
+    
+    3|6 0|2 2|6 3 0
+                - -
+    0|4 5|5 0|6 1 0
+    
+    2 6 4|5 1|6 1|2
+    - -
+    2 6 2|3 1|1 6 5
+                - -
+    2|5 2|4 0|3 5 3
+
+#### Problem 19
+    4|4 2 3 2|4 4|5
+        - -
+    0|2 1 0 4|6 6|6
+    
+    2|6 6 3|5 1|1 4
+        -         -
+    3|4 5 1|6 2|2 0
+    
+    1 6 5 0|0 1 3|1
+    - - -     -
+    0 0 5 3|3 4 5 5
+                - -
+    3|6 1|5 2|3 2 0
+
+#### Problem 20
+    2 5 2|6 0|0 3|3
+    - -
+    2 5 2 0|4 3|5 5
+        -         -
+    0|3 5 6|6 0|6 1
+    
+    4|5 1 1|3 2 2 4
+        -     - - -
+    1|1 4 1|6 1 0 4
+    
+    3|6 2|4 1 2|3 4
+            -     -
+    4|6 0|5 0 5|6 3
 
 ## Domino Finder
 A memory game with hidden traps.
@@ -2534,6 +2593,26 @@ Here are the Mirror Donimoes solutions:
     Moves for 4: 1L3, 3L2, 2U1R3, 3R2, 2L1D2, 3D2L4, 1D3R4U5, 3R4U5R1, 2U5R2.
     Moves for 5: 3L2, 4D1L1, 4D1, 2U1R4, 1R3U1, 3R4D1.
     Moves for 6: 3L2, 5U1L5, 4L5D3R1, 5D3R1U1R1.
+17. Total moves: 32.
+    Moves for 3: 1L4, 1D5, 1L2, 1U2, 2L7U2, 1D2, 2D4R4, 1R2, 2L2U6R1, 1U5.
+    Moves for 4: 3L2, 3D5, 3R3, 3U4, 1L3D4, 3D4L3, 1L3U1, 2L7D1R4D1, 1D1R4D1L1, 3R3.
+    Moves for 5: 3L1, 2L2D2, 3D4, 3R4D2R1, 1D5L3, 3L1U2L1, 2L1.
+    Moves for 6: 5L3, 3D4R5U1L1, 5R5U1L2, 1D2L2, 4U2R3U1.
+18. Total moves: 31.
+    Moves for 3: 2R1, 2D4, 2L2, 1D5R3U1, 2R2.
+    Moves for 4: 1L2, 2R1, 1D2, 1R6, 1D1, 1L2, 2D2L4, 1L4U1, 2D2, 3L5U4, 2U2.
+    Moves for 5: 1L2, 3R2, 3U6, 3L1D2, 3L6, 2L3D2, 1D3R6, 2R6U4R1, 3R6, 1U1, 4R5U2.
+    Moves for 6: 5D6, 5L1U3L2, 4R3, 3U3L2U2.
+19. Total moves: 34.
+    Moves for 3: 1R5, 2R2, 1U2, 2U1R1, 1R1, 2D6, 2R2, 1D4L4, 2L4U6, 1U5.
+    Moves for 4: 1R5, 3D2, 1U2, 3R2D4, 1D4L3, 1U5, 2R1U1, 1D5, 2D6R4, 3R1U2, 1R4U4, 2U3.
+    Moves for 5: 3D5, 3R1, 4D3L3U4, 2R3D4R3D1, 2L1, 4D4R3D1, 3R3D1L2, 1R7.
+    Moves for 6: 3D5, 2D4, 4D3L6U2, 5L5.
+20. Total moves: 31.
+    Moves for 3: 2L1, 2D2, 1R1U1, 1L5, 2L3, 2U4, 2L2, 1U2.
+    Moves for 4: 1U4L1, 1D3, 1L2, 1U2R6, 3R6U2, 3L1, 2U3L4, 3R1, 1U2L5D3, 3L5D3R2, 2D1, 3U2R1, 1U2R1.
+    Moves for 5: 2L1, 2D2, 2L3, 4D4L2U1, 1L2U1L1, 3D2R1D2.
+    Moves for 6: 5R2, 5U4, 3R4U1, 1U4R1D1R2.
 
 ## Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different
