@@ -3,8 +3,12 @@ import typing
 from itertools import groupby
 from sys import maxsize
 
-from domino_puzzle import Board, BadPositionError, Domino, BoardGraph, Cell, GraphLimitExceeded
+from domino_puzzle import (Board, BadPositionError, Domino, BoardGraph, Cell,
+                           GraphLimitExceeded, MoveDescription)
 from evo import Individual, Evolution
+from priority import PriorityQueue
+
+SOLVED = 'SOLVED'
 
 
 def get_cell_marker(cell: Cell) -> str:
@@ -25,12 +29,11 @@ class MirrorGraph(BoardGraph):
         super().__init__(board_class)
         self.min_heuristic = None
 
-    def generate_moves(self, board: Board):
+    def generate_moves(self, board: Board) -> typing.Iterator[MoveDescription]:
         if board.are_markers_connected:
-            if self.last is None:
-                self.last = '0|0\n---\n1'
-            yield 'SOLVED', self.last
-            raise GraphLimitExceeded(len(self.graph))
+            self.last = '0|0\n---\n1'
+            yield MoveDescription(SOLVED, self.last)
+            return
         for domino in board.dominoes[:]:
             dx, dy = domino.direction
             yield from self.try_move_domino(domino, dx, dy)
@@ -39,14 +42,23 @@ class MirrorGraph(BoardGraph):
             for dx, dy in Domino.directions:
                 yield from self.try_move_marker(board, x, y, dx, dy)
 
-    def try_move_marker(self, board: Board, x: int, y: int, dx: int, dy: int):
+    def try_move_marker(self,
+                        board: Board,
+                        x: int,
+                        y: int,
+                        dx: int,
+                        dy: int) -> typing.Iterator[MoveDescription]:
         try:
-            move, new_state, heuristic = self.move_marker(board, x, y, dx, dy)
-            yield move, new_state, None, heuristic
+            yield self.move_marker(board, x, y, dx, dy)
         except BadPositionError:
             pass
 
-    def move_marker(self, board: Board, x: int, y: int, dx: int, dy: int):
+    def move_marker(self,
+                    board: Board,
+                    x: int,
+                    y: int,
+                    dx: int,
+                    dy: int) -> MoveDescription:
         x2 = x+dx
         y2 = y+dy
         new_cell = board[x2][y2]
@@ -71,16 +83,21 @@ class MirrorGraph(BoardGraph):
 
         del board.markers[(x2, y2)]
         board.markers[(x, y)] = marker
-        return move, new_state, heuristic
+        return MoveDescription(move,
+                               new_state,
+                               heuristic=heuristic,
+                               remaining=heuristic)
 
-    def try_move_domino(self, domino: Domino, dx: int, dy: int):
+    def try_move_domino(self,
+                        domino: Domino,
+                        dx: int,
+                        dy: int) -> typing.Iterator[MoveDescription]:
         try:
-            move, new_state, heuristic = self.move_domino(domino, dx, dy)
-            yield move, new_state, None, heuristic
+            yield self.move_domino(domino, dx, dy)
         except BadPositionError:
             pass
 
-    def move_domino(self, domino: Domino, dx, dy):
+    def move_domino(self, domino: Domino, dx, dy) -> MoveDescription:
         head_marker = get_cell_marker(domino.head)
         tail_marker = get_cell_marker(domino.tail)
         marker = head_marker or tail_marker
@@ -108,7 +125,10 @@ class MirrorGraph(BoardGraph):
             if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
             heuristic = self.calculate_heuristic(board)
-            return move, board.display(cropped=True), heuristic
+            return MoveDescription(move,
+                                   board.display(cropped=True),
+                                   heuristic=heuristic,
+                                   remaining=heuristic)
         finally:
             domino.move(-dx, -dy)
             board.markers = original_markers
@@ -136,7 +156,7 @@ class MirrorGraph(BoardGraph):
 
     def get_solution(self, return_partial=False, solution_nodes=None):
         solution = super().get_solution(return_partial, solution_nodes)
-        assert solution[-1] == 'SOLVED'
+        assert solution[-1] == SOLVED
         return solution[:-1]
 
     def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
@@ -149,6 +169,16 @@ class MirrorGraph(BoardGraph):
             if size_limit is not None and ex.limit >= size_limit:
                 raise
             return set(self.graph.nodes())
+
+    def add_moves(self,
+                  start_state: str,
+                  moves: typing.Iterable[MoveDescription],
+                  pending_nodes: PriorityQueue,
+                  g_score: typing.Dict[str, float]):
+        super().add_moves(start_state, moves, pending_nodes, g_score)
+        for description in moves:
+            if description.move == SOLVED:
+                raise GraphLimitExceeded(len(self.graph))
 
 
 class MirrorProblem(Individual):

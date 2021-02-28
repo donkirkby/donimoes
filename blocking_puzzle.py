@@ -20,9 +20,10 @@ class BlockingBoardGraph(BoardGraph):
         """ Move a domino and calculate the new board state.
 
         Afterward, put the board back in its original state.
-        @return: the new board state
+        @return: the new board state and remaining moves
         @raise BadPositionError: if the move is illegal
         """
+        remaining = 1  # ignored for this puzzle
         domino.move(dx, dy)
         try:
             board = domino.head.board
@@ -30,7 +31,7 @@ class BlockingBoardGraph(BoardGraph):
                 raise BadPositionError('Board is not connected.')
             if board.hasMatch():
                 raise BadPositionError('Board has a match.')
-            return board.display(cropped=True)
+            return board.display(cropped=True), remaining
         finally:
             domino.move(-dx, -dy)
 

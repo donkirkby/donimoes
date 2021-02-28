@@ -1,7 +1,8 @@
 import typing
 from sys import maxsize
 
-from domino_puzzle import BadPositionError, find_boards_with_deap, Domino, BoardGraph
+from domino_puzzle import (BadPositionError, find_boards_with_deap, Domino,
+                           BoardGraph, MoveDescription)
 from queued_board import QueuedBoard
 
 
@@ -18,11 +19,11 @@ class AddingBoardGraph(BoardGraph):
         yield from super().generate_moves(start_board)
         yield from self.try_add(start_board)
 
-    def move(self, domino, dx, dy):
+    def move(self, domino, dx, dy) -> typing.Tuple[str, int]:
         """ Move a domino and calculate the new board state.
 
         Afterward, put the board back in its original state.
-        @return: the new board state
+        @return: the new board state and the number of dominoes left unadded
         @raise BadPositionError: if the move is illegal
         """
         domino.move(dx, dy)
@@ -31,7 +32,8 @@ class AddingBoardGraph(BoardGraph):
             board = domino.head.board
             if not board.is_connected():
                 raise BadPositionError('Board is not connected.')
-            return board.display(cropped=True)
+            remaining = self.check_progress(board)
+            return board.display(cropped=True), remaining
         finally:
             domino.move(-dx, -dy)
 
@@ -44,25 +46,37 @@ class AddingBoardGraph(BoardGraph):
                 for angle_index in range(4):
                     try:
                         added_domino.rotate_to(angle_index * 90)
-                        new_display = self.add(added_domino, board, x, y)
+                        new_display, remaining = self.add(added_domino,
+                                                          board,
+                                                          x,
+                                                          y)
                         move = added_domino.describe_add(x, board.height-y-1)
-                        yield move, new_display
+                        yield MoveDescription(move,
+                                              new_display,
+                                              remaining=remaining)
                     except BadPositionError:
                         pass
 
-    def add(self, domino: Domino, board: QueuedBoard, x: int, y: int) -> str:
+    def add(self,
+            domino: Domino,
+            board: QueuedBoard,
+            x: int,
+            y: int) -> typing.Tuple[str, float]:
         """ Add a domino and calculate the new board state.
 
         Afterward, put the board back in its original state.
-        @return: the new board state
+        @return: the new board state and remaining progress to reach goal
         @raise BadPositionError: if the move is illegal
         """
         board.add(domino, x, y)
-        self.check_matches(domino)
+        try:
+            self.check_matches(domino)
 
-        new_display = board.display(cropped=True)
-        board.remove(domino)
-        return new_display
+            new_display = board.display(cropped=True)
+            remaining = self.check_progress(board)
+            return new_display, remaining
+        finally:
+            board.remove(domino)
 
     @staticmethod
     def check_matches(domino: Domino, is_complement_allowed=False):
@@ -103,10 +117,6 @@ class AddingBoardGraph(BoardGraph):
             width = xmax-xmin+1
             height = ymax-ymin+1
             domino_count = 1 - 2*len(board.dominoes)/(width*height)
-        if self.min_domino_count is None or domino_count < self.min_domino_count:
-            self.min_domino_count = domino_count
-        if self.last is None and not domino_count:
-            self.last = board.display(cropped=True)
         return domino_count
 
 

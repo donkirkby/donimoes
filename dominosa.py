@@ -7,7 +7,8 @@ from sys import maxsize
 
 from networkx import shortest_path, DiGraph, edges, NetworkXNoPath, NodeNotFound
 
-from domino_puzzle import Board, Cell, BoardGraph, GraphLimitExceeded, DiceSet, ArrowSet
+from domino_puzzle import (Board, Cell, BoardGraph, GraphLimitExceeded, DiceSet,
+                           ArrowSet, MoveDescription)
 from evo import Individual, Evolution
 
 MoveType = IntEnum('MoveType', ('SINGLE_NEIGHBOUR',
@@ -128,7 +129,7 @@ class FitnessCalculator:
             graph.walk(board, size_limit=10_000)
         except GraphLimitExceeded:
             fitness -= 100_000
-        dominoes_unused = graph.min_domino_count
+        dominoes_unused = graph.min_remaining
         if graph.last is None:
             fitness -= 1_000_000 * dominoes_unused
             moves = ['unsolved']
@@ -591,23 +592,21 @@ class DominosaGraph(BoardGraph):
                                 for rule in selected_rules]
         self.solution_states = set()
         self.last = None
-        self.min_domino_count = None
         self.move_weights = move_weights
 
     def walk(self, board, size_limit=maxsize):
         board.split_all()
-        self.min_domino_count = None
         self.check_progress(board)
         self.solution_states.clear()
         self.last = None
         states = super().walk(board, size_limit)
         return states
 
-    def generate_moves(self, board: DominosaBoard):
+    def generate_moves(self,
+                       board: DominosaBoard) -> typing.Iterator[MoveDescription]:
         """ Generate all moves from the board's current state.
 
         :param Board board: the current state
-        :return: a generator of (move_description, state) tuples
         """
 
         for rule in (generator(board)
@@ -621,7 +620,7 @@ class DominosaGraph(BoardGraph):
                 new_board: DominosaBoard = self.board_class.create(
                     state,
                     max_pips=board.max_pips)
-                self.check_progress(new_board)
+                remaining = self.check_progress(new_board)
                 if not new_board.extra_dominoes:
                     state = clean_solution(board)
                     self.solution_states.add(state)
@@ -633,18 +632,20 @@ class DominosaGraph(BoardGraph):
                     move_num = int(move_label)
                     move_attrs['weight'] = self.move_weights[move_num]
                     move_attrs['move_num'] = move_num
-                yield move, state, move_attrs
+                yield MoveDescription(move,
+                                      state,
+                                      move_attrs,
+                                      remaining=remaining)
                 has_yielded = True
             if has_yielded:
                 return
 
-    def check_progress(self, board):
-        """ Keep track of which board state was the closest to a solution. """
+    def check_progress(self, board: DominosaBoard) -> int:
+        """ Check how close a board is to a solution. """
         if board.max_pips is None:
             raise ValueError('Board does not have max_pips set.')
         domino_count = len(board.extra_dominoes)
-        if self.min_domino_count is None or domino_count < self.min_domino_count:
-            self.min_domino_count = domino_count
+        return domino_count
 
 
 def clean_solution(board: DominosaBoard) -> str:

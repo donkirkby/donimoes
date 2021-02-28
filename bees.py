@@ -5,7 +5,8 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import datetime
 from sys import maxsize
 
-from domino_puzzle import Board, BoardGraph, GraphLimitExceeded, DiceSet, ArrowSet
+from domino_puzzle import (Board, BoardGraph, GraphLimitExceeded, DiceSet,
+                           ArrowSet, MoveDescription)
 from evo import Individual, Evolution
 
 
@@ -79,7 +80,7 @@ class BeesFitnessCalculator:
         solution_lengths = []
         fitness = 0
         for queen_pips in range(3, max_pips+1):
-            graph = BeesGraph()
+            graph = BeesGraph(process_count=3)
             board.place_dice(queen_pips)
             try:
                 graph.walk(board, size_limit=self.size_limit)
@@ -89,9 +90,11 @@ class BeesFitnessCalculator:
                 print('Failed to solve:', file=sys.stderr)
                 print(board.display(), file=sys.stderr)
                 raise
-            min_heuristic = graph.min_gaps
+            min_remaining = graph.min_remaining
+            if min_remaining is None:
+                min_remaining = board.width + board.height
             if graph.last is None:
-                fitness -= 1_000_000 * min_heuristic
+                fitness -= 1_000_000 * min_remaining
                 moves = ['unsolved']
             else:
                 moves = graph.get_solution()
@@ -112,7 +115,7 @@ class BeesFitnessCalculator:
                        total_moves)
             round_summaries.insert(0, f'Total moves: {total_moves}.')
             lengths_display = ' + '.join(str(length)
-                                             for length in solution_lengths)
+                                         for length in solution_lengths)
             lengths_display += f' = {total_moves}'
         self.summaries.append('\n    '.join(round_summaries))
         self.details.append(f'{board.width}x{board.height} {lengths_display}')
@@ -164,8 +167,9 @@ class BeesBoard(Board):
 class BeesGraph(BoardGraph):
     def __init__(self,
                  board_class=BeesBoard,
+                 process_count: int = 0,
                  debug=False):
-        super().__init__(board_class)
+        super().__init__(board_class, process_count)
         self.debug = debug
         self.solution_states = set()
         self.last = None
@@ -180,12 +184,10 @@ class BeesGraph(BoardGraph):
         return states
 
     def generate_moves(self, board: BeesBoard) -> typing.Iterator[
-            typing.Tuple[str, str]]:
+            MoveDescription]:
         """ Generate all moves from the board's current state.
 
         :param Board board: the current state
-        :return: a generator of (move_description, state, edge_attrs, heuristic)
-            tuples, where the last two are optional
         """
         dice_set = board.dice_set
         board.dice_set = None
@@ -199,8 +201,10 @@ class BeesGraph(BoardGraph):
                 move = dice_set.move(*extended_positions)
                 dice_display = dice_set.text
                 combined_display = f'{board_display}---\ndice:{dice_display}\n'
-                self.check_progress(board)
-                yield move, combined_display
+                total_gaps = self.check_progress(board)
+                yield MoveDescription(move,
+                                      combined_display,
+                                      remaining=total_gaps)
                 dice_set.move(extended_positions[-1], (x, y))
 
     def extend_positions(self, positions: typing.List[typing.Tuple[int, int]], board: BeesBoard):
@@ -242,8 +246,8 @@ class BeesGraph(BoardGraph):
         for position2 in direct_positions:
             yield positions + [position2]
 
-    def check_progress(self, board):
-        """ Keep track of which board state was the closest to a solution. """
+    def check_progress(self, board: BeesBoard) -> int:
+        """ See how close a board is to a solution. """
         unvisited = set(board.dice_set.dice)
         max_gap = board.width + board.height
         old_total = max_gap * len(unvisited)
@@ -268,11 +272,7 @@ class BeesGraph(BoardGraph):
                 break
             old_total = total_gaps
             unvisited = set(board.dice_set.dice) - grouped
-
-        if self.min_gaps is None or total_gaps < self.min_gaps:
-            self.min_gaps = total_gaps
-        if self.last is None and total_gaps == 0:
-            self.last = board.display()
+        return total_gaps
 
 
 def parse_args():

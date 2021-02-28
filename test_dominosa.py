@@ -1,6 +1,7 @@
 from networkx import DiGraph
 
 from diagram import draw_diagram
+from domino_puzzle import MoveDescription
 from dominosa import DominosaBoard, PairState, DominosaGraph, DominosaProblem, \
     generate_moves_from_unique_pairs, generate_moves_from_single_neighbours, \
     generate_moves_from_newly_joined, generate_moves_from_newly_split, \
@@ -146,8 +147,9 @@ s s j
     -
 1|1 0
 """
-    expected_moves = [('1:01j11', expected_display, {'weight': 1,
-                                                     'move_num': 1})]
+    expected_moves = [MoveDescription('1:01j11',
+                                      expected_display,
+                                      {'weight': 1, 'move_num': 1})]
     graph = DominosaGraph(DominosaBoard, move_weights={1: 1})
 
     moves = list(graph.generate_moves(board))
@@ -277,8 +279,10 @@ def test_rule5_shared_space():
 ~ ~
 1|1S2 1 0
 """
-    expected_moves = [('5:21,21s11', expected_display, {'weight': 1,
-                                                        'move_num': 5})]
+    expected_moves = [MoveDescription('5:21,21s11',
+                                      expected_display,
+                                      {'weight': 1, 'move_num': 5},
+                                      remaining=9)]
     graph = DominosaGraph(DominosaBoard, move_weights={5: 1, 6: 10})
 
     moves = list(graph.generate_moves(board))

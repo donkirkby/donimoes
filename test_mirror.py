@@ -1,4 +1,4 @@
-from domino_puzzle import Board, GraphLimitExceeded
+from domino_puzzle import Board, GraphLimitExceeded, MoveDescription
 from mirror import MirrorGraph, MirrorProblem, MirrorFitnessCalculator
 
 
@@ -15,7 +15,7 @@ B1P2
     board = Board.create(start_state, border=1)
     graph = MirrorGraph()
     expected_moves = {
-        ('PdR', '''\
+        MoveDescription('PdR', '''\
 0|0 1|2 x
 
 B|1 x 0|P
@@ -23,8 +23,8 @@ B|1 x 0|P
 2|2 0|1 x
 ---
 B1P2
-''', None, 2),
-        ('BdL', '''\
+''', heuristic=2, remaining=2),
+        MoveDescription('BdL', '''\
 x 0|0 1|2
 
 B|1 x 0|P
@@ -32,8 +32,8 @@ B|1 x 0|P
 x 2|2 0|1
 ---
 B1P2
-''', None, 2),
-        ('BR', '''\
+''', heuristic=2, remaining=2),
+        MoveDescription('BR', '''\
 0|0 1|2
 
 1|B 0|P
@@ -41,8 +41,8 @@ B1P2
 2|2 0|1
 ---
 B1P2
-''', None, 0),
-        ('PU', '''\
+'''),
+        MoveDescription('PU', '''\
 0|0 1|P
 
 B|1 0|2
@@ -50,8 +50,8 @@ B|1 0|2
 2|2 0|1
 ---
 B1P2
-''', None, 2),
-        ('PL', '''\
+''', heuristic=2, remaining=2),
+        MoveDescription('PL', '''\
 0|0 1|2
 
 B|1 P|2
@@ -59,7 +59,7 @@ B|1 P|2
 2|2 0|1
 ---
 B1P0
-''', None, 0)}
+''')}
 
     moves = set(graph.generate_moves(board))
 
@@ -77,27 +77,27 @@ P6N2
     board = Board.create(start_state, border=1)
     graph = MirrorGraph()
     expected_moves = {
-        ('NdR', '''\
+        MoveDescription('NdR', '''\
 1|N x x
 
 3|4 5|P
 ---
 P6N2
-''', None, 1),
-        ('NL', '''\
+''', heuristic=1, remaining=1),
+        MoveDescription('NL', '''\
 N|2 x x x
 
 x 3|4 5|P
 ---
 P6N1
-''', None, 3),
-        ('PL', '''\
+''', heuristic=3, remaining=3),
+        MoveDescription('PL', '''\
 1|N x x x
 
 x 3|4 P|6
 ---
 P5N2
-''', None, 1)}
+''', heuristic=1, remaining=1)}
 
     moves = set(graph.generate_moves(board))
 
@@ -117,7 +117,7 @@ N2B1P2
     board = Board.create(start_state, border=1)
     graph = MirrorGraph()
     expected_moves = {
-        ('PdR', '''\
+        MoveDescription('PdR', '''\
 0|0 1|0 x
 
 B|1 x 0|P
@@ -125,8 +125,8 @@ B|1 x 0|P
 2|2 1|N x
 ---
 N2B1P2
-''', None, 4),
-        ('BdL', '''\
+''', heuristic=4, remaining=4),
+        MoveDescription('BdL', '''\
 x 0|0 1|0
 
 B|1 x 0|P
@@ -134,8 +134,8 @@ B|1 x 0|P
 x 2|2 1|N
 ---
 N2B1P2
-''', None, 5),
-        ('NdR', '''\
+''', heuristic=5, remaining=5),
+        MoveDescription('NdR', '''\
 0|0 1|0 x
 
 B|1 0|P x
@@ -143,8 +143,8 @@ B|1 0|P x
 2|2 x 1|N
 ---
 N2B1P2
-''', None, 4),
-        ('BR', '''\
+''', heuristic=4, remaining=4),
+        MoveDescription('BR', '''\
 0|0 1|0
 
 1|B 0|P
@@ -152,8 +152,8 @@ N2B1P2
 2|2 1|N
 ---
 N2B1P2
-''', None, 2),
-        ('PL', '''\
+''', heuristic=2, remaining=2),
+        MoveDescription('PL', '''\
 0|0 1|0
 
 B|1 P|2
@@ -161,8 +161,8 @@ B|1 P|2
 2|2 1|N
 ---
 N2B1P0
-''', None, 3),
-        ('NL', '''\
+''', heuristic=3, remaining=3),
+        MoveDescription('NL', '''\
 0|0 1|0
 
 B|1 0|P
@@ -170,7 +170,7 @@ B|1 0|P
 2|2 N|2
 ---
 N1B1P2
-''', None, 3)}
+''', heuristic=3, remaining=3)}
 
     moves = set(graph.generate_moves(board))
 
@@ -190,7 +190,7 @@ P1R0B0
     board = Board.create(start_state, border=1)
     graph = MirrorGraph()
     expected_moves = {
-        ('RdU', '''\
+        MoveDescription('RdU', '''\
 x x x B
       -
 2 0|1 R
@@ -200,8 +200,8 @@ x x x B
 2|0 1|2
 ---
 P1R0B0
-''', None, 2),
-        ('PR', '''\
+''', heuristic=2, remaining=2),
+        MoveDescription('PR', '''\
 2 0|1 B
 -     -
 2 1|P R
@@ -209,7 +209,7 @@ P1R0B0
 2|0 1|2
 ---
 P1R0B0
-''', None, 0)}
+''')}
 
     moves = set(graph.generate_moves(board))
 

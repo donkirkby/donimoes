@@ -1,7 +1,11 @@
 import math
 import re
 import typing
-from collections import defaultdict
+from operator import itemgetter
+from collections import defaultdict, deque
+from concurrent.futures import Future
+from concurrent.futures.process import ProcessPoolExecutor
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from functools import partial
 from itertools import chain
@@ -108,8 +112,9 @@ class DiceSet:
 
     @property
     def text(self):
+        sorted_dice = sorted(self.dice.items(), key=itemgetter(1))
         return ','.join(f'({x},{y}){die_pips}'
-                        for (x, y), die_pips in self.dice.items())
+                        for (x, y), die_pips in sorted_dice)
 
     def items(self):
         return self.dice.items()
@@ -874,17 +879,45 @@ class GraphLimitExceeded(RuntimeError):
         self.limit = limit
 
 
+@dataclass(frozen=True)
+class MoveDescription:
+    move: str
+    new_state: str
+    edge_attrs: dict = None
+    heuristic: float = 0  # Drive search using A*, leave at zero for Dyjkstra.
+
+    # Similar to heuristic, but doesn't control search. Zero iff new_state is solved.
+    remaining: float = 0
+
+
+@dataclass
+class MoveRequest:
+    start_state: str
+    future: Future
+
+
 class BoardGraph(object):
-    def __init__(self, board_class=Board):
+    def __init__(self, board_class=Board, process_count: int = 0):
         self.graph = self.start = self.last = self.closest = None
-        self.min_domino_count = None
+        self.min_remaining = None  # Minimum steps remaining to find a solution.
         self.board_class = board_class
+        self.process_count = process_count
+        if process_count > 0:
+            self.executor = ProcessPoolExecutor(process_count)
+        else:
+            self.executor: typing.Optional[ProcessPoolExecutor] = None
+        self.closest = None
         self.is_debugging = False
 
     def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
         self.graph = DiGraph()
         self.start = board.display(cropped=True)
         self.graph.add_node(self.start)
+
+        if self.executor is not None:
+            walker = self.__class__(self.board_class)
+        else:
+            walker = None
 
         # len of shortest path known from start to a state.
         g_score = defaultdict(lambda: math.inf)
@@ -893,88 +926,100 @@ class BoardGraph(object):
 
         start_h = self.calculate_heuristic(board)
         g_score[self.start] = 0
-        min_heuristic = start_h
         pending_nodes = PriorityQueue()
         pending_nodes.add(self.start, start_h)
+        requests: typing.Deque[MoveRequest] = deque()
         while pending_nodes:
             if size_limit is not None and len(self.graph) >= size_limit:
                 raise GraphLimitExceeded(size_limit)
             state = pending_nodes.pop()
-            state_g_score = g_score[state]
-            board = self.board_class.create(state, border=1, max_pips=max_pips)
-            for move, new_state, *extras in self.generate_moves(board):
-                edge_attrs = None
-                heuristic = 0
-                if extras:
-                    edge_attrs = extras[0]
-                    if len(extras) > 1:
-                        heuristic = extras[1]
-                if edge_attrs is None:
-                    edge_attrs = {}
-
-                new_g_score = state_g_score + 1
-                known_g_score = g_score[new_state]
-                if not self.graph.has_node(new_state):
-                    # new node
-                    self.graph.add_node(new_state)
-                    is_improved = True
-                    min_heuristic = min(heuristic, min_heuristic)
-                    if self.is_debugging:
-                        if len(self.graph) % 1000 == 0:
-                            print(len(self.graph),
-                                  heuristic,
-                                  'min is',
-                                  min_heuristic)
-                        if heuristic == 0:
-                            print(new_state)
-                else:
-                    is_improved = new_g_score < known_g_score
-                if is_improved:
-                    g_score[new_state] = new_g_score
-                    f = new_g_score + heuristic
-
-                    pending_nodes.add(new_state, f)
-                self.graph.add_edge(state, new_state, move=move, **edge_attrs)
+            if not self.executor:
+                moves = self.find_moves(state, max_pips)
+                self.add_moves(state, moves, pending_nodes, g_score)
+            else:
+                request = MoveRequest(
+                    state,
+                    self.executor.submit(walker.find_moves, state, max_pips))
+                requests.append(request)
+                while ((not pending_nodes and requests) or
+                       len(requests) > 2*self.process_count):
+                    request = requests.popleft()
+                    state = request.start_state
+                    moves = request.future.result()
+                    self.add_moves(state, moves, pending_nodes, g_score)
         return set(self.graph.nodes())
+
+    def find_moves(self, state, max_pips):
+        board = self.board_class.create(state, border=1, max_pips=max_pips)
+        moves = list(self.generate_moves(board))
+        return moves
+
+    def add_moves(self,
+                  start_state: str,
+                  moves: typing.Iterable[MoveDescription],
+                  pending_nodes: PriorityQueue,
+                  g_score: typing.Dict[str, float]):
+        state_g_score = g_score[start_state]
+        for description in moves:
+            edge_attrs = description.edge_attrs or {}
+
+            new_g_score = state_g_score + 1
+            new_state = description.new_state
+            known_g_score = g_score[new_state]
+            if not self.graph.has_node(new_state):
+                # new node
+                self.graph.add_node(new_state)
+                is_improved = True
+                if self.is_debugging:
+                    if description.heuristic == 0:
+                        print(new_state)
+            else:
+                is_improved = new_g_score < known_g_score
+            if is_improved:
+                g_score[new_state] = new_g_score
+                f = new_g_score + description.heuristic
+
+                pending_nodes.add(new_state, f)
+            self.graph.add_edge(start_state,
+                                new_state,
+                                move=description.move,
+                                **edge_attrs)
+            if self.min_remaining is None or description.remaining < self.min_remaining:
+                self.min_remaining = description.remaining
+                self.closest = description.new_state
+            if description.remaining == 0 and self.last is None:
+                self.last = description.new_state
 
     def calculate_heuristic(self, board: Board) -> float:
         return 0
 
-    def generate_moves(self, board):
-        """ Generate all moves from the board's current state.
-
-        :param Board board: the current state
-        :return: a generator of (move_description, state, edge_attrs, heuristic)
-            tuples, where the last two are optional
-        """
-        self.check_progress(board)
+    def generate_moves(self, board: Board) -> typing.Iterator[MoveDescription]:
+        """ Generate all moves from the board's current state. """
         dominoes = set(board.dominoes)
         for domino in dominoes:
             dx, dy = domino.direction
             yield from self.try_move(domino, dx, dy)
             yield from self.try_move(domino, -dx, -dy)
 
-    def check_progress(self, board):
-        """ Keep track of which board state was the closest to a solution. """
+    def check_progress(self, board: Board) -> int:
+        """ Check how close a board state is to a solution. """
         dominoes = set(board.dominoes)
         domino_count = len(dominoes)
-        if self.min_domino_count is None or domino_count < self.min_domino_count:
-            self.min_domino_count = domino_count
-            self.last = board.display(cropped=True)
+        return domino_count
 
     def try_move(self, domino, dx, dy):
         try:
-            new_state = self.move(domino, dx, dy)
+            new_state, remaining = self.move(domino, dx, dy)
             move = domino.describe_move(dx, dy)
-            yield move, new_state
+            yield MoveDescription(move, new_state, remaining=remaining)
         except BadPositionError:
             pass
 
-    def move(self, domino, dx, dy):
+    def move(self, domino, dx, dy) -> typing.Tuple[str, int]:
         """ Move a domino and calculate the new board state.
 
         Afterward, put the board back in its original state.
-        @return: the new board state
+        @return: the new board state and remaining progress needed
         @raise BadPositionError: if the move is illegal
         """
         domino.move(dx, dy)
@@ -984,7 +1029,8 @@ class BoardGraph(object):
                 raise BadPositionError('Board is not connected.')
             if board.has_loner():
                 raise BadPositionError('Board has a lonely domino.')
-            return board.display(cropped=True)
+            remaining = self.check_progress(board)
+            return board.display(cropped=True), remaining
         finally:
             domino.move(-dx, -dy)
 
@@ -1026,17 +1072,6 @@ class BoardGraph(object):
 
 
 class CaptureBoardGraph(BoardGraph):
-    def __init__(self):
-        super(CaptureBoardGraph, self).__init__()
-        self.closest = None
-
-    def walk(self, board, size_limit=maxsize):
-        states = super(CaptureBoardGraph, self).walk(board, size_limit)
-        self.closest = self.last
-        if self.last != '':
-            self.last = None
-        return states
-
     def move(self, domino, dx, dy, offset=None):
         """ Move a domino and calculate the new board state.
 
@@ -1048,7 +1083,7 @@ class CaptureBoardGraph(BoardGraph):
             The input position is updated to show where that position would
             be on the new board. The numbers are reduced if the border gets
             cropped away.
-        @return: the new board state
+        @return: the new board state and remaining dominoes
         @raise BadPositionError: if the move is illegal
         """
         matching_dominoes = set()
@@ -1078,16 +1113,18 @@ class CaptureBoardGraph(BoardGraph):
             cropping_bounds = [] if offset is not None else None
             new_state = board.display(cropped=True,
                                       cropping_bounds=cropping_bounds)
+            remaining = self.check_progress(board)
             if offset is not None:
                 offset[0] -= cropping_bounds[0]
                 offset[1] -= cropping_bounds[1]
-            if self.closest is None or len(new_state) < len(self.closest):
-                self.closest = new_state
-            return new_state
+            return new_state, remaining
         finally:
             for matching_domino, x, y in matching_dominoes:
                 board.add(matching_domino, x, y)
             domino.move(-dx, -dy)
+
+    def check_progress(self, board: Board) -> int:
+        return len(board.display(cropped=True))
 
 
 class BoardAnalysis(object):
@@ -1133,7 +1170,7 @@ class BoardAnalysis(object):
         self.graph_size = len(graph.graph)
         self.start = graph.start
         if graph.last is None:
-            self.min_dominoes = graph.min_domino_count
+            self.min_dominoes = graph.min_remaining
             self.solution = self.choice_counts = []
             self.average_choices = self.max_choices = 0
         else:
@@ -1180,7 +1217,7 @@ class SearchManager(object):
                             board_type=board_type,
                             matches_allowed=False),
 
-    def evaluateBoard(self, slow_queue, individual):
+    def evaluate_board(self, slow_queue, individual):
         try:
             analysis = BoardAnalysis(individual,
                                      self.graph_class(),
@@ -1191,7 +1228,7 @@ class SearchManager(object):
             slow_queue.put(individual.display())
             return (len(individual.dominoes) + 1), 0, 0, 0, 0
 
-    def evaluateSlowBoards(self, slow_queue, results_queue):
+    def evaluate_slow_boards(self, slow_queue, results_queue):
         while True:
             start = slow_queue.get()
             board = Board.create(start, max_pips=6)
@@ -1205,7 +1242,7 @@ class SearchManager(object):
 
     def loggedMap(self, pool, function, *args):
         results = pool.map(function, *args)
-        if function.func is self.evaluateBoard:
+        if function.func is self.evaluate_board:
             for fitness_values in results:
                 graph_size = fitness_values[-1]
                 score = BoardAnalysis.calculate_score(fitness_values)
@@ -1272,7 +1309,7 @@ def find_boards_with_deap(graph_class=CaptureBoardGraph,
     toolbox = base.Toolbox()
     pool = Pool()
     halloffame = hall_of_fame.MappedHallOfFame(10, solution_length_index=2)
-    pool.apply_async(search_manager.evaluateSlowBoards,
+    pool.apply_async(search_manager.evaluate_slow_boards,
                      [slow_queue, results_queue])
     toolbox.register("map", search_manager.loggedMap, pool)
     # noinspection PyUnresolvedReferences
@@ -1298,7 +1335,7 @@ def find_boards_with_deap(graph_class=CaptureBoardGraph,
                      results_queue,
                      halloffame,
                      creator.Individual)
-    toolbox.register("evaluate", search_manager.evaluateBoard, slow_queue)
+    toolbox.register("evaluate", search_manager.evaluate_board, slow_queue)
 
     # noinspection PyUnresolvedReferences
     pop = toolbox.population(n=NPOP)

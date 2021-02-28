@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 
 class Individual(ABC):
-    def __init__(self, value=None, init_params=None):
+    def __init__(self, value: dict = None, init_params: dict = None):
         if value is not None:
             self.value = value
         else:

@@ -1,5 +1,6 @@
 import unittest
 
+import pytest
 from networkx.exception import NodeNotFound
 
 from domino_puzzle import Domino, Cell, Board, BoardGraph, CaptureBoardGraph
@@ -445,7 +446,8 @@ x 4|3
 
         self.assertEqual(expected_states, states)
 
-    def testMoveLeftUpdatesOffset(self):
+    @staticmethod
+    def testMoveLeftUpdatesOffset():
         start_state = """\
 4|3
 
@@ -462,10 +464,10 @@ x 4|3
         offset = [1, 1]  # position of bottom left corner (within border)
         expected_offset = [1, 0]  # equivalent position after move and cropping
 
-        state = graph.move(board[1][1].domino, -1, 0, offset)
+        state, remaining = graph.move(board[1][1].domino, -1, 0, offset)
 
-        self.assertEqual(expected_state, state)
-        self.assertEqual(expected_offset, offset)
+        assert state == expected_state
+        assert offset == expected_offset
 
     def testSolution(self):
         graph = CaptureBoardGraph()
@@ -482,7 +484,8 @@ x 4|3
         self.assertEqual(expected_solution, solution)
         self.assertEqual(expected_closest, graph.closest)
 
-    def testNoSolution(self):
+    @staticmethod
+    def testNoSolution():
         graph = CaptureBoardGraph()
         board = Board.create("""\
 6|2 3
@@ -496,8 +499,9 @@ x 4|3
 """
         graph.walk(board)
 
-        self.assertEqual(expected_closest, graph.closest)
-        self.assertRaises(NodeNotFound, graph.get_solution)
+        assert graph.closest == expected_closest
+        with pytest.raises(NodeNotFound):
+            graph.get_solution()
 
     def testPartialSolution(self):
         graph = CaptureBoardGraph()
