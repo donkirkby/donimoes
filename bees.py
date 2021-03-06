@@ -29,6 +29,7 @@ class BeesProblem(Individual):
         return BeesProblem(self.value)
 
     def mutate(self, mutate_params):
+        self.value: dict
         max_pips = self.value['max_pips']
         board = BeesBoard.create(self.value['start'],
                                  max_pips=max_pips)
@@ -36,10 +37,17 @@ class BeesProblem(Individual):
         self.value = dict(start=new_board.display(),
                           max_pips=max_pips)
 
-    def _random_init(self, init_params):
+    def _random_init(self, init_params: dict):
+        blanks = init_params.pop('blanks', 'touching')
         board = BeesBoard(**init_params)
         while True:
-            if board.fill(random):
+            if not board.fill(random):
+                pass
+            elif not board.has_touching_blanks:
+                break
+            elif blanks == 'redeal':
+                board = BeesBoard(**init_params)
+            else:
                 break
 
         return dict(start=board.display(),
@@ -47,7 +55,7 @@ class BeesProblem(Individual):
 
 
 class BeesFitnessCalculator:
-    def __init__(self, target_length=100, size_limit=10_000):
+    def __init__(self, target_length=100, size_limit=11_200):
         self.target_length = target_length
         self.size_limit = size_limit
         self.details = []
@@ -96,14 +104,15 @@ class BeesFitnessCalculator:
             if graph.last is None:
                 fitness -= 1_000_000 * min_remaining
                 moves = ['unsolved']
+                solution_lengths.append('unsolved')
             else:
                 moves = graph.get_solution()
                 solution_lengths.append(len(moves))
 
             move_display = ', '.join(moves)
             round_summaries.append(f'Moves for {queen_pips}: {move_display}.')
-        if len(solution_lengths) != max_pips - 2:
-            lengths_display = 'some unsolved'
+        if 'unsolved' in solution_lengths:
+            total_moves = 'unsolved'
         else:
             move_product = 1000
             for solution_length in solution_lengths:
@@ -114,9 +123,9 @@ class BeesFitnessCalculator:
                        -1_000 * move_product +
                        total_moves)
             round_summaries.insert(0, f'Total moves: {total_moves}.')
-            lengths_display = ' + '.join(str(length)
-                                         for length in solution_lengths)
-            lengths_display += f' = {total_moves}'
+        lengths_display = ' + '.join(str(length)
+                                     for length in solution_lengths)
+        lengths_display += f' = {total_moves}'
         self.summaries.append('\n    '.join(round_summaries))
         self.details.append(f'{board.width}x{board.height} {lengths_display}')
 
@@ -162,6 +171,16 @@ class BeesBoard(Board):
                         cell.pips <= max_pips):
                     self.dice_set.dice[x, y] = cell.pips
         self.queen_pips = max(self.dice_set.dice.values())
+
+    @property
+    def has_touching_blanks(self):
+        for domino1 in self.dominoes:
+            if domino1.head.pips != 0 and domino1.tail.pips != 0:
+                continue
+            for domino2 in domino1.find_neighbours():
+                if domino2.head.pips == 0 or domino2.tail.pips == 0:
+                    return True
+        return False
 
 
 class BeesGraph(BoardGraph):

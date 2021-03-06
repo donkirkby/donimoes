@@ -1460,19 +1460,19 @@ to the solutions at the end.
     3|6 1|5 2|3 2 0
 
 #### Problem 20
-    2 5 2|6 0|0 3|3
-    - -
-    2 5 2 0|4 3|5 5
-        -         -
-    0|3 5 6|6 0|6 1
-    
-    4|5 1 1|3 2 2 4
-        -     - - -
-    1|1 4 1|6 1 0 4
-    
-    3|6 2|4 1 2|3 4
+    3|4 3|3 6 5|3 1
             -     -
-    4|6 0|5 0 5|6 3
+    2|6 0|2 3 3 4 0
+              - -
+    0|3 4 5|5 2 6 6
+        -         -
+    4|5 4 6 1|2 4 1
+          -     -
+    0|0 3 6 2|2 1 5
+        -         -
+    1|1 1 5|6 0|4 0
+    
+    2|5 1|5 0|6 2|4
 
 ## Domino Finder
 A memory game with hidden traps.
@@ -2608,11 +2608,11 @@ Here are the Mirror Donimoes solutions:
     Moves for 4: 1R5, 3D2, 1U2, 3R2D4, 1D4L3, 1U5, 2R1U1, 1D5, 2D6R4, 3R1U2, 1R4U4, 2U3.
     Moves for 5: 3D5, 3R1, 4D3L3U4, 2R3D4R3D1, 2L1, 4D4R3D1, 3R3D1L2, 1R7.
     Moves for 6: 3D5, 2D4, 4D3L6U2, 5L5.
-20. Total moves: 31.
-    Moves for 3: 2L1, 2D2, 1R1U1, 1L5, 2L3, 2U4, 2L2, 1U2.
-    Moves for 4: 1U4L1, 1D3, 1L2, 1U2R6, 3R6U2, 3L1, 2U3L4, 3R1, 1U2L5D3, 3L5D3R2, 2D1, 3U2R1, 1U2R1.
-    Moves for 5: 2L1, 2D2, 2L3, 4D4L2U1, 1L2U1L1, 3D2R1D2.
-    Moves for 6: 5R2, 5U4, 3R4U1, 1U4R1D1R2.
+20. Total moves: 36.
+    Moves for 3: 1D3, 1L3, 2L3, 2D1, 2R5, 2D2, 2L1, 1D1R2, 2R2D2, 1D2L4, 2L6, 1L2U4, 2U5.
+    Moves for 4: 1D3, 2L3, 2D5, 2R6, 2U1L1, 2U3, 3R4D3, 2D1, 1L2D2R1U1, 2D1.
+    Moves for 5: 1D4L1, 1D1L5, 3D3R6, 1L1, 2L3, 2D4R7U1L2, 1R7U1L1.
+    Moves for 6: 5U4L2, 1L2D6L3, 5D6L4, 3D4R3, 5R2, 2D5R3.
 
 ## Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different

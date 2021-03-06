@@ -1,5 +1,6 @@
 import re
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
+from datetime import datetime
 from pathlib import Path
 
 import typing
@@ -26,11 +27,15 @@ def parse_args():
                         default=str(Path(__file__).parent / 'raw_rules' /
                                     'rules.md'))
     args = parser.parse_args()
-    args.patterns = args.patterns.split(':')
+    pattern_levels = args.patterns.split(':')
+    if len(pattern_levels) > 4:
+        parser.error(f'More than four levels in {args.patterns}')
+    args.patterns = pattern_levels
     return args
 
 
 def main():
+    start_time = datetime.now()
     args = parse_args()
     rules_text = args.rules.read()
 
@@ -60,7 +65,9 @@ def main():
             heading_level = int(state.style[len(Styles.Heading):])
             headings[heading_level-1] = state.text
             headings[heading_level:] = ['']*(level_count-heading_level)
+    duration = datetime.now() - start_time
     print(*summaries, sep='\n')
+    print(f'Checked {len(summaries)} problems in {duration}.')
 
 
 def headings_match(headings: typing.List[str], patterns: typing.List[str]) -> bool:
@@ -174,10 +181,10 @@ def check_bees(state, heading):
     17. 8x7 10 + 10 + 7 + 5 = 32
     18. 8x7 5 + 11 + 11 + 4 = 31
     19. 8x7 10 + 12 + 8 + 4 = 34
-    20. 8x7 8 + 13 + 6 + 4 = 31
+    20. 8x7 13 + 10 + 7 + 6 = 36
     """
     n = heading.split(' ')[-1]
-    size_limit = 100_000
+    size_limit = 11_200  # Found failures below 5,600, so doubled it.
     fitness_calculator = BeesFitnessCalculator(size_limit=size_limit)
     problem = BeesProblem(dict(start=state.text))
     fitness_calculator.calculate(problem)

@@ -284,3 +284,14 @@ dice:(2,3)3,(3,2)2,(2,2)1
     gap = graph.check_progress(board)
 
     assert gap == expected_gap
+
+
+def test_has_touching_blanks():
+    start_state = """\
+1|0 2|2
+
+0|2 1|3
+"""
+    board = BeesBoard.create(start_state, max_pips=3)
+
+    assert board.has_touching_blanks
