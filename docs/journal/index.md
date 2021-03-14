@@ -1,6 +1,7 @@
 ---
 title: Journal
 subtitle: How we got here
+hero_image: ../images/index_hero.jpg
 ---
 ## 2015 - Domiculture
 I started the project with the idea that I could create something like the Rush
