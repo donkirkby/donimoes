@@ -1063,7 +1063,7 @@ A puzzle race game where a swarm of dice bring nectar back to the hive.
 
 ### Object
 Bring the nectar back to the hive in as few moves as possible, faster than the
-other players. One die is chosen as the queen bee and doesn't move, the others
+other players. The biggest die is the queen bee and doesn't move, the others
 have to form a connected group around her.
 
 ### Setup
@@ -1074,10 +1074,8 @@ dominoes face up to form a rectangle of numbers.
 
 Look for the dominoes with a number at one end and a blank at the other. The
 number on each of those dominoes is the starting space for the die with the
-matching number. The board will be easier to solve if none of those dominoes
-touch each other, so you may swap them with their neighbours until none of them
-are touching. Take 3 dice, turn them so the numbers 1, 2, and 3 are on top, then
-place them on their starting spaces.
+matching number. Take 3 dice, turn them so the numbers 1, 2, and 3 are on top,
+then place them on their starting spaces.
 
 For example, here's one possible setup for four dice:
 
@@ -1098,17 +1096,14 @@ The die with the largest number is the queen bee, which never moves during the
 round. All the smaller bees have to bring their nectar back to her in one
 connected group. (Diagonal connections don't count.)
 
-The dice can only land on their own numbers. They can move between numbers in
-two ways:
+The dice can only land on their own numbers or on unoccupied blanks. They can
+move in two ways:
 1. In a straight line along a row or a column. They can pass over other numbers,
    squares with their own number, or other dice. This counts as one move.
 2. Changing direction over other dice. In the middle of a regular move, a die
    may make a 90° turn directly above another die. Later in the same move, it
    may make more turns directly above other dice. No matter how many turns it
    makes, this still counts as one move.
-
-The blank on the other end of the queen bee's domino is wild. Any die can land
-there. A die may also leave the wild space on a later move.
 
 See the example solution after the rules.
 
@@ -1205,18 +1200,19 @@ die and all the dominoes with numbers up to 4, then play 2 rounds. Continue with
 
 For experienced players, play 3 cycles with 6 dice for a total of 12 rounds.
 
-### Variants
-If you find the race too stressful, play cooperatively. Choose a player each
-turn to move the dice, and have the other players give suggestions for how to
-solve it.
+### Advanced Version
+Letting the dice land on the blanks makes the game easier to solve. For more
+challenging puzzles, only let the dice land on one blank: the blank on the
+queen bee's domino.
 
-It can also be played solitaire, either with or without a timer.
+If you find the race too stressful, play cooperatively or as a solitaire.
 
 ### Problems
 When you randomly lay out the dominoes, most solutions will take between 3 and
 6 moves. Here are some carefully chosen layouts that range from easy to very
 challenging. Record how many moves you used for each queen bee, and then compare
-to the solutions at the end.
+to the solutions at the end. These problems all use the advanced version of the
+rules, so the only blank you can land on is the one on the queen bee's domino.
 
 #### Problem 1
     0|2 2|3 0
@@ -2535,6 +2531,9 @@ Here are the Mirror Donimoes solutions:
     NR2, NU, PdR, PU, NL, RD3, RR3, RU, RR2!
 
 ## Bee Donimoes Solutions
+Remember that these solutions use the advanced rules: the only blank you can
+land on is the one on the queen bee's domino.
+
 1. Total moves: 4.
    Moves for 3: 1R3, 2D2, 1D2, 2R3D1.
 2. Total moves: 6.

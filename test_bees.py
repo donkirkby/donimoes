@@ -1,5 +1,5 @@
 from bees import BeesBoard, BeesGraph
-from domino_puzzle import MoveDescription
+from domino_puzzle import MoveDescription, GraphLimitExceeded
 
 
 def test_create_with_dice():
@@ -158,6 +158,57 @@ dice:(3,0)1,(0,0)2,(2,1)3
     assert board.display() == start_state
 
 
+def test_all_blanks_wild():
+    start_state = """\
+1|0 3|3
+
+3|2 3|0
+
+2|0 3|1
+"""
+    board = BeesBoard.create(start_state, max_pips=3)
+    expected_display1 = start_state + "---\ndice:(3,0)1,(0,0)2,(2,1)3\n"
+    expected_display2 = start_state + "---\ndice:(1,2)1,(0,0)2,(2,1)3\n"
+    expected_display3 = start_state + "---\ndice:(0,2)1,(1,0)2,(2,1)3\n"
+    expected_display4 = start_state + "---\ndice:(1,0)1,(0,0)2,(2,1)3\n"
+    expected_display5 = start_state + "---\ndice:(0,2)1,(1,2)2,(2,1)3\n"
+    expected_moves = {MoveDescription('1D2R3', expected_display1, remaining=3),
+                      MoveDescription('1R1', expected_display2, remaining=3),
+                      MoveDescription('2R1', expected_display3, remaining=3),
+                      MoveDescription('1D2R1', expected_display4, remaining=1),
+                      MoveDescription('2U2R1', expected_display5, remaining=1)}
+    graph = BeesGraph(are_all_blanks_wild=True)
+
+    moves = set(graph.generate_moves(board))
+
+    assert moves == expected_moves
+
+
+def test_wild_blank_occupied():
+    dominoes = """\
+1|0 3|3
+
+3|2 3|0
+
+2|0 3|1
+"""
+    start_state = dominoes + "---\ndice:(0,2)1,(1,2)2,(2,1)3\n"
+    board = BeesBoard.create(start_state, max_pips=3)
+    expected_display1 = dominoes + "---\ndice:(0,2)1,(1,1)2,(2,1)3\n"
+    expected_display2 = dominoes + "---\ndice:(0,2)1,(1,0)2,(2,1)3\n"
+    expected_display3 = dominoes + "---\ndice:(0,2)1,(0,0)2,(2,1)3\n"
+    expected_display4 = dominoes + "---\ndice:(1,0)1,(1,2)2,(2,1)3\n"
+    expected_moves = {MoveDescription('2D1', expected_display1, remaining=1),
+                      MoveDescription('2D2', expected_display2, remaining=3),
+                      MoveDescription('2L1D2', expected_display3, remaining=3),
+                      MoveDescription('1R1D2', expected_display4, remaining=2)}
+    graph = BeesGraph(are_all_blanks_wild=True)
+
+    moves = set(graph.generate_moves(board))
+
+    assert moves == expected_moves
+
+
 def test_solution():
     start_state = """\
 1|0 1|2
@@ -171,6 +222,28 @@ dice:(2,0)2,(0,2)1
     board = BeesBoard.create(start_state, max_pips=3)
     expected_solution = ['1R2', '1D2R1']
     graph = BeesGraph(process_count=2)
+
+    graph.walk(board)
+    solution = graph.get_solution()
+
+    assert solution == expected_solution
+
+
+def test_solution_zero_length():
+    start_state = """\
+0|0 1|2
+
+0|1 1|3
+
+0|2 2|2
+
+0|3 2|3
+
+1|1 3|3
+"""
+    board = BeesBoard.create(start_state, max_pips=3)
+    expected_solution = []
+    graph = BeesGraph()
 
     graph.walk(board)
     solution = graph.get_solution()

@@ -499,7 +499,7 @@ A puzzle race game where a swarm of dice bring nectar back to the hive.
 
 ### Object
 Bring the nectar back to the hive in as few moves as possible, faster than the
-other players. One die is chosen as the queen bee and doesn't move, the others
+other players. The biggest die is the queen bee and doesn't move, the others
 have to form a connected group around her.
 
 ### Setup
@@ -510,36 +510,26 @@ dominoes face up to form a rectangle of numbers.
 
 Look for the dominoes with a number at one end and a blank at the other. The
 number on each of those dominoes is the starting space for the die with the
-matching number. You can't have two of those dominoes next to each other, so
-swap them with their neighbours until none of them are touching.
-
-Roll 2 dice, and place each one on its starting space. If a die matches the
-other die or doesn't match any dominoes, reroll it.
+matching number. Take 3 dice, turn them so the numbers 1, 2, and 3 are on top,
+then place them on their starting spaces.
 
 For example, here's one possible setup for four dice:
 
 ![Diagram](images/rules/diagram75.png)
 
 ### Play
-The game is played in rounds, and each round starts by adding a die to be the
-queen bee. Take one of the dice that's not on the board, and roll it until it
-matches one of the empty starting spaces. Place it on the starting space.
+The die with the largest number is the queen bee, which never moves during the
+round. All the smaller bees have to bring their nectar back to her in one
+connected group. (Diagonal connections don't count.)
 
-The queen bee never moves during a round, and all the other bees have to bring
-their nectar back to her in one connected group. (Diagonal connections don't
-count.)
-
-The dice can only land on their own numbers. They can move between numbers in
-two ways:
+The dice can only land on their own numbers or on unoccupied blanks. They can
+move in two ways:
 1. In a straight line along a row or a column. They can pass over other numbers,
    squares with their own number, or other dice. This counts as one move.
 2. Changing direction over other dice. In the middle of a regular move, a die
    may make a 90° turn directly above another die. Later in the same move, it
    may make more turns directly above other dice. No matter how many turns it
    makes, this still counts as one move.
-
-The blank on the other end of the queen bee's domino is wild. Any die can land
-there. A die may also leave the wild space on a later move.
 
 See the example solution after the rules.
 
@@ -559,7 +549,7 @@ timer. They win the round if no other player can find a solution before the
 timer ends.
 
 ### Demonstrate
-Whichever player has claimed the best solution when the timer goes now has to
+Whichever player has claimed the best solution when the timer ends has to
 demonstrate that solution, counting the moves out loud. Players should
 demonstrate with no more than a few seconds of hesitation. If they made a
 mistake or can't remember the solution, let the player who claimed the next best
@@ -569,11 +559,11 @@ The player who successfully demonstrates a solution scores one point.
 
 ### Next Round
 Put the dice back on their starting spaces. If there are any empty starting
-spaces, start the next round by adding a queen bee on one of them. Otherwise,
-shuffle all the dominoes and set up again.
+spaces, start the next round by adding the next bigger die on its starting
+space. Otherwise, shuffle all the dominoes and set up again.
 
 ### Example Solution
-Let's solve the set up above if the 3 die is the queen bee. The first thing to
+Let's solve the set up above, where the 3 die is the queen bee. The first thing to
 do is check whether there are enough places for the bees to land around the
 queen bee. The queen is surrounded on three sides by 3s and 4s, so something has
 to land on the wild space. Next to that is a 4 and a 2, so you know that the
@@ -601,12 +591,81 @@ To play a series of games, start with 3 dice and play 1 round. Add in another
 die and all the dominoes with numbers up to 4, then play 2 rounds. Continue with
 5 and 6 dice for a total of 10 rounds.
 
-### Variants
-If you find the race too stressful, play cooperatively. Choose a player each
-turn to move the dice, and have the other players give suggestions for how to
-solve it.
+For experienced players, play 3 cycles with 6 dice for a total of 12 rounds.
 
-It can also be played solitaire, either with or without a timer.
+### Advanced Version
+Letting the dice land on the blanks makes the game easier to solve. For more
+challenging puzzles, only let the dice land on one blank: the blank on the
+queen bee's domino.
+
+If you find the race too stressful, play cooperatively or as a solitaire.
+
+### Problems
+When you randomly lay out the dominoes, most solutions will take between 3 and
+6 moves. Here are some carefully chosen layouts that range from easy to very
+challenging. Record how many moves you used for each queen bee, and then compare
+to the solutions at the end. These problems all use the advanced version of the
+rules, so the only blank you can land on is the one on the queen bee's domino.
+
+#### Problem 1
+![Diagram](images/rules/diagram79.png)
+
+#### Problem 2
+![Diagram](images/rules/diagram80.png)
+
+#### Problem 3
+![Diagram](images/rules/diagram81.png)
+
+#### Problem 4
+![Diagram](images/rules/diagram82.png)
+
+#### Problem 5
+![Diagram](images/rules/diagram83.png)
+
+#### Problem 6
+![Diagram](images/rules/diagram84.png)
+
+#### Problem 7
+![Diagram](images/rules/diagram85.png)
+
+#### Problem 8
+![Diagram](images/rules/diagram86.png)
+
+#### Problem 9
+![Diagram](images/rules/diagram87.png)
+
+#### Problem 10
+![Diagram](images/rules/diagram88.png)
+
+#### Problem 11
+![Diagram](images/rules/diagram89.png)
+
+#### Problem 12
+![Diagram](images/rules/diagram90.png)
+
+#### Problem 13
+![Diagram](images/rules/diagram91.png)
+
+#### Problem 14
+![Diagram](images/rules/diagram92.png)
+
+#### Problem 15
+![Diagram](images/rules/diagram93.png)
+
+#### Problem 16
+![Diagram](images/rules/diagram94.png)
+
+#### Problem 17
+![Diagram](images/rules/diagram95.png)
+
+#### Problem 18
+![Diagram](images/rules/diagram96.png)
+
+#### Problem 19
+![Diagram](images/rules/diagram97.png)
+
+#### Problem 20
+![Diagram](images/rules/diagram98.png)
 
 ## Domino Finder
 A memory game with hidden traps.
@@ -683,12 +742,12 @@ cliffs.)
 
 For example, this set of 18 dominoes:
 
-![Diagram](images/rules/diagram79.png)
+![Diagram](images/rules/diagram99.png)
 
 can be arranged into this solution, where the grey lines show the paths you can
 walk along:
 
-![Diagram](images/rules/diagram80.png)
+![Diagram](images/rules/diagram100.png)
 
 I like this solitaire, because it can almost always be solved, though finding a
 solution can be very difficult. There's usually more than one solution. For
@@ -743,7 +802,7 @@ twelve face-up dominoes side by side. Leave the three remaining dominoes face
 down, and use them to lift up the two middle dominoes as the peak of Mount Fuji.
 Here's an example layout:
 
-![Diagram](images/rules/diagram81.png)
+![Diagram](images/rules/diagram101.png)
 
 Place a Priest (pawn) beside each number at both ends of the mountain.
 
@@ -786,64 +845,64 @@ length was 14, with half of them between 12 and 16. Here are some more
 challenging problems for you to try. The solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/rules/diagram82.png)
+![Diagram](images/rules/diagram102.png)
 
 #### Problem 2
-![Diagram](images/rules/diagram83.png)
+![Diagram](images/rules/diagram103.png)
 
 #### Problem 3
-![Diagram](images/rules/diagram84.png)
+![Diagram](images/rules/diagram104.png)
 
 #### Problem 4
-![Diagram](images/rules/diagram85.png)
+![Diagram](images/rules/diagram105.png)
 
 #### Problem 5
-![Diagram](images/rules/diagram86.png)
+![Diagram](images/rules/diagram106.png)
 
 #### Problem 6
-![Diagram](images/rules/diagram87.png)
+![Diagram](images/rules/diagram107.png)
 
 #### Problem 7
-![Diagram](images/rules/diagram88.png)
+![Diagram](images/rules/diagram108.png)
 
 #### Problem 8
-![Diagram](images/rules/diagram89.png)
+![Diagram](images/rules/diagram109.png)
 
 #### Problem 9
-![Diagram](images/rules/diagram90.png)
+![Diagram](images/rules/diagram110.png)
 
 #### Problem 10
-![Diagram](images/rules/diagram91.png)
+![Diagram](images/rules/diagram111.png)
 
 #### Problem 11
-![Diagram](images/rules/diagram92.png)
+![Diagram](images/rules/diagram112.png)
 
 #### Problem 12
-![Diagram](images/rules/diagram93.png)
+![Diagram](images/rules/diagram113.png)
 
 #### Problem 13
-![Diagram](images/rules/diagram94.png)
+![Diagram](images/rules/diagram114.png)
 
 #### Problem 14
-![Diagram](images/rules/diagram95.png)
+![Diagram](images/rules/diagram115.png)
 
 #### Problem 15
-![Diagram](images/rules/diagram96.png)
+![Diagram](images/rules/diagram116.png)
 
 #### Problem 16
-![Diagram](images/rules/diagram97.png)
+![Diagram](images/rules/diagram117.png)
 
 #### Problem 17
-![Diagram](images/rules/diagram98.png)
+![Diagram](images/rules/diagram118.png)
 
 #### Problem 18
-![Diagram](images/rules/diagram99.png)
+![Diagram](images/rules/diagram119.png)
 
 #### Problem 19
-![Diagram](images/rules/diagram100.png)
+![Diagram](images/rules/diagram120.png)
 
 #### Problem 20
-![Diagram](images/rules/diagram101.png)
+![Diagram](images/rules/diagram121.png)
 
 ## Cobra Paw
 Derek Weston is a new game designer who designed this cute quick-reaction game
@@ -908,18 +967,18 @@ On your turn, you must play a domino with a matching number. In this example,
 the 24 domino has just been played. It's a valid move, because its 2 matches the
 2 on the open end.
 
-![Diagram](images/rules/diagram102.png)
+![Diagram](images/rules/diagram122.png)
 
 This example is not valid, because the 4 is played against a number that doesn't
 match.
 
-![Diagram](images/rules/diagram103.png)
+![Diagram](images/rules/diagram123.png)
 
 Dominoes must either be played against an end of the line, or against the sniff.
 (The sniff is explained below in the rules for doubles.) This example is not
 valid, because the 34 domino wasn't played against one of the ends.
 
-![Diagram](images/rules/diagram104.png)
+![Diagram](images/rules/diagram124.png)
 
 ### Draw
 You may draw extra dominoes before you play one, to give you more options. If
@@ -931,14 +990,14 @@ play any, then pass your turn.
 There are special rules for doubles, and there are extra special rules for the
 first double. Most doubles have to be played across the line, like this:
 
-![Diagram](images/rules/diagram105.png)
+![Diagram](images/rules/diagram125.png)
 
 Whichever double gets played first is called the sniff, and it has some
 differences from the other doubles. You can play against all four sides of the
 sniff, so if the 22 domino is the sniff, then a 24 domino could be played on
 the 22 domino, but not on the 44 domino.
 
-![Diagram](images/rules/diagram106.png)
+![Diagram](images/rules/diagram126.png)
 
 The other difference with the sniff is that doesn't have to be played across the
 line, you can choose which way to play it. That can make a difference to the
@@ -949,40 +1008,40 @@ After playing a domino, add up the numbers on the ends. If the total is a
 multiple of 5, then add it to your score. This example adds up to 5, and scores
 5 points.
 
-![Diagram](images/rules/diagram107.png)
+![Diagram](images/rules/diagram127.png)
 
 The next player adds a 63 domino, and the total is 8, no score. You don't count
 the 3's, because they're not on the ends.
 
-![Diagram](images/rules/diagram108.png)
+![Diagram](images/rules/diagram128.png)
 
 Now the first double gets played (the sniff). It's played across the line, so
 you count both numbers, and the total is 10. Score 10 points!
 
-![Diagram](images/rules/diagram109.png)
+![Diagram](images/rules/diagram129.png)
 
 A few turns later, a second double is played. It has to be played across the
 line, so you count both numbers. The sniff's ends are still open to play on, so
 you count them, and the total is 18. No score.
 
-![Diagram](images/rules/diagram110.png)
+![Diagram](images/rules/diagram130.png)
 
 The next play is on the regular double, so we stop counting it. The total is
 6 + 2 + 2 + 0 = 10. Score 10 points.
 
-![Diagram](images/rules/diagram111.png)
+![Diagram](images/rules/diagram131.png)
 
 Don't forget you can play off the sniff. Now the total is 6 + 2 + 1 + 0 = 9. No
 score.
 
-![Diagram](images/rules/diagram112.png)
+![Diagram](images/rules/diagram132.png)
 
 Here's an example where the sniff should be played in line instead of across
 the line. Playing across the line would make a total of 14, but playing in line
 makes 10 and scores. Don't forget, you can still play off all four sides of the
 sniff.
 
-![Diagram](images/rules/diagram113.png)
+![Diagram](images/rules/diagram133.png)
 
 Always keep track of which ends need to be counted: there can be 2, 3, or 4. If
 you run out of room on the table, you can bend a line of dominoes around a
@@ -1010,7 +1069,7 @@ your dominoes. If the current total is 7, then you can score by raising the
 total by 3 or dropping it by 2. In this example, the difference between 3 and
 6 is 3, so playing it changes the total from 7 to 10.
 
-![Diagram](images/rules/diagram114.png)
+![Diagram](images/rules/diagram134.png)
 
 Particularly in a two-player game, there is a painful rhythm where your opponent
 repeatedly scores and you can't. The key to breaking out of that rhythm is to be
@@ -1028,32 +1087,32 @@ the numbers, without duplicated or missing dominoes.
 ### Example
 Here's a small problem to start with.
 
-![Diagram](images/rules/diagram115.png)
+![Diagram](images/rules/diagram135.png)
 
 Every problem uses a complete set of dominoes up to the highest number you see.
 In this small problem, the highest number is one, so there are three dominoes:
 
-![Diagram](images/rules/diagram116.png)
+![Diagram](images/rules/diagram136.png)
 
 When you start solving, most dominoes will usually have more than one place they
 could go. For example, the blank/one domino could go in a few different places,
 including these three:
 
-![Diagram](images/rules/diagram117.png)
+![Diagram](images/rules/diagram137.png)
 
 However, some of the dominoes will only have one possible place, like the double
 blank:
 
-![Diagram](images/rules/diagram118.png)
+![Diagram](images/rules/diagram138.png)
 
 Once you've placed a domino, check to see if it forces any other dominoes. In
 this case, the top right corner only has one space it can connect to:
 
-![Diagram](images/rules/diagram119.png)
+![Diagram](images/rules/diagram139.png)
 
 That makes the final domino obvious, and the solution looks like this:
 
-![Diagram](images/rules/diagram120.png)
+![Diagram](images/rules/diagram140.png)
 
 I took a long time to add this puzzle to the
 collection, because I found it tedious to keep searching for unique numbers.
@@ -1073,64 +1132,64 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
 [knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
 
 ### Problem 1
-![Diagram](images/rules/diagram121.png)
+![Diagram](images/rules/diagram141.png)
 
 ### Problem 2
-![Diagram](images/rules/diagram122.png)
+![Diagram](images/rules/diagram142.png)
 
 ### Problem 3
-![Diagram](images/rules/diagram123.png)
+![Diagram](images/rules/diagram143.png)
 
 ### Problem 4
-![Diagram](images/rules/diagram124.png)
+![Diagram](images/rules/diagram144.png)
 
 ### Problem 5
-![Diagram](images/rules/diagram125.png)
+![Diagram](images/rules/diagram145.png)
 
 ### Problem 6
-![Diagram](images/rules/diagram126.png)
+![Diagram](images/rules/diagram146.png)
 
 ### Problem 7
-![Diagram](images/rules/diagram127.png)
+![Diagram](images/rules/diagram147.png)
 
 ### Problem 8
-![Diagram](images/rules/diagram128.png)
+![Diagram](images/rules/diagram148.png)
 
 ### Problem 9
-![Diagram](images/rules/diagram129.png)
+![Diagram](images/rules/diagram149.png)
 
 ### Problem 10
-![Diagram](images/rules/diagram130.png)
+![Diagram](images/rules/diagram150.png)
 
 ### Problem 11
-![Diagram](images/rules/diagram131.png)
+![Diagram](images/rules/diagram151.png)
 
 ### Problem 12
-![Diagram](images/rules/diagram132.png)
+![Diagram](images/rules/diagram152.png)
 
 ### Problem 13
-![Diagram](images/rules/diagram133.png)
+![Diagram](images/rules/diagram153.png)
 
 ### Problem 14
-![Diagram](images/rules/diagram134.png)
+![Diagram](images/rules/diagram154.png)
 
 ### Problem 15
-![Diagram](images/rules/diagram135.png)
+![Diagram](images/rules/diagram155.png)
 
 ### Problem 16
-![Diagram](images/rules/diagram136.png)
+![Diagram](images/rules/diagram156.png)
 
 ### Problem 17
-![Diagram](images/rules/diagram137.png)
+![Diagram](images/rules/diagram157.png)
 
 ### Problem 18
-![Diagram](images/rules/diagram138.png)
+![Diagram](images/rules/diagram158.png)
 
 ### Problem 19
-![Diagram](images/rules/diagram139.png)
+![Diagram](images/rules/diagram159.png)
 
 ### Problem 20
-![Diagram](images/rules/diagram140.png)
+![Diagram](images/rules/diagram160.png)
 
 ### Dominosa Strategy
 There are several methods to deduce where the dominoes must be placed, and it's
@@ -1146,14 +1205,14 @@ rules, and the diagram on the right shows the next step that uses that section's
 rule.
 
 #### Rule 1: One Neighbour
-![Diagram](images/rules/diagram141.png)
+![Diagram](images/rules/diagram161.png)
 
 Look for a number that only has one neighbour, and join it with its neighbour.
 Particularly check near the last pair you joined. In this example, the top right
 corner only has one neighbour.
 
 #### Rule 2: Newly Joined
-![Diagram](images/rules/diagram142.png)
+![Diagram](images/rules/diagram162.png)
 
 If you have a newly joined pair of numbers, check if the same pair appears
 elsewhere. Split the other locations, because you can't have two dominoes
@@ -1166,7 +1225,7 @@ that is to draw the boundary between the dominoes there. Fill in the gap between
 the two grey lines.
 
 #### Rule 3: Newly Split
-![Diagram](images/rules/diagram143.png)
+![Diagram](images/rules/diagram163.png)
 
 If you have a newly split pair of numbers, look for the same pair elsewhere
 on the board to see if there is only one pair like them. If so, join them. In
@@ -1177,7 +1236,7 @@ is only one pair like that left. In fact, the only one/blank pair left is in the
 bottom left corner, so you can join them.
 
 #### Rule 4: Duplicate Neighbours
-![Diagram](images/rules/diagram144.png)
+![Diagram](images/rules/diagram164.png)
 
 If all of a space's available neighbours are the same, you know it will join
 one of them and use up the domino with those two numbers. Look for the same pair
@@ -1188,7 +1247,7 @@ Therefore, you can split the two and one in the bottom right corner, as well as
 several other two/one pairs.
 
 #### Rule 5: Shared Space
-![Diagram](images/rules/diagram145.png)
+![Diagram](images/rules/diagram165.png)
 
 If a pair of numbers appears more than once on the board, but all of the pairs
 share one space, then you know that space must join to the other number. Mark
@@ -1198,7 +1257,7 @@ both use the middle two, so you know it won't join to the blank below or the one
 above, and you can mark those as split.
 
 #### Rule 6: Unique Pairs
-![Diagram](images/rules/diagram146.png)
+![Diagram](images/rules/diagram166.png)
 
 Look for unique pairs of numbers, and mark them as joined. (This is the tedious
 part, so I try to only require it a few times in each problem.) In this example,
@@ -1207,7 +1266,7 @@ you can join them. All problems will start solving with this rule or rule 4, but
 once you've started solving, it's faster to try the other rules before this one.
 
 #### Rule 7: Neck
-![Diagram](images/rules/diagram147.png)
+![Diagram](images/rules/diagram167.png)
 
 If two unsolved areas are joined by a narrow neck, you know that both areas must
 have an even number of spaces in them. That will tell you where you can split or
@@ -1364,6 +1423,89 @@ Here are the Mirror Donimoes solutions:
     RD, RL, RdU2, NdU2, PR2, PdD3, RdD3, PD, PR3, PU, PR2, PU, PL, ND2, NR3, NU,
     NR2, NU, PdR, PU, NL, RD3, RR3, RU, RR2!
 
+## Bee Donimoes Solutions
+Remember that these solutions use the advanced rules: the only blank you can
+land on is the one on the queen bee's domino.
+
+1. Total moves: 4.
+   Moves for 3: 1R3, 2D2, 1D2, 2R3D1.
+2. Total moves: 6.
+   Moves for 3: 1D1, 1R3, 1D2, 2R1U3, 1U3L3, 2L3D1.
+3. Total moves: 8.
+   Moves for 3: 1L3, 1U1R2, 1U1, 1R2, 1D3, 2R3U2, 1U2L4D1, 2L4U1.
+4. Total moves: 10.
+   Moves for 3: 2L3, 1D2, 2D2, 1L3, 1U1.
+   Moves for 4: 3R3, 2D4R1, 1D2, 3D2L2, 1L3.
+5. Total moves: 14.
+   Moves for 3: 2R1, 2D1R3, 2U2, 2L1, 1R1D3, 2D3L2, 1L2U1L1.
+   Moves for 4: 2R1, 2D1R3, 3R3D2, 2D2L5, 3L5U4, 1L3D2, 3D3.
+6. Total moves: 16.
+   Moves for 3: 2R1, 2D2, 2L2, 2D1, 1L5D1, 2U2, 1U3R3, 2R4D1.
+   Moves for 4: 2R1, 2D2, 2L2, 2D1, 1L5D1, 2U2, 3L4D3R1, 2D2.
+7. Total moves: 18.
+   Moves for 3: 1D4, 1R1U2, 1R1, 1D1, 2L2U3, 1U3L2, 2L1, 1D4, 2D4L2.
+   Moves for 4: 3R2U2, 3R1, 2U1L5, 3L1, 2R4D2L1, 3D2L2, 2U4, 1R2D3, 2D4.
+8. Total moves: 18.
+   Moves for 3: 1L3, 2R2, 2U2, 2L6, 1D2R6, 2R6D1L1.
+   Moves for 4: 1L2, 1D3, 3L6, 3D1, 2L4U2, 3U1.
+   Moves for 5: 3L2, 4R2D1L3, 3D1L4, 2L3D1L1, 1L3, 1D4R1D1R1.
+9. Total moves: 20.
+   Moves for 3: 1D3, 1L1, 1U1, 1R6, 2D3L3, 1L4.
+   Moves for 4: 1D3, 3D2, 1L1, 3L2U4, 2L6D4R4, 3D4R3, 1R4D1.
+   Moves for 5: 4U4, 2L1D1, 4D4, 1R4D3L5, 2D3L5D1, 4L5D1R2, 3D3L1.
+10. Total moves: 22.
+    Moves for 3: 2R2, 2U3, 2L1, 2D1, 1L2D3, 2D3L2, 1L2U2L2, 2U2L1.
+    Moves for 4: 2R2, 2U4L1, 2D2, 1L2U2, 2U1, 1L2, 3U3R2, 1R1.
+    Moves for 5: 2L3, 4D3, 3R3U1, 1L1D1L5, 4U1L5, 3L4.
+11. Total moves: 27.
+    Moves for 3: 2D3, 2L1, 2U1, 2R4U3, 1U3L6, 2L6D1, 1D4, 2D3R2, 1R3.
+    Moves for 4: 2L3, 2D1, 2R1U2, 2R5, 1U3L6, 1D4, 3L4U2, 1U4, 2L6D1.
+    Moves for 5: 2L3, 1U4L1, 1D1, 1L5, 2U1R1, 4U2R3, 3U4L1, 2R5, 1R5.
+12. Total moves: 25.
+    Moves for 3: 1R2, 2L6, 1U1, 1L3, 2U2R1, 1R3, 2R2D3, 2L1, 1D3.
+    Moves for 4: 1R2, 2L6, 1U1, 1L3, 2U2R1, 1R1U1, 2U1R2, 1R4, 2R2U1L1, 3U5R1D1R1.
+    Moves for 5: 4L5, 2L6, 2U4R2D5, 3L2U5L2D1, 2U5L1, 1U2.
+13. Total moves: 22.
+    Moves for 3: 1U3, 1R1D4, 1R2, 1U5, 2U3L3, 1L3D1.
+    Moves for 4: 1L2, 3R2, 2U2L6, 3L6U1, 3R1, 1U4L1.
+    Moves for 5: 4R7, 4D6, 4L4, 1D1R1, 4R1U3, 1U3R2.
+    Moves for 6: 4R6, 4D4L1, 5D1L1, 3D2L1.
+14. Total moves: 26.
+    Moves for 3: 2D1L3, 2U3, 2R6, 1D3L5, 2L4, 1D3, 2D3.
+    Moves for 4: 2D1L3, 3L3U4, 2U3, 2R6, 1D3L5, 2L5U2, 3R1.
+    Moves for 5: 2D1L3, 3L3U4, 2U4L1, 3R5, 2R6D1R1, 1D3L1U2, 4R3D2L1.
+    Moves for 6: 5D3, 1L3, 5L2U6L1, 2U5L1D3, 3U6L1D2.
+15. Total moves: 26.
+    Moves for 3: 1L2, 1D6, 1R4, 2D5L4, 1L4U1.
+    Moves for 4: 1L2, 1D5, 1R7, 1D1, 1L3, 1U3, 2D2L3, 3U3R1.
+    Moves for 5: 4D2, 4L1, 1D5R5, 4R5U4L1, 2R2D1, 1U4L1D1L5, 3U4R5U2, 1R6.
+    Moves for 6: 2R3D3, 5D3L7, 1D4L2D1, 2L6, 3U2R1U1.
+16. Total moves: 28.
+    Moves for 3: 2R2, 1L3, 2U1R1, 2D3, 2L5, 1D4R6, 2R6U3, 1U3L2D1, 2L2D2.
+    Moves for 4: 1L3, 3L2, 2U1R3, 3R2, 2L1D2, 3D2L4, 1D3R4U5, 3R4U5R1, 2U5R2.
+    Moves for 5: 3L2, 4D1L1, 4D1, 2U1R4, 1R3U1, 3R4D1.
+    Moves for 6: 3L2, 5U1L5, 4L5D3R1, 5D3R1U1R1.
+17. Total moves: 32.
+    Moves for 3: 1L4, 1D5, 1L2, 1U2, 2L7U2, 1D2, 2D4R4, 1R2, 2L2U6R1, 1U5.
+    Moves for 4: 3L2, 3D5, 3R3, 3U4, 1L3D4, 3D4L3, 1L3U1, 2L7D1R4D1, 1D1R4D1L1, 3R3.
+    Moves for 5: 3L1, 2L2D2, 3D4, 3R4D2R1, 1D5L3, 3L1U2L1, 2L1.
+    Moves for 6: 5L3, 3D4R5U1L1, 5R5U1L2, 1D2L2, 4U2R3U1.
+18. Total moves: 31.
+    Moves for 3: 2R1, 2D4, 2L2, 1D5R3U1, 2R2.
+    Moves for 4: 1L2, 2R1, 1D2, 1R6, 1D1, 1L2, 2D2L4, 1L4U1, 2D2, 3L5U4, 2U2.
+    Moves for 5: 1L2, 3R2, 3U6, 3L1D2, 3L6, 2L3D2, 1D3R6, 2R6U4R1, 3R6, 1U1, 4R5U2.
+    Moves for 6: 5D6, 5L1U3L2, 4R3, 3U3L2U2.
+19. Total moves: 34.
+    Moves for 3: 1R5, 2R2, 1U2, 2U1R1, 1R1, 2D6, 2R2, 1D4L4, 2L4U6, 1U5.
+    Moves for 4: 1R5, 3D2, 1U2, 3R2D4, 1D4L3, 1U5, 2R1U1, 1D5, 2D6R4, 3R1U2, 1R4U4, 2U3.
+    Moves for 5: 3D5, 3R1, 4D3L3U4, 2R3D4R3D1, 2L1, 4D4R3D1, 3R3D1L2, 1R7.
+    Moves for 6: 3D5, 2D4, 4D3L6U2, 5L5.
+20. Total moves: 36.
+    Moves for 3: 1D3, 1L3, 2L3, 2D1, 2R5, 2D2, 2L1, 1D1R2, 2R2D2, 1D2L4, 2L6, 1L2U4, 2U5.
+    Moves for 4: 1D3, 2L3, 2D5, 2R6, 2U1L1, 2U3, 3R4D3, 2D1, 1L2D2R1U1, 2D1.
+    Moves for 5: 1D4L1, 1D1L5, 3D3R6, 1L1, 2L3, 2D4R7U1L2, 1R7U1L1.
+    Moves for 6: 5U4L2, 1L2D6L3, 5D6L4, 3D4R3, 5R2, 2D5R3.
+
 ## Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different
 pawns, the top left is labelled as a (P)awn, the bottom left is a k(N)ight, the
@@ -1449,64 +1591,64 @@ over two other pieces, meaning that it moves five spaces in total.
 
 ## Dominosa Solutions
 ### Solution 1
-![Diagram](images/rules/diagram148.png)
+![Diagram](images/rules/diagram168.png)
 
 ### Solution 2
-![Diagram](images/rules/diagram149.png)
+![Diagram](images/rules/diagram169.png)
 
 ### Solution 3
-![Diagram](images/rules/diagram150.png)
+![Diagram](images/rules/diagram170.png)
 
 ### Solution 4
-![Diagram](images/rules/diagram151.png)
+![Diagram](images/rules/diagram171.png)
 
 ### Solution 5
-![Diagram](images/rules/diagram152.png)
+![Diagram](images/rules/diagram172.png)
 
 ### Solution 6
-![Diagram](images/rules/diagram153.png)
+![Diagram](images/rules/diagram173.png)
 
 ### Solution 7
-![Diagram](images/rules/diagram154.png)
+![Diagram](images/rules/diagram174.png)
 
 ### Solution 8
-![Diagram](images/rules/diagram155.png)
+![Diagram](images/rules/diagram175.png)
 
 ### Solution 9
-![Diagram](images/rules/diagram156.png)
+![Diagram](images/rules/diagram176.png)
 
 ### Solution 10
-![Diagram](images/rules/diagram157.png)
+![Diagram](images/rules/diagram177.png)
 
 ### Solution 11
-![Diagram](images/rules/diagram158.png)
+![Diagram](images/rules/diagram178.png)
 
 ### Solution 12
-![Diagram](images/rules/diagram159.png)
+![Diagram](images/rules/diagram179.png)
 
 ### Solution 13
-![Diagram](images/rules/diagram160.png)
+![Diagram](images/rules/diagram180.png)
 
 ### Solution 14
-![Diagram](images/rules/diagram161.png)
+![Diagram](images/rules/diagram181.png)
 
 ### Solution 15
-![Diagram](images/rules/diagram162.png)
+![Diagram](images/rules/diagram182.png)
 
 ### Solution 16
-![Diagram](images/rules/diagram163.png)
+![Diagram](images/rules/diagram183.png)
 
 ### Solution 17
-![Diagram](images/rules/diagram164.png)
+![Diagram](images/rules/diagram184.png)
 
 ### Solution 18
-![Diagram](images/rules/diagram165.png)
+![Diagram](images/rules/diagram185.png)
 
 ### Solution 19
-![Diagram](images/rules/diagram166.png)
+![Diagram](images/rules/diagram186.png)
 
 ### Solution 20
-![Diagram](images/rules/diagram167.png)
+![Diagram](images/rules/diagram187.png)
 
 # Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at

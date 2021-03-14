@@ -16,7 +16,7 @@ def main():
     stats_path = Path('bees_stats.csv')
     all_size_counts = count_stats(stats_path)
 
-    colours = dict(touching='b', redeal='r')
+    colours = dict(touching='b', redeal='r', wild='g')
     fig, axes_table = plt.subplots(4, 4, sharex='all', sharey='all')
     for (pips, queen, blanks), size_counts in all_size_counts.items():
         sizes = []
@@ -40,6 +40,15 @@ def main():
                 axes = axes_table[pips-3][queen-3]
                 axes.set_frame_on(False)
                 axes.tick_params(bottom=False, left=False)
+
+    # Make legend.
+    axes = axes_table[0][3]
+    for blanks, style in colours.items():
+        axes.plot([], [], style, label=blanks)
+    axes.legend()
+
+    plt.suptitle('Solution Lengths with Rule Changes')
+    plt.xlabel('Solution Length')
 
     plt.tight_layout()
     plt.show()
@@ -71,13 +80,13 @@ def count_stats(stats_path: Path) -> dict:
 def write_missing_counts(all_size_counts: dict, stats_path: Path):
     new_stats_path = stats_path.with_suffix('.new.csv')
     assert not new_stats_path.exists()
-    calculator = BeesFitnessCalculator()
+    calculator = BeesFitnessCalculator(size_limit=300_000)
     was_data_missing = False
     stats_columns = ['pips', 'queen', 'blanks', 'solution', 'count']
     target_count = 1000
     with new_stats_path.open('w') as counts_file:
         writer = DictWriter(counts_file, stats_columns)
-        for blanks in ('touching', 'redeal'):
+        for blanks in ('touching', 'redeal', 'wild'):
             for max_pips in range(3, 7):
                 init_params = dict(max_pips=max_pips,
                                    width=max_pips + 2,
@@ -113,7 +122,7 @@ def write_missing_counts(all_size_counts: dict, stats_path: Path):
         with stats_path.open('w') as stats_file:
             writer = DictWriter(stats_file, stats_columns)
             write_old_counts(all_size_counts, writer)
-        new_stats_path.unlink(missing_ok=True)
+    new_stats_path.unlink(missing_ok=True)
 
 
 def write_old_counts(all_size_counts: dict, writer: DictWriter):

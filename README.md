@@ -21,6 +21,9 @@ puzzles by other designers:
     matching dominoes in a grid, then try to play the tetromino shapes on top.
     (1-4 players, double-six dominoes, 7 cardboard tetrominoes, and some beads,
     buttons, or coins)
+* **Bee Donimoes** is a puzzle race game I designed where a swarm of dice bring
+    nectar back to the hive. (1-6 players, double-six dominoes, 3-6 dice, and a
+    timer)
 * **Domino Finder** is a memory game I designed where you have to find the
     treasure domino without falling in a trap. (2-4 players,
     double-six dominoes, pawns, and two dice)
@@ -49,8 +52,9 @@ The Capturing Donimoes problems look like this:
 To try the puzzle, get a set of dominoes. Then either [read the rules][rules],
 or download [the PDF][pdf].
 
-If you're interested, you can read about [making donimoes]. If you're brave, you
-can read about [experiments] in progress ([PDF][new pdf]).
+If you're interested, you can read about [making donimoes] or my
+[design journal]. If you're brave, you can read about [experiments] in progress
+([PDF][new pdf]).
 
 [rules]: https://donkirkby.github.io/donimoes/rules.html
 [Unmatched example]: https://donkirkby.github.io/donimoes/blocking_example.png
@@ -58,5 +62,6 @@ can read about [experiments] in progress ([PDF][new pdf]).
 [solution example]: https://donkirkby.github.io/donimoes/solution_example.png
 [pdf]: https://donkirkby.github.io/donimoes/donimoes.pdf
 [making donimoes]: https://donkirkby.github.io/donimoes/making_donimoes.html
+[design journal]: https://donkirkby.github.io/donimoes/journal/
 [experiments]: https://donkirkby.github.io/donimoes/new_rules.html
 [new pdf]: https://donkirkby.github.io/donimoes/new_rules.pdf

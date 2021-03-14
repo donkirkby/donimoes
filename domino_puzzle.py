@@ -915,7 +915,7 @@ class BoardGraph(object):
         self.graph.add_node(self.start)
 
         if self.executor is not None:
-            walker = self.__class__(self.board_class)
+            walker = self.clone()
         else:
             walker = None
 
@@ -948,6 +948,10 @@ class BoardGraph(object):
                     moves = request.future.result()
                     self.add_moves(state, moves, pending_nodes, g_score)
         return set(self.graph.nodes())
+
+    def clone(self) -> 'BoardGraph':
+        """ Create a smaller copy of this object to pass to worker process. """
+        return self.__class__(self.board_class)
 
     def find_moves(self, state, max_pips):
         board = self.board_class.create(state, border=1, max_pips=max_pips)
@@ -984,11 +988,14 @@ class BoardGraph(object):
                                 new_state,
                                 move=description.move,
                                 **edge_attrs)
-            if self.min_remaining is None or description.remaining < self.min_remaining:
-                self.min_remaining = description.remaining
-                self.closest = description.new_state
-            if description.remaining == 0 and self.last is None:
-                self.last = description.new_state
+            self.check_remaining(description.remaining, new_state)
+
+    def check_remaining(self, remaining: float, new_state: str):
+        if self.min_remaining is None or remaining < self.min_remaining:
+            self.min_remaining = remaining
+            self.closest = new_state
+        if remaining == 0 and self.last is None:
+            self.last = new_state
 
     def calculate_heuristic(self, board: Board) -> float:
         return 0

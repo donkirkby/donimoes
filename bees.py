@@ -9,6 +9,8 @@ from domino_puzzle import (Board, BoardGraph, GraphLimitExceeded, DiceSet,
                            ArrowSet, MoveDescription)
 from evo import Individual, Evolution
 
+DEFAULT_BLANKS = 'touching'
+
 
 class BeesProblem(Individual):
     def __repr__(self):
@@ -35,23 +37,26 @@ class BeesProblem(Individual):
                                  max_pips=max_pips)
         new_board = board.mutate(random, BeesBoard)
         self.value = dict(start=new_board.display(),
-                          max_pips=max_pips)
+                          max_pips=max_pips,
+                          blanks=self.value.get('blanks', DEFAULT_BLANKS))
 
     def _random_init(self, init_params: dict):
-        blanks = init_params.pop('blanks', 'touching')
-        board = BeesBoard(**init_params)
+        final_params = dict(init_params)
+        blanks = final_params.pop('blanks', DEFAULT_BLANKS)
+        board = BeesBoard(**final_params)
         while True:
             if not board.fill(random):
                 pass
             elif not board.has_touching_blanks:
                 break
             elif blanks == 'redeal':
-                board = BeesBoard(**init_params)
+                board = BeesBoard(**final_params)
             else:
                 break
 
         return dict(start=board.display(),
-                    max_pips=board.max_pips)
+                    max_pips=board.max_pips,
+                    blanks=blanks)
 
 
 class BeesFitnessCalculator:
@@ -87,8 +92,11 @@ class BeesFitnessCalculator:
         round_summaries = []
         solution_lengths = []
         fitness = 0
+        blanks = value.get('blanks')
+        are_all_blanks_wild = blanks == 'wild'
         for queen_pips in range(3, max_pips+1):
-            graph = BeesGraph(process_count=3)
+            graph = BeesGraph(process_count=3,
+                              are_all_blanks_wild=are_all_blanks_wild)
             board.place_dice(queen_pips)
             try:
                 graph.walk(board, size_limit=self.size_limit)
@@ -123,6 +131,7 @@ class BeesFitnessCalculator:
                        -1_000 * move_product +
                        total_moves)
             round_summaries.insert(0, f'Total moves: {total_moves}.')
+
         lengths_display = ' + '.join(str(length)
                                      for length in solution_lengths)
         lengths_display += f' = {total_moves}'
@@ -187,18 +196,24 @@ class BeesGraph(BoardGraph):
     def __init__(self,
                  board_class=BeesBoard,
                  process_count: int = 0,
-                 debug=False):
+                 debug=False,
+                 are_all_blanks_wild=False):
         super().__init__(board_class, process_count)
         self.debug = debug
+        self.are_all_blanks_wild = are_all_blanks_wild
         self.solution_states = set()
         self.last = None
         self.min_gaps: typing.Optional[int] = None
 
+    def clone(self) -> 'BoardGraph':
+        clone = super().clone()
+        clone.are_all_blanks_wild = self.are_all_blanks_wild
+        return clone
+
     def walk(self, board, size_limit=maxsize):
         self.min_gaps = None
-        self.check_progress(board)
+        self.check_remaining(self.check_progress(board), board.display())
         self.solution_states.clear()
-        self.last = None
         states = super().walk(board, size_limit)
         return states
 
@@ -243,22 +258,30 @@ class BeesGraph(BoardGraph):
         if dy == 0:
             targets.extend((x, y2) for y2 in range(board.height))
 
-        wild_position = None
-        for position, pips2 in board.dice_set.dice.items():
-            if pips2 == board.queen_pips:
-                queen_x, queen_y = position
-                wild_cell = board[queen_x][queen_y].partner
-                wild_position = wild_cell.x, wild_cell.y
-                if wild_position in board.dice_set.dice:
-                    # Wild position is already occupied, can't use it.
-                    wild_position = None
+        wild_positions = set()
+        if self.are_all_blanks_wild:
+            for x in range(board.width):
+                for y in range(board.height):
+                    if board[x][y].pips == 0:
+                        wild_positions.add((x, y))
+            wild_positions.difference_update(board.dice_set.dice)
+        else:
+            for position, pips2 in board.dice_set.dice.items():
+                if pips2 == board.queen_pips:
+                    queen_x, queen_y = position
+                    wild_cell = board[queen_x][queen_y].partner
+                    wild_position = wild_cell.x, wild_cell.y
+                    if wild_position not in board.dice_set.dice:
+                        # Wild position is not occupied, can use it.
+                        wild_positions.add(wild_position)
+
         direct_positions = []
         for position2 in targets:
             if position2 in positions:
                 continue
             x2, y2 = position2
             pips2 = board[x2][y2].pips
-            if pips2 == pips or position2 == wild_position:
+            if pips2 == pips or position2 in wild_positions:
                 direct_positions.append(position2)
             elif position2 in board.dice_set.dice:
                 yield from self.extend_positions(positions + [position2], board)
@@ -344,7 +367,10 @@ def main():
           f'with up to {max_pips} pips.')
     target_total = args.target_length * (max_pips - 2)
     fitness_calculator = BeesFitnessCalculator(target_length=args.target_length)
-    init_params = dict(max_pips=max_pips, width=max_pips+2, height=max_pips+1)
+    init_params = dict(max_pips=max_pips,
+                       width=max_pips+2,
+                       height=max_pips+1,
+                       blanks='wild')
     evo = Evolution(
         pool_size=args.pool_size,
         fitness=fitness_calculator.calculate,

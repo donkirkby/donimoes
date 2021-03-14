@@ -2,5 +2,7 @@
   link: /rules.html
 - name: PDF
   link: /donimoes.pdf
+- name: Journal
+  link: /journal/
 - name: GitHub
   link: https://github.com/donkirkby/donimoes
