@@ -2532,7 +2532,9 @@ Here are the Mirror Donimoes solutions:
 
 ## Bee Donimoes Solutions
 Remember that these solutions use the advanced rules: the only blank you can
-land on is the one on the queen bee's domino.
+land on is the one on the queen bee's domino. The moves are described with the
+number of a die, a direction, and a distance. For example, 1R3 means move the
+1 die to the right, 3 spaces.
 
 1. Total moves: 4.
    Moves for 3: 1R3, 2D2, 1D2, 2R3D1.
@@ -2941,8 +2943,8 @@ over two other pieces, meaning that it moves five spaces in total.
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [donkirkby.github.com/donimoes][github].
 
-Unmatched, Capturing, and Mirror Donimoes, as well as Tetradominoes and Domino
-Finder are original puzzles and games designed by [Don Kirkby][don].
+Unmatched, Capturing, Mirror, and Bee Donimoes, as well as Tetradominoes and
+Domino Finder are original puzzles and games designed by [Don Kirkby][don].
 
 [github]: https://donkirkby.github.io/donimoes
 [don]: https://donkirkby.github.io/
