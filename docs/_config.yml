@@ -7,3 +7,6 @@ defaults:
       path: ""
     values:
       hero_image: images/index_hero.jpg
+      twitter:
+        card: summary_large_image
+      image: images/index_hero.jpg
