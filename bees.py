@@ -369,8 +369,7 @@ def main():
     fitness_calculator = BeesFitnessCalculator(target_length=args.target_length)
     init_params = dict(max_pips=max_pips,
                        width=max_pips+2,
-                       height=max_pips+1,
-                       blanks='wild')
+                       height=max_pips+1)
     evo = Evolution(
         pool_size=args.pool_size,
         fitness=fitness_calculator.calculate,

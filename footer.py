@@ -4,17 +4,18 @@ from reportlab.lib.pagesizes import LETTER
 
 class FooterCanvas(canvas.Canvas):
 
-    def __init__(self, *args, is_booklet=False, **kwargs):
+    def __init__(self, *args, is_booklet=False, font_name='Times-Roman', **kwargs):
         canvas.Canvas.__init__(self, *args, **kwargs)
         self.pages = []
         self.is_booklet = is_booklet
+        self.font_name = font_name
 
     def showPage(self):
         self.pages.append(dict(self.__dict__))
         self._startPage()
 
     def save(self):
-        if not self.is_booklet:
+        if True or not self.is_booklet:
             reordered_pages = self.pages
         else:
             page_offsets = (1, -2, 2, -3, -1, 0, -1, 0)
@@ -34,7 +35,7 @@ class FooterCanvas(canvas.Canvas):
     def draw_canvas(self):
         x = 30
         self.saveState()
-        self.setFont('Times-Roman', 14 if self.is_booklet else 9)
+        self.setFont(self.font_name, 7 if self.is_booklet else 9)
         if self._pageNumber % 2:
             self.drawString(LETTER[0]-x, 45, str(self._pageNumber))
         else:
@@ -42,5 +43,5 @@ class FooterCanvas(canvas.Canvas):
         if self._pageNumber == 1:
             self.drawCentredString(LETTER[0] / 2,
                                    45,
-                                   "donkirkby.github.com/donimoes")
+                                   "donkirkby.github.io/donimoes")
         self.restoreState()

@@ -5,6 +5,8 @@ from subprocess import call
 
 from PIL import Image
 from reportlab.lib import pagesizes
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.platypus.flowables import Spacer, KeepTogether, ListFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ListStyle
@@ -134,35 +136,57 @@ def main():
     markdown_path = Path(args.markdown.name)
     rules_stem = markdown_path.stem
     pdf_stem = 'donimoes' if rules_stem == 'rules' else rules_stem
-    pdf_path = Path(__file__).parent / 'docs' / (pdf_stem + '.pdf')
+    source_path = Path(__file__).parent
+    pdf_path = source_path / 'docs' / (pdf_stem + '.pdf')
     merged_path = pdf_path.parent / (rules_stem + '.md')
     images_path = pdf_path.parent / 'images' / rules_stem
     images_path.mkdir(parents=True, exist_ok=True)
+
+    fonts_path = source_path / 'fonts'
+    fredoka_file = fonts_path / 'Fredoka_One' / 'FredokaOne-Regular.ttf'
+    raleway_file = fonts_path / 'Raleway' / 'static' / 'Raleway-Regular.ttf'
+    pdfmetrics.registerFont(TTFont("Fredoka", fredoka_file))
+    pdfmetrics.registerFont(TTFont("Raleway", raleway_file))
+
     with args.markdown:
         states = parse(args.markdown.read())
     diagram_writer = DiagramWriter(pdf_path.parent, images_path)
+    if args.booklet:
+        page_size = (4.25*inch, 6.875*inch)
+        vertical_margin = 0.25*inch
+        side_margin = 0.5*inch
+    else:
+        page_size = pagesizes.letter
+        vertical_margin = 0.625*inch
+        side_margin = inch
 
     doc = SimpleDocTemplate(str(pdf_path),
                             author='Don Kirkby',
-                            pagesize=pagesizes.letter,
-                            topMargin=0.625*inch,
-                            bottomMargin=0.625*inch)
+                            pagesize=page_size,
+                            leftMargin=side_margin,
+                            rightMargin=side_margin,
+                            topMargin=vertical_margin,
+                            bottomMargin=vertical_margin)
     styles = getSampleStyleSheet()
-    if args.booklet:
-        for style in styles.byName.values():
-            if hasattr(style, 'fontSize'):
-                if style.name.startswith('Heading'):
-                    scale = 1.5
-                else:
-                    scale = 2
+    for style in styles.byName.values():
+        if hasattr(style, 'fontSize'):
+            if style.name.startswith('Heading'):
+                scale = 1.5
+                style.fontName = 'Fredoka'
+            else:
+                scale = 2
+                style.fontName = 'Raleway'
+            if False and args.booklet:
                 style.fontSize *= scale
                 style.leading *= scale
     paragraph_style = styles[Styles.Normal]
     numbered_list_style = ListStyle('default_list',
+                                    bulletFontName='Raleway',
                                     bulletFontSize=paragraph_style.fontSize,
                                     leftIndent=paragraph_style.fontSize*1.5,
                                     bulletFormat='%s.')
     bulleted_list_style = ListStyle('default_list',
+                                    bulletFontName='Raleway',
                                     bulletFontSize=paragraph_style.fontSize,
                                     leftIndent=paragraph_style.fontSize*1.5)
     story = []
@@ -260,7 +284,9 @@ def main():
                              first_bullet,
                              bulleted_list_style,
                              numbered_list_style)
-    doc.build(story, canvasmaker=partial(FooterCanvas, is_booklet=args.booklet))
+    doc.build(story, canvasmaker=partial(FooterCanvas,
+                                         font_name='Raleway',
+                                         is_booklet=args.booklet))
     with merged_path.open('w') as merged_file:
         for state in states:
             state.write_markdown(merged_file)
