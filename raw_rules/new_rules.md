@@ -7,6 +7,8 @@ know what you think.
 
 * **Adding Donimoes** is a puzzle I designed where you add dominoes in the given
     order. (1 player, double-six dominoes)
+* **Tetromino Road** is a board game I designed where you lay out dominoes with
+    roads between them. (2 players, double-six dominoes, beads and coins)
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.
@@ -100,6 +102,62 @@ solutions are listed at the end.
     2 3 5 4 5 2
     - - - - - -
     1 5 1 5 5 4
+
+## Tetromino Road
+The dominoes are played on an 8x8 grid. Make the edges out of face-down
+dominoes, or play on a chess board where a pair of squares are the same size as
+one of your dominoes.
+
+Choose which player will play the tetrominoes dark side up, and give them 3
+dark player tokens. Give the other player 3 light player tokens. Each player
+draws 3 dominoes and keeps them hidden from their opponent.
+
+On your turn, you must place a domino and then mark any spaces that must be
+roads. At any time during your turn, you may play a token or tetrominoes.
+
+### Placing Dominoes and Tokens
+Dominoes and tokens must be played on empty spaces so that they touch the edge
+of the board or another item that's already on the board. Diagonal connections
+don't count as touching.
+
+### Placing Roads
+If a number on a domino is completely surrounded by other numbers, the
+surrounding numbers must exactly equal 3 times the number of neighbours.
+Corners must have neighbours equal to 6, sides must equal 9, and centre spaces
+must equal 12. If a square has only one empty space next to it and it would be
+impossible to fill that space with a legal number, then that space must be a
+road. After placing a domino, check to see if any spaces must be roads and place
+road markers on them.
+
+At the end of the game, all road spaces on the board must form one connected
+road network, so you can also place road markers where they are needed to keep
+the roads connected.
+
+If an empty space has no empty spaces next to it, then no dominoes will fit on
+it. Place a road marker on it.
+
+If a player token is on a space that must be a road, replace it with a road
+marker and give it back to the player. However, check to see whether the player
+can use it to play a tetromino before replacing it. The active player can
+choose what order to play road markers. 
+
+### Placing Tetrominoes
+Tetrominoes need to be played on spaces with either road markers or player
+tokens. They cannot be played on spaces with dominoes, other tetrominoes, or
+empty spaces. At least one of the spaces must have a player token that belongs
+to the player who's playing the tetromino.
+
+If a player's token is getting replaced during their opponent's turn, they may
+use it immediately to place a tetromino. The opponent then continues their turn
+if they have more road markers to place. (Should the player's turn end when
+they have to replace another player's token?)
+
+Tetrominoes can't be moved after they are played, and they must be played with
+the player's side up. If a player's token is getting replaced and there aren't
+any tetrominoes that will fit, the token is just returned to the player.
+
+### Winning
+The player who plays 4 tetrominoes wins.
 
 # Solutions
 ## Adding Donimoes Solutions
