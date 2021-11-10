@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "574bc723240bd01827204be9e75206c5db945fea2a817dddc9faa47ec54cbe92"
+            "sha256": "3938d28243e6ea4c4ca225492e06cd87f75b7bcb2d73c83f1ac09d30ccc75696"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -315,11 +315,11 @@
         },
         "pyparsing": {
             "hashes": [
-                "sha256:c0a7dfcd26825bd4453574c4e7ad04aa095975ce54d04f738fe3a8350fbd223a",
-                "sha256:e0df773d7fa2240322daae7805626dfc5f2d5effb34e1a7be2702c99cfb9f6b1"
+                "sha256:4881e3d2979f27b41a3a2421b10be9cbfa7ce2baa6c7117952222f8bbea6650c",
+                "sha256:9329d1c1b51f0f76371c4ded42c5ec4cc0be18456b22193e0570c2da98ed288b"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==3.0.4"
+            "version": "==3.0.5"
         },
         "python-dateutil": {
             "hashes": [
@@ -505,11 +505,11 @@
         },
         "pyparsing": {
             "hashes": [
-                "sha256:c0a7dfcd26825bd4453574c4e7ad04aa095975ce54d04f738fe3a8350fbd223a",
-                "sha256:e0df773d7fa2240322daae7805626dfc5f2d5effb34e1a7be2702c99cfb9f6b1"
+                "sha256:4881e3d2979f27b41a3a2421b10be9cbfa7ce2baa6c7117952222f8bbea6650c",
+                "sha256:9329d1c1b51f0f76371c4ded42c5ec4cc0be18456b22193e0570c2da98ed288b"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==3.0.4"
+            "version": "==3.0.5"
         },
         "pytest": {
             "hashes": [
@@ -518,6 +518,10 @@
             ],
             "index": "pypi",
             "version": "==6.2.5"
+        },
+        "space-tracer": {
+            "git": "git://github.com/donkirkby/live-py-plugin.git",
+            "ref": "0ee96d2ca647c4ef84d4f2539325da6912f7301b"
         },
         "toml": {
             "hashes": [
