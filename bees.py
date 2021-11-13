@@ -192,6 +192,36 @@ class BeesBoard(Board):
         return False
 
 
+def count_gaps(positions: typing.Set[typing.Tuple[int, int]],
+               width: int,
+               height: int):
+    unvisited = set(positions)
+    max_gap = width + height
+    old_total = max_gap * len(unvisited)
+    grouped = set()
+    grouped.add(unvisited.pop())
+    while True:
+        total_gaps = 0
+        while unvisited:
+            x1, y1 = unvisited.pop()
+            min_gap = width + height
+            for x2, y2 in grouped:
+                gap = abs(x1 - x2) + abs(y1 - y2) - 1
+                if gap == 0:
+                    break
+                elif gap < min_gap:
+                    min_gap = gap
+            else:
+                total_gaps += min_gap
+                continue
+            grouped.add((x1, y1))
+        if total_gaps == 0 or total_gaps == old_total:
+            break
+        old_total = total_gaps
+        unvisited = positions - grouped
+    return total_gaps
+
+
 class BeesGraph(BoardGraph):
     def __init__(self,
                  board_class=BeesBoard,
@@ -290,31 +320,7 @@ class BeesGraph(BoardGraph):
 
     def check_progress(self, board: BeesBoard) -> int:
         """ See how close a board is to a solution. """
-        unvisited = set(board.dice_set.dice)
-        max_gap = board.width + board.height
-        old_total = max_gap * len(unvisited)
-        grouped = set()
-        grouped.add(unvisited.pop())
-        while True:
-            total_gaps = 0
-            while unvisited:
-                x1, y1 = unvisited.pop()
-                min_gap = board.width + board.height
-                for x2, y2 in grouped:
-                    gap = abs(x1-x2) + abs(y1-y2) - 1
-                    if gap == 0:
-                        break
-                    elif gap < min_gap:
-                        min_gap = gap
-                else:
-                    total_gaps += min_gap
-                    continue
-                grouped.add((x1, y1))
-            if total_gaps == 0 or total_gaps == old_total:
-                break
-            old_total = total_gaps
-            unvisited = set(board.dice_set.dice) - grouped
-        return total_gaps
+        return count_gaps(set(board.dice_set.dice), board.width, board.height)
 
 
 def parse_args():

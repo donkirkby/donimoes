@@ -1,5 +1,5 @@
 from bees import BeesBoard, BeesGraph
-from domino_puzzle import MoveDescription, GraphLimitExceeded
+from domino_puzzle import MoveDescription
 
 
 def test_create_with_dice():

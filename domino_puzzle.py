@@ -99,31 +99,35 @@ class MarkerSet:
 
 
 class DiceSet:
-    def __init__(self, dice_text: str = ''):
+    def __init__(self, dice_text: str = '', border: int = 0):
         self.dice = {}  # {(x, y): pips}
         for match in re.finditer(r'\((\d+),(\d+)\)(\d+)', dice_text):
             row = int(match.group(1))
             column = int(match.group(2))
             die_pips = int(match.group(3))
-            self.dice[row, column] = die_pips
+            self.dice[row+border, column+border] = die_pips
 
     def __repr__(self):
         return f'DiceSet({self.text!r})'
 
     @property
     def text(self):
+        return self.crop_text(0, 0)
+
+    def crop_text(self, left_border: int, top_border: int):
         sorted_dice = sorted(self.dice.items(), key=itemgetter(1))
-        return ','.join(f'({x},{y}){die_pips}'
+        return ','.join(f'({x-left_border},{y-top_border}){die_pips}'
                         for (x, y), die_pips in sorted_dice)
 
     def items(self):
         return self.dice.items()
 
-    def move(self, *positions) -> str:
+    def move(self, *positions, show_length=True) -> str:
         """ Move a die through a list of positions.
 
         :param positions: ((x, y), ...) the starting position of the die,
             followed by one or more positions for it to turn on or stop at.
+        :param show_length: True if move lengths are included in text
         :return: a description of the move described by the positions
         """
         move_parts = []
@@ -143,6 +147,8 @@ class DiceSet:
                     move_part = f'U{dy}'
                 else:
                     move_part = f'D{-dy}'
+                if not show_length:
+                    move_part = move_part[0]
                 if i == 1:
                     move_part = f'{pips}{move_part}'
                 if i == move_count - 1:
@@ -155,6 +161,9 @@ class DiceSet:
     def __getitem__(self, coordinates):
         x, y = coordinates
         return self.dice.get((x, y))
+
+    def __contains__(self, coordinates):
+        return coordinates in self.dice
 
 
 class ArrowSet:
@@ -194,7 +203,7 @@ class Board(object):
             for line in sections[1].splitlines():
                 if line.startswith('dice:'):
                     dice_text = line[5:].rstrip()
-                    dice_set = DiceSet(dice_text)
+                    dice_set = DiceSet(dice_text, border)
                 elif line.startswith('arrows:'):
                     arrows_text = line[7:].rstrip()
                     arrows = ArrowSet(arrows_text)
@@ -473,7 +482,8 @@ class Board(object):
                 marker_display += f'{name}{pips}'
             main_display = f'{main_display}---\n{marker_display}\n'
         if self.dice_set:
-            main_display = f'{main_display}---\ndice:{self.dice_set.text}\n'
+            dice_text = self.dice_set.crop_text(xmin, ymin)
+            main_display = f'{main_display}---\ndice:{dice_text}\n'
 
         return main_display
 

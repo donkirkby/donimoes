@@ -560,6 +560,26 @@ dice:(2,1)3,(0,0)4
     assert dice_set[1, 1] is None
 
 
+def test_dice_set_move_with_border():
+    board = Board.create("""\
+1|2 3
+    -
+4|5 6
+---
+dice:(2,1)3,(0,0)4
+""", border=1)
+    expected_display = """\
+1|2 3
+    -
+4|5 6
+---
+dice:(1,1)3,(0,0)4
+"""
+    board.dice_set.move((3, 2), (2, 2))
+
+    assert board.display(cropped=True) == expected_display
+
+
 def test_arrow_set():
     board = Board.create("""\
 1|2 3
