@@ -1,3 +1,4 @@
+import typing
 from io import BytesIO
 from pathlib import Path
 
@@ -15,13 +16,16 @@ class LiveSvg(LiveImage):
         self.diagram = diagram
 
     def convert_to_png(self) -> bytes:
+        png_alpha_bytes = BytesIO()
+        self.write_png(png_alpha_bytes)
+        return png_alpha_bytes.getvalue()
+
+    def write_png(self, file: typing.Union[typing.BinaryIO, Path]):
         drawing = self.diagram.to_reportlab()
         png_bytes = BytesIO(drawToString(drawing, 'PNG'))
         image = Image.open(png_bytes)
         image_alpha = image.convert('RGBA')
-        png_alpha_bytes = BytesIO()
-        image_alpha.save(png_alpha_bytes, 'PNG')
-        return png_alpha_bytes.getvalue()
+        image_alpha.save(file, 'PNG')
 
     def save(self, file_path: Path) -> Path:
         """ Save the image to a file.

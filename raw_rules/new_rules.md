@@ -5,10 +5,65 @@ title: New Rules for Donimoes
 These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 
+* **Donimo Drivers** is a puzzle I designed where dice can walk over the
+  dominoes or drive them around. (1 player, 4 dice, and double-six dominoes)
 * **Adding Donimoes** is a puzzle I designed where you add dominoes in the given
     order. (1 player, double-six dominoes)
 * **Tetromino Road** is a board game I designed where you lay out dominoes with
     roads between them. (2 players, double-six dominoes, beads and coins)
+
+## Donimo Drivers
+Dice can walk or drive to their destination.
+
+### Goal
+Get all the blank squares into one connected group. Diagonal connections don't
+count.
+
+### Start
+Arrange the dominoes in the problem's starting position. Then place a die on
+each of the corners, so its top face matches the number it's on.
+
+### Moves
+Each die can do one of three things on each turn:
+
+* Walk on a number smaller than its own.
+* Drive a domino while sitting on a matching number.
+* Rest on a matching number while another die moves.
+
+There are several limits to the moves. Only one die can move at a time, so the
+other three must be resting on their own numbers. Once a die starts walking,
+it must continue until it rests on its own number again. A die can only walk
+onto an empty, neighbouring number, and diagonal neighbours don't count. A
+domino can only be driven when it has a die on it, and driven along its longer
+direction, not sideways. It moves one space at a time, and all the dominoes
+must be in one connected group before and after each move. Again, diagonal
+connections don't count.
+
+### Problems
+Here are the starting positions for several Donimo Drivers problems. The
+solutions are listed at the end.
+
+#### Problem 1
+    3|4 2|2 3 4
+            - -
+    3|2 0|2 3 4
+    
+    4|1 4 0 0|3
+        - -
+    2|4 0 0 0|1
+    
+    1|3 1|1 1|2
+
+#### Problem 2
+    3|3 4|0 0|2
+    
+    4 1 0|0 2|3
+    - -
+    4 1 0|3 3|4
+    
+    2 0|1 4|1 2
+    -         -
+    1 2|2 3|1 4
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.
@@ -160,6 +215,15 @@ any tetrominoes that will fit, the token is just returned to the player.
 The player who plays 4 tetrominoes wins.
 
 # Solutions
+## Donimo Drivers Solutions
+The walking moves are described with the number of a die, a direction, and a
+distance. For example, 1R3 means move the 1 die to the right, 3 spaces. A move
+with no distance means one space. The driving moves have a small letter 'd' for
+'domino' after the die number, like 1dR.
+
+1. 3D, 3R, 3R, 3R, 3R, 3dU, 4dU, 2L, 2L, 2U, 2U, 2U, 2dR
+2. 4dD, 4U, 4L2, 4U, 4dR, 4U3, 4L2, 2dR, 4dR, 3dR, 4D, 4L3, 4dU, 1dU, 1R2, 2L2,
+   2D, 2L3, 2D, 2L, 2dD, 2R, 2U2, 2R3, 2U, 2R2, 4dD, 4R3, 4U, 3dL, 4dL, 2dL, 1dR
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Adding moves contain the domino

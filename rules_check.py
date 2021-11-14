@@ -10,6 +10,7 @@ from bees import BeesFitnessCalculator, BeesProblem
 from book_parser import parse, Styles
 from domino_puzzle import BoardAnalysis, Board
 from dominosa import DominosaBoard, FitnessCalculator, LEVEL_WEIGHTS, DominosaProblem
+from drivers import DriversFitnessCalculator, DriversProblem
 from mirror import MirrorFitnessCalculator, MirrorProblem
 
 
@@ -43,23 +44,31 @@ def main():
     summaries = []
     level_count = 4
     headings = ['']*level_count
-    is_dominosa = is_mirror = is_bees = False
+    is_dominosa = is_mirror = is_bees = is_drivers = False
     for state in states:
         if state.style == Styles.Heading2:
             is_dominosa = 'Dominosa' in state.text
             is_mirror = 'Mirror' in state.text
             is_bees = 'Bee' in state.text
+            is_drivers = 'Driver' in state.text
         if state.style == Styles.Diagram and headings_match(headings,
                                                             args.patterns):
             heading = headings[-1]
-            if is_dominosa:
-                summary = check_dominosa(state, heading)
-            elif is_mirror:
-                summary = check_mirror(state, heading)
-            elif is_bees:
-                summary = check_bees(state, heading)
-            else:
-                summary = check_other(state, heading)
+            try:
+                if is_dominosa:
+                    summary = check_dominosa(state, heading)
+                elif is_mirror:
+                    summary = check_mirror(state, heading)
+                elif is_bees:
+                    summary = check_bees(state, heading)
+                elif is_drivers:
+                    summary = check_drivers(state, heading)
+                else:
+                    summary = check_other(state, heading)
+            except Exception as ex:
+                context = ':'.join(headings)
+                raise RuntimeError(f"Failed to score {context}.") from ex
+
             summaries.append(summary)
         if state.style.startswith(Styles.Heading):
             heading_level = int(state.style[len(Styles.Heading):])
@@ -187,6 +196,20 @@ def check_bees(state, heading):
     size_limit = 11_200  # Found failures below 5,600, so doubled it.
     fitness_calculator = BeesFitnessCalculator(size_limit=size_limit)
     problem = BeesProblem(dict(start=state.text))
+    fitness_calculator.calculate(problem)
+    print(n + '.', fitness_calculator.format_details())
+    return n + '. ' + fitness_calculator.format_summaries()
+
+
+def check_drivers(state, heading):
+    """ Check solution to a Donimo Drivers problem.
+
+    Current summaries:
+    """
+    n = heading.split(' ')[-1]
+    size_limit = 20_000  # OOM at 2,560,000. Prob 1 unsolved btw 10,000 and 20,000
+    fitness_calculator = DriversFitnessCalculator(size_limit=size_limit)
+    problem = DriversProblem(dict(start=state.text))
     fitness_calculator.calculate(problem)
     print(n + '.', fitness_calculator.format_details())
     return n + '. ' + fitness_calculator.format_summaries()

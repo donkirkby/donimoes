@@ -1154,7 +1154,7 @@ class BoardAnalysis(object):
          solution_length,
          avg_choices,
          _graph_size) = values
-        if min_dominoes > 0:
+        if min_dominoes is not None and min_dominoes > 0:
             return -min_dominoes*100
         return max_choices * 100 - solution_length + avg_choices * 0.1
 

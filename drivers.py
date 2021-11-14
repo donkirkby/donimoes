@@ -1,8 +1,10 @@
+import operator
 import random
 import sys
 import typing
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import datetime
+from functools import reduce
 from sys import maxsize
 
 from bees import count_gaps
@@ -69,8 +71,12 @@ class DriversFitnessCalculator:
         """ Calculate fitness score based on the solution.
 
         Categories (most valuable to least:
-        -1,000,000 * corners without a die
         -100,000 when the graph had more than 10,000 nodes and stopped exploring
+        -1,000,000 when the problem was unsolved.
+        10,000 * variey of move types
+        -1,000 * difference from target length
+        10* max choices at any step
+        average choices at any step
         """
         value = problem.value
         fitness = value.get('fitness')
@@ -78,7 +84,7 @@ class DriversFitnessCalculator:
             return fitness
         board = DriversBoard.create(value['start'])
         fitness = 0
-        graph = DriversGraph(process_count=0)
+        graph = DriversGraph(process_count=2)
         try:
             graph.walk(board, size_limit=self.size_limit)
         except GraphLimitExceeded:
@@ -92,14 +98,22 @@ class DriversFitnessCalculator:
             min_remaining = board.width + board.height
 
         if graph.last is None:
-            fitness -= 100_000
+            fitness -= 1_000_000
             fitness -= min_remaining
             self.summaries.append('unsolved')
         else:
             solution_nodes = graph.get_solution_nodes()
             solution_moves = graph.get_solution(solution_nodes=solution_nodes)
-            domino_move_count = sum(len(move) == 3 for move in solution_moves)
-            fitness += 300*domino_move_count
+            move_types = {str(pips): 0.1 for pos, pips in board.dice_set.items()}
+            move_types['domino'] = 0.1
+            for move in solution_moves:
+                if len(move) == 3:
+                    move_types['domino'] += 1
+                move_type = move[0]
+                move_types[move_type] += 1
+            variety_score = reduce(operator.mul, move_types.values(), 1)
+            fitness += variety_score * 10000
+
             if self.target_length is None:
                 fitness += len(solution_nodes)*1000
             else:
@@ -113,6 +127,7 @@ class DriversFitnessCalculator:
             self.details.append(
                 f'{board.width}x{board.height}: {len(solution_moves)} moves, '
                 f'max {max_choices}, avg {average_choices}, '
+                f'variety {variety_score}, '
                 f'{len(graph.graph)} states')
 
         value['fitness'] = fitness
@@ -254,7 +269,8 @@ class DriversGraph(BoardGraph):
                         generated_moves.add(move)
                         yield MoveDescription(move,
                                               combined_display,
-                                              remaining=total_gaps)
+                                              remaining=total_gaps,
+                                              heuristic=total_gaps)
                     if len(dice_start_positions) == 2:
                         positions2.reverse()
                         dice_set.move(*positions2)

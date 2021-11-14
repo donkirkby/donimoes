@@ -13,9 +13,10 @@ from reportlab.lib.styles import getSampleStyleSheet, ListStyle
 from reportlab.lib.units import inch
 # noinspection PyUnresolvedReferences
 from reportlab.rl_config import defaultPageSize
+from space_tracer import LivePillowImage
 
 from diagram import draw_diagram, draw_fuji
-from diagram_differ import diagram_to_image, DiagramDiffer
+from diagram_differ import LiveSvg, DiagramDiffer
 from domino_puzzle import Board
 from dominosa import DominosaBoard
 from footer import FooterCanvas
@@ -116,18 +117,17 @@ class DiagramWriter:
     def add_diagram(self, diagram: Diagram) -> Path:
         self.diagram_count += 1
         svg_diagram = diagram.build()
-        image = diagram_to_image(svg_diagram)
+        image = LiveSvg(svg_diagram)
         file_name = f'diagram{self.diagram_count}.png'
         target_path = self.images_folder / file_name
         relative_path = target_path.relative_to(self.target_folder)
         try:
-            old_image = Image.open(target_path)
-            if self.diagram_differ.compare_pngs(old_image, image) is None:
+            old_image = LivePillowImage(Image.open(target_path))
+            if self.diagram_differ.compare(old_image, image) is None:
                 return relative_path
         except IOError:
             pass
-        with target_path.open('wb') as f:
-            image.save(f, 'png')
+        image.write_png(target_path)
         return relative_path
 
 
