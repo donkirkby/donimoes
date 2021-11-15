@@ -229,6 +229,7 @@ class DriversGraph(BoardGraph):
                 total_gaps = self.check_progress(board)
                 yield MoveDescription(move,
                                       combined_display,
+                                      heuristic=total_gaps,
                                       remaining=total_gaps)
                 positions.reverse()
                 dice_set.move(*positions)

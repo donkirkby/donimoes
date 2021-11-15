@@ -195,6 +195,8 @@ class BeesBoard(Board):
 def count_gaps(positions: typing.Set[typing.Tuple[int, int]],
                width: int,
                height: int):
+    if not positions:
+        return 0
     unvisited = set(positions)
     max_gap = width + height
     old_total = max_gap * len(unvisited)

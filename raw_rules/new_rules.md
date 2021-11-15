@@ -44,6 +44,13 @@ Here are the starting positions for several Donimo Drivers problems. The
 solutions are listed at the end.
 
 #### Problem 1
+    4|4 4|3
+    
+    0|0 1 1
+        - -
+    2|4 0 1
+
+#### Problem 2
     3|4 2|2 3 4
             - -
     3|2 0|2 3 4
@@ -54,7 +61,16 @@ solutions are listed at the end.
     
     1|3 1|1 1|2
 
-#### Problem 2
+#### Problem 3
+    4 1|1 0|1
+    -
+    3 3 4 0|0
+      - -
+    3 0 0 4|4
+    -
+    2 4|2 1|3
+
+#### Problem 4
     3|3 4|0 0|2
     
     4 1 0|0 2|3
@@ -221,8 +237,10 @@ distance. For example, 1R3 means move the 1 die to the right, 3 spaces. A move
 with no distance means one space. The driving moves have a small letter 'd' for
 'domino' after the die number, like 1dR.
 
-1. 3D, 3R, 3R, 3R, 3R, 3dU, 4dU, 2L, 2L, 2U, 2U, 2U, 2dR
-2. 4dD, 4U, 4L2, 4U, 4dR, 4U3, 4L2, 2dR, 4dR, 3dR, 4D, 4L3, 4dU, 1dU, 1R2, 2L2,
+1. 3dR, 4dL, 1L, 1U, 1dU
+2. 3D, 3R4, 3dU, 4dU, 2L2, 2U3, 2dR
+3. 1L2, 2dD, 3L2, 3U, 3L, 3U, 4dD, 1dL2, 3dU, 4R2, 4dU
+4. 4dD, 4U, 4L2, 4U, 4dR, 4U3, 4L2, 2dR, 4dR, 3dR, 4D, 4L3, 4dU, 1dU, 1R2, 2L2,
    2D, 2L3, 2D, 2L, 2dD, 2R, 2U2, 2R3, 2U, 2R2, 4dD, 4R3, 4U, 3dL, 4dL, 2dL, 1dR
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the

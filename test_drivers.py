@@ -125,11 +125,26 @@ x x x 3
 ---
 dice:(0,2)1,(3,1)2
 """
-    expected_moves = [MoveDescription('1R', expected_display1, remaining=1),
-                      MoveDescription('1dL', expected_display2, remaining=2),
-                      MoveDescription('2L', expected_display3, remaining=1),
-                      MoveDescription('2dU', expected_display4, remaining=1),
-                      MoveDescription('2dD', expected_display5, remaining=1)]
+    expected_moves = [MoveDescription('1R',
+                                      expected_display1,
+                                      heuristic=1,
+                                      remaining=1),
+                      MoveDescription('1dL',
+                                      expected_display2,
+                                      heuristic=2,
+                                      remaining=2),
+                      MoveDescription('2L',
+                                      expected_display3,
+                                      heuristic=1,
+                                      remaining=1),
+                      MoveDescription('2dU',
+                                      expected_display4,
+                                      heuristic=1,
+                                      remaining=1),
+                      MoveDescription('2dD',
+                                      expected_display5,
+                                      heuristic=1,
+                                      remaining=1)]
     graph = DriversGraph()
 
     moves = list(graph.generate_moves(board))
@@ -155,7 +170,10 @@ dice:(1,1)1,(3,1)2
 ---
 dice:(0,1)1,(3,1)2
 """
-    expected_moves = [MoveDescription('1L', expected_display1, remaining=1)]
+    expected_moves = [MoveDescription('1L',
+                                      expected_display1,
+                                      heuristic=1,
+                                      remaining=1)]
     graph = DriversGraph()
 
     moves = list(graph.generate_moves(board))
@@ -180,7 +198,10 @@ x 3|3 0 2
 ---
 dice:(0,1)1,(1,1)2
 """
-    expected_moves = [MoveDescription('1dL', expected_display, remaining=1)]
+    expected_moves = [MoveDescription('1dL',
+                                      expected_display,
+                                      heuristic=1,
+                                      remaining=1)]
     graph = DriversGraph()
 
     moves = list(graph.generate_moves(board))
@@ -213,8 +234,14 @@ dice:(1,1)1
 ---
 dice:(0,1)1
 """
-    expected_moves = [MoveDescription('1R', expected_display1, remaining=2),
-                      MoveDescription('1dR', expected_display2, remaining=1)]
+    expected_moves = [MoveDescription('1R',
+                                      expected_display1,
+                                      heuristic=2,
+                                      remaining=2),
+                      MoveDescription('1dR',
+                                      expected_display2,
+                                      heuristic=1,
+                                      remaining=1)]
     graph = DriversGraph()
 
     moves = list(graph.generate_moves(board))
