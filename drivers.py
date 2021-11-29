@@ -5,7 +5,6 @@ import typing
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import datetime
 from functools import reduce
-from sys import maxsize
 
 from bees import count_gaps
 from domino_puzzle import (Board, BoardGraph, GraphLimitExceeded, DiceSet,
@@ -168,30 +167,19 @@ class DriversBoard(Board):
                 placed_pips.add(pips)
 
 
+# Add a graph or search mode for moving dominoes until blanks are connected.
+# When you get to a connected state, find the path and then calculate the weight
+# of each step by moving dice until the required die is on the domino that
+# needs to move. If the dice can't move, then delete the edge. Hold the dice
+# positions as an attribute on the domino position's node?
+
+# Another option: nonlinear planning using constraint posting.
+
 class DriversGraph(BoardGraph):
     def __init__(self,
                  board_class=DriversBoard,
-                 process_count: int = 0,
-                 debug=False,
-                 are_all_blanks_wild=False):
+                 process_count: int = 0):
         super().__init__(board_class, process_count)
-        self.debug = debug
-        self.are_all_blanks_wild = are_all_blanks_wild
-        self.solution_states = set()
-        self.last = None
-        self.min_gaps: typing.Optional[int] = None
-
-    def clone(self) -> 'BoardGraph':
-        clone = super().clone()
-        clone.are_all_blanks_wild = self.are_all_blanks_wild
-        return clone
-
-    def walk(self, board, size_limit=maxsize):
-        self.min_gaps = None
-        self.check_remaining(self.check_progress(board), board.display())
-        self.solution_states.clear()
-        states = super().walk(board, size_limit)
-        return states
 
     def generate_moves(self, board: DriversBoard) -> typing.Iterator[
             MoveDescription]:
@@ -331,7 +319,8 @@ def main():
     print(f'Searching for solutions of length {args.target_length} '
           f'with up to {max_pips} pips.')
     target_total = args.target_length
-    fitness_calculator = DriversFitnessCalculator(target_length=args.target_length)
+    fitness_calculator = DriversFitnessCalculator(target_length=args.target_length,
+                                                  size_limit=100_000)
     init_params = dict(max_pips=max_pips,
                        width=max_pips+2,
                        height=max_pips+1)
