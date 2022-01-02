@@ -43,6 +43,10 @@ puzzles by other designers:
     the ends add up to a multiple of five. (2-4 players, double-six dominoes)
 * **Dominosa** is the classic domino puzzle by O.S. Adler where you have to fit
     the set of dominoes onto a grid of numbers.
+* **Domino Runners** is based on board games by Roland Siegers, where your
+  runners run across a grid of dominoes, dropping checkers and trying to capture
+  your opponent's checkers. (2 players, double-six dominoes, 2 dice, and
+  checkers)
 
 ## Unmatched Donimoes
 A puzzle I designed that's the opposite of traditional dominoes: matches are
@@ -2386,6 +2390,58 @@ pair as joined.  If it later causes a contradiction, backtrack and mark it
 split. (This would be very frustrating when solving, so none of the problems in
 this collection require it.)
 
+## Domino Runners
+Roland Siegers used an unusual mechanic in two board games:
+[Winkeladvokat (1986)][winkeladvokat] and [Cabale (1999)][cabale]. Each turn,
+your runner makes a V-shaped move, and drops a marker at the bend. I've played
+many games of Cabale, which uses a hexagonal grid. When I learned that
+Winkeladvokat uses the same mechanic on a square grid, I thought it would adapt
+well to play on a grid of dominoes.
+
+### Equipment
+* a set of dominoes from double blank to double six
+* ten checkers for each player, in different colours, that will fit on half a
+  domino
+* one runner for each player, in colours to match the checkers, they can be
+  pawns or a stack of two checkers
+* a neutral runner in a third colour (optional)
+
+### Start
+Shuffle all the dominoes face down, and then place them in a 7x8 grid of
+numbers, flipping them face up as you go.
+
+Both players roll the two dice, and the higher total plays first. If the totals
+match, both players roll again. Start by placing your runner on either end of
+the domino that matches the two numbers you rolled. When both players have
+placed their runners, the game begins.
+
+### Play
+On each turn, move your runner in two parts: vertical then horizontal or
+horizontal then vertical. Each part must move at least one space across the
+board. Start by replacing your runner with the neutral runner, then move your
+runner as described. It cannot cross over another runner or any checkers. After
+moving the runner, place one of your checkers on the space where the runner
+changed direction. **Important:** you cannot place a checker on a blank space,
+so you cannot change direction on a blank space.
+
+After placing the checker, you may use it to jump over one of your opponent's
+checkers, if the two checkers are right next to each other and there's an empty
+space on the other side. You may not jump diagonally, and you may not land on a
+blank space. You may continue jumping another checker after you land, with the
+same rules.
+
+Once you finish, your opponent takes a turn.
+
+### Winning
+The game ends in one of two ways: either both players place all their checkers,
+or a player can't make a legal move. If a player can't make a legal move, they
+lose. If both players have played all their checkers, look under the checkers,
+and add up all the covered numbers, then add one more point for every captured
+checker. The player with the most points wins.
+
+[winkeladvokat]: https://boardgamegeek.com/boardgame/2473/winkeladvokat
+[cabale]: https://boardgamegeek.com/boardgame/687/cabale
+
 # Solutions
 ## Unmatched Donimoes Solutions ##
 Here are the solutions to the Unmatched Donimoes problems. For each step, move
@@ -2941,7 +2997,7 @@ over two other pieces, meaning that it moves five spaces in total.
 
 # Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at
-[donkirkby.github.com/donimoes][github].
+[donkirkby.github.io/donimoes][github].
 
 Unmatched, Capturing, Mirror, and Bee Donimoes, as well as Tetradominoes and
 Domino Finder are original puzzles and games designed by [Don Kirkby][don].
