@@ -542,11 +542,11 @@
         },
         "space-tracer": {
             "hashes": [
-                "sha256:5f3b7fc13b2741ae8932cd2c69809813d165d2a4886668d2ca8a348975d30be9",
-                "sha256:8aa422c2ca26959ecc607deeb6812a2d17777f0015670cf060715cb12894b521"
+                "sha256:336b9c87f83f8e126e3555b8351ffa9b71e2346fe19cc311d6d51fa8703de1f7",
+                "sha256:99f878cb1303918c78575239ae03bc6188146078a9ef731c566791b48f181d35"
             ],
             "index": "pypi",
-            "version": "==4.5.0"
+            "version": "==4.7.0"
         },
         "toml": {
             "hashes": [
