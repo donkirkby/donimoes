@@ -116,6 +116,7 @@ enjoyed searching for the right rules, trying to balance several goals:
 [All Fives]: https://github.com/donkirkby/donimoes/issues/28
 [Ladder Donimoes]: https://github.com/donkirkby/donimoes/issues/31
 [Mirror Donimoes]: https://github.com/donkirkby/donimoes/issues/52
+[Magic Maze]: https://puzzling.stackexchange.com/q/89482/38
 
 ## 2021 - Bees
 [Bee Donimoes] started out as a game called Mephisto, by Christian Freeling.
