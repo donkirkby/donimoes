@@ -528,19 +528,19 @@
         },
         "space-tracer": {
             "hashes": [
-                "sha256:336b9c87f83f8e126e3555b8351ffa9b71e2346fe19cc311d6d51fa8703de1f7",
-                "sha256:99f878cb1303918c78575239ae03bc6188146078a9ef731c566791b48f181d35"
+                "sha256:73cd91cc8233c3df686add36e0870d3799c7b23395a9aa3a3fb486fb2319d7d1",
+                "sha256:d103ff04fddb6b3c60586dd99a832d87e622a1d3af828f86d6cc17f106c56d34"
             ],
             "index": "pypi",
-            "version": "==4.7.0"
+            "version": "==4.8.0"
         },
         "tomli": {
             "hashes": [
-                "sha256:b5bde28da1fed24b9bd1d4d2b8cba62300bfb4ec9a6187a957e8ddb9434c5224",
-                "sha256:c292c34f58502a1eb2bbb9f5bbc9a5ebc37bee10ffb8c2d6bbdfa8eb13cc14e1"
+                "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc",
+                "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==2.0.0"
+            "version": "==2.0.1"
         }
     }
 }
