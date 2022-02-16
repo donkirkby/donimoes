@@ -243,11 +243,18 @@ def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
         turtle.setpos(start_x + x*cell_size, start_y + y*cell_size)
         turtle.color(start_colour)
         turtle.dot(0.75*cell_size)
-        turtle.back(0.05*cell_size)
         turtle.color('white')
-        turtle.write(marker,
-                     align='center',
-                     font=('Arial', 0.20*cell_size, 'normal'))
+        if marker == 'w':
+            turtle.dot(0.7*cell_size)
+            turtle.color(start_colour)
+            turtle.back(0.05*cell_size)
+        elif marker == 'b':
+            turtle.back(0.05*cell_size)
+        else:
+            turtle.back(0.05*cell_size)
+            turtle.write(marker,
+                         align='center',
+                         font=('Arial', 0.20*cell_size, 'normal'))
         turtle.back(0.10*cell_size)
         cell = board[x][y]
         domino = cell.domino

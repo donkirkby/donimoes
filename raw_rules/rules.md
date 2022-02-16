@@ -45,8 +45,7 @@ puzzles by other designers:
     the set of dominoes onto a grid of numbers.
 * **Domino Runners** is based on board games by Roland Siegers, where your
   runners run across a grid of dominoes, dropping checkers and trying to capture
-  your opponent's checkers. (2 players, double-six dominoes, 2 dice, and
-  checkers)
+  your opponent's checkers. (2 players, double-six dominoes, and checkers)
 
 ## Unmatched Donimoes
 A puzzle I designed that's the opposite of traditional dominoes: matches are
@@ -2410,10 +2409,12 @@ well to play on a grid of dominoes.
 Shuffle all the dominoes face down, and then place them in a 7x8 grid of
 numbers, flipping them face up as you go.
 
-Both players roll the two dice, and the higher total plays first. If the totals
-match, both players roll again. Start by placing your runner on either end of
-the domino that matches the two numbers you rolled. When both players have
-placed their runners, the game begins.
+Randomly choose colours for the two players. The player with darker colour
+starts, placing their runner on one end of any domino. The player with the
+lighter colour then has a choice: either place their runner somewhere else on
+the dominoes, or swap colours and force the other player to place the lighter
+runner. This means that if the first player makes too strong a first move, the
+second player can steal it.
 
 ### Play
 On each turn, move your runner in two parts: vertical then horizontal or

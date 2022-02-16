@@ -85,10 +85,18 @@ class BadPositionError(BoardError):
 
 class MarkerSet:
     def __init__(self, marker_text: str, border: int):
-        markers = iter(marker_text.rstrip())
-        self.marker_pips = dict(zip(markers, markers))  # {marker: pips}
-        self.marker_locations = {}  # {(x, y): marker}
         self.border = border
+        self.marker_locations = {}  # {(x, y): marker}
+        if not marker_text.startswith('('):
+            markers = iter(marker_text.rstrip())
+            self.marker_pips = dict(zip(markers, markers))  # {marker: pips}
+        else:
+            self.marker_pips = {}
+            for match in re.finditer(r'\((\d+),(\d+)\)(.)', marker_text):
+                row = int(match.group(1))
+                column = int(match.group(2))
+                marker = match.group(3)
+                self.marker_locations[row+border, column+border] = marker
 
     def check_markers(self, pips_or_marker: str, x: int, y: int) -> str:
         new_pips = self.marker_pips.get(pips_or_marker)
@@ -455,6 +463,8 @@ class Board(object):
             cropping_bounds[:] = [xmin, ymin, xmax, ymax]
         width = xmax-xmin+1
         height = ymax-ymin+1
+        marker_display = self.display_markers()
+        are_markers_unique = not marker_display.startswith('(')
         display = [[' '] * (width*2-1) for _ in range(height*2-1)]
 
         for y in range(height):
@@ -462,7 +472,10 @@ class Board(object):
                 row = (height - y - 1)*2
                 col = x*2
                 cell = self[x+xmin][y+ymin]
-                cell_display = self.display_cell(cell, x+xmin, y+ymin)
+                cell_display = self.display_cell(cell,
+                                                 x+xmin,
+                                                 y+ymin,
+                                                 are_markers_unique)
                 display[row][col] = cell_display
                 if (cell is not None and
                         cell.domino is not None and
@@ -472,14 +485,7 @@ class Board(object):
                     display[row-dy][col+dx] = divider
         self.adjust_display(display)
         main_display = ''.join(''.join(row).rstrip() + '\n' for row in display)
-        if self.markers:
-            marker_items = sorted((y, x, name)
-                                  for (x, y), name in self.markers.items())
-            marker_display = ''
-            for y, x, name in marker_items:
-                cell = self[x][y]
-                pips = cell.pips if cell else 'x'
-                marker_display += f'{name}{pips}'
+        if marker_display:
             main_display = f'{main_display}---\n{marker_display}\n'
         if self.dice_set:
             dice_text = self.dice_set.crop_text(xmin, ymin)
@@ -487,12 +493,32 @@ class Board(object):
 
         return main_display
 
-    def display_cell(self, cell, x, y):
+    def display_markers(self):
+        if not self.markers:
+            return ''
+        marker_values = set(self.markers.values())
+        if len(marker_values) != len(self.markers):
+            sorted_markers = sorted(self.markers.items(), key=itemgetter(1, 0))
+            marker_display = ','.join(f'({x},{y}){die_pips}'
+                                      for (x, y), die_pips in sorted_markers)
+        else:
+            marker_items = sorted((y, x, name)
+                                  for (x, y), name in self.markers.items())
+            marker_display = ''
+            for y, x, name in marker_items:
+                cell = self[x][y]
+                pips = cell.pips if cell else 'x'
+                marker_display += f'{name}{pips}'
+        return marker_display
+
+    def display_cell(self, cell, x, y, are_markers_unique):
         if cell is None:
             display = 'x'
         else:
             display = str(cell.pips)
-        return self.markers.get((x, y), display)
+        if are_markers_unique:
+            return self.markers.get((x, y), display)
+        return display
 
     def adjust_display(self, display: typing.List[typing.List[str]]):
         """ Adjust the display grid before it gets assembled. """

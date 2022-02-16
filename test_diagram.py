@@ -260,7 +260,6 @@ P2
     t.left(90)
     t.down()
     t.dot(75)
-    t.color('black')
 
     t.up()
     t.back(5)
@@ -275,6 +274,73 @@ P2
     draw_diagram(actual.turtle, state)
 
     drawing_differ.assert_equal(actual, expected, 'draw_marker')
+
+
+# noinspection DuplicatedCode
+def test_draw_black_marker(drawing_differ):
+    state = """\
+1|b
+---
+b2
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(50, -50)
+    draw_domino(t, Domino(1, 2))
+    t.forward(100)
+    t.left(90)
+    t.down()
+    t.dot(75)
+
+    t.up()
+    t.back(5)
+    t.color('white')
+    t.fillcolor('white')
+    t.back(10)
+    t.right(90)
+    draw_pips(t, 2, 30)
+    t.forward(25)
+
+    draw_diagram(actual.turtle, state)
+
+    drawing_differ.assert_equal(actual, expected, 'draw_black_marker')
+
+
+# noinspection DuplicatedCode
+def test_draw_white_marker(drawing_differ):
+    state = """\
+1|w
+---
+w2
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(50, -50)
+    draw_domino(t, Domino(1, 2))
+    t.forward(100)
+    t.left(90)
+    t.down()
+    t.dot(75)
+    t.color('white')
+    t.dot(70)
+
+    t.up()
+    t.back(5)
+    t.color('black')
+    t.back(10)
+    t.right(90)
+    draw_pips(t, 2, 30)
+    t.forward(25)
+
+    draw_diagram(actual.turtle, state)
+
+    drawing_differ.assert_equal(actual, expected, 'draw_white_marker')
 
 
 # noinspection DuplicatedCode

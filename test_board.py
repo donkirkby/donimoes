@@ -996,6 +996,23 @@ R5P0N3
     assert board.display() == start_state
 
 
+def test_marker_positions():
+    """ When there are duplicate markers, give their positions. """
+    start_state = '''\
+0|1 2 3
+    - -
+4|5 6 0
+---
+(0,1)P,(3,1)P,(1,0)R
+'''
+    expected_markers = {(1, 0): 'R', (0, 1): 'P', (3, 1): 'P'}
+
+    board = Board.create(start_state)
+
+    assert board.markers == expected_markers
+    assert board.display() == start_state
+
+
 def test_markers_off_board():
     start_state = '''\
 R x x x

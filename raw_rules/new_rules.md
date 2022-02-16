@@ -11,6 +11,8 @@ know what you think.
     order. (1 player, double-six dominoes)
 * **Tetromino Road** is a board game I designed where you lay out dominoes with
     roads between them. (2 players, double-six dominoes, beads and coins)
+* **Writing Rules** is a section to help me remember how to create the
+    different types of diagrams.
 
 ## Donimo Drivers
 Dice can walk or drive to their destination.
@@ -263,6 +265,97 @@ any tetrominoes that will fit, the token is just returned to the player.
 
 ### Winning
 The player who plays 4 tetrominoes wins.
+
+## Writing Rules
+Here are some examples of the diagrams that you can draw using code blocks:
+
+Basic dominoes are shown as numbers joined by the | or - characters. Leave
+spaces between the numbers that aren't joined.
+
+    1|2 3
+        -
+        4
+
+You can mix unjoined cells from Dominosa in with regular dominoes.
+
+    1 2 3
+        -
+        4
+
+Usually, the dominoes are all lined up with each other, but you can offset them
+by half a space.
+
+        3
+    1|2 -
+        4
+
+You can draw arrows to mark a moved domino with <^v> characters in the middle of
+it, mark an added domino with a +, or a removed domino with a *.
+
+    1>2 3
+        +
+    5*4 4
+
+There are several things you can draw on top of the dominoes by adding an extra
+section. You can add letter markers on top of the dominoes, and list the number
+under each marker.
+
+    1|A 3
+        -
+        B
+    ---
+    A2B4
+
+If your markers aren't unique, list them with their positions.
+
+    1|2 3
+        -
+        4
+    ---
+    (1,1)A,(2,0)A
+
+There are two special markers: lower-case b and w for black and white markers.
+
+    1|w 3
+        -
+        b
+    ---
+    w2b4
+
+You can add dice by giving the coordinates and the value on top.
+
+    1|2 3
+        -
+    4|5 6
+    ---
+    dice:(2,1)3,(0,0)4
+
+You can add arrows by giving the start coordinates and the directions to move.
+
+    1|2 3
+        -
+    4|5 6
+    ---
+    arrows:(2,1)L2D1,(1,0)R1
+
+You can combine the different types of extras into the same diagram. Order
+doesn't matter.
+
+    1|A 3
+        -
+    4|5 6
+    ---
+    dice:(2,1)3
+    A2
+    arrows:(2,1)L2D1
+
+### Dominosa
+Dominosa boards can include a partial solution, but one of the headings must be
+"Dominosa".
+
+    0 1S2
+    ~
+    2 2 0
 
 # Solutions
 ## Donimo Drivers Solutions
