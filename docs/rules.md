@@ -45,8 +45,7 @@ puzzles by other designers:
     the set of dominoes onto a grid of numbers.
 * **Domino Runners** is based on board games by Roland Siegers, where your
   runners run across a grid of dominoes, dropping checkers and trying to capture
-  your opponent's checkers. (2 players, double-six dominoes, 2 dice, and
-  checkers)
+  your opponent's checkers. (2 players, double-six dominoes, and checkers)
 
 ## Unmatched Donimoes
 A puzzle I designed that's the opposite of traditional dominoes: matches are
@@ -1303,10 +1302,20 @@ well to play on a grid of dominoes.
 Shuffle all the dominoes face down, and then place them in a 7x8 grid of
 numbers, flipping them face up as you go.
 
-Both players roll the two dice, and the higher total plays first. If the totals
-match, both players roll again. Start by placing your runner on either end of
-the domino that matches the two numbers you rolled. When both players have
-placed their runners, the game begins.
+Randomly choose colours for the two players. The player with the darker colour
+starts, placing their runner on one end of any domino. The player with the
+lighter colour then has a choice: either place their runner somewhere else on
+the dominoes, or swap colours and force the other player to place the lighter
+runner. This means that if the first player makes too strong a first move, the
+second player can steal it.
+
+Here's an example starting position, where there are several fives and sixes
+protected by blanks or the edge of the board. The black player decided to line
+up with two of the fives, so the white player would choose to line up with a
+six instead of swapping colours. The little white pips show you what number is
+underneath each runner.
+
+![Diagram](images/rules/diagram168.png)
 
 ### Play
 On each turn, move your runner in two parts: vertical then horizontal or
@@ -1317,6 +1326,13 @@ moving the runner, place one of your checkers on the space where the runner
 changed direction. **Important:** you cannot place a checker on a blank space,
 so you cannot change direction on a blank space.
 
+Here's what the black player might do on the first move of the example game. The
+neutral runner is optional, and helps you see where you started your move. The
+black runner turned at the 5 and dropped a black checker, then moved up to the
+blank and stopped.
+
+![Diagram](images/rules/diagram169.png)
+
 After placing the checker, you may use it to jump over one of your opponent's
 checkers, if the two checkers are right next to each other and there's an empty
 space on the other side. You may not jump diagonally, and you may not land on a
@@ -1325,6 +1341,14 @@ same rules.
 
 Once you finish, your opponent takes a turn.
 
+After a few moves in the example game, the white player has left some checkers
+unprotected. You can see the neutral runner where the black runner started, and
+the corner where the black player dropped a checker. Then that checker jumped
+over the white checker on the five and then over the white checker on the six.
+Both the white checkers can now be removed by the black player.
+
+![Diagram](images/rules/diagram170.png)
+
 ### Winning
 The game ends in one of two ways: either both players place all their checkers,
 or a player can't make a legal move. If a player can't make a legal move, they
@@ -1332,8 +1356,13 @@ lose. If both players have played all their checkers, look under the checkers,
 and add up all the covered numbers, then add one more point for every captured
 checker. The player with the most points wins.
 
-[winkeladvokat]: https://boardgamegeek.com/boardgame/2473/winkeladvokat
-[cabale]: https://boardgamegeek.com/boardgame/687/cabale
+In the example game, the white player has made another mistake, and can't make
+a legal move. You might think that white could move one to the right and then
+down the empty column, but remember that you can't drop a checker on a blank.
+White loses the game, and it doesn't matter how many points are under the
+checkers.
+
+![Diagram](images/rules/diagram171.png)
 
 # Solutions
 ## Unmatched Donimoes Solutions ##
@@ -1649,64 +1678,64 @@ over two other pieces, meaning that it moves five spaces in total.
 
 ## Dominosa Solutions
 ### Solution 1
-![Diagram](images/rules/diagram168.png)
-
-### Solution 2
-![Diagram](images/rules/diagram169.png)
-
-### Solution 3
-![Diagram](images/rules/diagram170.png)
-
-### Solution 4
-![Diagram](images/rules/diagram171.png)
-
-### Solution 5
 ![Diagram](images/rules/diagram172.png)
 
-### Solution 6
+### Solution 2
 ![Diagram](images/rules/diagram173.png)
 
-### Solution 7
+### Solution 3
 ![Diagram](images/rules/diagram174.png)
 
-### Solution 8
+### Solution 4
 ![Diagram](images/rules/diagram175.png)
 
-### Solution 9
+### Solution 5
 ![Diagram](images/rules/diagram176.png)
 
-### Solution 10
+### Solution 6
 ![Diagram](images/rules/diagram177.png)
 
-### Solution 11
+### Solution 7
 ![Diagram](images/rules/diagram178.png)
 
-### Solution 12
+### Solution 8
 ![Diagram](images/rules/diagram179.png)
 
-### Solution 13
+### Solution 9
 ![Diagram](images/rules/diagram180.png)
 
-### Solution 14
+### Solution 10
 ![Diagram](images/rules/diagram181.png)
 
-### Solution 15
+### Solution 11
 ![Diagram](images/rules/diagram182.png)
 
-### Solution 16
+### Solution 12
 ![Diagram](images/rules/diagram183.png)
 
-### Solution 17
+### Solution 13
 ![Diagram](images/rules/diagram184.png)
 
-### Solution 18
+### Solution 14
 ![Diagram](images/rules/diagram185.png)
 
-### Solution 19
+### Solution 15
 ![Diagram](images/rules/diagram186.png)
 
-### Solution 20
+### Solution 16
 ![Diagram](images/rules/diagram187.png)
+
+### Solution 17
+![Diagram](images/rules/diagram188.png)
+
+### Solution 18
+![Diagram](images/rules/diagram189.png)
+
+### Solution 19
+![Diagram](images/rules/diagram190.png)
+
+### Solution 20
+![Diagram](images/rules/diagram191.png)
 
 # Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at

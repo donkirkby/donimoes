@@ -11,6 +11,8 @@ know what you think.
     order. (1 player, double-six dominoes)
 * **Tetromino Road** is a board game I designed where you lay out dominoes with
     roads between them. (2 players, double-six dominoes, beads and coins)
+* **Writing Rules** is a section to help me remember how to create the
+    different types of diagrams.
 
 ## Donimo Drivers
 Dice can walk or drive to their destination.
@@ -46,8 +48,26 @@ solutions are listed at the end.
 #### Problem 1
 ![Diagram](images/new_rules/diagram1.png)
 
-#### Problem 2
+#### Problem 1b
 ![Diagram](images/new_rules/diagram2.png)
+
+#### Problem 1c
+![Diagram](images/new_rules/diagram3.png)
+
+#### Problem 1d
+![Diagram](images/new_rules/diagram4.png)
+
+#### Problem 1e
+![Diagram](images/new_rules/diagram5.png)
+
+#### Problem 2
+![Diagram](images/new_rules/diagram6.png)
+
+#### Problem 3
+![Diagram](images/new_rules/diagram7.png)
+
+#### Problem 4
+![Diagram](images/new_rules/diagram8.png)
 
 ## Adding Donimoes
 The idea was to avoid the slow setup phase at the start of the other puzzles.
@@ -62,15 +82,15 @@ in the same position relative to each other.
 
 For example, if this is the queue:
 
-![Diagram](images/new_rules/diagram3.png)
+![Diagram](images/new_rules/diagram9.png)
 
 Then the start position is like this:
 
-![Diagram](images/new_rules/diagram4.png)
+![Diagram](images/new_rules/diagram10.png)
 
 Not like this:
 
-![Diagram](images/new_rules/diagram5.png)
+![Diagram](images/new_rules/diagram11.png)
 
 ### Moves
 There are only two ways a domino can move.
@@ -83,12 +103,12 @@ numbers can match the two ends of the domino, or both match one end.
 In this example, the 13 can be added, because it matches the 1 below and the 3
 below.
 
-![Diagram](images/new_rules/diagram6.png)
+![Diagram](images/new_rules/diagram12.png)
 
 In this example, the 52 can be added, because it matches the 5 beside and the 5
 above. The 52 could also be added in the vertical position.
 
-![Diagram](images/new_rules/diagram7.png)
+![Diagram](images/new_rules/diagram13.png)
 
 #### Sliding
 Move a domino one space along its long axis so that it ends up with at least
@@ -98,12 +118,12 @@ matches at least two of the adjacent numbers on neighbouring dominoes.
 In this example, the left domino can move down, because the 1 and the 5 add to
 six.
 
-![Diagram](images/new_rules/diagram8.png)
+![Diagram](images/new_rules/diagram14.png)
 
 The left domino can move back up, because the 1 matches the 1 above, and the 5
 matches the 5 to the right.
 
-![Diagram](images/new_rules/diagram9.png)
+![Diagram](images/new_rules/diagram15.png)
 
 #### Stay Connected
 All the dominoes on the board must stay in one connected group, you can't split the group
@@ -114,7 +134,7 @@ Here are the starting positions for several Adding Donimoes problems. The
 solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/new_rules/diagram10.png)
+![Diagram](images/new_rules/diagram16.png)
 
 ## Tetromino Road
 The dominoes are played on an 8x8 grid. Make the edges out of face-down
@@ -172,6 +192,61 @@ any tetrominoes that will fit, the token is just returned to the player.
 ### Winning
 The player who plays 4 tetrominoes wins.
 
+## Writing Rules
+Here are some examples of the diagrams that you can draw using code blocks:
+
+Basic dominoes are shown as numbers joined by the | or - characters. Leave
+spaces between the numbers that aren't joined.
+
+![Diagram](images/new_rules/diagram17.png)
+
+You can mix unjoined cells from Dominosa in with regular dominoes.
+
+![Diagram](images/new_rules/diagram18.png)
+
+Usually, the dominoes are all lined up with each other, but you can offset them
+by half a space.
+
+![Diagram](images/new_rules/diagram19.png)
+
+You can draw arrows to mark a moved domino with <^v> characters in the middle of
+it, mark an added domino with a +, or a removed domino with a *.
+
+![Diagram](images/new_rules/diagram20.png)
+
+There are several things you can draw on top of the dominoes by adding an extra
+section. You can add letter markers on top of the dominoes, and list the number
+under each marker.
+
+![Diagram](images/new_rules/diagram21.png)
+
+If your markers aren't unique, list them with their positions.
+
+![Diagram](images/new_rules/diagram22.png)
+
+There are two special markers: lower-case b and w for black and white markers.
+
+![Diagram](images/new_rules/diagram23.png)
+
+You can add dice by giving the coordinates and the value on top.
+
+![Diagram](images/new_rules/diagram24.png)
+
+You can add arrows by giving the start coordinates and the directions to move.
+
+![Diagram](images/new_rules/diagram25.png)
+
+You can combine the different types of extras into the same diagram. Order of
+the sections doesn't matter, but order of the arrows matters if they overlap.
+
+![Diagram](images/new_rules/diagram26.png)
+
+### Dominosa
+Dominosa boards can include a partial solution, but one of the headings must be
+"Dominosa".
+
+![Diagram](images/new_rules/diagram27.png)
+
 # Solutions
 ## Donimo Drivers Solutions
 The walking moves are described with the number of a die, a direction, and a
@@ -179,8 +254,10 @@ distance. For example, 1R3 means move the 1 die to the right, 3 spaces. A move
 with no distance means one space. The driving moves have a small letter 'd' for
 'domino' after the die number, like 1dR.
 
-1. 3D, 3R, 3R, 3R, 3R, 3dU, 4dU, 2L, 2L, 2U, 2U, 2U, 2dR
-2. 4dD, 4U, 4L2, 4U, 4dR, 4U3, 4L2, 2dR, 4dR, 3dR, 4D, 4L3, 4dU, 1dU, 1R2, 2L2,
+1. 3dR, 4dL, 1L, 1U, 1dU
+2. 3D, 3R4, 3dU, 4dU, 2L2, 2U3, 2dR
+3. 1L2, 2dD, 3L2, 3U, 3L, 3U, 4dD, 1dL2, 3dU, 4R2, 4dU
+4. 4dD, 4U, 4L2, 4U, 4dR, 4U3, 4L2, 2dR, 4dR, 3dR, 4D, 4L3, 4dU, 1dU, 1R2, 2L2,
    2D, 2L3, 2D, 2L, 2dD, 2R, 2U2, 2R3, 2U, 2R2, 4dD, 4R3, 4U, 3dL, 4dL, 2dL, 1dR
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the

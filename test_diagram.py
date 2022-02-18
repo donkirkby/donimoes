@@ -560,6 +560,29 @@ arrows:(0,1)R2D1
     draw_domino(t, Domino(2, 4))
     t.forward(100)
     t.right(180)
+
+    pos = t.pos()
+    heading = t.heading()
+    t.width(7)
+    t.color('white')
+    t.down()
+    t.forward(200)
+    t.right(90)
+    t.forward(95)
+    t.up()
+    t.width(1)
+    t.forward(8)
+    t.right(150)
+    t.down()
+    t.begin_fill()
+    for _ in range(3):
+        t.forward(21)
+        t.right(120)
+    t.end_fill()
+
+    t.up()
+    t.goto(pos)
+    t.setheading(heading)
     t.width(5)
     t.color('grey50')
     t.down()
@@ -584,3 +607,103 @@ arrows:(0,1)R2D1
 
     drawing_differ.tolerance = 10
     drawing_differ.assert_equal(actual, expected, 'draw_arrows')
+
+
+# noinspection DuplicatedCode
+def test_arrows_and_marker(drawing_differ):
+    state = """\
+4|2 3
+    -
+6|5 4
+---
+(2,0)B,(2,1)W
+arrows:(0,1)R2D1
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(-50, -50)
+    draw_domino(t, Domino(6, 5))
+
+    t.forward(200)
+    t.left(90)
+    draw_domino(t, Domino(4, 3))
+
+    t.dot(75)
+    t.color('white')
+    t.back(5)
+    t.write('B',
+            align='center',
+            font=('Arial', 20, 'normal'))
+    t.back(10)
+    draw_pips(t, 4, 30)
+    t.forward(15)
+    t.color('black')
+
+    t.forward(100)
+    t.dot(75)
+    t.color('white')
+    t.back(5)
+    t.write('W',
+            align='center',
+            font=('Arial', 20, 'normal'))
+    t.back(10)
+    draw_pips(t, 3, 30)
+    t.forward(15)
+    t.color('black')
+
+    t.left(90)
+    t.forward(100)
+    draw_domino(t, Domino(2, 4))
+    t.forward(100)
+    t.right(180)
+
+    pos = t.pos()
+    heading = t.heading()
+    t.width(7)
+    t.color('white')
+    t.down()
+    t.forward(200)
+    t.right(90)
+    t.forward(95)
+    t.up()
+    t.width(1)
+    t.forward(8)
+    t.right(150)
+    t.down()
+    t.begin_fill()
+    for _ in range(3):
+        t.forward(21)
+        t.right(120)
+    t.end_fill()
+
+    t.up()
+    t.goto(pos)
+    t.setheading(heading)
+
+    t.width(5)
+    t.color('grey50')
+    t.down()
+    t.forward(200)
+    t.right(90)
+    t.forward(95)
+    t.up()
+    t.width(1)
+    t.forward(5)
+    t.right(150)
+    t.down()
+    t.begin_fill()
+    for _ in range(3):
+        t.forward(15)
+        t.right(120)
+    t.end_fill()
+
+    t = actual.turtle
+    t.up()
+    t.goto(-100, 100)
+    draw_diagram(actual.turtle, state)
+
+    drawing_differ.tolerance = 10
+    drawing_differ.assert_equal(actual, expected, 'draw_arrows_and_marker')

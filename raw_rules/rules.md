@@ -2409,12 +2409,34 @@ well to play on a grid of dominoes.
 Shuffle all the dominoes face down, and then place them in a 7x8 grid of
 numbers, flipping them face up as you go.
 
-Randomly choose colours for the two players. The player with darker colour
+Randomly choose colours for the two players. The player with the darker colour
 starts, placing their runner on one end of any domino. The player with the
 lighter colour then has a choice: either place their runner somewhere else on
 the dominoes, or swap colours and force the other player to place the lighter
 runner. This means that if the first player makes too strong a first move, the
 second player can steal it.
+
+Here's an example starting position, where there are several fives and sixes
+protected by blanks or the edge of the board. The black player decided to line
+up with two of the fives, so the white player would choose to line up with a
+six instead of swapping colours. The little white pips show you what number is
+underneath each runner.
+
+    3|3 3|4 5|5 0|2
+    
+    4|1 2|1 1|0 2|4
+    
+    2|6 4|4 0|5 B|5
+    
+    5|2 5|1 0|4 0|0
+    
+    0|3 2|2 1|6 6|3
+    
+    6|W 6|4 5|6 1|1
+    
+    1|3 5|3 3|2 0|6
+    ---
+    B4W6
 
 ### Play
 On each turn, move your runner in two parts: vertical then horizontal or
@@ -2425,6 +2447,28 @@ moving the runner, place one of your checkers on the space where the runner
 changed direction. **Important:** you cannot place a checker on a blank space,
 so you cannot change direction on a blank space.
 
+Here's what the black player might do on the first move of the example game. The
+neutral runner is optional, and helps you see where you started your move. The
+black runner turned at the 5 and dropped a black checker, then moved up to the
+blank and stopped.
+
+    3|3 3|4 5|5 0|2
+    
+    4|1 2|1 1|B 2|4
+    
+    2|6 4|4 0|b N|5
+    
+    5|2 5|1 0|4 0|0
+    
+    0|3 2|2 1|6 6|3
+    
+    6|W 6|4 5|6 1|1
+    
+    1|3 5|3 3|2 0|6
+    ---
+    N4W6B0b5
+    arrows:(6,4)L1U1
+
 After placing the checker, you may use it to jump over one of your opponent's
 checkers, if the two checkers are right next to each other and there's an empty
 space on the other side. You may not jump diagonally, and you may not land on a
@@ -2433,12 +2477,58 @@ same rules.
 
 Once you finish, your opponent takes a turn.
 
+After a few moves in the example game, the white player has left some checkers
+unprotected. You can see the neutral runner where the black runner started, and
+the corner where the black player dropped a checker. Then that checker jumped
+over the white checker on the five and then over the white checker on the six.
+Both the white checkers can now be removed by the black player.
+
+    3|3 3|4 5|5 0|2
+    
+    4|1 2|1 1|0 2|4
+    
+    2|6 4|4 0|5 4|5
+    
+    5|2 5|1 0|4 0|0
+    
+    0|3 2|2 1|6 6|3
+    
+    6|6 6|4 5|6 1|1
+    
+    1|3 5|3 3|2 0|6
+    ---
+    (0,6)b,(1,6)w,(3,6)w,(3,5)W,(4,3)B,(5,4)b,(7,5)b,(7,6)N
+    arrows:(2,6)L2,(4,6)L2,(7,6)L3D3
+
 ### Winning
 The game ends in one of two ways: either both players place all their checkers,
 or a player can't make a legal move. If a player can't make a legal move, they
 lose. If both players have played all their checkers, look under the checkers,
 and add up all the covered numbers, then add one more point for every captured
 checker. The player with the most points wins.
+
+In the example game, the white player has made another mistake, and can't make
+a legal move. You might think that white could move one to the right and then
+down the empty column, but remember that you can't drop a checker on a blank.
+White loses the game, and it doesn't matter how many points are under the
+checkers.
+
+    3|3 3|4 5|5 0|2
+    
+    4|1 2|1 1|0 2|4
+    
+    2|6 4|4 0|5 4|5
+    
+    5|2 5|1 0|4 0|0
+    
+    0|3 2|2 1|6 6|3
+    
+    6|6 6|4 5|6 1|1
+    
+    1|3 5|3 3|2 0|6
+    ---
+    (0,6)b,(3,6)w,(4,5)b,(5,6)W,(5,4)b,(5,5)B,(7,5)b
+
 
 [winkeladvokat]: https://boardgamegeek.com/boardgame/2473/winkeladvokat
 [cabale]: https://boardgamegeek.com/boardgame/687/cabale

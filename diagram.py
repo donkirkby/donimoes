@@ -631,8 +631,8 @@ def draw_arrows(turtle: Turtle, board: Board, cell_size: int):
         return
     start_pos = turtle.pos()
     turtle.up()
-    turtle.color('grey50')
-    line_width = cell_size / 20
+    line_width = cell_size * 0.05
+    outline_width = cell_size * 0.07
     turtle.right(90)
     turtle.forward(cell_size * (board.height - 0.5))
     turtle.left(90)
@@ -640,36 +640,39 @@ def draw_arrows(turtle: Turtle, board: Board, cell_size: int):
     x0, y0 = turtle.pos()
 
     for arrow in arrows.positions:
-        x2, y2 = arrow[0]
-        x = x0 + x2*cell_size
-        y = y0 + y2*cell_size
-        turtle.goto(x, y)
-        turtle.down()
-        # noinspection PyTypeChecker
-        turtle.width(line_width)
-        for x2, y2 in arrow[1:-1]:
+        for colour, width in (('white', outline_width),
+                              ('grey50', line_width)):
+            turtle.color(colour)
+            x2, y2 = arrow[0]
             x = x0 + x2*cell_size
             y = y0 + y2*cell_size
             turtle.goto(x, y)
-        x2, y2 = arrow[-1]
-        x = x0 + x2*cell_size
-        y = y0 + y2*cell_size
-        turtle.setheading(turtle.towards(x, y))
-        distance = max(abs(x - turtle.xcor()), abs(y - turtle.ycor()))
-        turtle.forward(distance - line_width)
-        turtle.up()
-        turtle.forward(line_width)
-        turtle.right(150)
-        turtle.width(cell_size//100)
-        turtle.down()
-        turtle.begin_fill()
-        for _ in range(3):
-            turtle.forward(cell_size*0.15)
-            turtle.right(120)
-        turtle.end_fill()
-        turtle.up()
-        turtle.goto(x0, y0)
-        turtle.setheading(0)
+            turtle.down()
+            # noinspection PyTypeChecker
+            turtle.width(width)
+            for x2, y2 in arrow[1:-1]:
+                x = x0 + x2*cell_size
+                y = y0 + y2*cell_size
+                turtle.goto(x, y)
+            x2, y2 = arrow[-1]
+            x = x0 + x2*cell_size
+            y = y0 + y2*cell_size
+            turtle.setheading(turtle.towards(x, y))
+            distance = max(abs(x - turtle.xcor()), abs(y - turtle.ycor()))
+            turtle.forward(distance - line_width)
+            turtle.up()
+            turtle.forward(width + (width-line_width)/2)
+            turtle.right(150)
+            turtle.width(cell_size//100)
+            turtle.down()
+            turtle.begin_fill()
+            for _ in range(3):
+                turtle.forward(width*3)
+                turtle.right(120)
+            turtle.end_fill()
+            turtle.up()
+            turtle.goto(x0, y0)
+            turtle.setheading(0)
     turtle.goto(start_pos)
 
 

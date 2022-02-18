@@ -338,8 +338,8 @@ You can add arrows by giving the start coordinates and the directions to move.
     ---
     arrows:(2,1)L2D1,(1,0)R1
 
-You can combine the different types of extras into the same diagram. Order
-doesn't matter.
+You can combine the different types of extras into the same diagram. Order of
+the sections doesn't matter, but order of the arrows matters if they overlap.
 
     1|A 3
         -
@@ -347,7 +347,7 @@ doesn't matter.
     ---
     dice:(2,1)3
     A2
-    arrows:(2,1)L2D1
+    arrows:(1,0)U1R1,(0,0)R2
 
 ### Dominosa
 Dominosa boards can include a partial solution, but one of the headings must be

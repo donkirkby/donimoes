@@ -27,6 +27,7 @@ Before publishing a release, check the following:
 To publish a release:
 
 * Run the `donimoes.py` script to generate the PDF version in the `docs` folder.
+* Compress the PDF with the [Adobe compressor].
 * Commit the changes and check that the new version works on the web site.
 * Go to the GitHub [releases page][releases], create a new release using a tag
     like `vX.Y`.
@@ -36,3 +37,4 @@ To publish a release:
 [nx]: http://networkx.github.io/
 [deap]: https://pypi.python.org/pypi/deap
 [releases]: https://github.com/donkirkby/donimoes/releases
+[Adobe compressor]: https://www.adobe.com/ca/acrobat/online/compress-pdf.html
