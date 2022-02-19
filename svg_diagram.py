@@ -1,7 +1,9 @@
-from io import BytesIO
+from io import BytesIO, StringIO
+from pathlib import Path
 
 import svgwrite
 import reportlab.graphics.shapes as reportlab_shapes
+from cairosvg import svg2png
 from reportlab.graphics.renderPM import drawToFile
 from svglib.svglib import svg2rlg
 
@@ -23,6 +25,11 @@ class SvgDiagram:
         svg_bytes = svg_text.encode()
         drawing = svg2rlg(BytesIO(svg_bytes))
         return drawing
+
+    def to_cairo(self, png_file: str):
+        svg2png(file_obj=StringIO(self.turtle.to_svg()),
+                write_to=png_file,
+                background_color='transparent')
 
 
 def draw_page(turtle, state):
@@ -59,12 +66,17 @@ def main():
 """
     # cell size of 60 looks good on puzzling.se.
     diagram = SvgDiagram('480', '420')
-    diagram.svg_drawing.add(
-        diagram.svg_drawing.rect(fill='white', size=("100%", "100%")))
+    bg = 'white'
+    if bg:
+        diagram.svg_drawing.add(
+            diagram.svg_drawing.rect(fill='bg', size=("100%", "100%")))
     draw_page(diagram.turtle, state)
     is_svg = False
+    is_cairo = True
     if is_svg:
         diagram.svg_drawing.saveas('diagram.svg')
+    elif is_cairo:
+        diagram.to_cairo('docs/images/example-trap.png')
     else:
         drawing = diagram.to_reportlab()
         drawToFile(drawing, 'docs/images/example.png', 'PNG')
