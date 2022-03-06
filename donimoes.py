@@ -123,7 +123,8 @@ class DiagramWriter:
         relative_path = target_path.relative_to(self.target_folder)
         try:
             old_image = LivePillowImage(Image.open(target_path))
-            if self.diagram_differ.compare(old_image, image) is None:
+            self.diagram_differ.compare(old_image, image)
+            if self.diagram_differ.diff_count == 0:
                 return relative_path
         except IOError:
             pass
@@ -164,8 +165,9 @@ def main():
     diagram_writer = DiagramWriter(pdf_path.parent, images_path)
     if args.booklet:
         page_size = (4.25*inch, 6.875*inch)
-        vertical_margin = 0.25*inch
+        vertical_margin = 0.3*inch
         side_margin = 0.5*inch
+        states.pop(1)  # Remove title, since it's on the cover.
     else:
         page_size = pagesizes.letter
         vertical_margin = 0.625*inch

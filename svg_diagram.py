@@ -1,5 +1,4 @@
 from io import BytesIO, StringIO
-from pathlib import Path
 
 import svgwrite
 import reportlab.graphics.shapes as reportlab_shapes
@@ -66,7 +65,7 @@ def main():
 """
     # cell size of 60 looks good on puzzling.se.
     diagram = SvgDiagram('480', '420')
-    bg = 'white'
+    bg = None
     if bg:
         diagram.svg_drawing.add(
             diagram.svg_drawing.rect(fill='bg', size=("100%", "100%")))
@@ -76,7 +75,7 @@ def main():
     if is_svg:
         diagram.svg_drawing.saveas('diagram.svg')
     elif is_cairo:
-        diagram.to_cairo('docs/images/example-trap.png')
+        diagram.to_cairo('docs/images/example.png')
     else:
         drawing = diagram.to_reportlab()
         drawToFile(drawing, 'docs/images/example.png', 'PNG')

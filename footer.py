@@ -1,5 +1,4 @@
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import LETTER
 
 
 class FooterCanvas(canvas.Canvas):
@@ -34,14 +33,19 @@ class FooterCanvas(canvas.Canvas):
 
     def draw_canvas(self):
         x = 30
+        width, height = self._pagesize
+
+        # noinspection PyUnresolvedReferences
+        bottom = self._doctemplate.bottomMargin
+
         self.saveState()
         self.setFont(self.font_name, 7 if self.is_booklet else 9)
         if self._pageNumber % 2:
-            self.drawString(LETTER[0]-x, 45, str(self._pageNumber))
+            self.drawString(width-x, bottom, str(self._pageNumber))
         else:
-            self.drawString(x, 45, str(self._pageNumber))
+            self.drawString(x, bottom, str(self._pageNumber))
         if self._pageNumber == 1:
-            self.drawCentredString(LETTER[0] / 2,
-                                   45,
+            self.drawCentredString(width / 2,
+                                   bottom,
                                    "donkirkby.github.io/donimoes")
         self.restoreState()

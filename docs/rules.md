@@ -812,13 +812,13 @@ Place a Priest (pawn) beside each number at both ends of the mountain.
 ### Moving a Priest
 1. A Priest may move onto a space if the number matches the number of unoccupied
   spaces the Priest must move in a straight line to get there (including the
-  destination space itself, but not including the space the Priest's starting
-  space). For example, a Priest may move onto a space containing a value 4 coin
-  if there are 3 unoccupied spaces between it and the Priest.
+  destination space itself, but not including the Priest's starting space). For
+  example, a Priest may move onto a space with the number 4 if there are 3
+  unoccupied spaces between it and the Priest.
 2. Occupied spaces (containing intervening Priests) are not counted when
   determining if a Priest may move onto a particular space. For example, a
-  Priest may move onto a space containing a value 2 coin if there are 3 occupied
-  spaces and one unoccupied space between it and the Priest.
+  Priest may move onto a space with the number 2 if there are 3 occupied spaces
+  and one unoccupied space between it and the Priest.
 3. A Priest may move freely between the two spaces on a domino. This is the only
   manner in which a Priest may move onto a blank space.
 4. Once a Priest lands on the peak of the mountain, he will refuse to leave it,
@@ -826,7 +826,7 @@ Place a Priest (pawn) beside each number at both ends of the mountain.
   two dominoes). Clarification: A Priest may pass over the peak dominoes as part
   of a move.
 5. A Priest must enter the mountain from his own starting row; that is, he
-  cannot move back or forth while he remains on the ground.
+  cannot move back and forth while he remains on the ground.
 
 ### Goal
 The Priests will be content when they all reach the top of the mountain.
@@ -1344,7 +1344,7 @@ Once you finish, your opponent takes a turn.
 After a few moves in the example game, the white player has left some checkers
 unprotected. You can see the neutral runner where the black runner started, and
 the corner where the black player dropped a checker. Then that checker jumped
-over the white checker on the five and then over the white checker on the six.
+over the white checker on the four and then over the white checker on the three.
 Both the white checkers can now be removed by the black player.
 
 ![Diagram](images/rules/diagram170.png)
