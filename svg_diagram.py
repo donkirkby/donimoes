@@ -71,7 +71,7 @@ def main():
             diagram.svg_drawing.rect(fill='bg', size=("100%", "100%")))
     draw_page(diagram.turtle, state)
     is_svg = False
-    is_cairo = True
+    is_cairo = False
     if is_svg:
         diagram.svg_drawing.saveas('diagram.svg')
     elif is_cairo:

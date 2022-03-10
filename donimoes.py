@@ -3,6 +3,7 @@ from functools import partial
 from pathlib import Path
 from subprocess import call
 
+# noinspection PyPackageRequirements
 from PIL import Image
 from reportlab.lib import pagesizes
 from reportlab.pdfbase import pdfmetrics
