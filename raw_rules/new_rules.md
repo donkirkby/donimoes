@@ -2,17 +2,11 @@
 title: New Rules for Donimoes
 ---
 # Experiments in Progress
+## Introduction
 These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 
-* **Donimo Drivers** is a puzzle I designed where dice can walk over the
-  dominoes or drive them around. (1 player, 4 dice, and double-six dominoes)
-* **Adding Donimoes** is a puzzle I designed where you add dominoes in the given
-    order. (1 player, double-six dominoes)
-* **Tetromino Road** is a board game I designed where you lay out dominoes with
-    roads between them. (2 players, double-six dominoes, beads and coins)
-* **Writing Rules** is a section to help me remember how to create the
-    different types of diagrams.
+## Table of Contents
 
 ## Donimo Drivers
 Dice can walk or drive to their destination.

@@ -79,11 +79,10 @@ class Cover:
                            textAnchor='middle'))
 
         small_font_size = self.total_height / 50
-        lines = ["A collection that will broaden your horizons",
+        lines = ["A dozen games and puzzles that take you",
                  "beyond a chain of dominoes with matching",
-                 "numbers. You'll find new games and puzzles I",
-                 "designed, as well as my favourites from other",
-                 "designers."]
+                 "numbers. You'll find my new games and puzzles,",
+                 "as well as my favourites from other designers."]
         for i, line in enumerate(lines):
             drawing.add(String(self.margin + self.bleed,
                                self.total_height * 0.78 - i*small_font_size,

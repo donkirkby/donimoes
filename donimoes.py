@@ -1,5 +1,7 @@
 import logging
+import typing
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
+from csv import DictReader
 from functools import partial
 from logging import getLogger, basicConfig
 from pathlib import Path
@@ -10,8 +12,9 @@ from PIL import Image
 from reportlab.lib import pagesizes
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.platypus.flowables import Spacer, KeepTogether, ListFlowable
-from reportlab.lib.styles import getSampleStyleSheet, ListStyle
+from reportlab.lib.styles import getSampleStyleSheet, ListStyle, ParagraphStyle
 from reportlab.lib.units import inch
+from reportlab.platypus.tableofcontents import TableOfContents
 # noinspection PyUnresolvedReferences
 from reportlab.rl_config import defaultPageSize
 from space_tracer import LivePillowImage
@@ -136,10 +139,62 @@ class DiagramWriter:
         return relative_path
 
 
+class RulesDocTemplate(SimpleDocTemplate):
+    def __init__(self,
+                 *args,
+                 contents_descriptions: typing.Dict[str, str] = None,
+                 **kwargs):
+        super().__init__(*args, **kwargs)
+        self.contents_descriptions = contents_descriptions or {}
+        self.bookmarks = {}  # {heading_text: key}
+        self.first_headings = set()
+        self.before_contents = True
+
+    def create_link(self, heading_text):
+        new_link = f'section{len(self.bookmarks)}'
+        linked_text = heading_text + f'<a name="{new_link}"/>'
+        self.bookmarks[heading_text] = new_link
+        return linked_text
+
+    def afterFlowable(self, flowable):
+        if not isinstance(flowable, Paragraph):
+            return
+        if not flowable.style.name.startswith('Heading'):
+            return
+        heading_level = int(flowable.style.name[-1])
+        if heading_level > 2:
+            return
+        heading_text = flowable.getPlainText()
+        if heading_text.endswith(' Solutions'):
+            return
+        if heading_text == 'Table of Contents':
+            self.before_contents = False
+            return
+        if self.before_contents or heading_text in self.first_headings:
+            self.first_headings.add(heading_text)
+            return
+        description = self.contents_descriptions.get(heading_text)
+        key = self.bookmarks.get(heading_text)
+        if description:
+            heading_text += ' '
+            heading_text += description
+        self.notify('TOCEntry',
+                    (0, heading_text, self.page, key))
+
+
+def load_contents_descriptions(contents_path: Path) -> typing.Dict[str, str]:
+    if not contents_path.exists():
+        return {}
+    with contents_path.open() as f:
+        reader = DictReader(f)
+        return {row['heading']: row['description']
+                for row in reader}
+
+
 def main():
     basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s:%(name)s:%(message)s")
-    logger.info('Start.')
     args = parse_args()
+    logger.info('Start.')
     markdown_path = Path(args.markdown.name)
     rules_stem = markdown_path.stem
     pdf_stem = 'donimoes' if rules_stem == 'rules' else rules_stem
@@ -148,7 +203,8 @@ def main():
     merged_path = pdf_path.parent / (rules_stem + '.md')
     images_path = pdf_path.parent / 'images' / rules_stem
     images_path.mkdir(parents=True, exist_ok=True)
-
+    contents_path = markdown_path.parent / (rules_stem + '_contents.csv')
+    contents_descriptions = load_contents_descriptions(contents_path)
     register_fonts()
 
     with args.markdown:
@@ -164,13 +220,14 @@ def main():
         vertical_margin = 0.625*inch
         side_margin = inch
 
-    doc = SimpleDocTemplate(str(pdf_path),
-                            author='Don Kirkby',
-                            pagesize=page_size,
-                            leftMargin=side_margin,
-                            rightMargin=side_margin,
-                            topMargin=vertical_margin,
-                            bottomMargin=vertical_margin)
+    doc = RulesDocTemplate(str(pdf_path),
+                           author='Don Kirkby',
+                           pagesize=page_size,
+                           leftMargin=side_margin,
+                           rightMargin=side_margin,
+                           topMargin=vertical_margin,
+                           bottomMargin=vertical_margin,
+                           contents_descriptions=contents_descriptions)
     styles = getSampleStyleSheet()
     for style in styles.byName.values():
         if hasattr(style, 'fontSize'):
@@ -200,6 +257,12 @@ def main():
     first_bullet = None
     image_width = 800
     image_height = 600
+    toc = TableOfContents(dotsMinLevel=0)
+    toc.levelStyles = [ParagraphStyle('toc',
+                                      parent=paragraph_style,
+                                      leftIndent=20,
+                                      firstLineIndent=-20,
+                                      leading=16)]
     for state in states:
         if state.style == Styles.Metadata:
             doc.title = state.text
@@ -245,6 +308,8 @@ def main():
         if state.style.startswith(Styles.Heading):
             if state.style < 'Heading3':
                 logger.info(state.text)
+            linked_text = doc.create_link(state.text)
+            flowable = Paragraph(linked_text, styles[state.style])
             if bulleted:
                 create_list_flowable(bulleted,
                                      group,
@@ -261,6 +326,10 @@ def main():
             while len(headings) < heading_level:
                 headings.append(None)
             headings[heading_level - 1] = state.text
+            if state.text == 'Table of Contents':
+                story.append(KeepTogether(group))
+                story.append(toc)
+                group = []
         elif state.bullet:
             bulleted.append(flowable)
             first_bullet = first_bullet or state.bullet
@@ -290,9 +359,9 @@ def main():
                              first_bullet,
                              bulleted_list_style,
                              numbered_list_style)
-    doc.build(story, canvasmaker=partial(FooterCanvas,
-                                         font_name='Raleway',
-                                         is_booklet=args.booklet))
+    doc.multiBuild(story, canvasmaker=partial(FooterCanvas,
+                                              font_name='Raleway',
+                                              is_booklet=args.booklet))
     with merged_path.open('w') as merged_file:
         for state in states:
             state.write_markdown(merged_file)
