@@ -1,13 +1,13 @@
+import logging
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
 from functools import partial
+from logging import getLogger, basicConfig
 from pathlib import Path
 from subprocess import call
 
 # noinspection PyPackageRequirements
 from PIL import Image
 from reportlab.lib import pagesizes
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.platypus.flowables import Spacer, KeepTogether, ListFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ListStyle
@@ -20,6 +20,7 @@ from diagram import draw_diagram, draw_fuji
 from diagram_differ import LiveSvg, DiagramDiffer
 from domino_puzzle import Board
 from dominosa import DominosaBoard
+from font_set import register_fonts
 from footer import FooterCanvas
 from book_parser import parse, Styles
 from svg_diagram import SvgDiagram
@@ -27,9 +28,11 @@ from svg_diagram import SvgDiagram
 PAGE_HEIGHT = defaultPageSize[1]
 PAGE_WIDTH = defaultPageSize[0]
 
+logger = getLogger(__file__)
+
 
 def parse_args():
-    default_markdown = str(Path(__file__).parent / 'docs' / 'rules.md')
+    default_markdown = str(Path(__file__).parent / 'raw_rules' / 'rules.md')
     # noinspection PyTypeChecker
     parser = ArgumentParser(description='Convert rules markdown into a PDF.',
                             formatter_class=ArgumentDefaultsHelpFormatter)
@@ -134,6 +137,8 @@ class DiagramWriter:
 
 
 def main():
+    basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s:%(name)s:%(message)s")
+    logger.info('Start.')
     args = parse_args()
     markdown_path = Path(args.markdown.name)
     rules_stem = markdown_path.stem
@@ -144,22 +149,7 @@ def main():
     images_path = pdf_path.parent / 'images' / rules_stem
     images_path.mkdir(parents=True, exist_ok=True)
 
-    fonts_path = source_path / 'fonts'
-    fredoka_file = fonts_path / 'Fredoka_One' / 'FredokaOne-Regular.ttf'
-    raleway_file = fonts_path / 'Raleway' / 'static' / 'Raleway-Regular.ttf'
-    raleway_bold_file = fonts_path / 'Raleway' / 'static' / 'Raleway-Bold.ttf'
-    raleway_italic_file = fonts_path / 'Raleway' / 'static' / 'Raleway-Italic.ttf'
-    raleway_bold_italic_file = fonts_path / 'Raleway' / 'static' / 'Raleway-BoldItalic.ttf'
-    pdfmetrics.registerFont(TTFont("Fredoka", fredoka_file))
-    pdfmetrics.registerFont(TTFont("Raleway", raleway_file))
-    pdfmetrics.registerFont(TTFont("Raleway-Bold", raleway_bold_file))
-    pdfmetrics.registerFont(TTFont("Raleway-Italic", raleway_italic_file))
-    pdfmetrics.registerFont(TTFont("Raleway-BoldItalic", raleway_bold_italic_file))
-    pdfmetrics.registerFontFamily('Raleway',
-                                  'Raleway',
-                                  'Raleway-Bold',
-                                  'Raleway-Italic',
-                                  'Raleway-BoldItalic')
+    register_fonts()
 
     with args.markdown:
         states = parse(args.markdown.read())
@@ -253,6 +243,8 @@ def main():
             flowable = Paragraph(state.text,
                                  styles[state.style])
         if state.style.startswith(Styles.Heading):
+            if state.style < 'Heading3':
+                logger.info(state.text)
             if bulleted:
                 create_list_flowable(bulleted,
                                      group,
@@ -305,6 +297,7 @@ def main():
         for state in states:
             state.write_markdown(merged_file)
 
+    logger.info('Done.')
     call(["evince", pdf_path])
 
 
