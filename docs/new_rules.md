@@ -2,18 +2,25 @@
 title: New Rules for Donimoes
 ---
 # Experiments in Progress
+## Introduction
 These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 
-* **Donimo Drivers** is a puzzle I designed where dice can walk over the
-  dominoes or drive them around. (1 player, 4 dice, and double-six dominoes)
-* **Adding Donimoes** is a puzzle I designed where you add dominoes in the given
-    order. (1 player, double-six dominoes)
-* **Tetromino Road** is a board game I designed where you lay out dominoes with
-    roads between them. (2 players, double-six dominoes, beads and coins)
-* **Writing Rules** is a section to help me remember how to create the
-    different types of diagrams.
+## Table of Contents
 
+* [Donimo Drivers](#donimo-drivers) is a puzzle I designed where dice
+    can walk over the dominoes or drive them around. (1 player, 4 dice,
+    and double-six dominoes)
+* [Adding Donimoes](#adding-donimoes) is a puzzle I designed where you
+    add dominoes in the given order. (1 player, double-six dominoes)
+* [Tetromino Road](#tetromino-road) is a board game I designed where
+    you lay out dominoes with roads between them. (2 players, double-six
+    dominoes, beads and coins)
+* [Writing Rules](#writing-rules) is a section to help me remember how
+    to create the different types of diagrams.
+* [Solutions](#solutions)
+
+# Puzzles
 ## Donimo Drivers
 Dice can walk or drive to their destination.
 
@@ -136,6 +143,7 @@ solutions are listed at the end.
 #### Problem 1
 ![Diagram](images/new_rules/diagram16.png)
 
+# Games
 ## Tetromino Road
 The dominoes are played on an 8x8 grid. Make the edges out of face-down
 dominoes, or play on a chess board where a pair of squares are the same size as
@@ -192,6 +200,7 @@ any tetrominoes that will fit, the token is just returned to the player.
 ### Winning
 The player who plays 4 tetrominoes wins.
 
+# Software Tips
 ## Writing Rules
 Here are some examples of the diagrams that you can draw using code blocks:
 
@@ -259,6 +268,7 @@ with no distance means one space. The driving moves have a small letter 'd' for
 3. 1L2, 2dD, 3L2, 3U, 3L, 3U, 4dD, 1dL2, 3dU, 4R2, 4dU
 4. 4dD, 4U, 4L2, 4U, 4dR, 4U3, 4L2, 2dR, 4dR, 3dR, 4D, 4L3, 4dU, 1dU, 1R2, 2L2,
    2D, 2L3, 2D, 2L, 2dD, 2R, 2U2, 2R3, 2U, 2R2, 4dD, 4R3, 4U, 3dL, 4dL, 2dL, 1dR
+
 ## Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Adding moves contain the domino

@@ -80,6 +80,7 @@ class ParsingState(object):
         self.style = style
         self.bullet = bullet
         self.image_path = None
+        self.extra_markdown = ''
 
     def add(self, line):
         if line.startswith('    '):
@@ -108,7 +109,8 @@ class ParsingState(object):
         self.raw_text += line + os.linesep
         return self
 
-    def is_printed(self):
+    @staticmethod
+    def is_printed():
         return True
 
     def __repr__(self):
@@ -127,6 +129,7 @@ class ParsingState(object):
         :param markdown_file: the destination to write the markdown to
         """
         markdown_file.write(self.raw_text)
+        markdown_file.write(self.extra_markdown)
 
 
 class StartState(ParsingState):

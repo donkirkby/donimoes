@@ -6,6 +6,7 @@ from functools import partial
 from logging import getLogger, basicConfig
 from pathlib import Path
 from subprocess import call
+from textwrap import wrap
 
 # noinspection PyPackageRequirements
 from PIL import Image
@@ -191,6 +192,15 @@ def load_contents_descriptions(contents_path: Path) -> typing.Dict[str, str]:
                 for row in reader}
 
 
+def format_contents_markdown(
+        contents_descriptions: typing.Dict[str, str]) -> str:
+    return '\n'.join(
+        '\n    '.join(wrap(f'* [{heading}](#{heading.lower().replace(" ", "-")}) '
+                           f'{description}',
+                           break_on_hyphens=False))
+        for heading, description in contents_descriptions.items()) + '\n\n'
+
+
 def main():
     basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s:%(name)s:%(message)s")
     args = parse_args()
@@ -332,6 +342,8 @@ def main():
                 headings.append(None)
             headings[heading_level - 1] = state.text
             if state.text == 'Table of Contents':
+                state.extra_markdown = format_contents_markdown(
+                    contents_descriptions)
                 story.append(KeepTogether(group))
                 story.append(toc)
                 group = []

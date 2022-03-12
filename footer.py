@@ -32,5 +32,5 @@ class FooterCanvas(canvas.Canvas):
         if self._pageNumber == 1:
             self.drawCentredString(width / 2,
                                    bottom,
-                                   "donkirkby.github.io/donimoes")
+                                   "https://donkirkby.github.io/donimoes")
         self.restoreState()
