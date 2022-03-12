@@ -143,6 +143,7 @@ class StartState(ParsingState):
 class MetadataState(ParsingState):
     def __init__(self, text=None):
         super().__init__(text, Styles.Metadata)
+        self.subtitle = None
 
     def is_printed(self):
         return True
@@ -157,6 +158,9 @@ class MetadataState(ParsingState):
         match = re.match('title: *', line)
         if match is not None:
             self.text = line[match.end():]
+        match = re.match('subtitle: *', line)
+        if match is not None:
+            self.subtitle = line[match.end():]
         return self
 
 

@@ -2,7 +2,6 @@
 title: The Rules of Donimoes
 ---
 
-# Donimoes: New Games and Puzzles
 ## Introduction
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of

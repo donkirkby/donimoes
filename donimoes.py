@@ -11,7 +11,8 @@ from textwrap import wrap
 # noinspection PyPackageRequirements
 from PIL import Image
 from reportlab.lib import pagesizes
-from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.lib.enums import TA_CENTER
+from reportlab.platypus import SimpleDocTemplate, Paragraph, PageBreak
 from reportlab.platypus.flowables import Spacer, KeepTogether, ListFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ListStyle, ParagraphStyle
 from reportlab.lib.units import inch
@@ -224,7 +225,6 @@ def main():
         page_size = (4.25*inch, 6.875*inch)
         vertical_margin = 0.3*inch
         side_margin = 0.5*inch
-        states.pop(1)  # Remove title, since it's on the cover.
     else:
         page_size = pagesizes.letter
         vertical_margin = 0.625*inch
@@ -281,6 +281,30 @@ def main():
     for state in states:
         if state.style == Styles.Metadata:
             doc.title = state.text
+            title_text = state.text
+            subtitle_text = state.subtitle
+            if title_text == 'The Rules of Donimoes':
+                title_text = 'Donimoes'
+                subtitle_text = 'New Games and Puzzles'
+            if args.booklet:
+                story.append(Spacer(0, page_size[1]*0.3))
+            title_style = ParagraphStyle('MainTitle',
+                                         parent=styles['Heading1'],
+                                         alignment=TA_CENTER)
+            story.append(Paragraph(title_text, title_style))
+            if subtitle_text:
+                subtitle_style = ParagraphStyle('Subtitle',
+                                                parent=paragraph_style,
+                                                alignment=TA_CENTER,
+                                                fontName='Raleway-Italic')
+                story.append(Paragraph(subtitle_text, subtitle_style))
+            if args.booklet:
+                story.append(Spacer(0, page_size[1]*0.2))
+                author_style = ParagraphStyle('Author',
+                                              parent=paragraph_style,
+                                              alignment=TA_CENTER)
+                story.append(Paragraph('Don Kirkby', author_style))
+                story.append(PageBreak())
             continue
         elif state.style == Styles.Diagram:
             if 'Fujisan' in headings or 'Fujisan Problems' in headings:
