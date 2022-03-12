@@ -121,8 +121,6 @@ class Cover:
         spine_group.rotate(-90)
         drawing.add(spine_group)
 
-        # canvas.setFont('Helvetica', 16)
-        # canvas.drawString(100, 100, "Welcome to Reportlab!")
         return drawing
 
     def add_border(self, drawing):

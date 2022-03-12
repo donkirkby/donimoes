@@ -179,7 +179,7 @@ class RulesDocTemplate(SimpleDocTemplate):
             heading_text += ' '
             heading_text += description
         self.notify('TOCEntry',
-                    (0, heading_text, self.page, key))
+                    (heading_level-1, heading_text, self.page, key))
 
 
 def load_contents_descriptions(contents_path: Path) -> typing.Dict[str, str]:
@@ -260,8 +260,13 @@ def main():
     toc = TableOfContents(dotsMinLevel=0)
     toc.levelStyles = [ParagraphStyle('toc',
                                       parent=paragraph_style,
+                                      leftIndent=10,
+                                      firstLineIndent=-10,
+                                      leading=16),
+                       ParagraphStyle('toc',
+                                      parent=paragraph_style,
                                       leftIndent=20,
-                                      firstLineIndent=-20,
+                                      firstLineIndent=-10,
                                       leading=16)]
     for state in states:
         if state.style == Styles.Metadata:

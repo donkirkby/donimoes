@@ -8,6 +8,7 @@ know what you think.
 
 ## Table of Contents
 
+# Puzzles
 ## Donimo Drivers
 Dice can walk or drive to their destination.
 
@@ -204,6 +205,7 @@ solutions are listed at the end.
     - - - - - -
     1 5 1 5 5 4
 
+# Games
 ## Tetromino Road
 The dominoes are played on an 8x8 grid. Make the edges out of face-down
 dominoes, or play on a chess board where a pair of squares are the same size as
@@ -260,6 +262,7 @@ any tetrominoes that will fit, the token is just returned to the player.
 ### Winning
 The player who plays 4 tetrominoes wins.
 
+# Software Tips
 ## Writing Rules
 Here are some examples of the diagrams that you can draw using code blocks:
 

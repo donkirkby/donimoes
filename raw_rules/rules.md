@@ -3,6 +3,7 @@ title: The Rules of Donimoes
 ---
 
 # Donimoes: New Games and Puzzles
+## Introduction
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of
 games, often with Mr. Hoyle's name on the cover, you might find the basic game
@@ -15,6 +16,7 @@ puzzles by other designers.
 
 ## Table of Contents
 
+# Puzzles
 ## Unmatched Donimoes
 A puzzle I designed that's the opposite of traditional dominoes: matches are
 forbidden.
@@ -878,11 +880,11 @@ solutions are listed at the end.
 
 You'll need patience for this one. Did I go too far?
 
-# Domino Games
+# Games
 I really enjoy classic domino games like All Fives, and I've played recent
 inventions like Chickenfoot and Mexican Train. However, I thought I might be
-able to design a domino game that felt more like a grid than a chain.
-Tetradominoes is my attempt to do that.
+able to design a domino game that felt more like a grid than a chain. These
+games are my attempt to do that.
 
 ## Tetradominoes
 Play matching dominoes in a grid, then try to play the tetromino shapes on top.
@@ -1500,7 +1502,7 @@ The turn passes to the player on your right.
 ### Winning
 As soon as you collect enough treasures, you win the game.
 
-# Domino Puzzles By Other Designers
+# By Other Designers
 ## Mountains and Valleys
 Sid Sackson is one of my favourite game designers. He designed Acquire, Can't
 Stop, and I'm the Boss, among many, many others. He included Mountains and
@@ -3060,7 +3062,7 @@ over two other pieces, meaning that it moves five spaces in total.
 
 # Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at
-[donkirkby.github.io/donimoes][github].
+[https://donkirkby.github.io/donimoes][github].
 
 Unmatched, Capturing, Mirror, and Bee Donimoes, as well as Tetradominoes and
 Domino Finder are original puzzles and games designed by [Don Kirkby][don].
