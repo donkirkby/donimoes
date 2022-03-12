@@ -39,6 +39,9 @@ puzzles by other designers:
     the ends add up to a multiple of five. (2-4 players, double-six dominoes)
 * **Dominosa** is the classic domino puzzle by O.S. Adler where you have to fit
     the set of dominoes onto a grid of numbers.
+* **Domino Runners** is based on board games by Roland Siegers, where your
+  runners run across a grid of dominoes, dropping checkers and trying to capture
+  your opponent's checkers. (2 players, double-six dominoes, and checkers)
 
 The book of rules includes problems to solve for each puzzle. The Unmatched
 Donimoes problems are patterns of dominoes for you to start from, like this:
