@@ -1581,6 +1581,150 @@ rules as the cooperative version.
 
 [solitaire]: https://boardgamegeek.com/game/3940
 
+## Domino Runners
+Roland Siegers used an unusual mechanic in two board games:
+[Winkeladvokat (1986)][winkeladvokat] and [Cabale (1999)][cabale]. Each turn,
+your runner makes a V-shaped move, and drops a marker at the bend. I've played
+many games of Cabale, which uses a hexagonal grid. When I learned that
+Winkeladvokat uses the same mechanic on a square grid, I thought it would adapt
+well to play on a grid of dominoes.
+
+### Equipment
+* a set of dominoes from double blank to double six
+* ten checkers for each player, in different colours, that will fit on half a
+  domino
+* one runner for each player, in colours to match the checkers, they can be
+  pawns or a stack of two checkers
+* a neutral runner in a third colour (optional)
+
+### Start
+Shuffle all the dominoes face down, and then place them in a 7x8 grid of
+numbers, flipping them face up as you go.
+
+Randomly choose colours for the two players. The player with the darker colour
+starts, placing their runner on one end of any domino. The player with the
+lighter colour then has a choice: either place their runner somewhere else on
+the dominoes, or swap colours and force the other player to place the lighter
+runner. This means that if the first player makes too strong a first move, the
+second player can steal it.
+
+Here's an example starting position, where there are several fives and sixes
+protected by blanks or the edge of the board. The black player decided to line
+up with two of the fives, so the white player would choose to line up with a
+six instead of swapping colours. The little white pips show you what number is
+underneath each runner.
+
+    3|3 3|4 5|5 0|2
+    
+    4|1 2|1 1|0 2|4
+    
+    2|6 4|4 0|5 B|5
+    
+    5|2 5|1 0|4 0|0
+    
+    0|3 2|2 1|6 6|3
+    
+    6|W 6|4 5|6 1|1
+    
+    1|3 5|3 3|2 0|6
+    ---
+    B4W6
+
+### Play
+On each turn, move your runner in two parts: vertical then horizontal or
+horizontal then vertical. Each part must move at least one space across the
+board. Start by replacing your runner with the neutral runner, then move your
+runner as described. It cannot cross over another runner or any checkers. After
+moving the runner, place one of your checkers on the space where the runner
+changed direction. **Important:** you cannot place a checker on a blank space,
+so you cannot change direction on a blank space.
+
+Here's what the black player might do on the first move of the example game. The
+neutral runner is optional, and helps you see where you started your move. The
+black runner turned at the 5 and dropped a black checker, then moved up to the
+blank and stopped.
+
+    3|3 3|4 5|5 0|2
+    
+    4|1 2|1 1|B 2|4
+    
+    2|6 4|4 0|b N|5
+    
+    5|2 5|1 0|4 0|0
+    
+    0|3 2|2 1|6 6|3
+    
+    6|W 6|4 5|6 1|1
+    
+    1|3 5|3 3|2 0|6
+    ---
+    N4W6B0b5
+    arrows:(6,4)L1U1
+
+After placing the checker, you may use it to jump over one of your opponent's
+checkers, if the two checkers are right next to each other and there's an empty
+space on the other side. You may not jump diagonally, and you may not land on a
+blank space. You may continue jumping another checker after you land, with the
+same rules.
+
+Once you finish, your opponent takes a turn.
+
+After a few moves in the example game, the white player has left some checkers
+unprotected. You can see the neutral runner where the black runner started, and
+the corner where the black player dropped a checker. Then that checker jumped
+over the white checker on the four and then over the white checker on the three.
+Both the white checkers can now be removed by the black player.
+
+    3|3 3|4 5|5 0|2
+    
+    4|1 2|1 1|0 2|4
+    
+    2|6 4|4 0|5 4|5
+    
+    5|2 5|1 0|4 0|0
+    
+    0|3 2|2 1|6 6|3
+    
+    6|6 6|4 5|6 1|1
+    
+    1|3 5|3 3|2 0|6
+    ---
+    (0,6)b,(1,6)w,(3,6)w,(3,5)W,(4,3)B,(5,4)b,(7,5)b,(7,6)N
+    arrows:(2,6)L2,(4,6)L2,(7,6)L3D3
+
+### Winning
+The game ends in one of two ways: either both players place all their checkers,
+or a player can't make a legal move. If a player can't make a legal move, they
+lose. If both players have played all their checkers, look under the checkers,
+and add up all the covered numbers, then add one more point for every captured
+checker. The player with the most points wins.
+
+In the example game, the white player has made another mistake, and can't make
+a legal move. You might think that white could move one to the right and then
+down the empty column, but remember that you can't drop a checker on a blank.
+White loses the game, and it doesn't matter how many points are under the
+checkers.
+
+    3|3 3|4 5|5 0|2
+    
+    4|1 2|1 1|0 2|4
+    
+    2|6 4|4 0|5 4|5
+    
+    5|2 5|1 0|4 0|0
+    
+    0|3 2|2 1|6 6|3
+    
+    6|6 6|4 5|6 1|1
+    
+    1|3 5|3 3|2 0|6
+    ---
+    (0,6)b,(3,6)w,(4,5)b,(5,6)W,(5,4)b,(5,5)B,(7,5)b
+
+
+[winkeladvokat]: https://boardgamegeek.com/boardgame/2473/winkeladvokat
+[cabale]: https://boardgamegeek.com/boardgame/687/cabale
+
 ## Fujisan
 James Droscha is best known as the designer of the piecepack game system, and
 he designed Fujisan for the piecepack, then adapted it for dominoes and pawns in
@@ -1940,13 +2084,66 @@ a difference of 5. Those dominoes are 61, 50, and 55, so they are useful to keep
 in your hand. The double blank can also be played without changing the total, so
 it's useful to keep.
 
-## Dominosa
+## Classic Puzzles
+In the early twentieth century, Henry Ernest Dudeney published several
+collections of mathematical puzzles and games. They included a few domino
+puzzles where you had to lay out the dominoes in a given pattern to meet some
+goal. Unfortunately, they often require brute-force search to find the solution.
+Here, I've included similar puzzles from Creative Puzzles of the World, by
+Pieter van Delft. I chose ones where you can use deduction to reduce the search.
+Neighbouring ends don't have to match, unless the description says so. All the
+solutions are at the end.
+
+### Two Equal Lines
+A simple start using only the numbers from blank to two. Arrange them with
+matching ends so that the sum in each row is the same.
+
+    0|0 0|0 0|0
+    
+    
+    
+    0|0 0|0 0|0
+
+### Square of Six
+Arrange the same dominoes into a square, as shown. The sums along all four sides
+must match, but the ends don't have to match their neighbours.
+
+    0 0|0 0
+    -     -
+    0     0
+    
+    0     0
+    -     -
+    0 0|0 0
+
+### Rows and Columns
+Arrange the ten dominoes of the double-three set to form two rows of numbers.
+The numbers in each row must add up to the same row total, and the numbers in
+each column must add up to the same column total. The row total and the column
+total may be different. The dominoes can be in any combination of vertical and
+horizontal positions, this is one possibility:
+
+    0 0|0 0 0 0|0 0 0 0
+    -     - -     - - -
+    0 0|0 0 0 0|0 0 0 0
+
+### Twin Rectangles
+Arrange the same dominoes into two rectangles of five dominoes each, so that
+each of the eight sides add up to the same total.
+
+    0 0|0 0   0 0|0 0
+    -     -   -     -
+    0     0   0     0
+    
+    0|0 0|0   0|0 0|0
+
+### Dominosa
 The domino puzzle I most often see in books or online is called either Dominosa
 or Domino Solitaire. It was invented by O.S. Adler in 1874, and each problem
 starts with a grid of numbers, you have to lay out the dominoes so they match
 the numbers, without duplicated or missing dominoes.
 
-### Example
+#### Example
 Here's a small problem to start with.
 
     0 0 1
@@ -1999,23 +2196,23 @@ One thing I find interesting about this puzzle is that it's easier to solve with
 pencil and paper than with a set of dominoes. If you don't want to write in the
 book, you can photocopy the pages, or just write the numbers in a grid on paper.
 There's also a PDF version you can print out at
-[https://donkirkby.github.io/donimoes].
+[https://donkirkby.github.io/donimoes][pdf].
 
 If you like this style of puzzle, Reiner Knizia published some puzzles called
 [Domino Knobelspass][knizia] that are very similar to Dominosa.
 
 [np]: http://cs.stackexchange.com/q/16850/40884
-[https://donkirkby.github.io/donimoes]: https://donkirkby.github.io/donimoes/donimoes.pdf
+[pdf]: https://donkirkby.github.io/donimoes/donimoes.pdf
 [knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
 
-### Problem 1
+#### Problem 1
     2 2 1 2
            
     0 0 1 0
     
     1 2 0 1
 
-### Problem 2
+#### Problem 2
     0 1 0 1 3
     
     3 1 0 2 2
@@ -2024,7 +2221,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     2 3 1 0 2
 
-### Problem 3
+#### Problem 3
     3 0 1 1 0 4
     
     2 4 4 1 1 2
@@ -2035,7 +2232,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     3 0 2 1 3 0
 
-### Problem 4
+#### Problem 4
     0 2 1 1 2
     
     0 0 1 3 2
@@ -2044,7 +2241,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     3 3 1 2 2
 
-### Problem 5
+#### Problem 5
     3 4 0 1 1 2
     
     1 2 2 2 4 4
@@ -2055,7 +2252,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     0 0 3 3 1 3
 
-### Problem 6
+#### Problem 6
     1 2 3 3 0 3
     
     0 3 0 4 4 4
@@ -2066,7 +2263,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     2 2 1 0 0 1
 
-### Problem 7
+#### Problem 7
     2 5 0 0 2 4 3
     
     4 1 5 0 3 3 2
@@ -2079,7 +2276,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     3 3 1 2 3 5 4
 
-### Problem 8
+#### Problem 8
     3 5 0 1 3 4 5
     
     3 1 4 1 3 3 0
@@ -2092,7 +2289,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     3 0 1 5 1 2 4
 
-### Problem 9
+#### Problem 9
     1 2 4 2 3 4
     
     1 4 4 1 3 3
@@ -2103,7 +2300,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     2 4 0 1 0 2
 
-### Problem 10
+#### Problem 10
     1 2 4 2 3 1
     
     1 3 2 0 0 1
@@ -2114,7 +2311,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     0 2 4 0 3 1
 
-### Problem 11
+#### Problem 11
     5 1 3 2 3 1 1
     
     0 5 4 5 2 2 5
@@ -2127,7 +2324,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     5 1 5 2 0 0 1
 
-### Problem 12
+#### Problem 12
     3 4 3 3 1 5 2
     
     0 4 0 0 2 3 0
@@ -2140,7 +2337,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     4 4 1 2 0 1 1
 
-### Problem 13
+#### Problem 13
     6 0 6 4 1 3 4 5
     
     4 6 4 4 1 2 2 2
@@ -2155,7 +2352,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     1 5 5 4 0 1 1 4
 
-### Problem 14
+#### Problem 14
     1 5 6 2 2 2 6 2
     
     4 1 5 5 3 3 2 6
@@ -2170,7 +2367,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     0 5 5 1 1 6 2 4
 
-### Problem 15
+#### Problem 15
     0 0 1 3 1 1
     
     4 0 2 2 3 2
@@ -2181,7 +2378,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     0 0 1 1 2 1
 
-### Problem 16
+#### Problem 16
     2 3 2 2 3 3
     
     3 0 1 4 1 1
@@ -2192,7 +2389,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     0 4 4 1 3 0
 
-### Problem 17
+#### Problem 17
     0 2 3 1 2 5 5
     
     3 5 0 4 1 1 3
@@ -2205,7 +2402,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     1 5 3 4 0 1 2
 
-### Problem 18
+#### Problem 18
     3 4 0 5 2 3 3
     
     0 0 2 4 5 0 3
@@ -2218,7 +2415,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     1 5 1 4 2 0 1
 
-### Problem 19
+#### Problem 19
     2 3 4 4 1 3 2 5
     
     6 6 0 5 5 5 3 3
@@ -2233,7 +2430,7 @@ If you like this style of puzzle, Reiner Knizia published some puzzles called
     
     1 1 3 3 0 1 4 0
 
-### Problem 20
+#### Problem 20
     0 6 0 1 4 4 3 6
     
     2 6 6 0 5 2 6 3
@@ -2361,150 +2558,6 @@ If none of the other rules apply, guess at a domino's placement by marking a
 pair as joined.  If it later causes a contradiction, backtrack and mark it
 split. (This would be very frustrating when solving, so none of the problems in
 this collection require it.)
-
-## Domino Runners
-Roland Siegers used an unusual mechanic in two board games:
-[Winkeladvokat (1986)][winkeladvokat] and [Cabale (1999)][cabale]. Each turn,
-your runner makes a V-shaped move, and drops a marker at the bend. I've played
-many games of Cabale, which uses a hexagonal grid. When I learned that
-Winkeladvokat uses the same mechanic on a square grid, I thought it would adapt
-well to play on a grid of dominoes.
-
-### Equipment
-* a set of dominoes from double blank to double six
-* ten checkers for each player, in different colours, that will fit on half a
-  domino
-* one runner for each player, in colours to match the checkers, they can be
-  pawns or a stack of two checkers
-* a neutral runner in a third colour (optional)
-
-### Start
-Shuffle all the dominoes face down, and then place them in a 7x8 grid of
-numbers, flipping them face up as you go.
-
-Randomly choose colours for the two players. The player with the darker colour
-starts, placing their runner on one end of any domino. The player with the
-lighter colour then has a choice: either place their runner somewhere else on
-the dominoes, or swap colours and force the other player to place the lighter
-runner. This means that if the first player makes too strong a first move, the
-second player can steal it.
-
-Here's an example starting position, where there are several fives and sixes
-protected by blanks or the edge of the board. The black player decided to line
-up with two of the fives, so the white player would choose to line up with a
-six instead of swapping colours. The little white pips show you what number is
-underneath each runner.
-
-    3|3 3|4 5|5 0|2
-    
-    4|1 2|1 1|0 2|4
-    
-    2|6 4|4 0|5 B|5
-    
-    5|2 5|1 0|4 0|0
-    
-    0|3 2|2 1|6 6|3
-    
-    6|W 6|4 5|6 1|1
-    
-    1|3 5|3 3|2 0|6
-    ---
-    B4W6
-
-### Play
-On each turn, move your runner in two parts: vertical then horizontal or
-horizontal then vertical. Each part must move at least one space across the
-board. Start by replacing your runner with the neutral runner, then move your
-runner as described. It cannot cross over another runner or any checkers. After
-moving the runner, place one of your checkers on the space where the runner
-changed direction. **Important:** you cannot place a checker on a blank space,
-so you cannot change direction on a blank space.
-
-Here's what the black player might do on the first move of the example game. The
-neutral runner is optional, and helps you see where you started your move. The
-black runner turned at the 5 and dropped a black checker, then moved up to the
-blank and stopped.
-
-    3|3 3|4 5|5 0|2
-    
-    4|1 2|1 1|B 2|4
-    
-    2|6 4|4 0|b N|5
-    
-    5|2 5|1 0|4 0|0
-    
-    0|3 2|2 1|6 6|3
-    
-    6|W 6|4 5|6 1|1
-    
-    1|3 5|3 3|2 0|6
-    ---
-    N4W6B0b5
-    arrows:(6,4)L1U1
-
-After placing the checker, you may use it to jump over one of your opponent's
-checkers, if the two checkers are right next to each other and there's an empty
-space on the other side. You may not jump diagonally, and you may not land on a
-blank space. You may continue jumping another checker after you land, with the
-same rules.
-
-Once you finish, your opponent takes a turn.
-
-After a few moves in the example game, the white player has left some checkers
-unprotected. You can see the neutral runner where the black runner started, and
-the corner where the black player dropped a checker. Then that checker jumped
-over the white checker on the four and then over the white checker on the three.
-Both the white checkers can now be removed by the black player.
-
-    3|3 3|4 5|5 0|2
-    
-    4|1 2|1 1|0 2|4
-    
-    2|6 4|4 0|5 4|5
-    
-    5|2 5|1 0|4 0|0
-    
-    0|3 2|2 1|6 6|3
-    
-    6|6 6|4 5|6 1|1
-    
-    1|3 5|3 3|2 0|6
-    ---
-    (0,6)b,(1,6)w,(3,6)w,(3,5)W,(4,3)B,(5,4)b,(7,5)b,(7,6)N
-    arrows:(2,6)L2,(4,6)L2,(7,6)L3D3
-
-### Winning
-The game ends in one of two ways: either both players place all their checkers,
-or a player can't make a legal move. If a player can't make a legal move, they
-lose. If both players have played all their checkers, look under the checkers,
-and add up all the covered numbers, then add one more point for every captured
-checker. The player with the most points wins.
-
-In the example game, the white player has made another mistake, and can't make
-a legal move. You might think that white could move one to the right and then
-down the empty column, but remember that you can't drop a checker on a blank.
-White loses the game, and it doesn't matter how many points are under the
-checkers.
-
-    3|3 3|4 5|5 0|2
-    
-    4|1 2|1 1|0 2|4
-    
-    2|6 4|4 0|5 4|5
-    
-    5|2 5|1 0|4 0|0
-    
-    0|3 2|2 1|6 6|3
-    
-    6|6 6|4 5|6 1|1
-    
-    1|3 5|3 3|2 0|6
-    ---
-    (0,6)b,(3,6)w,(4,5)b,(5,6)W,(5,4)b,(5,5)B,(7,5)b
-
-
-[winkeladvokat]: https://boardgamegeek.com/boardgame/2473/winkeladvokat
-[cabale]: https://boardgamegeek.com/boardgame/687/cabale
 
 # Solutions
 ## Unmatched Donimoes Solutions ##
@@ -2818,15 +2871,44 @@ over two other pieces, meaning that it moves five spaces in total.
     PR5(+1), PD, ND, NR5(+2), NU, PU, RU, BL1(+3), BD, PD, PL2(+1), PU, BL2, RD,
     ND, NL4(+2), NU, RL4(+1)
 
-## Dominosa Solutions
-### Solution 1
+## Classic Puzzle Solutions
+### Two Equal Lines
+    0|0 0|2 2|2
+    
+    
+    
+    0|1 1|1 1|2
+
+### Square of Six
+    0 1|1 2
+    -     -
+    0     1
+    
+    2     1
+    -     -
+    2 2|0 0
+
+### Rows and Columns
+    0|0 3|2 1 3 2|2 2|0
+            - -
+    3|3 0|1 2 0 1|1 1|3
+
+### Twin Rectangles
+    3 0|0 3   2 1|1 2
+    -     -   -     -
+    0     3   2     1
+    
+    3|2 1|0   2|0 1|3
+
+### Dominosa
+#### Solution 1
     2|2 1 2
         - -
     0|0 1 0
     
     1|2 0|1
 
-### Solution 2
+#### Solution 2
     0|1 0 1|3
         -
     3 1 0 2|2
@@ -2835,7 +2917,7 @@ over two other pieces, meaning that it moves five spaces in total.
         -
     2|3 1 0|2
 
-### Solution 3
+#### Solution 3
     3 0|1 1 0|4
     -     -
     2 4|4 1 1|2
@@ -2846,7 +2928,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -         -
     3 0|2 1|3 0
 
-### Solution 4
+#### Solution 4
     0|2 1|1 2
             -
     0 0|1 3 2
@@ -2855,7 +2937,7 @@ over two other pieces, meaning that it moves five spaces in total.
             -
     3|3 1|2 2
 
-### Solution 5
+#### Solution 5
     3|4 0|1 1|2
     
     1 2 2|2 4|4
@@ -2866,7 +2948,7 @@ over two other pieces, meaning that it moves five spaces in total.
     
     0|0 3|3 1|3
 
-### Solution 6
+#### Solution 6
     1 2 3|3 0|3
     - -
     0 3 0 4|4 4
@@ -2877,7 +2959,7 @@ over two other pieces, meaning that it moves five spaces in total.
         -     -
     2|2 1 0|0 1
 
-### Solution 7
+#### Solution 7
     2|5 0|0 2|4 3
                 -
     4 1|5 0|3 3 2
@@ -2890,7 +2972,7 @@ over two other pieces, meaning that it moves five spaces in total.
                 -
     3|3 1|2 3|5 4
 
-### Solution 8
+#### Solution 8
     3|5 0|1 3|4 5
                 -
     3 1|4 1|3 3 0
@@ -2903,7 +2985,7 @@ over two other pieces, meaning that it moves five spaces in total.
         - -     -
     3|0 1 5 1|2 4
 
-### Solution 9
+#### Solution 9
     1|2 4 2|3 4
         -     -
     1|4 4 1 3 3
@@ -2914,7 +2996,7 @@ over two other pieces, meaning that it moves five spaces in total.
     
     2|4 0|1 0|2
 
-### Solution 10
+#### Solution 10
     1|2 4 2|3 1
         -     -
     1|3 2 0|0 1
@@ -2925,7 +3007,7 @@ over two other pieces, meaning that it moves five spaces in total.
         -     -
     0|2 4 0|3 1
 
-### Solution 11
+#### Solution 11
     5 1|3 2|3 1|1
     -
     0 5 4|5 2|2 5
@@ -2938,7 +3020,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -
     5 1|5 2|0 0|1
 
-### Solution 12
+#### Solution 12
     3|4 3|3 1|5 2
                 -
     0|4 0|0 2 3 0
@@ -2951,7 +3033,7 @@ over two other pieces, meaning that it moves five spaces in total.
             -
     4|4 1|2 0 1|1
 
-### Solution 13
+#### Solution 13
     6 0|6 4 1 3|4 5
     -     - -     -
     4 6 4 4 1 2|2 2
@@ -2966,7 +3048,7 @@ over two other pieces, meaning that it moves five spaces in total.
     
     1|5 5|4 0|1 1|4
 
-### Solution 14
+#### Solution 14
     1|5 6 2|2 2 6|2
         -     -
     4 1 5 5|3 3 2 6
@@ -2981,7 +3063,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -     -
     0 5|5 1 1|6 2|4
 
-### Solution 15
+#### Solution 15
     0|0 1|3 1|1
     
     4 0|2 2|3 2
@@ -2992,7 +3074,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -         -
     0 0|1 1|2 1
 
-### Solution 16
+#### Solution 16
     2|3 2|2 3|3
     
     3 0|1 4|1 1
@@ -3003,7 +3085,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -         -
     0 4|4 1|3 0
 
-### Solution 17
+#### Solution 17
     0|2 3 1|2 5|5
         -
     3|5 0 4 1|1 3
@@ -3016,7 +3098,7 @@ over two other pieces, meaning that it moves five spaces in total.
                 -
     1|5 3|4 0|1 2
 
-### Solution 18
+#### Solution 18
     3|4 0|5 2|3 3
                 -
     0 0|2 4|5 0 3
@@ -3029,7 +3111,7 @@ over two other pieces, meaning that it moves five spaces in total.
             -
     1|5 1|4 2 0|1
 
-### Solution 19
+#### Solution 19
     2|3 4|4 1|3 2|5
     
     6|6 0|5 5 5|3 3
@@ -3044,7 +3126,7 @@ over two other pieces, meaning that it moves five spaces in total.
             -     -
     1|1 3|3 0 1|4 0
 
-### Solution 20
+#### Solution 20
     0|6 0|1 4|4 3|6
     
     2|6 6 0|5 2 6 3

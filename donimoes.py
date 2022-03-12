@@ -315,7 +315,7 @@ def main():
                     image_width,
                     image_height,
                     state.text))
-            elif 'Dominosa' in headings:
+            elif '~' in state.text:
                 flowable = Diagram(
                     doc.width,
                     doc.height,
