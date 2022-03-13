@@ -24,7 +24,7 @@ class FooterCanvas(canvas.Canvas):
             bottom = self.previous_bottom = template.bottomMargin
 
         self.saveState()
-        self.setFont(self.font_name, 7 if self.is_booklet else 9)
+        self.setFont(self.font_name, 8 if self.is_booklet else 9)
         if self._pageNumber % 2:
             self.drawRightString(width-x, bottom, str(self._pageNumber))
         else:

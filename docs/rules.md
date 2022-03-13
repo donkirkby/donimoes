@@ -39,6 +39,10 @@ puzzles by other designers.
     by Sid Sackson where you have to lay out a map that you can hike on. I
     added a cooperative version, and adapted it from paper, pencil, and
     dice to use dominoes. (1-4 players, double-six dominoes)
+* [Domino Runners](#domino-runners) is based on board games by Roland
+    Siegers, where your runners run across a grid of dominoes, dropping
+    checkers and trying to capture your opponent's checkers. (2 players,
+    double-six dominoes, and checkers)
 * [Fujisan](#fujisan) is a solitaire game by James Droscha where you
     help four Shinto priests climb to the peak of Mount Fuji. I found 20
     layouts that are much more challenging than usual. (1 player,
@@ -48,13 +52,10 @@ puzzles by other designers.
 * [All Fives](#all-fives) is a traditional dominoes game, where you
     score points by making the ends add up to a multiple of five. (2-4
     players, double-six dominoes)
-* [Dominosa](#dominosa) is the classic domino puzzle by O.S. Adler
-    where you have to fit the set of dominoes onto a grid of numbers. (1
-    player, paper and pencil)
-* [Domino Runners](#domino-runners) is based on board games by Roland
-    Siegers, where your runners run across a grid of dominoes, dropping
-    checkers and trying to capture your opponent's checkers. (2 players,
-    double-six dominoes, and checkers)
+* [Classic Puzzles](#classic-puzzles) where you have to lay out
+    dominoes in a given pattern to meet some goal, popularized by Henry
+    Ernest Dudeney. Also includes Dominosa by O.S. Adler. (1 player,
+    double-six dominoes, paper and pencil)
 * [Solutions](#solutions)
 
 # Puzzles
@@ -799,6 +800,88 @@ rules as the cooperative version.
 
 [solitaire]: https://boardgamegeek.com/game/3940
 
+## Domino Runners
+Roland Siegers used an unusual mechanic in two board games:
+[Winkeladvokat (1986)][winkeladvokat] and [Cabale (1999)][cabale]. Each turn,
+your runner makes a V-shaped move, and drops a marker at the bend. I've played
+many games of Cabale, which uses a hexagonal grid. When I learned that
+Winkeladvokat uses the same mechanic on a square grid, I thought it would adapt
+well to play on a grid of dominoes.
+
+### Equipment
+* a set of dominoes from double blank to double six
+* ten checkers for each player, in different colours, that will fit on half a
+  domino
+* one runner for each player, in colours to match the checkers, they can be
+  pawns or a stack of two checkers
+* a neutral runner in a third colour (optional)
+
+### Start
+Shuffle all the dominoes face down, and then place them in a 7x8 grid of
+numbers, flipping them face up as you go.
+
+Randomly choose colours for the two players. The player with the darker colour
+starts, placing their runner on one end of any domino. The player with the
+lighter colour then has a choice: either place their runner somewhere else on
+the dominoes, or swap colours and force the other player to place the lighter
+runner. This means that if the first player makes too strong a first move, the
+second player can steal it.
+
+Here's an example starting position, where there are several fives and sixes
+protected by blanks or the edge of the board. The black player decided to line
+up with two of the fives, so the white player would choose to line up with a
+six instead of swapping colours. The little white pips show you what number is
+underneath each runner.
+
+![Diagram](images/rules/diagram101.png)
+
+### Play
+On each turn, move your runner in two parts: vertical then horizontal or
+horizontal then vertical. Each part must move at least one space across the
+board. Start by replacing your runner with the neutral runner, then move your
+runner as described. It cannot cross over another runner or any checkers. After
+moving the runner, place one of your checkers on the space where the runner
+changed direction. **Important:** you cannot place a checker on a blank space,
+so you cannot change direction on a blank space.
+
+Here's what the black player might do on the first move of the example game. The
+neutral runner is optional, and helps you see where you started your move. The
+black runner turned at the 5 and dropped a black checker, then moved up to the
+blank and stopped.
+
+![Diagram](images/rules/diagram102.png)
+
+After placing the checker, you may use it to jump over one of your opponent's
+checkers, if the two checkers are right next to each other and there's an empty
+space on the other side. You may not jump diagonally, and you may not land on a
+blank space. You may continue jumping another checker after you land, with the
+same rules.
+
+Once you finish, your opponent takes a turn.
+
+After a few moves in the example game, the white player has left some checkers
+unprotected. You can see the neutral runner where the black runner started, and
+the corner where the black player dropped a checker. Then that checker jumped
+over the white checker on the four and then over the white checker on the three.
+Both the white checkers can now be removed by the black player.
+
+![Diagram](images/rules/diagram103.png)
+
+### Winning
+The game ends in one of two ways: either both players place all their checkers,
+or a player can't make a legal move. If a player can't make a legal move, they
+lose. If both players have played all their checkers, look under the checkers,
+and add up all the covered numbers, then add one more point for every captured
+checker. The player with the most points wins.
+
+In the example game, the white player has made another mistake, and can't make
+a legal move. You might think that white could move one to the right and then
+down the empty column, but remember that you can't drop a checker on a blank.
+White loses the game, and it doesn't matter how many points are under the
+checkers.
+
+![Diagram](images/rules/diagram104.png)
+
 ## Fujisan
 James Droscha is best known as the designer of the piecepack game system, and
 he designed Fujisan for the piecepack, then adapted it for dominoes and pawns in
@@ -816,7 +899,7 @@ twelve face-up dominoes side by side. Leave the three remaining dominoes face
 down, and use them to lift up the two middle dominoes as the peak of Mount Fuji.
 Here's an example layout:
 
-![Diagram](images/rules/diagram101.png)
+![Diagram](images/rules/diagram105.png)
 
 Place a Priest (pawn) beside each number at both ends of the mountain.
 
@@ -859,64 +942,64 @@ length was 14, with half of them between 12 and 16. Here are some more
 challenging problems for you to try. The solutions are listed at the end.
 
 #### Problem 1
-![Diagram](images/rules/diagram102.png)
-
-#### Problem 2
-![Diagram](images/rules/diagram103.png)
-
-#### Problem 3
-![Diagram](images/rules/diagram104.png)
-
-#### Problem 4
-![Diagram](images/rules/diagram105.png)
-
-#### Problem 5
 ![Diagram](images/rules/diagram106.png)
 
-#### Problem 6
+#### Problem 2
 ![Diagram](images/rules/diagram107.png)
 
-#### Problem 7
+#### Problem 3
 ![Diagram](images/rules/diagram108.png)
 
-#### Problem 8
+#### Problem 4
 ![Diagram](images/rules/diagram109.png)
 
-#### Problem 9
+#### Problem 5
 ![Diagram](images/rules/diagram110.png)
 
-#### Problem 10
+#### Problem 6
 ![Diagram](images/rules/diagram111.png)
 
-#### Problem 11
+#### Problem 7
 ![Diagram](images/rules/diagram112.png)
 
-#### Problem 12
+#### Problem 8
 ![Diagram](images/rules/diagram113.png)
 
-#### Problem 13
+#### Problem 9
 ![Diagram](images/rules/diagram114.png)
 
-#### Problem 14
+#### Problem 10
 ![Diagram](images/rules/diagram115.png)
 
-#### Problem 15
+#### Problem 11
 ![Diagram](images/rules/diagram116.png)
 
-#### Problem 16
+#### Problem 12
 ![Diagram](images/rules/diagram117.png)
 
-#### Problem 17
+#### Problem 13
 ![Diagram](images/rules/diagram118.png)
 
-#### Problem 18
+#### Problem 14
 ![Diagram](images/rules/diagram119.png)
 
-#### Problem 19
+#### Problem 15
 ![Diagram](images/rules/diagram120.png)
 
-#### Problem 20
+#### Problem 16
 ![Diagram](images/rules/diagram121.png)
+
+#### Problem 17
+![Diagram](images/rules/diagram122.png)
+
+#### Problem 18
+![Diagram](images/rules/diagram123.png)
+
+#### Problem 19
+![Diagram](images/rules/diagram124.png)
+
+#### Problem 20
+![Diagram](images/rules/diagram125.png)
 
 ## Cobra Paw
 Derek Weston is a new game designer who designed this cute quick-reaction game
@@ -981,18 +1064,18 @@ On your turn, you must play a domino with a matching number. In this example,
 the 24 domino has just been played. It's a valid move, because its 2 matches the
 2 on the open end.
 
-![Diagram](images/rules/diagram122.png)
+![Diagram](images/rules/diagram126.png)
 
 This example is not valid, because the 4 is played against a number that doesn't
 match.
 
-![Diagram](images/rules/diagram123.png)
+![Diagram](images/rules/diagram127.png)
 
 Dominoes must either be played against an end of the line, or against the sniff.
 (The sniff is explained below in the rules for doubles.) This example is not
 valid, because the 34 domino wasn't played against one of the ends.
 
-![Diagram](images/rules/diagram124.png)
+![Diagram](images/rules/diagram128.png)
 
 ### Draw
 You may draw extra dominoes before you play one, to give you more options. If
@@ -1004,14 +1087,14 @@ play any, then pass your turn.
 There are special rules for doubles, and there are extra special rules for the
 first double. Most doubles have to be played across the line, like this:
 
-![Diagram](images/rules/diagram125.png)
+![Diagram](images/rules/diagram129.png)
 
 Whichever double gets played first is called the sniff, and it has some
 differences from the other doubles. You can play against all four sides of the
 sniff, so if the 22 domino is the sniff, then a 24 domino could be played on
 the 22 domino, but not on the 44 domino.
 
-![Diagram](images/rules/diagram126.png)
+![Diagram](images/rules/diagram130.png)
 
 The other difference with the sniff is that doesn't have to be played across the
 line, you can choose which way to play it. That can make a difference to the
@@ -1022,40 +1105,40 @@ After playing a domino, add up the numbers on the ends. If the total is a
 multiple of 5, then add it to your score. This example adds up to 5, and scores
 5 points.
 
-![Diagram](images/rules/diagram127.png)
+![Diagram](images/rules/diagram131.png)
 
 The next player adds a 63 domino, and the total is 8, no score. You don't count
 the 3's, because they're not on the ends.
 
-![Diagram](images/rules/diagram128.png)
+![Diagram](images/rules/diagram132.png)
 
 Now the first double gets played (the sniff). It's played across the line, so
 you count both numbers, and the total is 10. Score 10 points!
 
-![Diagram](images/rules/diagram129.png)
+![Diagram](images/rules/diagram133.png)
 
 A few turns later, a second double is played. It has to be played across the
 line, so you count both numbers. The sniff's ends are still open to play on, so
 you count them, and the total is 18. No score.
 
-![Diagram](images/rules/diagram130.png)
+![Diagram](images/rules/diagram134.png)
 
 The next play is on the regular double, so we stop counting it. The total is
 6 + 2 + 2 + 0 = 10. Score 10 points.
 
-![Diagram](images/rules/diagram131.png)
+![Diagram](images/rules/diagram135.png)
 
 Don't forget you can play off the sniff. Now the total is 6 + 2 + 1 + 0 = 9. No
 score.
 
-![Diagram](images/rules/diagram132.png)
+![Diagram](images/rules/diagram136.png)
 
 Here's an example where the sniff should be played in line instead of across
 the line. Playing across the line would make a total of 14, but playing in line
 makes 10 and scores. Don't forget, you can still play off all four sides of the
 sniff.
 
-![Diagram](images/rules/diagram133.png)
+![Diagram](images/rules/diagram137.png)
 
 Always keep track of which ends need to be counted: there can be 2, 3, or 4. If
 you run out of room on the table, you can bend a line of dominoes around a
@@ -1083,7 +1166,7 @@ your dominoes. If the current total is 7, then you can score by raising the
 total by 3 or dropping it by 2. In this example, the difference between 3 and
 6 is 3, so playing it changes the total from 7 to 10.
 
-![Diagram](images/rules/diagram134.png)
+![Diagram](images/rules/diagram138.png)
 
 Particularly in a two-player game, there is a painful rhythm where your opponent
 repeatedly scores and you can't. The key to breaking out of that rhythm is to be
@@ -1092,40 +1175,85 @@ a difference of 5. Those dominoes are 61, 50, and 55, so they are useful to keep
 in your hand. The double blank can also be played without changing the total, so
 it's useful to keep.
 
-## Dominosa
+## Classic Puzzles
+In the early twentieth century, Henry Ernest Dudeney published several
+collections of mathematical puzzles and games. They included a few domino
+puzzles where you had to lay out the dominoes in a given pattern to meet some
+goal. Unfortunately, they often require brute-force search to find the solution.
+Here, I've included similar puzzles from Creative Puzzles of the World, by
+Pieter van Delft. I chose ones where you can use deduction to reduce the search.
+Neighbouring ends don't have to match, unless the description says so. All the
+solutions are at the end.
+
+### Two Equal Lines
+A simple start using only the numbers from blank to two. Arrange them with
+matching ends so that the sum in each row is the same.
+
+![Diagram](images/rules/diagram139.png)
+
+### Square of Six
+Arrange the same dominoes into a square, as shown. The sums along all four sides
+must match, but the ends don't have to match their neighbours.
+
+![Diagram](images/rules/diagram140.png)
+
+### Rows and Columns
+Arrange the ten dominoes of the double-three set to form two rows of numbers.
+The numbers in each row must add up to the same row total, and the numbers in
+each column must add up to the same column total. The row total and the column
+total may be different. The dominoes can be in any combination of vertical and
+horizontal positions, this is one possibility:
+
+![Diagram](images/rules/diagram141.png)
+
+### Twin Rectangles
+Arrange the same dominoes into two rectangles of five dominoes each, so that
+each of the eight sides add up to the same total.
+
+![Diagram](images/rules/diagram142.png)
+
+### The Latin Square
+A bit like a Sudoku, arrange 18 of the double-six dominoes into a six by six
+square of numbers with no duplicated numbers in any row or column. This example
+doesn't work, because it has two number ones in the left column and two number
+fives in the bottom row, among other problems.
+
+![Diagram](images/rules/diagram143.png)
+
+### Dominosa
 The domino puzzle I most often see in books or online is called either Dominosa
 or Domino Solitaire. It was invented by O.S. Adler in 1874, and each problem
 starts with a grid of numbers, you have to lay out the dominoes so they match
 the numbers, without duplicated or missing dominoes.
 
-### Example
+#### Example
 Here's a small problem to start with.
 
-![Diagram](images/rules/diagram135.png)
+![Diagram](images/rules/diagram144.png)
 
 Every problem uses a complete set of dominoes up to the highest number you see.
 In this small problem, the highest number is one, so there are three dominoes:
 
-![Diagram](images/rules/diagram136.png)
+![Diagram](images/rules/diagram145.png)
 
 When you start solving, most dominoes will usually have more than one place they
 could go. For example, the blank/one domino could go in a few different places,
 including these three:
 
-![Diagram](images/rules/diagram137.png)
+![Diagram](images/rules/diagram146.png)
 
 However, some dominoes will only have one possible place, like the double blank:
 
-![Diagram](images/rules/diagram138.png)
+![Diagram](images/rules/diagram147.png)
 
 Once you've placed a domino, check to see if it forces any other dominoes. In
 this case, the top right corner only has one space it can connect to:
 
-![Diagram](images/rules/diagram139.png)
+![Diagram](images/rules/diagram148.png)
 
 That makes the final domino obvious, and the solution looks like this:
 
-![Diagram](images/rules/diagram140.png)
+![Diagram](images/rules/diagram149.png)
 
 I took a long time to add this puzzle to the
 collection, because I found it tedious to keep searching for unique numbers.
@@ -1139,74 +1267,74 @@ One thing I find interesting about this puzzle is that it's easier to solve with
 pencil and paper than with a set of dominoes. If you don't want to write in the
 book, you can photocopy the pages, or just write the numbers in a grid on paper.
 There's also a PDF version you can print out at
-[https://donkirkby.github.io/donimoes].
+[https://donkirkby.github.io/donimoes][pdf].
 
 If you like this style of puzzle, Reiner Knizia published some puzzles called
 [Domino Knobelspass][knizia] that are very similar to Dominosa.
 
 [np]: http://cs.stackexchange.com/q/16850/40884
-[https://donkirkby.github.io/donimoes]: https://donkirkby.github.io/donimoes/donimoes.pdf
+[pdf]: https://donkirkby.github.io/donimoes/donimoes.pdf
 [knizia]: https://boardgamegeek.com/boardgame/36738/domino-knobelspass
 
-### Problem 1
-![Diagram](images/rules/diagram141.png)
-
-### Problem 2
-![Diagram](images/rules/diagram142.png)
-
-### Problem 3
-![Diagram](images/rules/diagram143.png)
-
-### Problem 4
-![Diagram](images/rules/diagram144.png)
-
-### Problem 5
-![Diagram](images/rules/diagram145.png)
-
-### Problem 6
-![Diagram](images/rules/diagram146.png)
-
-### Problem 7
-![Diagram](images/rules/diagram147.png)
-
-### Problem 8
-![Diagram](images/rules/diagram148.png)
-
-### Problem 9
-![Diagram](images/rules/diagram149.png)
-
-### Problem 10
+#### Problem 1
 ![Diagram](images/rules/diagram150.png)
 
-### Problem 11
+#### Problem 2
 ![Diagram](images/rules/diagram151.png)
 
-### Problem 12
+#### Problem 3
 ![Diagram](images/rules/diagram152.png)
 
-### Problem 13
+#### Problem 4
 ![Diagram](images/rules/diagram153.png)
 
-### Problem 14
+#### Problem 5
 ![Diagram](images/rules/diagram154.png)
 
-### Problem 15
+#### Problem 6
 ![Diagram](images/rules/diagram155.png)
 
-### Problem 16
+#### Problem 7
 ![Diagram](images/rules/diagram156.png)
 
-### Problem 17
+#### Problem 8
 ![Diagram](images/rules/diagram157.png)
 
-### Problem 18
+#### Problem 9
 ![Diagram](images/rules/diagram158.png)
 
-### Problem 19
+#### Problem 10
 ![Diagram](images/rules/diagram159.png)
 
-### Problem 20
+#### Problem 11
 ![Diagram](images/rules/diagram160.png)
+
+#### Problem 12
+![Diagram](images/rules/diagram161.png)
+
+#### Problem 13
+![Diagram](images/rules/diagram162.png)
+
+#### Problem 14
+![Diagram](images/rules/diagram163.png)
+
+#### Problem 15
+![Diagram](images/rules/diagram164.png)
+
+#### Problem 16
+![Diagram](images/rules/diagram165.png)
+
+#### Problem 17
+![Diagram](images/rules/diagram166.png)
+
+#### Problem 18
+![Diagram](images/rules/diagram167.png)
+
+#### Problem 19
+![Diagram](images/rules/diagram168.png)
+
+#### Problem 20
+![Diagram](images/rules/diagram169.png)
 
 ### Dominosa Strategy
 There are several methods to deduce where the dominoes must be placed, and it's
@@ -1222,14 +1350,14 @@ rules, and the diagram on the right shows the next step that uses that section's
 rule.
 
 #### Rule 1: One Neighbour
-![Diagram](images/rules/diagram161.png)
+![Diagram](images/rules/diagram170.png)
 
 Look for a number that only has one neighbour, and join it with its neighbour.
 Particularly check near the last pair you joined. In this example, the top right
 corner only has one neighbour.
 
 #### Rule 2: Newly Joined
-![Diagram](images/rules/diagram162.png)
+![Diagram](images/rules/diagram171.png)
 
 If you have a newly joined pair of numbers, check if the same pair appears
 elsewhere. Split the other locations, because you can't have two dominoes
@@ -1242,7 +1370,7 @@ that is to draw the boundary between the dominoes there. Fill in the gap between
 the two grey lines.
 
 #### Rule 3: Newly Split
-![Diagram](images/rules/diagram163.png)
+![Diagram](images/rules/diagram172.png)
 
 If you have a newly split pair of numbers, look for the same pair elsewhere
 on the board to see if there is only one pair like them. If so, join them. In
@@ -1253,7 +1381,7 @@ is only one pair like that left. In fact, the only one/blank pair left is in the
 bottom left corner, so you can join them.
 
 #### Rule 4: Duplicate Neighbours
-![Diagram](images/rules/diagram164.png)
+![Diagram](images/rules/diagram173.png)
 
 If all of a space's available neighbours are the same, you know it will join
 one of them and use up the domino with those two numbers. Look for the same pair
@@ -1264,7 +1392,7 @@ Therefore, you can split the two and one in the bottom right corner, as well as
 several other two/one pairs.
 
 #### Rule 5: Shared Space
-![Diagram](images/rules/diagram165.png)
+![Diagram](images/rules/diagram174.png)
 
 If a pair of numbers appears more than once on the board, but all of the pairs
 share one space, then you know that space must join to the other number. Mark
@@ -1274,7 +1402,7 @@ both use the middle two, so you know it won't join to the blank below or the one
 above, and you can mark those as split.
 
 #### Rule 6: Unique Pairs
-![Diagram](images/rules/diagram166.png)
+![Diagram](images/rules/diagram175.png)
 
 Look for unique pairs of numbers, and mark them as joined. (This is the tedious
 part, so I try to only require it a few times in each problem.) In this example,
@@ -1283,7 +1411,7 @@ you can join them. All problems will start solving with this rule or rule 4, but
 once you've started solving, it's faster to try the other rules before this one.
 
 #### Rule 7: Neck
-![Diagram](images/rules/diagram167.png)
+![Diagram](images/rules/diagram176.png)
 
 If two unsolved areas are joined by a narrow neck, you know that both areas must
 have an even number of spaces in them. That will tell you where you can split or
@@ -1295,88 +1423,6 @@ If none of the other rules apply, guess at a domino's placement by marking a
 pair as joined.  If it later causes a contradiction, backtrack and mark it
 split. (This would be very frustrating when solving, so none of the problems in
 this collection require it.)
-
-## Domino Runners
-Roland Siegers used an unusual mechanic in two board games:
-[Winkeladvokat (1986)][winkeladvokat] and [Cabale (1999)][cabale]. Each turn,
-your runner makes a V-shaped move, and drops a marker at the bend. I've played
-many games of Cabale, which uses a hexagonal grid. When I learned that
-Winkeladvokat uses the same mechanic on a square grid, I thought it would adapt
-well to play on a grid of dominoes.
-
-### Equipment
-* a set of dominoes from double blank to double six
-* ten checkers for each player, in different colours, that will fit on half a
-  domino
-* one runner for each player, in colours to match the checkers, they can be
-  pawns or a stack of two checkers
-* a neutral runner in a third colour (optional)
-
-### Start
-Shuffle all the dominoes face down, and then place them in a 7x8 grid of
-numbers, flipping them face up as you go.
-
-Randomly choose colours for the two players. The player with the darker colour
-starts, placing their runner on one end of any domino. The player with the
-lighter colour then has a choice: either place their runner somewhere else on
-the dominoes, or swap colours and force the other player to place the lighter
-runner. This means that if the first player makes too strong a first move, the
-second player can steal it.
-
-Here's an example starting position, where there are several fives and sixes
-protected by blanks or the edge of the board. The black player decided to line
-up with two of the fives, so the white player would choose to line up with a
-six instead of swapping colours. The little white pips show you what number is
-underneath each runner.
-
-![Diagram](images/rules/diagram168.png)
-
-### Play
-On each turn, move your runner in two parts: vertical then horizontal or
-horizontal then vertical. Each part must move at least one space across the
-board. Start by replacing your runner with the neutral runner, then move your
-runner as described. It cannot cross over another runner or any checkers. After
-moving the runner, place one of your checkers on the space where the runner
-changed direction. **Important:** you cannot place a checker on a blank space,
-so you cannot change direction on a blank space.
-
-Here's what the black player might do on the first move of the example game. The
-neutral runner is optional, and helps you see where you started your move. The
-black runner turned at the 5 and dropped a black checker, then moved up to the
-blank and stopped.
-
-![Diagram](images/rules/diagram169.png)
-
-After placing the checker, you may use it to jump over one of your opponent's
-checkers, if the two checkers are right next to each other and there's an empty
-space on the other side. You may not jump diagonally, and you may not land on a
-blank space. You may continue jumping another checker after you land, with the
-same rules.
-
-Once you finish, your opponent takes a turn.
-
-After a few moves in the example game, the white player has left some checkers
-unprotected. You can see the neutral runner where the black runner started, and
-the corner where the black player dropped a checker. Then that checker jumped
-over the white checker on the four and then over the white checker on the three.
-Both the white checkers can now be removed by the black player.
-
-![Diagram](images/rules/diagram170.png)
-
-### Winning
-The game ends in one of two ways: either both players place all their checkers,
-or a player can't make a legal move. If a player can't make a legal move, they
-lose. If both players have played all their checkers, look under the checkers,
-and add up all the covered numbers, then add one more point for every captured
-checker. The player with the most points wins.
-
-In the example game, the white player has made another mistake, and can't make
-a legal move. You might think that white could move one to the right and then
-down the empty column, but remember that you can't drop a checker on a blank.
-White loses the game, and it doesn't matter how many points are under the
-checkers.
-
-![Diagram](images/rules/diagram171.png)
 
 # Solutions
 ## Unmatched Donimoes Solutions ##
@@ -1690,66 +1736,82 @@ over two other pieces, meaning that it moves five spaces in total.
     PR5(+1), PD, ND, NR5(+2), NU, PU, RU, BL1(+3), BD, PD, PL2(+1), PU, BL2, RD,
     ND, NL4(+2), NU, RL4(+1)
 
-## Dominosa Solutions
-### Solution 1
-![Diagram](images/rules/diagram172.png)
-
-### Solution 2
-![Diagram](images/rules/diagram173.png)
-
-### Solution 3
-![Diagram](images/rules/diagram174.png)
-
-### Solution 4
-![Diagram](images/rules/diagram175.png)
-
-### Solution 5
-![Diagram](images/rules/diagram176.png)
-
-### Solution 6
+## Classic Puzzle Solutions
+### Two Equal Lines
 ![Diagram](images/rules/diagram177.png)
 
-### Solution 7
+### Square of Six
 ![Diagram](images/rules/diagram178.png)
 
-### Solution 8
+### Rows and Columns
 ![Diagram](images/rules/diagram179.png)
 
-### Solution 9
+### Twin Rectangles
 ![Diagram](images/rules/diagram180.png)
 
-### Solution 10
+### The Latin Square
 ![Diagram](images/rules/diagram181.png)
 
-### Solution 11
+### Dominosa
+#### Solution 1
 ![Diagram](images/rules/diagram182.png)
 
-### Solution 12
+#### Solution 2
 ![Diagram](images/rules/diagram183.png)
 
-### Solution 13
+#### Solution 3
 ![Diagram](images/rules/diagram184.png)
 
-### Solution 14
+#### Solution 4
 ![Diagram](images/rules/diagram185.png)
 
-### Solution 15
+#### Solution 5
 ![Diagram](images/rules/diagram186.png)
 
-### Solution 16
+#### Solution 6
 ![Diagram](images/rules/diagram187.png)
 
-### Solution 17
+#### Solution 7
 ![Diagram](images/rules/diagram188.png)
 
-### Solution 18
+#### Solution 8
 ![Diagram](images/rules/diagram189.png)
 
-### Solution 19
+#### Solution 9
 ![Diagram](images/rules/diagram190.png)
 
-### Solution 20
+#### Solution 10
 ![Diagram](images/rules/diagram191.png)
+
+#### Solution 11
+![Diagram](images/rules/diagram192.png)
+
+#### Solution 12
+![Diagram](images/rules/diagram193.png)
+
+#### Solution 13
+![Diagram](images/rules/diagram194.png)
+
+#### Solution 14
+![Diagram](images/rules/diagram195.png)
+
+#### Solution 15
+![Diagram](images/rules/diagram196.png)
+
+#### Solution 16
+![Diagram](images/rules/diagram197.png)
+
+#### Solution 17
+![Diagram](images/rules/diagram198.png)
+
+#### Solution 18
+![Diagram](images/rules/diagram199.png)
+
+#### Solution 19
+![Diagram](images/rules/diagram200.png)
+
+#### Solution 20
+![Diagram](images/rules/diagram201.png)
 
 # Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at
@@ -1760,3 +1822,8 @@ Domino Finder are original puzzles and games designed by [Don Kirkby][don].
 
 [github]: https://donkirkby.github.io/donimoes
 [don]: https://donkirkby.github.io/
+
+[![cc-logo]][cc-by-sa]
+
+[cc-logo]: images/cc-by-sa.png
+[cc-by-sa]: https://creativecommons.org/licenses/by-sa/4.0/

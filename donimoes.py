@@ -6,10 +6,11 @@ from functools import partial
 from logging import getLogger, basicConfig
 from pathlib import Path
 from subprocess import call
-from textwrap import wrap
+from textwrap import wrap, dedent
 
 # noinspection PyPackageRequirements
 from PIL import Image
+from reportlab.graphics.shapes import Image as ReportLabImage, Drawing
 from reportlab.lib import pagesizes
 from reportlab.lib.enums import TA_CENTER
 from reportlab.platypus import SimpleDocTemplate, Paragraph, PageBreak
@@ -278,6 +279,15 @@ def main():
                                       leftIndent=20,
                                       firstLineIndent=-10,
                                       leading=16)]
+    cc_aspect = 88 / 31
+    cc_width = page_size[0] * 0.1
+    padding = 6
+    cc_height = cc_width / cc_aspect
+    cc_drawing = Drawing(doc.width, cc_height * 2)
+    cc_drawing.add(ReportLabImage(
+        (doc.width - cc_width) / 2 - padding, 0,
+        cc_width, cc_height,
+        'docs/images/cc-by-sa.png'))
     for state in states:
         if state.style == Styles.Metadata:
             doc.title = state.text
@@ -299,11 +309,15 @@ def main():
                                                 fontName='Raleway-Italic')
                 story.append(Paragraph(subtitle_text, subtitle_style))
             if args.booklet:
-                story.append(Spacer(0, page_size[1]*0.2))
+                story.append(Spacer(0, page_size[1]*0.15))
                 author_style = ParagraphStyle('Author',
                                               parent=paragraph_style,
                                               alignment=TA_CENTER)
                 story.append(Paragraph('Don Kirkby', author_style))
+                story.append(Spacer(0, page_size[1]*0.15))
+                story.append(Paragraph('978-1-4583-8566-6', author_style))
+                story.append(Paragraph('Imprint: Lulu.com', author_style))
+                story.append(cc_drawing)
                 story.append(PageBreak())
             continue
         elif state.style == Styles.Diagram:
@@ -400,12 +414,21 @@ def main():
                              first_bullet,
                              bulleted_list_style,
                              numbered_list_style)
+    if not args.booklet:
+        story.append(cc_drawing)
     doc.multiBuild(story, canvasmaker=partial(FooterCanvas,
                                               font_name='Raleway',
                                               is_booklet=args.booklet))
     with merged_path.open('w') as merged_file:
         for state in states:
             state.write_markdown(merged_file)
+        merged_file.write(dedent('''\
+            
+            [![cc-logo]][cc-by-sa]
+            
+            [cc-logo]: images/cc-by-sa.png
+            [cc-by-sa]: https://creativecommons.org/licenses/by-sa/4.0/
+            '''))
 
     logger.info('Done.')
     call(["evince", pdf_path])

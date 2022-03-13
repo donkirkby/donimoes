@@ -5,21 +5,23 @@ from reportlab.graphics.shapes import Drawing, Rect, Image, String, Group
 from reportlab.lib.colors import Color
 from reportlab.lib.pagesizes import inch
 from space_tracer import LivePillowImage
+# noinspection PyPackageRequirements
 import PIL.Image
+from svglib.svglib import svg2rlg
 
 from font_set import register_fonts
 
 
 class Cover:
     def __init__(self):
-        self.total_width = 9.031 * inch
+        self.total_width = 9.046 * inch
         self.total_height = 7.125 * inch
-        self.spine = 0.281 * inch
+        self.spine = 0.296 * inch
         self.margin = 0.5 * inch
         self.bleed = 0.125 * inch
 
     def draw(self) -> Drawing:
-        register_fonts()
+        register_fonts(include_courier=True)
         drawing = Drawing(self.total_width, self.total_height)
         cover_left = (self.total_width + self.spine) / 2
         cover_width = (self.total_width - self.spine) / 2
@@ -105,21 +107,36 @@ class Cover:
                                fillColor=Color(0.85, 0.85, 0.85),
                                textAnchor='start'))
 
-        spine_group = Group(String(-self.margin - self.bleed, self.total_width / 2 - self.spine / 4,
+        spine_group = Group(String(-self.margin - self.bleed, self.total_width / 2 - self.spine / 5,
                                    'Don Kirkby',
                                    fontName='Raleway',
-                                   fontSize=self.total_height / 35,
+                                   fontSize=self.total_height / 40,
                                    fillColor=Color(0.85, 0.85, 0.85),
                                    textAnchor='end'),
-                            String(-self.total_height/2, self.total_width / 2 - self.spine / 4,
+                            String(-self.total_height/2, self.total_width / 2 - self.spine / 5,
                                    'Donimoes',
                                    fontName='Raleway',
-                                   fontSize=self.total_height / 35,
+                                   fontSize=self.total_height / 40,
                                    fillColor=Color(0.85, 0.85, 0.85),
                                    textAnchor='middle')
                             )
         spine_group.rotate(-90)
         drawing.add(spine_group)
+
+        isbn = svg2rlg('cover/isbn.svg')
+        isbn_frame_width = isbn.width*1.2
+        isbn_frame_height = isbn.height*1.4
+        drawing.add(Rect((self.total_width-self.spine)/2 -
+                         self.margin-isbn_frame_width,
+                         self.bleed+self.margin,
+                         isbn_frame_width,
+                         isbn_frame_height,
+                         fillColor=Color(1, 1, 1),
+                         strokeColor=None))
+        isbn.translate((self.total_width-self.spine)/2-self.margin -
+                       (isbn.width+isbn_frame_width)/2,
+                       self.bleed+self.margin+(isbn_frame_height-isbn.height)/2)
+        drawing.add(isbn)
 
         return drawing
 
@@ -159,13 +176,24 @@ class Cover:
                          fillColor=Color(0, .5, 0),
                          strokeColor=None))
 
+        # spine wiggle
+        wiggle = 0.125*inch/2
+        drawing.add(Rect((self.total_width-self.spine)/2, 0,
+                         wiggle, self.total_height,
+                         fillColor=Color(.5, 0, .5),
+                         strokeColor=None))
+        drawing.add(Rect((self.total_width+self.spine)/2-wiggle, 0,
+                         wiggle, self.total_height,
+                         fillColor=Color(.5, 0, .5),
+                         strokeColor=None))
+
         # bar code
         bar_width = 3.622*inch
         bar_height = 1.26*inch
         drawing.add(Rect((self.total_width-self.spine)/2-self.margin-bar_width,
                          self.margin+self.bleed,
                          bar_width, bar_height,
-                         fillColor=Color(1, 1, 1),
+                         fillColor=Color(.8, .8, .8),
                          strokeColor=None))
 
 

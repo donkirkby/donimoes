@@ -280,3 +280,8 @@ The top left corner is 11, one space to the right is 21, and one space below is 
 Donimoes is an original puzzle designed by [Don Kirkby][don].
 
 [don]: https://donkirkby.github.com/
+
+[![cc-logo]][cc-by-sa]
+
+[cc-logo]: images/cc-by-sa.png
+[cc-by-sa]: https://creativecommons.org/licenses/by-sa/4.0/

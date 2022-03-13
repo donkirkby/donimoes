@@ -2137,6 +2137,24 @@ each of the eight sides add up to the same total.
     
     0|0 0|0   0|0 0|0
 
+### The Latin Square
+A bit like a Sudoku, arrange 18 of the double-six dominoes into a six by six
+square of numbers with no duplicated numbers in any row or column. This example
+doesn't work, because it has two number ones in the left column and two number
+fives in the bottom row, among other problems.
+
+    2 3|4 5 1|0
+    -     -
+    0 4|5 6 2|1
+    
+    4|0 3|5 3|2
+    
+    1|4 2 0 6 3
+        - - - -
+    5|1 4 3 0 6
+    
+    1|6 3|1 5|5
+
 ### Dominosa
 The domino puzzle I most often see in books or online is called either Dominosa
 or Domino Solitaire. It was invented by O.S. Adler in 1874, and each problem
@@ -2899,6 +2917,19 @@ over two other pieces, meaning that it moves five spaces in total.
     0     3   2     1
     
     3|2 1|0   2|0 1|3
+
+### The Latin Square
+    0 1 2 3 4 5
+    - - - - - -
+    1 2 3 4 5 6
+    
+    2 3 4 5 6 0
+    - - - - - -
+    4 5 6 0 1 2
+    
+    3 4 5 6 0 1
+    - - - - - -
+    6 0 1 2 3 4
 
 ### Dominosa
 #### Solution 1
