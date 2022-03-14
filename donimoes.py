@@ -168,8 +168,6 @@ class RulesDocTemplate(SimpleDocTemplate):
         if heading_level > 2:
             return
         heading_text = flowable.getPlainText()
-        if heading_text.endswith(' Solutions'):
-            return
         if heading_text == 'Table of Contents':
             self.before_contents = False
             return
@@ -359,7 +357,8 @@ def main():
             flowable = Paragraph(state.text,
                                  styles[state.style])
         if state.style.startswith(Styles.Heading):
-            if state.style < 'Heading3':
+            heading_level = int(state.style[-1])
+            if heading_level < 3:
                 logger.info(state.text)
             linked_text = doc.create_link(state.text)
             flowable = Paragraph(linked_text, styles[state.style])
@@ -373,8 +372,9 @@ def main():
                 group = []
                 bulleted = []
                 first_bullet = None
+            if heading_level < 3 and not group and headings:
+                story.append(PageBreak())
             group.append(flowable)
-            heading_level = int(state.style[-1])
             headings = headings[:heading_level]
             while len(headings) < heading_level:
                 headings.append(None)

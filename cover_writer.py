@@ -14,9 +14,9 @@ from font_set import register_fonts
 
 class Cover:
     def __init__(self):
-        self.total_width = 9.046 * inch
+        self.total_width = 9.065 * inch
         self.total_height = 7.125 * inch
-        self.spine = 0.296 * inch
+        self.spine = 0.315 * inch
         self.margin = 0.5 * inch
         self.bleed = 0.125 * inch
 

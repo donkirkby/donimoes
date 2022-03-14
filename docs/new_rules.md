@@ -257,7 +257,7 @@ Dominosa boards can include a partial solution, but one of the headings must be
 ![Diagram](images/new_rules/diagram27.png)
 
 # Solutions
-## Donimo Drivers Solutions
+### Donimo Drivers Solutions
 The walking moves are described with the number of a die, a direction, and a
 distance. For example, 1R3 means move the 1 die to the right, 3 spaces. A move
 with no distance means one space. The driving moves have a small letter 'd' for
@@ -269,7 +269,7 @@ with no distance means one space. The driving moves have a small letter 'd' for
 4. 4dD, 4U, 4L2, 4U, 4dR, 4U3, 4L2, 2dR, 4dR, 3dR, 4D, 4L3, 4dU, 1dU, 1R2, 2L2,
    2D, 2L3, 2D, 2L, 2dD, 2R, 2U2, 2R3, 2U, 2R2, 4dD, 4R3, 4U, 3dL, 4dL, 2dL, 1dR
 
-## Adding Donimoes Solutions
+### Adding Donimoes Solutions
 Here are the solutions to the Adding Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Adding moves contain the domino
 numbers, (H)orizontal or (V)ertical direction, and the position to place it.

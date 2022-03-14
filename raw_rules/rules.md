@@ -2578,7 +2578,7 @@ split. (This would be very frustrating when solving, so none of the problems in
 this collection require it.)
 
 # Solutions
-## Unmatched Donimoes Solutions ##
+### Unmatched Donimoes Solutions
 Here are the solutions to the Unmatched Donimoes problems. For each step, move
 the listed domino left, right, up, or down. 
 
@@ -2621,7 +2621,7 @@ the listed domino left, right, up, or down.
     40U, 41U, 16U, 20L, 40U, 41U, 16U, 64R, 63R, 65R, 55R, 54D, 01R, 11D, 52D, 51D,
     66R, 66R, 33D, 33D, 42L, 50L, 44L, 60L
 
-## Capturing Donimoes Solutions
+### Capturing Donimoes Solutions
 Here are the solutions to the Capturing Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Then make captures for any matching
 numbers.
@@ -2651,7 +2651,7 @@ numbers.
 20. 25U, 40D, 10D, 63D, 60R, 60R, 32D, 20R, 31D, 65R, 62D, 21R, 51R, 34L, 53R,
     51R
 
-## Mirror Donimoes Solutions
+### Mirror Donimoes Solutions
 To distinguish the four different pawns in each solution, the top left is
 labelled as a regular (P)awn, the bottom left is a k(N)ight, the top right is a
 (B)ishop, and the bottom right is a (R)ook. Each pawn move has two letters and
@@ -2721,7 +2721,7 @@ Here are the Mirror Donimoes solutions:
     RD, RL, RdU2, NdU2, PR2, PdD3, RdD3, PD, PR3, PU, PR2, PU, PL, ND2, NR3, NU,
     NR2, NU, PdR, PU, NL, RD3, RR3, RU, RR2!
 
-## Bee Donimoes Solutions
+### Bee Donimoes Solutions
 Remember that these solutions use the advanced rules: the only blank you can
 land on is the one on the queen bee's domino. The moves are described with the
 number of a die, a direction, and a distance. For example, 1R3 means move the
@@ -2806,7 +2806,7 @@ number of a die, a direction, and a distance. For example, 1R3 means move the
     Moves for 5: 1D4L1, 1D1L5, 3D3R6, 1L1, 2L3, 2D4R7U1L2, 1R7U1L1.
     Moves for 6: 5U4L2, 1L2D6L3, 5D6L4, 3D4R3, 5R2, 2D5R3.
 
-## Fujisan Solutions
+### Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different
 pawns, the top left is labelled as a (P)awn, the bottom left is a k(N)ight, the
 top right is a (B)ishop, and the bottom right is a (R)ook. The direction of each
@@ -2889,15 +2889,15 @@ over two other pieces, meaning that it moves five spaces in total.
     PR5(+1), PD, ND, NR5(+2), NU, PU, RU, BL1(+3), BD, PD, PL2(+1), PU, BL2, RD,
     ND, NL4(+2), NU, RL4(+1)
 
-## Classic Puzzle Solutions
-### Two Equal Lines
+### Classic Puzzle Solutions
+#### Two Equal Lines
     0|0 0|2 2|2
     
     
     
     0|1 1|1 1|2
 
-### Square of Six
+#### Square of Six
     0 1|1 2
     -     -
     0     1
@@ -2906,19 +2906,19 @@ over two other pieces, meaning that it moves five spaces in total.
     -     -
     2 2|0 0
 
-### Rows and Columns
+#### Rows and Columns
     0|0 3|2 1 3 2|2 2|0
             - -
     3|3 0|1 2 0 1|1 1|3
 
-### Twin Rectangles
+#### Twin Rectangles
     3 0|0 3   2 1|1 2
     -     -   -     -
     0     3   2     1
     
     3|2 1|0   2|0 1|3
 
-### The Latin Square
+#### The Latin Square
     0 1 2 3 4 5
     - - - - - -
     1 2 3 4 5 6
@@ -2931,15 +2931,14 @@ over two other pieces, meaning that it moves five spaces in total.
     - - - - - -
     6 0 1 2 3 4
 
-### Dominosa
-#### Solution 1
+#### Dominosa Solution 1
     2|2 1 2
         - -
     0|0 1 0
     
     1|2 0|1
 
-#### Solution 2
+#### Dominosa Solution 2
     0|1 0 1|3
         -
     3 1 0 2|2
@@ -2948,7 +2947,7 @@ over two other pieces, meaning that it moves five spaces in total.
         -
     2|3 1 0|2
 
-#### Solution 3
+#### Dominosa Solution 3
     3 0|1 1 0|4
     -     -
     2 4|4 1 1|2
@@ -2959,7 +2958,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -         -
     3 0|2 1|3 0
 
-#### Solution 4
+#### Dominosa Solution 4
     0|2 1|1 2
             -
     0 0|1 3 2
@@ -2968,7 +2967,7 @@ over two other pieces, meaning that it moves five spaces in total.
             -
     3|3 1|2 2
 
-#### Solution 5
+#### Dominosa Solution 5
     3|4 0|1 1|2
     
     1 2 2|2 4|4
@@ -2979,7 +2978,7 @@ over two other pieces, meaning that it moves five spaces in total.
     
     0|0 3|3 1|3
 
-#### Solution 6
+#### Dominosa Solution 6
     1 2 3|3 0|3
     - -
     0 3 0 4|4 4
@@ -2990,7 +2989,7 @@ over two other pieces, meaning that it moves five spaces in total.
         -     -
     2|2 1 0|0 1
 
-#### Solution 7
+#### Dominosa Solution 7
     2|5 0|0 2|4 3
                 -
     4 1|5 0|3 3 2
@@ -3003,7 +3002,7 @@ over two other pieces, meaning that it moves five spaces in total.
                 -
     3|3 1|2 3|5 4
 
-#### Solution 8
+#### Dominosa Solution 8
     3|5 0|1 3|4 5
                 -
     3 1|4 1|3 3 0
@@ -3016,7 +3015,7 @@ over two other pieces, meaning that it moves five spaces in total.
         - -     -
     3|0 1 5 1|2 4
 
-#### Solution 9
+#### Dominosa Solution 9
     1|2 4 2|3 4
         -     -
     1|4 4 1 3 3
@@ -3027,7 +3026,7 @@ over two other pieces, meaning that it moves five spaces in total.
     
     2|4 0|1 0|2
 
-#### Solution 10
+#### Dominosa Solution 10
     1|2 4 2|3 1
         -     -
     1|3 2 0|0 1
@@ -3038,7 +3037,7 @@ over two other pieces, meaning that it moves five spaces in total.
         -     -
     0|2 4 0|3 1
 
-#### Solution 11
+#### Dominosa Solution 11
     5 1|3 2|3 1|1
     -
     0 5 4|5 2|2 5
@@ -3051,7 +3050,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -
     5 1|5 2|0 0|1
 
-#### Solution 12
+#### Dominosa Solution 12
     3|4 3|3 1|5 2
                 -
     0|4 0|0 2 3 0
@@ -3064,7 +3063,7 @@ over two other pieces, meaning that it moves five spaces in total.
             -
     4|4 1|2 0 1|1
 
-#### Solution 13
+#### Dominosa Solution 13
     6 0|6 4 1 3|4 5
     -     - -     -
     4 6 4 4 1 2|2 2
@@ -3079,7 +3078,7 @@ over two other pieces, meaning that it moves five spaces in total.
     
     1|5 5|4 0|1 1|4
 
-#### Solution 14
+#### Dominosa Solution 14
     1|5 6 2|2 2 6|2
         -     -
     4 1 5 5|3 3 2 6
@@ -3094,7 +3093,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -     -
     0 5|5 1 1|6 2|4
 
-#### Solution 15
+#### Dominosa Solution 15
     0|0 1|3 1|1
     
     4 0|2 2|3 2
@@ -3105,7 +3104,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -         -
     0 0|1 1|2 1
 
-#### Solution 16
+#### Dominosa Solution 16
     2|3 2|2 3|3
     
     3 0|1 4|1 1
@@ -3116,7 +3115,7 @@ over two other pieces, meaning that it moves five spaces in total.
     -         -
     0 4|4 1|3 0
 
-#### Solution 17
+#### Dominosa Solution 17
     0|2 3 1|2 5|5
         -
     3|5 0 4 1|1 3
@@ -3129,7 +3128,7 @@ over two other pieces, meaning that it moves five spaces in total.
                 -
     1|5 3|4 0|1 2
 
-#### Solution 18
+#### Dominosa Solution 18
     3|4 0|5 2|3 3
                 -
     0 0|2 4|5 0 3
@@ -3142,7 +3141,7 @@ over two other pieces, meaning that it moves five spaces in total.
             -
     1|5 1|4 2 0|1
 
-#### Solution 19
+#### Dominosa Solution 19
     2|3 4|4 1|3 2|5
     
     6|6 0|5 5 5|3 3
@@ -3157,7 +3156,7 @@ over two other pieces, meaning that it moves five spaces in total.
             -     -
     1|1 3|3 0 1|4 0
 
-#### Solution 20
+#### Dominosa Solution 20
     0|6 0|1 4|4 3|6
     
     2|6 6 0|5 2 6 3

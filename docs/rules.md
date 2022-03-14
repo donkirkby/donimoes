@@ -1425,7 +1425,7 @@ split. (This would be very frustrating when solving, so none of the problems in
 this collection require it.)
 
 # Solutions
-## Unmatched Donimoes Solutions ##
+### Unmatched Donimoes Solutions
 Here are the solutions to the Unmatched Donimoes problems. For each step, move
 the listed domino left, right, up, or down. 
 
@@ -1468,7 +1468,7 @@ the listed domino left, right, up, or down.
     40U, 41U, 16U, 20L, 40U, 41U, 16U, 64R, 63R, 65R, 55R, 54D, 01R, 11D, 52D, 51D,
     66R, 66R, 33D, 33D, 42L, 50L, 44L, 60L
 
-## Capturing Donimoes Solutions
+### Capturing Donimoes Solutions
 Here are the solutions to the Capturing Donimoes problems. For each step, move the
 listed domino left, right, up, or down. Then make captures for any matching
 numbers.
@@ -1498,7 +1498,7 @@ numbers.
 20. 25U, 40D, 10D, 63D, 60R, 60R, 32D, 20R, 31D, 65R, 62D, 21R, 51R, 34L, 53R,
     51R
 
-## Mirror Donimoes Solutions
+### Mirror Donimoes Solutions
 To distinguish the four different pawns in each solution, the top left is
 labelled as a regular (P)awn, the bottom left is a k(N)ight, the top right is a
 (B)ishop, and the bottom right is a (R)ook. Each pawn move has two letters and
@@ -1568,7 +1568,7 @@ Here are the Mirror Donimoes solutions:
     RD, RL, RdU2, NdU2, PR2, PdD3, RdD3, PD, PR3, PU, PR2, PU, PL, ND2, NR3, NU,
     NR2, NU, PdR, PU, NL, RD3, RR3, RU, RR2!
 
-## Bee Donimoes Solutions
+### Bee Donimoes Solutions
 Remember that these solutions use the advanced rules: the only blank you can
 land on is the one on the queen bee's domino. The moves are described with the
 number of a die, a direction, and a distance. For example, 1R3 means move the
@@ -1653,7 +1653,7 @@ number of a die, a direction, and a distance. For example, 1R3 means move the
     Moves for 5: 1D4L1, 1D1L5, 3D3R6, 1L1, 2L3, 2D4R7U1L2, 1R7U1L1.
     Moves for 6: 5U4L2, 1L2D6L3, 5D6L4, 3D4R3, 5R2, 2D5R3.
 
-## Fujisan Solutions
+### Fujisan Solutions
 Here are the solutions to the Fujisan problems. To distinguish the four different
 pawns, the top left is labelled as a (P)awn, the bottom left is a k(N)ight, the
 top right is a (B)ishop, and the bottom right is a (R)ook. The direction of each
@@ -1736,81 +1736,80 @@ over two other pieces, meaning that it moves five spaces in total.
     PR5(+1), PD, ND, NR5(+2), NU, PU, RU, BL1(+3), BD, PD, PL2(+1), PU, BL2, RD,
     ND, NL4(+2), NU, RL4(+1)
 
-## Classic Puzzle Solutions
-### Two Equal Lines
+### Classic Puzzle Solutions
+#### Two Equal Lines
 ![Diagram](images/rules/diagram177.png)
 
-### Square of Six
+#### Square of Six
 ![Diagram](images/rules/diagram178.png)
 
-### Rows and Columns
+#### Rows and Columns
 ![Diagram](images/rules/diagram179.png)
 
-### Twin Rectangles
+#### Twin Rectangles
 ![Diagram](images/rules/diagram180.png)
 
-### The Latin Square
+#### The Latin Square
 ![Diagram](images/rules/diagram181.png)
 
-### Dominosa
-#### Solution 1
+#### Dominosa Solution 1
 ![Diagram](images/rules/diagram182.png)
 
-#### Solution 2
+#### Dominosa Solution 2
 ![Diagram](images/rules/diagram183.png)
 
-#### Solution 3
+#### Dominosa Solution 3
 ![Diagram](images/rules/diagram184.png)
 
-#### Solution 4
+#### Dominosa Solution 4
 ![Diagram](images/rules/diagram185.png)
 
-#### Solution 5
+#### Dominosa Solution 5
 ![Diagram](images/rules/diagram186.png)
 
-#### Solution 6
+#### Dominosa Solution 6
 ![Diagram](images/rules/diagram187.png)
 
-#### Solution 7
+#### Dominosa Solution 7
 ![Diagram](images/rules/diagram188.png)
 
-#### Solution 8
+#### Dominosa Solution 8
 ![Diagram](images/rules/diagram189.png)
 
-#### Solution 9
+#### Dominosa Solution 9
 ![Diagram](images/rules/diagram190.png)
 
-#### Solution 10
+#### Dominosa Solution 10
 ![Diagram](images/rules/diagram191.png)
 
-#### Solution 11
+#### Dominosa Solution 11
 ![Diagram](images/rules/diagram192.png)
 
-#### Solution 12
+#### Dominosa Solution 12
 ![Diagram](images/rules/diagram193.png)
 
-#### Solution 13
+#### Dominosa Solution 13
 ![Diagram](images/rules/diagram194.png)
 
-#### Solution 14
+#### Dominosa Solution 14
 ![Diagram](images/rules/diagram195.png)
 
-#### Solution 15
+#### Dominosa Solution 15
 ![Diagram](images/rules/diagram196.png)
 
-#### Solution 16
+#### Dominosa Solution 16
 ![Diagram](images/rules/diagram197.png)
 
-#### Solution 17
+#### Dominosa Solution 17
 ![Diagram](images/rules/diagram198.png)
 
-#### Solution 18
+#### Dominosa Solution 18
 ![Diagram](images/rules/diagram199.png)
 
-#### Solution 19
+#### Dominosa Solution 19
 ![Diagram](images/rules/diagram200.png)
 
-#### Solution 20
+#### Dominosa Solution 20
 ![Diagram](images/rules/diagram201.png)
 
 # Contributing
