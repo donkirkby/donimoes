@@ -2,7 +2,7 @@
 title: New Rules for Donimoes
 subtitle: Experiments in Progress
 ---
-## Introduction
+### Introduction
 These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 

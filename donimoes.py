@@ -372,7 +372,7 @@ def main():
                 group = []
                 bulleted = []
                 first_bullet = None
-            if heading_level < 3 and not group and headings:
+            if heading_level < 3 and not group:
                 story.append(PageBreak())
             group.append(flowable)
             headings = headings[:heading_level]

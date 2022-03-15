@@ -2,7 +2,7 @@
 title: The Rules of Donimoes
 ---
 
-## Introduction
+### Introduction
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of
 games, often with Mr. Hoyle's name on the cover, you might find the basic game
@@ -12,6 +12,14 @@ This book is a collection of domino games and puzzles that will broaden your
 horizons beyond a chain of dominoes with matching numbers. You'll find new games
 and puzzles that I designed, as well as some of my favourite domino games and
 puzzles by other designers.
+
+### Acknowledgements
+Many thanks to my patient family and friends who tested out early versions of
+these games and puzzles. I am grateful to Kerry Handscomb for demonstrating how
+to write seriously about fun topics, and for introducing me to many, many new
+games. Cameron Browne showed me that designing puzzles could be as much fun as
+designing board games, and Sid Sackson started my game design journey when I
+stumbled across A Gamut of Games in a neglected old library.
 
 ## Table of Contents
 
@@ -382,12 +390,12 @@ solutions are listed at the end.
 You'll need patience for this one. Did I go too far?
 
 # Games
-I really enjoy classic domino games like All Fives, and I've played recent
-inventions like Chickenfoot and Mexican Train. However, I thought I might be
-able to design a domino game that felt more like a grid than a chain. These
-games are my attempt to do that.
-
 ## Tetradominoes
+I enjoy classic domino games like All Fives, and I've played recent inventions
+like Chickenfoot and Mexican Train. However, I thought I might be able to design
+a domino game that felt more like a grid than a chain. Tetradominoes is my
+attempt to do that.
+
 Play matching dominoes in a grid, then try to play the tetromino shapes on top.
 
 ### Players
@@ -498,8 +506,10 @@ dominoes you played. Count the numbers along the longest side, and add that to
 the level 1 score. You win if your total score is less than 15. Good luck!
 
 ### Tournament
-Tournament play is a series of games until one player wins seven points. One
-point for each tetromino.
+Tournament play is a series of games until one player or team wins seven points.
+Each game ends when a player or team plays their fourth tetromino, and then
+everyone gets one point for each tetromino they played. The tournament ends
+immediately when someone scores seven points, no need to finish the last game.
 
 ## Bee Donimoes
 A puzzle race game where a swarm of dice bring nectar back to the hive.
