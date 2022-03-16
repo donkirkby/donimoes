@@ -8,7 +8,7 @@ that you can do more than just match the numbers. If you look in a book of
 games, often with Mr. Hoyle's name on the cover, you might find the basic game
 and maybe All Fives. If you're lucky, you'll find Chickenfoot and Mexican Train.
 
-This book is a collection of domino games and puzzles that will broaden your
+This is a collection of domino games and puzzles that will broaden your
 horizons beyond a chain of dominoes with matching numbers. You'll find new games
 and puzzles that I designed, as well as some of my favourite domino games and
 puzzles by other designers.
@@ -1822,7 +1822,7 @@ over two other pieces, meaning that it moves five spaces in total.
 #### Dominosa Solution 20
 ![Diagram](images/rules/diagram201.png)
 
-# Contributing
+### Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [https://donkirkby.github.io/donimoes][github].
 

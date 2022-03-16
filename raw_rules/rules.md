@@ -3181,7 +3181,7 @@ over two other pieces, meaning that it moves five spaces in total.
     
     0|0 3|5 2|4 2|5
 
-# Contributing
+### Contributing
 Found some interesting problems to solve? Ideas to share? Get in touch at
 [https://donkirkby.github.io/donimoes][github].
 
