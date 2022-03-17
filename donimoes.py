@@ -192,13 +192,20 @@ def load_contents_descriptions(contents_path: Path) -> typing.Dict[str, str]:
                 for row in reader}
 
 
+def slug(heading: str) -> str:
+    return heading.lower().replace(" ", "-")
+
+
 def format_contents_markdown(
         contents_descriptions: typing.Dict[str, str]) -> str:
-    return '\n'.join(
-        '\n    '.join(wrap(f'* [{heading}](#{heading.lower().replace(" ", "-")}) '
+    display = '\n'.join(
+        '\n    '.join(wrap(f'* [{heading}][{slug(heading)}] '
                            f'{description}',
                            break_on_hyphens=False))
-        for heading, description in contents_descriptions.items()) + '\n\n'
+        for heading, description in contents_descriptions.items())
+    links = '\n'.join(f'[{slug(heading)}]: #{slug(heading)}'
+                      for heading in contents_descriptions)
+    return f'{display}\n\n{links}\n\n'
 
 
 def main():

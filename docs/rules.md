@@ -23,48 +23,62 @@ stumbled across A Gamut of Games in a neglected old library.
 
 ## Table of Contents
 
-* [Unmatched Donimoes](#unmatched-donimoes) is a puzzle I designed
+* [Unmatched Donimoes][unmatched-donimoes] is a puzzle I designed
     where you have to slide all the dominoes into a rectangular shape,
     without sliding any matching numbers next to each other. (1 player,
     double-six dominoes)
-* [Capturing Donimoes](#capturing-donimoes) is a puzzle I designed
+* [Capturing Donimoes][capturing-donimoes] is a puzzle I designed
     where you have to collect all the dominoes by sliding matching numbers
     next to each other.  (1 player, double-six dominoes)
-* [Mirror Donimoes](#mirror-donimoes) is a puzzle I designed where
+* [Mirror Donimoes][mirror-donimoes] is a puzzle I designed where
     pawns walk around on top of the dominoes. (1 player, double-six
     dominoes, 4 pawns)
-* [Tetradominoes](#tetradominoes) is a game I designed where you play
+* [Tetradominoes][tetradominoes] is a game I designed where you play
     matching dominoes in a grid, then try to play the tetromino shapes on
     top. (1-4 players, double-six dominoes, 7 cardboard tetrominoes, and
     some beads, buttons, or coins)
-* [Bee Donimoes](#bee-donimoes) is a puzzle race game I designed where
+* [Bee Donimoes][bee-donimoes] is a puzzle race game I designed where
     a swarm of dice bring nectar back to the hive. (1-6 players,
     double-six dominoes, 3-6 dice, and a timer)
-* [Domino Finder](#domino-finder) is a memory game I designed where
-    you have to find the treasure domino without falling in a trap. (2-4
+* [Domino Finder][domino-finder] is a memory game I designed where you
+    have to find the treasure domino without falling in a trap. (2-4
     players, double-six dominoes, pawns, and two dice)
-* [Mountains and Valleys](#mountains-and-valleys) is a solitaire game
+* [Mountains and Valleys][mountains-and-valleys] is a solitaire game
     by Sid Sackson where you have to lay out a map that you can hike on. I
     added a cooperative version, and adapted it from paper, pencil, and
     dice to use dominoes. (1-4 players, double-six dominoes)
-* [Domino Runners](#domino-runners) is based on board games by Roland
+* [Domino Runners][domino-runners] is based on board games by Roland
     Siegers, where your runners run across a grid of dominoes, dropping
     checkers and trying to capture your opponent's checkers. (2 players,
     double-six dominoes, and checkers)
-* [Fujisan](#fujisan) is a solitaire game by James Droscha where you
+* [Fujisan][fujisan] is a solitaire game by James Droscha where you
     help four Shinto priests climb to the peak of Mount Fuji. I found 20
     layouts that are much more challenging than usual. (1 player,
     double-six dominoes, and four pawns)
-* [Cobra Paw](#cobra-paw) is a quick-reaction game by Derek Weston.
+* [Cobra Paw][cobra-paw] is a quick-reaction game by Derek Weston.
     (2-4 players, double-six dominoes, and two dice)
-* [All Fives](#all-fives) is a traditional dominoes game, where you
+* [All Fives][all-fives] is a traditional dominoes game, where you
     score points by making the ends add up to a multiple of five. (2-4
     players, double-six dominoes)
-* [Classic Puzzles](#classic-puzzles) where you have to lay out
+* [Classic Puzzles][classic-puzzles] where you have to lay out
     dominoes in a given pattern to meet some goal, popularized by Henry
     Ernest Dudeney. Also includes Dominosa by O.S. Adler. (1 player,
     double-six dominoes, paper and pencil)
-* [Solutions](#solutions)
+* [Solutions][solutions]
+
+[unmatched-donimoes]: #unmatched-donimoes
+[capturing-donimoes]: #capturing-donimoes
+[mirror-donimoes]: #mirror-donimoes
+[tetradominoes]: #tetradominoes
+[bee-donimoes]: #bee-donimoes
+[domino-finder]: #domino-finder
+[mountains-and-valleys]: #mountains-and-valleys
+[domino-runners]: #domino-runners
+[fujisan]: #fujisan
+[cobra-paw]: #cobra-paw
+[all-fives]: #all-fives
+[classic-puzzles]: #classic-puzzles
+[solutions]: #solutions
 
 # Puzzles
 ## Unmatched Donimoes
