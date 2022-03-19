@@ -1,4 +1,6 @@
+import random
 import unittest
+from textwrap import dedent
 
 import pytest
 from networkx.exception import NodeNotFound
@@ -593,3 +595,17 @@ arrows:(2,1)L2D1,(1,0)R1
     assert repr(arrows) == "ArrowSet('(2,1)L2D1,(1,0)R1')"
     assert arrows.positions == [[(2, 1), (0, 1), (0, 0)],
                                 [(1, 0), (2, 0)]]
+
+
+def test_mutate_after_removal():
+    """ Removing an extra domino means it can't be used in a mutation. """
+    board = Board.create(dedent("""\
+        0|0 0
+            -
+        1|1 1"""), max_pips=2)
+    board.extra_dominoes.clear()
+
+    for _ in range(10):
+        mutated = board.mutate(random)
+
+        assert Domino(2, 2) not in mutated.dominoes

@@ -159,3 +159,19 @@ add an advanced version with the queen's blank as the only wild one.
 
 [bee blanks]: 2021/bee_blanks.png
 [Bee Donimoes]: https://github.com/donkirkby/donimoes/issues/34
+
+I adapted the mechanics of Fresh Fish to make Tetromino Road. It's another use
+of the tetrominoes, but it's not quite ready to add to the main collection.
+[Domino Drivers] looks promising, and I made good progress with it, but it's
+too hard for the computer to solve!
+
+[Domino Drivers]: https://github.com/donkirkby/donimoes/issues/171
+
+## 2022 - Runners
+The big success this year was adapting [Domino Runners] from Winkeladvokat and
+Cabale. Kerry included it as an article in Abstract Games Magazine [issue 23].
+After that, I started to think seriously about publishing the collection in book
+form, adding a table of contents, a cover, and a selection of classic puzzles.
+
+[Domino Runners]: https://github.com/donkirkby/donimoes/issues/164
+[issue 23]: https://www.abstractgames.org/issue-23.html

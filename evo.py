@@ -1,5 +1,6 @@
 # Based on https://github.com/Garve/Evolutionary-Algorithm
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 
 class Individual(ABC):
@@ -82,6 +83,7 @@ class Evolution:
         self.pools = []
         self.add_pools()
         self.n_offsprings = n_offsprings
+        self.history = []
 
     @property
     def pool(self):
@@ -113,3 +115,48 @@ class Evolution:
             while 1 < len(self.pools) and self.pools[-1].is_stale:
                 self.pools.pop()
             self.add_pools()
+
+    @staticmethod
+    def is_finished():
+        """ Called after each epoch of evolution. Return true to stop. """
+        return False
+
+    def run(self, max_epochs: int):
+        start_time = datetime.now()
+        self.history.clear()
+        for epoch_count in range(max_epochs):
+            top_individual = self.pool.individuals[-1]
+            top_fitness = self.pool.fitness(top_individual)
+            mid_fitness = self.pool.fitness(
+                self.pool.individuals[-len(self.pool.individuals) // 5])
+            summaries = []
+            for pool in self.pools:
+                pool_fitness = pool.fitness(pool.individuals[-1])
+                total = pool_fitness
+                summaries.append(f'{total}')
+            self.history.append(top_fitness)
+            self.print_step_summaries(top_individual,
+                                      top_fitness,
+                                      mid_fitness,
+                                      summaries)
+            self.step()
+            if self.is_finished():
+                break
+
+        duration = datetime.now() - start_time
+        self.print_final_summary(duration)
+
+    def print_final_summary(self, duration):
+        best = self.pool.individuals[-1]
+        for problem in self.pool.individuals:
+            print(self.pool.fitness(problem))
+        solution = best.value['start']
+        print(solution)
+        print(f'Finished {len(self.history)} epochs in {duration}.')
+
+    def print_step_summaries(self, top_individual, top_fitness, mid_fitness, summaries):
+        print(len(self.history),
+              top_fitness,
+              mid_fitness,
+              repr(top_individual.value['start']),
+              ', '.join(summaries))

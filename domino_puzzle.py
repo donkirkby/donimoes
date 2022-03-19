@@ -423,6 +423,11 @@ class Board(object):
             new_board = board_type(self.width,
                                    self.height,
                                    max_pips=self.max_pips)
+            old_dominoes = set(self.dominoes)
+            old_dominoes.update(self.extra_dominoes)
+            new_board.extra_dominoes = [domino
+                                        for domino in new_board.extra_dominoes
+                                        if domino in old_dominoes]
             for domino in self.dominoes:
                 if domino not in removed:
                     i = new_board.extra_dominoes.index(domino)

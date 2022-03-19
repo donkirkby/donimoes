@@ -2,23 +2,29 @@
 title: New Rules for Donimoes
 subtitle: Experiments in Progress
 ---
-## Introduction
+### Introduction
 These are new puzzles that aren't finished yet. You can try them out and let me
 know what you think.
 
 ## Table of Contents
 
-* [Donimo Drivers](#donimo-drivers) is a puzzle I designed where dice
+* [Donimo Drivers][donimo-drivers] is a puzzle I designed where dice
     can walk over the dominoes or drive them around. (1 player, 4 dice,
     and double-six dominoes)
-* [Adding Donimoes](#adding-donimoes) is a puzzle I designed where you
+* [Adding Donimoes][adding-donimoes] is a puzzle I designed where you
     add dominoes in the given order. (1 player, double-six dominoes)
-* [Tetromino Road](#tetromino-road) is a board game I designed where
+* [Tetromino Road][tetromino-road] is a board game I designed where
     you lay out dominoes with roads between them. (2 players, double-six
     dominoes, beads and coins)
-* [Writing Rules](#writing-rules) is a section to help me remember how
+* [Writing Rules][writing-rules] is a section to help me remember how
     to create the different types of diagrams.
-* [Solutions](#solutions)
+* [Solutions][solutions]
+
+[donimo-drivers]: #donimo-drivers
+[adding-donimoes]: #adding-donimoes
+[tetromino-road]: #tetromino-road
+[writing-rules]: #writing-rules
+[solutions]: #solutions
 
 # Puzzles
 ## Donimo Drivers

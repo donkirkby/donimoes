@@ -2,6 +2,7 @@ import logging
 import typing
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
 from csv import DictReader
+from datetime import datetime
 from functools import partial
 from logging import getLogger, basicConfig
 from pathlib import Path
@@ -266,6 +267,9 @@ def main():
                                     bulletFontName='Raleway',
                                     bulletFontSize=paragraph_style.fontSize,
                                     leftIndent=paragraph_style.fontSize*1.5)
+    centred_style = ParagraphStyle('Author',
+                                   parent=paragraph_style,
+                                   alignment=TA_CENTER)
     story = []
     group = []
     bulleted = []
@@ -315,14 +319,12 @@ def main():
                 story.append(Paragraph(subtitle_text, subtitle_style))
             if args.booklet:
                 story.append(Spacer(0, page_size[1]*0.15))
-                author_style = ParagraphStyle('Author',
-                                              parent=paragraph_style,
-                                              alignment=TA_CENTER)
-                story.append(Paragraph('Don Kirkby', author_style))
+                story.append(Paragraph('Don Kirkby', centred_style))
                 story.append(Spacer(0, page_size[1]*0.15))
-                story.append(Paragraph('978-1-4583-8566-6', author_style))
-                story.append(Paragraph('Imprint: Lulu.com', author_style))
+                story.append(Paragraph('978-1-4583-8566-6', centred_style))
+                story.append(Paragraph('Imprint: Lulu.com', centred_style))
                 story.append(cc_drawing)
+                story.append(Paragraph(f'{datetime.now().year}', centred_style))
                 story.append(PageBreak())
             continue
         elif state.style == Styles.Diagram:
@@ -423,6 +425,7 @@ def main():
                              numbered_list_style)
     if not args.booklet:
         story.append(cc_drawing)
+        story.append(Paragraph(f'{datetime.now().year}', centred_style))
     doc.multiBuild(story, canvasmaker=partial(FooterCanvas,
                                               font_name='Raleway',
                                               is_booklet=args.booklet))
