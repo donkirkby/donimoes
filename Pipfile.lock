@@ -159,11 +159,11 @@
         },
         "fonttools": {
             "hashes": [
-                "sha256:058d15bd7aa35f47df70f99a15ac4994787127db42c468e695d1b9ef77c0a6a4",
-                "sha256:1b008d129c1c0f0174a74f2ea07b949ed4fbf328355cf4c9812506ecaac38b9f"
+                "sha256:236b29aee6b113e8f7bee28779c1230a86ad2aac9a74a31b0aedf57e7dfb62a4",
+                "sha256:2df636a3f402ef14593c6811dac0609563b8c374bd7850e76919eb51ea205426"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==4.31.0"
+            "version": "==4.31.2"
         },
         "kiwisolver": {
             "hashes": [
@@ -487,11 +487,11 @@
         },
         "svgwrite": {
             "hashes": [
-                "sha256:4b21652a1d9c543a6bf4f9f2a54146b214519b7540ca60cb99968ad09ef631d0",
-                "sha256:e220a4bf189e7e214a55e8a11421d152b5b6fb1dd660c86a8b6b61fe8cc2ac48"
+                "sha256:ca63d76396d1f6f099a2b2d8cf1419e1c1de8deece9a2b7f4da0632067d71d43",
+                "sha256:d304a929f197d31647c287c10eee0f64378058e1c83a9df83433a5980864e59f"
             ],
             "index": "pypi",
-            "version": "==1.4.1"
+            "version": "==1.4.2"
         },
         "tinycss2": {
             "hashes": [
