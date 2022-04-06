@@ -1,5 +1,7 @@
 import random
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+from itertools import count
+from textwrap import dedent
 
 from networkx import Graph, minimum_spanning_edges
 
@@ -51,10 +53,15 @@ def mountain_score(board: Board):
 
 class MountainsProblem(Individual):
     def _random_init(self, init_params):
-        board = Board(**init_params)
-        while True:
-            if board.fill(random):
-                break
+        start = init_params.get('start')
+        if start is not None:
+            board = Board.create(start, max_pips=init_params['max_pips'])
+            board.mutate(random)
+        else:
+            board = Board(**init_params)
+            while True:
+                if board.fill(random):
+                    break
 
         return dict(start=board.display(),
                     max_pips=board.max_pips)
@@ -152,24 +159,85 @@ class MountainsEvolution(Evolution):
               f'in {duration}.')
 
 
+def find_gaps():
+    """ See how common impossible deals are: 5938/11720000 = 0.000507. """
+    args = parse_args()
+    gap_count = 0
+    for i in count(1):
+        board = Board(args.columns, args.rows, args.max_pips)
+        while True:
+            if board.fill(random):
+                break
+        if has_gap(board):
+            print(board.display())
+            gap_count += 1
+        if i % 10000 == 0:
+            print(f'{gap_count}/{i} = {gap_count/i}')
+
+
+def has_gap(board):
+    required_numbers = set(range(1, 6))
+    numbers = {board[x][y].pips
+               for x in range(board.width)
+               for y in range(board.height)}
+    return numbers.intersection(required_numbers) != required_numbers
+
+
+def solve_deal():
+    init_params = dict(max_pips=6,
+                       start=(dedent("""\
+                            3|3 4 3|4 4
+                                -     -
+                            2|2 2 2|6 4
+                            
+                            1 4 4 3|6 6
+                            - - -     -
+                            0 0 1 4|5 4
+                            
+                            0|6 6 5 0|3
+                                - -
+                            1|6 6 0 1|3""")))
+    fitness_calculator = MountainsFitnessCalculator()
+    evo = MountainsEvolution(pool_size=100,
+                             fitness=fitness_calculator.calculate,
+                             individual_class=MountainsProblem,
+                             n_offsprings=30,
+                             pair_params=None,
+                             mutate_params=None,
+                             init_params=init_params)
+
+    evo.run(max_epochs=10000)
+    top_individual = evo.pool.individuals[-1]
+    top_fitness = evo.pool.fitness(top_individual)
+    print(f'{top_fitness=}')
+    print(top_individual.value['start'])
+    print(len(evo.history))
+
+
 def main():
     args = parse_args()
-    board = Board(args.columns, args.rows, args.max_pips)
-    board.fill(random)
     longest_results = []
     shortest_results = []
+    gap_count = 0
     fitness_calculator = MountainsFitnessCalculator()
-    init_params = dict(max_pips=6,
-                       width=6,
-                       height=6)
-    for i in range(10000):
+    for i in count(1):
         if i % 100 == 0:
+            print(f'Gap odds are {gap_count}/{i} = {gap_count/i}.')
             for generation_count, start in shortest_results:
                 print(f'Short {generation_count}:')
                 print(start)
             for generation_count, start in longest_results:
                 print(f'Long {generation_count}:')
                 print(start)
+        board = Board(args.columns, args.rows, args.max_pips)
+        while True:
+            if board.fill(random):
+                break
+        if has_gap(board):
+            gap_count += 1
+            print(f'{i}: Gap found.')
+            continue
+        init_params = dict(max_pips=args.max_pips, start=board.display())
         evo = MountainsEvolution(pool_size=100,
                                  fitness=fitness_calculator.calculate,
                                  individual_class=MountainsProblem,
@@ -179,7 +247,7 @@ def main():
                                  init_params=init_params,
                                  deal_num=i)
 
-        evo.run(max_epochs=10000)
+        evo.run(max_epochs=40000)
         top_individual = evo.pool.individuals[-1]
         top_fitness = evo.pool.fitness(top_individual)
         if top_fitness != 0:
@@ -207,83 +275,113 @@ def main():
 
 
 """
-Short 6:
-3|3 2|4 1|5
+Gap odds are 0/3300 = 0.0.
+Short 11:
+4|5 5 5|6 6
+    -     -
+3|6 5 1|6 6
 
-4 3 4|4 2|6
-- -
-3 2 5 6 3|5
+3|3 3 2|6 6
+    -     -
+4|0 2 4|4 4
+
+0|1 2 3 2|2
     - -
-0|1 0 3 4|6
+0|2 1 0 0|0
 
-1|2 2 2|5 6
-    -     -
-0|0 0 0|4 6
-
-Short 6:
-3|3 3 2 2|3
-    - -
-4|4 5 2 1 4
-        - -
-0|1 4|3 1 0
-
-1|2 4|6 1|6
-
-0|3 3|6 6 5
-        - -
-0|2 4|5 5 5
-
-Short 6:
-5|5 4|1 1|1
-
-2|5 4 1|2 3
-    -     -
-1|6 3 2|4 3
-
-2|2 3|6 4|5
-
-1|3 4|6 3|5
-
-0|3 5|6 2|6
-
-Long 5650:
-0|0 0|3 4 5
-        - -
-0|1 2|2 1 4
-
-1|1 0 2|0 6
-    -     -
-2|6 6 1|5 6
-
-3|5 5|5 4|3
-
-2|3 4|6 4|2
-
-Long 4610:
-3 4|4 3|6 6
+Short 14:
+4 5|6 5|5 6
 -         -
-3 3|5 6 5 6
-      - -
-2|4 4 1 2 6
+1 1|0 4|2 2
+
+1|1 1|5 2|2
+
+1|2 0|5 6|3
+
+0|2 2|5 5|4
+
+3|3 4|4 6|4
+
+Short 17:
+6|6 5 4|3 4
     -     -
-2|2 0 0|2 2
+6|1 0 0|2 4
 
-1|3 4|1 0|3
+5|5 4 1|3 3
+    -     -
+5|6 5 0|1 3
 
-1|2 1|1 0|0
+5 4 5 1|1 3
+- - -     -
+3 2 2 1|2 2
 
-Long 3916:
-1|1 0|6 4|5
+Long 29291:
+3|5 4 5|4 4
+    -     -
+3 4 0 6|1 2
+- -
+2 4 0|0 0|2
 
-2|6 6 5 6 5
-    - - - -
-2|5 4 1 6 5
-
-1|6 0|0 0|4
-
-0|1 0 3 3|3
+1|5 6 6 0|3
     - -
-2|1 2 2 2|4
+0|5 3 4 3|4
+
+0|6 6|6 5|5
+
+Long 25772:
+0 2|2 6 6 5
+-     - - -
+0 1|6 6 0 1
+
+0|5 6 6 0|2
+    - -
+0|4 3 4 3|2
+
+0|3 6 5|2 2
+    -     -
+0|1 2 3|3 4
+
+Long 21384:
+2 3 3|3 4|6
+- -
+2 1 2 3|4 6
+    -     -
+1|6 6 2|4 6
+
+0|6 5|5 4 5
+        - -
+0|5 3 4 0 1
+    - -
+0|3 2 1 0|2
+
+3342: Ran 40000 generations in 0:32:42.851259.
+top_fitness=-2
+0|2 6|6 5|6
+
+0|3 4|5 0|6
+
+2 2|4 4 1|6
+-     -
+2 2|5 3 2|6
+
+3|6 5 4 1|2
+    - -
+4|6 0 0 0|0
+
+3069: Ran 40000 generations in 0:31:27.698066.
+top_fitness=-2
+4 3|6 0|4 4
+-         -
+1 2|6 1|3 2
+
+0|3 4 2 0|2
+    - -
+0|0 3 2 1|1
+
+0|5 4|6 1|6
+
+0|6 6|6 5|6
+
 """
 
 

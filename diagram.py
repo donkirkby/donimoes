@@ -124,6 +124,7 @@ def draw_domino_outline(turtle,
                         cell_size=DEFAULT_CELL_SIZE,
                         fill='white',
                         margin=0.05):
+    start_colour = turtle.color()
     turtle.up()
     r = cell_size * 0.05
     margin_size = cell_size * margin
@@ -147,6 +148,7 @@ def draw_domino_outline(turtle,
     turtle.forward(cell_size/2-margin_size)
     turtle.left(90)
     turtle.forward(cell_size/2-r-margin_size)
+    turtle.color(*start_colour)
 
 
 def draw_die_outline(turtle,
@@ -241,12 +243,12 @@ def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
     for (x, y), marker in board.markers.items():
         turtle.setheading(start_heading+90)
         turtle.setpos(start_x + x*cell_size, start_y + y*cell_size)
-        turtle.color(start_colour)
+        turtle.color(*start_colour)
         turtle.dot(0.75*cell_size)
         turtle.color('white')
         if marker == 'w':
             turtle.dot(0.7*cell_size)
-            turtle.color(start_colour)
+            turtle.color(*start_colour)
             turtle.back(0.05*cell_size)
         elif marker == 'b':
             turtle.back(0.05*cell_size)
@@ -260,7 +262,7 @@ def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
         domino = cell.domino
         turtle.setheading(domino.degrees)
         draw_pips(turtle, cell.pips, int(0.30*cell_size))
-    turtle.color(start_colour)
+    turtle.color(*start_colour)
     turtle.setpos((start_x, start_y))
     turtle.setheading(start_heading)
 
@@ -677,8 +679,8 @@ def draw_arrows(turtle: Turtle, board: Board, cell_size: int):
 
 
 def draw_demo(turtle):
-    width = turtle.screen.window_width()
-    height = turtle.screen.window_height()
+    width = turtle.getscreen().window_width()
+    height = turtle.getscreen().window_height()
     cell_size = min(width/8.2, height/7.2)
     turtle.up()
     turtle.back(cell_size*4)
@@ -686,7 +688,7 @@ def draw_demo(turtle):
     turtle.forward(cell_size*3.5)
     turtle.right(90)
     turtle.down()
-    turtle.fillcolor('white')
+    turtle.fillcolor('ivory')
     turtle.begin_fill()
     for _ in range(2):
         turtle.forward(cell_size*8)
@@ -694,6 +696,7 @@ def draw_demo(turtle):
         turtle.forward(cell_size*7)
         turtle.right(90)
     turtle.end_fill()
+    turtle.fillcolor('black')
 
     demo_state = """\
 5 5 5 5 6 6 6 6
@@ -705,6 +708,8 @@ def draw_demo(turtle):
     4 5+6 6
 
 2|2
+---
+(0,4)F,(4,1)G
 """
     mountain_state = """\
 0|1 2|1 0|4
@@ -735,3 +740,9 @@ def draw_demo(turtle):
     else:
         draw_fuji(turtle, 8, cell_size)
         draw_diagram(turtle, demo_state, cell_size, solution=False)
+
+
+if __name__ == '__live_coding__':
+    from turtle import Turtle
+    t = Turtle()
+    draw_demo(t)

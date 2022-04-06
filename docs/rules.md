@@ -1120,8 +1120,8 @@ the 22 domino, but not on the 44 domino.
 
 ![Diagram](images/rules/diagram130.png)
 
-The other difference with the sniff is that doesn't have to be played across the
-line, you can choose which way to play it. That can make a difference to the
+The other difference with the sniff is that it doesn't have to be played across
+the line, you can choose which way to play it. That can make a difference to the
 scoring.
 
 ### Score

@@ -4,9 +4,12 @@ from reportlab.graphics import renderPM, renderPDF
 from reportlab.graphics.shapes import Drawing, Rect, Image, String, Group
 from reportlab.lib.colors import Color
 from reportlab.lib.pagesizes import inch
+from reportlab.pdfbase import pdfmetrics
 from space_tracer import LivePillowImage
 # noinspection PyPackageRequirements
 import PIL.Image
+# noinspection PyPackageRequirements
+import PIL.ImageDraw
 from svglib.svglib import svg2rlg
 
 from font_set import register_fonts
@@ -81,31 +84,21 @@ class Cover:
                            textAnchor='middle'))
 
         small_font_size = self.total_height / 50
-        lines = ["A dozen games and puzzles that take you",
+        lines = ["A dozen games and puzzles that will take you",
                  "beyond a chain of dominoes with matching",
                  "numbers. You'll find my new games and puzzles,",
                  "as well as my favourites from other designers."]
-        for i, line in enumerate(lines):
-            drawing.add(String(self.margin + self.bleed,
-                               self.total_height * 0.78 - i*small_font_size,
-                               line,
-                               fontName='Raleway',
-                               fontSize=small_font_size,
-                               fillColor=Color(0.85, 0.85, 0.85),
-                               textAnchor='start'))
+        x = self.margin + self.bleed
+        y = self.total_height * 0.78
+        self.draw_text_box(drawing, lines, x, y, small_font_size)
         lines = ["It might be the best new use of",
                  "dominoes since Sid Sackson's",
                  "The Domino Bead Game.",
                  "-- Kerry Handscomb,",
                  "    Abstract Games Magazine"]
-        for i, line in enumerate(lines):
-            drawing.add(String(self.total_width * 0.17,
-                               self.total_height * 0.56 - i*small_font_size,
-                               line,
-                               fontName='Raleway',
-                               fontSize=small_font_size,
-                               fillColor=Color(0.85, 0.85, 0.85),
-                               textAnchor='start'))
+        x = self.total_width * 0.17
+        y = self.total_height * 0.56
+        self.draw_text_box(drawing, lines, x, y, small_font_size)
 
         spine_group = Group(String(-self.margin - self.bleed, self.total_width / 2 - self.spine / 5,
                                    'Don Kirkby',
@@ -139,6 +132,47 @@ class Cover:
         drawing.add(isbn)
 
         return drawing
+
+    def draw_text_box(self, drawing, lines, x, y, font_size):
+        cover = PIL.Image.open('cover/cover_cropped.jpg')
+        scale = cover.width / self.total_width
+
+        width = max(pdfmetrics.stringWidth(line, 'Raleway', font_size)
+                    for line in lines)
+        height = (len(lines)+0.5)*font_size
+        padded_width = round((width+2*font_size)*scale)
+        padded_height = round((height+2*font_size)*scale)
+        image = PIL.Image.new('RGB', (padded_width, padded_height))
+        paint = PIL.ImageDraw.Draw(image)
+        paint.rectangle((0, 0, padded_width, padded_height), 'black')
+        steps = 32
+        for step in range(steps):
+            padding = round(step * font_size / steps * scale)
+            grey = round(step * 50 / steps)
+            grey_rgb = f'#{grey:02x}{grey:02x}{grey:02x}'
+            paint.rounded_rectangle((padding,
+                                     padding,
+                                     padded_width-2*padding,
+                                     padded_height-2*padding),
+                                    font_size*scale,
+                                    fill=grey_rgb)
+        mask = image.convert('L')
+
+        paint.rectangle((0, 0, padded_width, padded_height), fill='brown')
+        image.putalpha(mask)
+        cover.paste(image,
+                    (round((x-font_size)*scale),
+                     round(cover.height-(y+font_size*2)*scale)),
+                    image)
+        cover.save('cover/cover_cropped.jpg')
+        for i, line in enumerate(lines):
+            drawing.add(String(x,
+                               y - i * font_size,
+                               line,
+                               fontName='Raleway',
+                               fontSize=font_size,
+                               fillColor=Color(0.85, 0.85, 0.85),
+                               textAnchor='start'))
 
     def add_border(self, drawing):
         cover_left = (self.total_width + self.spine) / 2

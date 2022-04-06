@@ -89,10 +89,11 @@ class SvgTurtle(TNavigator, TPen):
             pencolor = self._colorstr(color)
         else:
             pencolor = self._pencolor or 0
-        self.screen.cv.add(self.screen.cv.circle((x, y),
-                                                 diameter/2,
-                                                 stroke=pencolor,
-                                                 fill=pencolor))
+        self.screen.cv.add(self.screen.cv.line((x, y),
+                                               (x+0.001, y),
+                                               stroke=pencolor,
+                                               stroke_width=diameter,
+                                               stroke_linecap='round'))
 
     def to_svg(self) -> str:
         self._path = None  # Cancel incomplete fill.
