@@ -2,6 +2,11 @@
   link: /rules.html
 - name: PDF
   link: /donimoes.pdf
+  dropdown:
+  - name: Rules
+    link: /donimoes.pdf
+  - name: Dominosa
+    link: /dominosa.pdf
 - name: Journal
   link: /journal/
 - name: GitHub

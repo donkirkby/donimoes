@@ -1,4 +1,5 @@
 import logging
+import os
 import typing
 from argparse import ArgumentParser, FileType, ArgumentDefaultsHelpFormatter
 from csv import DictReader
@@ -45,7 +46,10 @@ def parse_args():
                             formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('--booklet',
                         action='store_true',
-                        help='Reorder pages for printing as a folded booklet.')
+                        help='Use smaller pages for a booklet.')
+    parser.add_argument('--no-merge',
+                        action='store_true',
+                        help="Don't write merged markdown, only PDF.")
     parser.add_argument('markdown',
                         type=FileType(),
                         nargs='?',
@@ -118,14 +122,21 @@ class FujisanDiagram(Diagram):
 
 
 class DiagramWriter:
-    def __init__(self, target_folder: Path, images_folder: Path):
+    def __init__(self,
+                 target_folder: Path,
+                 images_folder: Path,
+                 is_disabled=False):
         self.diagram_count = 0
         self.target_folder = target_folder
         self.images_folder = images_folder
         self.diagram_differ = DiagramDiffer()
         self.diagram_differ.tolerance = 10
+        self.is_disabled = is_disabled
 
     def add_diagram(self, diagram: Diagram) -> Path:
+        if self.is_disabled:
+            return Path(os.devnull)
+
         self.diagram_count += 1
         svg_diagram = diagram.build()
         image = LiveSvg(svg_diagram)
@@ -220,14 +231,17 @@ def main():
     pdf_path = source_path / 'docs' / (pdf_stem + '.pdf')
     merged_path = pdf_path.parent / (rules_stem + '.md')
     images_path = pdf_path.parent / 'images' / rules_stem
-    images_path.mkdir(parents=True, exist_ok=True)
+    if not args.no_merge:
+        images_path.mkdir(parents=True, exist_ok=True)
     contents_path = markdown_path.parent / (rules_stem + '_contents.csv')
     contents_descriptions = load_contents_descriptions(contents_path)
     register_fonts()
 
     with args.markdown:
         states = parse(args.markdown.read())
-    diagram_writer = DiagramWriter(pdf_path.parent, images_path)
+    diagram_writer = DiagramWriter(pdf_path.parent,
+                                   images_path,
+                                   is_disabled=args.no_merge)
     if args.booklet:
         page_size = (4.25*inch, 6.875*inch)
         vertical_margin = 0.3*inch
@@ -425,20 +439,24 @@ def main():
                              numbered_list_style)
     if not args.booklet:
         story.append(cc_drawing)
-        story.append(Paragraph(f'{datetime.now().year}', centred_style))
+        story.append(Paragraph(
+            f'<a href="https://creativecommons.org/licenses/by-sa/4.0/">'
+            f'{datetime.now().year}</a>',
+            centred_style))
     doc.multiBuild(story, canvasmaker=partial(FooterCanvas,
                                               font_name='Raleway',
                                               is_booklet=args.booklet))
-    with merged_path.open('w') as merged_file:
-        for state in states:
-            state.write_markdown(merged_file)
-        merged_file.write(dedent('''\
-            
-            [![cc-logo]][cc-by-sa]
-            
-            [cc-logo]: images/cc-by-sa.png
-            [cc-by-sa]: https://creativecommons.org/licenses/by-sa/4.0/
-            '''))
+    if not args.no_merge:
+        with merged_path.open('w') as merged_file:
+            for state in states:
+                state.write_markdown(merged_file)
+            merged_file.write(dedent('''\
+                
+                [![cc-logo]][cc-by-sa]
+                
+                [cc-logo]: images/cc-by-sa.png
+                [cc-by-sa]: https://creativecommons.org/licenses/by-sa/4.0/
+                '''))
 
     logger.info('Done.')
     call(["evince", pdf_path])
