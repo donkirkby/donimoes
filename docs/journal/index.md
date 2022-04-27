@@ -167,11 +167,15 @@ too hard for the computer to solve!
 
 [Domino Drivers]: https://github.com/donkirkby/donimoes/issues/171
 
-## 2022 - Runners
+## 2022 - Runners and a Book
 The big success this year was adapting [Domino Runners] from Winkeladvokat and
 Cabale. Kerry included it as an article in Abstract Games Magazine [issue 23].
 After that, I started to think seriously about publishing the collection in book
 form, adding a table of contents, a cover, and a selection of classic puzzles.
 
+Finally, in April, I published [the book]. I think it turned out well, the
+diagrams look nice, and it fits inside the dominoes tin.
+
 [Domino Runners]: https://github.com/donkirkby/donimoes/issues/164
 [issue 23]: https://www.abstractgames.org/issue-23.html
+[the book]: https://www.lulu.com/en/us/shop/don-kirkby/donimoes/paperback/product-eg54rm.html

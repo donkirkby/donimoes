@@ -1,6 +1,8 @@
 ---
 title: Donimoes
 subtitle: New Games and Puzzles
+hero_link: https://www.lulu.com/en/us/shop/don-kirkby/donimoes/paperback/product-eg54rm.html
+hero_link_text: Buy the Book
 ---
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of
@@ -64,8 +66,9 @@ The Dominosa problems are a pattern of numbers to join into dominoes, like this:
 
 ![Dominosa example]
 
-To try the puzzle, get a set of dominoes. Then either [read the rules][rules],
-or download [the PDF][pdf].
+To try the games and puzzles, get a set of dominoes. Then either
+[read the rules][rules], download [the PDF][pdf], or [buy the book][book]. Bonus
+feature: the book fits inside a standard dominoes tin.
 
 If you're interested, you can read about [making donimoes] or my
 [design journal]. If you're brave, you can read about [experiments] in progress
@@ -93,3 +96,4 @@ If you're interested, you can read about [making donimoes] or my
 [design journal]: https://donkirkby.github.io/donimoes/journal/
 [experiments]: https://donkirkby.github.io/donimoes/new_rules.html
 [new pdf]: https://donkirkby.github.io/donimoes/new_rules.pdf
+[book]: https://www.lulu.com/en/us/shop/don-kirkby/donimoes/paperback/product-eg54rm.html
