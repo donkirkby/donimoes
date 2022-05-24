@@ -953,6 +953,7 @@ class BoardGraph(object):
     def walk(self, board, size_limit=maxsize) -> typing.Set[str]:
         self.graph = DiGraph()
         self.start = board.display(cropped=True)
+        self.check_remaining(len(board.dominoes), self.start)
         self.graph.add_node(self.start)
 
         if self.executor is not None:

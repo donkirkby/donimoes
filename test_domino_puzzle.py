@@ -505,6 +505,25 @@ x 4|3
         with pytest.raises(NodeNotFound):
             graph.get_solution()
 
+    @staticmethod
+    def testNoMoves():
+        graph = CaptureBoardGraph()
+        board = Board.create("""\
+6|2 3
+    -
+1|4 5
+""")
+        expected_closest = """\
+6|2 3
+    -
+1|4 5
+"""
+        graph.walk(board)
+
+        assert graph.closest == expected_closest
+        with pytest.raises(NodeNotFound):
+            graph.get_solution()
+
     def testPartialSolution(self):
         graph = CaptureBoardGraph()
         expected_solution = ['62l']

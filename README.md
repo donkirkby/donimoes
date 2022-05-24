@@ -1,4 +1,6 @@
 # Donimoes: New Games and Puzzles
+[**Buy the Book**][book]
+
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of
 games, often with Mr. Hoyle's name on the cover, you might find the basic game
@@ -62,7 +64,7 @@ The Dominosa problems are a pattern of numbers to join into dominoes, like this:
 ![Dominosa example]
 
 To try the puzzle, get a set of dominoes. Then either [read the rules][rules],
-or download [the PDF][pdf].
+[buy the book][book], or download [the PDF][pdf].
 
 If you're interested, you can read about [making donimoes] or my
 [design journal]. If you're brave, you can read about [experiments] in progress
@@ -85,6 +87,7 @@ If you're interested, you can read about [making donimoes] or my
 [Unmatched example]: https://donkirkby.github.io/donimoes/blocking_example.png
 [Dominosa example]: https://donkirkby.github.io/donimoes/dominosa_example.png
 [solution example]: https://donkirkby.github.io/donimoes/solution_example.png
+[book]: https://www.lulu.com/en/us/shop/don-kirkby/donimoes/paperback/product-eg54rm.html
 [pdf]: https://donkirkby.github.io/donimoes/donimoes.pdf
 [making donimoes]: https://donkirkby.github.io/donimoes/making_donimoes.html
 [design journal]: https://donkirkby.github.io/donimoes/journal/
