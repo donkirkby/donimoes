@@ -535,11 +535,11 @@
         },
         "svgwrite": {
             "hashes": [
-                "sha256:ca63d76396d1f6f099a2b2d8cf1419e1c1de8deece9a2b7f4da0632067d71d43",
-                "sha256:d304a929f197d31647c287c10eee0f64378058e1c83a9df83433a5980864e59f"
+                "sha256:a8fbdfd4443302a6619a7f76bc937fc683daf2628d9b737c891ec08b8ce524c3",
+                "sha256:bb6b2b5450f1edbfa597d924f9ac2dd099e625562e492021d7dd614f65f8a22d"
             ],
             "index": "pypi",
-            "version": "==1.4.2"
+            "version": "==1.4.3"
         },
         "tinycss2": {
             "hashes": [
