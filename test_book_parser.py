@@ -1,6 +1,8 @@
 import unittest
 from io import StringIO
 
+import pytest
+
 from book_parser import parse, Styles, ParagraphState, BulletedState, \
     ParsingState, DiagramState, MetadataState
 
@@ -262,3 +264,45 @@ Last paragraph
         state.write_markdown(converted)
 
     assert converted.getvalue() == expected_text
+
+
+def test_link_after_diagram():
+    source = """\
+Paragraph with [a link][link].
+
+    1|2 3
+        -
+    5|6 4
+
+[link]: https://example.com
+
+Last paragraph
+"""
+    expected_text = """\
+Paragraph with [a link][link].
+
+![Diagram](images/diagram1.png)
+
+[link]: https://example.com
+
+Last paragraph
+"""
+    tree = parse(source)
+    tree[1].image_path = 'images/diagram1.png'
+    converted = StringIO()
+    for state in tree:
+        state.write_markdown(converted)
+
+    assert converted.getvalue() == expected_text
+
+
+def test_link_first():
+    source = """\
+[link]: https://example.com
+
+Paragraph with [a link][link].
+
+Last paragraph
+"""
+    with pytest.raises(ValueError, match='Link must follow a paragraph.'):
+        parse(source)

@@ -31,9 +31,12 @@ def parse(source):
             name, address = s.get_link()
         except AttributeError:
             unlinked_states.append(s)
-            last_linked = s
+            if not isinstance(s, StartState):
+                last_linked = s
             continue
-        last_linked.raw_text += s.raw_text
+        if last_linked is None:
+            raise ValueError('Link must follow a paragraph.')
+        last_linked.extra_markdown += s.raw_text
         links[name] = address
     printed_states = []
     last_printed = None
@@ -218,6 +221,7 @@ class DiagramState(ParsingState):
     def write_markdown(self, markdown_file: typing.TextIO):
         print(f'![Diagram]({self.image_path})', file=markdown_file)
         print(file=markdown_file)
+        markdown_file.write(self.extra_markdown)
 
     def __repr__(self):
         return 'DiagramState({!r})'.format(self.text)

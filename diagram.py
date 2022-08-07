@@ -259,9 +259,10 @@ def draw_board(turtle, board, cell_size=DEFAULT_CELL_SIZE):
                          font=('Arial', 0.20*cell_size, 'normal'))
         turtle.back(0.10*cell_size)
         cell = board[x][y]
-        domino = cell.domino
-        turtle.setheading(domino.degrees)
-        draw_pips(turtle, cell.pips, int(0.30*cell_size))
+        if cell is not None:
+            domino = cell.domino
+            turtle.setheading(domino.degrees)
+            draw_pips(turtle, cell.pips, int(0.30*cell_size))
     turtle.color(*start_colour)
     turtle.setpos((start_x, start_y))
     turtle.setheading(start_heading)

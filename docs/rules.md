@@ -906,6 +906,9 @@ checkers.
 
 ![Diagram](images/rules/diagram104.png)
 
+[winkeladvokat]: https://boardgamegeek.com/boardgame/2473/winkeladvokat
+[cabale]: https://boardgamegeek.com/boardgame/687/cabale
+
 ## Fujisan
 James Droscha is best known as the designer of the piecepack game system, and
 he designed Fujisan for the piecepack, then adapted it for dominoes and pawns in

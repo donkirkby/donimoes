@@ -9,7 +9,7 @@ from dominosa import DominosaBoard, PairState, DominosaGraph, DominosaProblem, \
 from svg_diagram import SvgDiagram
 
 # noinspection PyUnresolvedReferences
-from diagram_differ import drawing_differ
+from diagram_differ import drawing_differ, session_drawing_differ
 
 
 def test_rule6_unique_pairs_vertical():

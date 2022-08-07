@@ -54,12 +54,21 @@ class DiagramDiffer(LiveImageDiffer):
             __init__() and either request fixture is passed to init or
             file_prefix is passed to this method.
         """
+        __tracebackhide__ = True
         super().assert_equal(LiveSvg(actual), LiveSvg(expected), file_prefix)
 
 
 @pytest.fixture(scope='session')
-def drawing_differ(request):
+def session_drawing_differ():
+    """ Track all images compared in a session. """
     diffs_path = Path(__file__).parent / 'image_diffs'
-    differ = DiagramDiffer(diffs_path, request)
+    differ = DiagramDiffer(diffs_path)
     yield differ
     differ.remove_common_prefix()
+
+
+@pytest.fixture
+def drawing_differ(request, session_drawing_differ):
+    """ Pass the current request to the session image differ. """
+    session_drawing_differ.request = request
+    yield session_drawing_differ

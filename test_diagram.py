@@ -4,7 +4,7 @@ from domino_puzzle import Domino, Cell, Board
 from svg_diagram import SvgDiagram
 
 # noinspection PyUnresolvedReferences
-from diagram_differ import drawing_differ
+from diagram_differ import drawing_differ, session_drawing_differ
 
 
 def test_draw_one_pip(drawing_differ):
@@ -381,6 +381,40 @@ P2
     draw_diagram(actual.turtle, state)
 
     drawing_differ.assert_equal(actual, expected, 'draw_marker_with_arrow')
+
+
+# noinspection DuplicatedCode
+def test_draw_marker_beside_domino(drawing_differ):
+    state = """\
+1|2
+
+x x
+
+---
+(0,0)A
+"""
+    expected = SvgDiagram(500, 250)
+    actual = SvgDiagram(500, 250)
+
+    t = expected.turtle
+    t.up()
+    t.goto(-50, 50)
+    draw_domino(t, Domino(1, 2))
+    t.right(90)
+    t.forward(100)
+    t.down()
+    t.dot(75)
+
+    t.up()
+    t.forward(5)
+    t.color('white')
+    t.write('A', align='center', font=('Arial', 20, 'normal'))
+
+    actual.turtle.up()
+    actual.turtle.goto(-100, 100)
+    draw_diagram(actual.turtle, state)
+
+    drawing_differ.assert_equal(actual, expected, 'draw_marker_beside_domino')
 
 
 def test_draw_fuji(drawing_differ):
