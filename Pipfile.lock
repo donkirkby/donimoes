@@ -534,10 +534,10 @@
         },
         "svglib": {
             "hashes": [
-                "sha256:a38998b95d1bb99564dc9dffaf15e4e9453761f2790d2dd4147a4ad5fbac1078"
+                "sha256:48c24706c23bb4262173b6fa49eabb10afa15b8412f14283120549517ccfa314"
             ],
             "index": "pypi",
-            "version": "==1.3.0"
+            "version": "==1.4.1"
         },
         "svgwrite": {
             "hashes": [
