@@ -1,8 +1,7 @@
 ---
 title: Donimoes
 subtitle: New Games and Puzzles
-hero_link: https://www.lulu.com/en/us/shop/don-kirkby/donimoes/paperback/product-eg54rm.html
-hero_link_text: Buy the Book
+callouts: index_callouts
 ---
 When I tell people that I like domino games, they are often surprised to hear
 that you can do more than just match the numbers. If you look in a book of

@@ -1,0 +1,17 @@
+height: is-small
+items:
+  - title: Book
+    subtitle: Buy from Lulu
+    icon: fa-book
+    call_to_action_name: Buy
+    call_to_action_link: https://www.lulu.com/en/us/shop/don-kirkby/donimoes/paperback/product-eg54rm.html
+  - title: Games and Puzzles
+    subtitle: Read the rules
+    icon: fa-globe
+    call_to_action_name: Read
+    call_to_action_link: /rules.html
+  - title: Tetrominoes
+    subtitle: Buy from Game Crafter
+    icon: fa-wrench
+    call_to_action_name: Buy
+    call_to_action_link: https://www.thegamecrafter.com/games/tetromino-set-black-and-white
