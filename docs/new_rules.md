@@ -13,6 +13,8 @@ know what you think.
     and double-six dominoes)
 * [Adding Donimoes][adding-donimoes] is a puzzle I designed where you
     add dominoes in the given order. (1 player, double-six dominoes)
+* [77][77] is a trick-taking game, inspired by David Parlett's card
+    game, 99. (2-3 players, double-six dominoes)
 * [Tetromino Road][tetromino-road] is a board game I designed where
     you lay out dominoes with roads between them. (2 players, double-six
     dominoes, beads and coins)
@@ -22,6 +24,7 @@ know what you think.
 
 [donimo-drivers]: #donimo-drivers
 [adding-donimoes]: #adding-donimoes
+[77]: #77
 [tetromino-road]: #tetromino-road
 [writing-rules]: #writing-rules
 [solutions]: #solutions
@@ -150,6 +153,87 @@ solutions are listed at the end.
 ![Diagram](images/new_rules/diagram16.png)
 
 # Games
+## 77
+I spent a lot of my childhood playing Oh Hell, so I loved David Parlett's 99
+when I read his book, "Original Card Games". Building your bid out of three
+cards from your hand adds a lovely puzzle to the beginning of each hand.
+
+In this game, I tried to capture some of that bidding puzzle, and mix it with
+the double suits in the Decktet.
+
+### Setup
+Shuffle the dominoes face down, then each player flips over one domino. Highest
+total pips will lead the first trick. Players tied for the lead should flip over
+another domino to break the tie.
+
+### Starting the Hand
+At the beginning of each hand, shuffle the dominoes face down, then the leader
+flips one domino face up to choose the trump suits. Each player now draws nine
+dominoes and looks at them without letting the other players see. Each player
+chooses two dominoes from their hand, and places them face down to the right of
+their hand. These two dominoes secretly record how many tricks the player has to
+win, and will be explained later. Finally, players have the option to make
+premium bids.
+
+### Taking Tricks
+Every domino played will use one of its numbers as a suit and the other as a
+value. Blanks cannot be used as a suit, so ignore them on the trump domino or
+the led domino. Each domino is compared to the led domino and the trump domino
+to decide which number is the suit. If either number matches the led domino,
+that number is the suit. If neither number matches the led domino but one of
+them matches a trump suit, then that number is the suit. If neither number
+matches the led domino or a trump suit, then the domino can't win the trick.
+
+Starting with the lead, each player plays one domino face up to the middle of
+the table. After assigning suits as described above, determine the winner. Look
+at the dominoes played after the lead, and go through the four possible suits:
+big trump, little trump, big lead, little lead. The first suit used on any
+domino after the lead will determine the winner. The highest value in that suit
+wins the trick. If no dominoes played in any of those suits, then the lead wins
+the trick and leads again. The lead domino may change suit as you compare it to
+the other dominoes. Remember that blanks can never be used as a suit.
+
+Whoever wins the trick places the dominoes in a face-down stack to the left of
+their hand, and then leads to the next trick.
+
+Example 1: Alice leads 41 when the trump is 62. Bob plays 51 to beat Alice in
+the 1 suit, but Charlie wins by playing 43 to beat Alice in the 4 suit. Charlie
+wins, because the 4 suit is compared before the 1 suit.
+
+Example 2: Alice leads 53 when the trump is 41. Bob plays 22, and Charlie
+plays 51. Although 1 is a trump suit, 51 has to use the 5 suit, because it
+matches the lead. 51 has a lower value than 53, so Alice wins the trick.
+
+### Bidding
+The two dominoes in the bid use their smaller number as the value of the bid,
+so 62 and 33 would form a bid for five tricks.
+
+After all players have placed a bid, players may convert their bid to "declare"
+or "reveal". Declaring is flipping your bid face up, and revealing is showing
+your hand as well as your bid. To be formal, go around the table from the lead's
+left, allowing players to make premium bids, with "reveal" surpassing "declare".
+Only one player may make a premium bid.
+
+### Scoring
+After playing all seven tricks in a hand, players reveal their bids and record
+the scores. Winning each trick scores one point, but the big points come from
+matching the bid. Look at how many players matched, then score 10 points if two
+matched, and 20 points if only one matched. A "declare" bid wins an extra 20
+points, and a "reveal" bid wins an extra 50, making 77 a perfect score.
+
+A game is played to 100 points. Leading the first trick passes to the left.
+
+### Two-Player Variant
+Deal a dummy hand face down, and pick two random dominoes as its bid. After all
+the bidding is finished, flip the dummy hand face up and leave its bid face
+down.
+
+The lead player for each trick always plays the third domino to the trick from
+the dummy hand. If the dummy wins a trick, the player who led the previous trick
+leads from the dummy hand and plays third from their own hand.
+
+Scoring works as normal, counting the dummy as a third player.
+
 ## Tetromino Road
 The dominoes are played on an 8x8 grid. Make the edges out of face-down
 dominoes, or play on a chess board where a pair of squares are the same size as
