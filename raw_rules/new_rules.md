@@ -206,13 +206,19 @@ solutions are listed at the end.
     1 5 1 5 5 4
 
 # Games
-## 77
+## Khufu
 I spent a lot of my childhood playing Oh Hell, so I loved David Parlett's 99
 when I read his book, "Original Card Games". Building your bid out of three
 cards from your hand adds a lovely puzzle to the beginning of each hand.
 
-In this game, I tried to capture some of that bidding puzzle, and mix it with
-the double suits in the Decktet.
+In this game, I tried to capture some of that bidding puzzle and also take 
+advantage of the dominoes' flexibility. You can choose whether to use the big
+number or the small number of each domino as its suit. Since David Parlett said
+he preferred the name Sphinx for his game, I called this Khufu - the Sphinx's
+neighbour.
+
+New players should play a round without any bidding, then add bidding for
+tricks, then add bidding for big or small suits.
 
 ### Setup
 Shuffle the dominoes face down, then each player flips over one domino. Highest
@@ -221,45 +227,54 @@ another domino to break the tie.
 
 ### Starting the Hand
 At the beginning of each hand, shuffle the dominoes face down, then the leader
-flips one domino face up to choose the trump suits. Each player now draws nine
-dominoes and looks at them without letting the other players see. Each player
-chooses two dominoes from their hand, and places them face down to the right of
-their hand. These two dominoes secretly record how many tricks the player has to
-win, and will be explained later. Finally, players have the option to make
-premium bids.
+flips one domino face up to choose the trump suit. Leave it face up in front of
+the leader. Each player now draws nine dominoes and looks at them without
+letting the other players see.
+
+Normally, the players bid points to choose big or small suits, then use two
+dominoes to place a secret bid for tricks. If there are new players, however,
+skip the bidding, play with big suits, and only draw seven dominoes. Bidding
+will be explained at the end.
 
 ### Taking Tricks
 Every domino played will use one of its numbers as a suit and the other as a
-value. Blanks cannot be used as a suit, so ignore them on the trump domino or
-the led domino. Each domino is compared to the led domino and the trump domino
-to decide which number is the suit. If either number matches the led domino,
-that number is the suit. If neither number matches the led domino but one of
-them matches a trump suit, then that number is the suit. If neither number
-matches the led domino or a trump suit, then the domino can't win the trick.
+value. If suits are big, then the bigger number is the suit. If suits are small,
+the smaller number is the suit. The other number is the value in the suit. The
+same rule applies to the domino turned up for trump.
 
 Starting with the lead, each player plays one domino face up to the middle of
-the table. After assigning suits as described above, determine the winner. Look
-at the dominoes played after the lead, and go through the four possible suits:
-big trump, little trump, big lead, little lead. The first suit used on any
-domino after the lead will determine the winner. The highest value in that suit
-wins the trick. If no dominoes played in any of those suits, then the lead wins
-the trick and leads again. The lead domino may change suit as you compare it to
-the other dominoes. Remember that blanks can never be used as a suit.
+the table. If they have any dominoes in the led suit, then they have to play one
+of them. If not, they can play any domino, trump or not. If any trumps are
+played, the one with the biggest value wins the trick. Otherwise, the domino
+with the biggest value in the led suit wins the trick. Remember, even when suits
+are small, the biggest value still wins the trick.
 
 Whoever wins the trick places the dominoes in a face-down stack to the left of
 their hand, and then leads to the next trick.
 
-Example 1: Alice leads 41 when the trump is 62. Bob plays 51 to beat Alice in
-the 1 suit, but Charlie wins by playing 43 to beat Alice in the 4 suit. Charlie
-wins, because the 4 suit is compared before the 1 suit.
+Example 1: Alice leads 41 when the trump is 32 and the suits are big. Bob plays
+43 to beat Alice in the 4s suit, but Charlie has no 4s and wins by playing 31, a
+trump.
 
-Example 2: Alice leads 53 when the trump is 41. Bob plays 22, and Charlie
-plays 51. Although 1 is a trump suit, 51 has to use the 5 suit, because it
-matches the lead. 51 has a lower value than 53, so Alice wins the trick.
+Example 2: Alice leads 41 when the trump is 32 and the suits are small. Bob has
+no 1s and plays 43, a trump. Charlie has to play 31, his only domino in the 1s
+suit. Although Alice has the highest of the 1s, Bob wins with the trump.
 
-### Bidding
-The two dominoes in the bid use their smaller number as the value of the bid,
-so 62 and 33 would form a bid for five tricks.
+### Bidding for Suits
+Players bid in turn, starting with the player to the left of the lead. Each bid
+is either "big" or "small", followed by a number, or a player may pass. The
+first bid may not pass, but it may be zero. Every bid after that must be at
+least one higher than the previous bid or a pass. Players may bid in later
+rounds after they pass. When all players pass, the final bid decides whether
+each domino uses its big number or its small number as a suit. The value of the
+bid gets added to the scores of all the players except the one who made the bid.
+
+### Bidding for Tricks
+Each player chooses two dominoes from their hand, and places them face down to
+the right of their hand. These two dominoes secretly record how many tricks the
+player thinks they will win. The two dominoes in the bid use their smaller
+number as the value of the bid, so 62 and 33 would form a bid for five tricks.
+Even when suits are big, bidding for tricks always uses the smaller number.
 
 After all players have placed a bid, players may convert their bid to "declare"
 or "reveal". Declaring is flipping your bid face up, and revealing is showing
@@ -270,9 +285,10 @@ Only one player may make a premium bid.
 ### Scoring
 After playing all seven tricks in a hand, players reveal their bids and record
 the scores. Winning each trick scores one point, but the big points come from
-matching the bid. Look at how many players matched, then score 10 points if two
-matched, and 20 points if only one matched. A "declare" bid wins an extra 20
-points, and a "reveal" bid wins an extra 50, making 77 a perfect score.
+matching the bid. Look at how many players matched, then score 10 points if
+all three matched, 20 points if two matched, and 30 points if only one matched.
+A "declare" bid wins an extra 30 points, and a "reveal" bid wins an extra 60,
+making 97 a perfect score.
 
 A game is played to 100 points. Leading the first trick passes to the left.
 
