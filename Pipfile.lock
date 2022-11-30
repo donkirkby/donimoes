@@ -775,11 +775,11 @@
         },
         "space-tracer": {
             "hashes": [
-                "sha256:73cd91cc8233c3df686add36e0870d3799c7b23395a9aa3a3fb486fb2319d7d1",
-                "sha256:d103ff04fddb6b3c60586dd99a832d87e622a1d3af828f86d6cc17f106c56d34"
+                "sha256:760ba9b2aa1cb7df59d16ca7b5baf5e4f2c78f10a4568710457589fbbd8fbb6e",
+                "sha256:a2922af511ff88b5cfddd3a01a8e081a25fa9138394ce0c2d25283b4be850984"
             ],
             "index": "pypi",
-            "version": "==4.8.0"
+            "version": "==4.9.0"
         },
         "tomli": {
             "hashes": [
