@@ -11,7 +11,7 @@ space-tracer = "*"
 [packages]
 matplotlib = "*"
 deap = "*"
-networkx = "<3"
+networkx = "<4"
 reportlab = "*"
 numpy = "*"
 svgwrite = "*"
