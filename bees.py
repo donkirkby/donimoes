@@ -14,7 +14,7 @@ DEFAULT_BLANKS = 'touching'
 
 class BeesProblem(Individual):
     def __repr__(self):
-        return f'BeesProblem({self.value!r}'
+        return f'BeesProblem({self.value!r})'
 
     def pair(self, other, pair_params):
         # self_head = self.value[:int(len(self.value) * pair_params['alpha'])].copy()
