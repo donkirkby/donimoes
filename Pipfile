@@ -17,6 +17,7 @@ numpy = "*"
 svgwrite = "*"
 svglib = "*"
 cairosvg = "*"
+rlpycairo = "*"
 
 [requires]
 python_version = "3.9"
