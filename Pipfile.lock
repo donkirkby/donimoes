@@ -669,11 +669,10 @@
         },
         "reportlab": {
             "hashes": [
-                "sha256:3dcda79ce04baf70721e2ec54854722644262cac2feec3d5c4c5e77015504cb0",
-                "sha256:7f70b3b56aff5f11cb4136c51a0f5a56fe6e4c8fbbac7b903076db99a8ef31c1"
+                "sha256:1344dbe779b9049a1888105503837d0e5b62163bf5c6b33bd1fbe84bad484f50"
             ],
             "index": "pypi",
-            "version": "==4.0.4"
+            "version": "==4.0.5"
         },
         "rlpycairo": {
             "hashes": [
@@ -722,11 +721,11 @@
         },
         "zipp": {
             "hashes": [
-                "sha256:679e51dd4403591b2d6838a48de3d283f3d188412a9782faadf845f298736ba0",
-                "sha256:ebc15946aa78bd63458992fc81ec3b6f7b1e92d51c35e6de1c3804e73b799147"
+                "sha256:0e923e726174922dce09c53c59ad483ff7bbb8e572e00c7f7c46b88556409f31",
+                "sha256:84e64a1c28cf7e91ed2078bb8cc8c259cb19b76942096c8d7b84947690cabaf0"
             ],
             "markers": "python_version < '3.10'",
-            "version": "==3.16.2"
+            "version": "==3.17.0"
         }
     },
     "develop": {
