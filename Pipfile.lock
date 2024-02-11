@@ -692,12 +692,12 @@
         },
         "reportlab": {
             "hashes": [
-                "sha256:c9656216321897486e323be138f7aea67851cedc116b8cc35f8ec7f8cc763538",
-                "sha256:f32bff66a0fda234202e1e33eaf77f25008871a61cb01cd91584a521a04c0047"
+                "sha256:28a40d5000afbd8ccae15a47f7abe2841768461354bede1a9d42841132997c98",
+                "sha256:3a99faf412691159c068b3ff01c15307ce2fd2cf6b860199434874e002040a84"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.7' and python_version < '4'",
-            "version": "==4.0.9"
+            "version": "==4.1.0"
         },
         "rlpycairo": {
             "hashes": [
