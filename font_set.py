@@ -24,6 +24,7 @@ def register_fonts(include_courier=False):
                                   'Raleway-Italic',
                                   'Raleway-BoldItalic')
     if include_courier:
+        # Needed for ISBN on book cover.
         pdfmetrics.registerFont(TTFont("Courier", courier_file))
         pdfmetrics.registerFontFamily('Courier',
                                       'Courier')
