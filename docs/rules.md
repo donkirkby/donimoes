@@ -39,10 +39,10 @@ stumbled across A Gamut of Games in a neglected old library.
     some beads, buttons, or coins)
 * [Bee Donimoes][bee-donimoes] is a puzzle race game I designed where
     a swarm of dice bring nectar back to the hive. (1-6 players,
-    double-six dominoes, 3-6 dice, and a timer)
+    double-six dominoes, 6 dice, and a timer)
 * [Domino Finder][domino-finder] is a memory game I designed where you
     have to find the treasure domino without falling in a trap. (2-4
-    players, double-six dominoes, pawns, and two dice)
+    players, double-six dominoes, pawns, and 2 dice)
 * [Mountains and Valleys][mountains-and-valleys] is a solitaire game
     by Sid Sackson where you have to lay out a map that you can hike on. I
     added a cooperative version, and adapted it from paper, pencil, and
