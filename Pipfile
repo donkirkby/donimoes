@@ -21,4 +21,4 @@ space-tracer = "*"
 pytest = "*"  # Needed for space-tracer's LiveImageDiffer
 
 [requires]
-python_version = "3.13"
+python_version = "3.13"  # Keep in synch with .github/workflows/python-app.yml

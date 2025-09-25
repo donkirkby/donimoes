@@ -440,7 +440,7 @@ class Board(object):
 
     @staticmethod
     def pick_mutation_count(max_mutations, random):
-        n = random.randint(1, (max_mutations + 1) * max_mutations / 2)
+        n = random.randint(1, (max_mutations + 1) * max_mutations // 2)
         mutation_count = 0
         dn = max_mutations
         while n > 0:
