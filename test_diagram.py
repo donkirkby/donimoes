@@ -500,12 +500,12 @@ def test_dice_diagram(drawing_differ):
 ---
 dice:(2,1)3,(0,0)6
 """
-    expected = SvgDiagram(500, 250)
-    actual = SvgDiagram(500, 250)
+    expected = SvgDiagram(400, 300)
+    actual = SvgDiagram(400, 300)
 
     t = expected.turtle
     t.up()
-    t.goto(-50, -50)
+    t.goto(-150, 0)
     draw_domino(t, Domino(6, 5))
 
     t.back(30)
@@ -553,10 +553,9 @@ dice:(2,1)3,(0,0)6
 
     t = actual.turtle
     t.up()
-    t.goto(-100, 100)
+    t.goto(-200, 150)
     draw_diagram(actual.turtle, state)
 
-    drawing_differ.tolerance = 10
     drawing_differ.assert_equal(actual, expected, 'draw_dice')
 
 
@@ -570,12 +569,12 @@ def test_arrows_diagram(drawing_differ):
 dice:(2,0)4,(2,1)3
 arrows:(0,1)R2D1
 """
-    expected = SvgDiagram(500, 250)
-    actual = SvgDiagram(500, 250)
+    expected = SvgDiagram(400, 300)
+    actual = SvgDiagram(400, 300)
 
     t = expected.turtle
     t.up()
-    t.goto(-50, -50)
+    t.goto(-150, 0)
     draw_domino(t, Domino(6, 5))
 
     t.forward(200)
@@ -636,10 +635,9 @@ arrows:(0,1)R2D1
 
     t = actual.turtle
     t.up()
-    t.goto(-100, 100)
+    t.goto(-200, 150)
     draw_diagram(actual.turtle, state)
 
-    drawing_differ.tolerance = 10
     drawing_differ.assert_equal(actual, expected, 'draw_arrows')
 
 
@@ -653,12 +651,12 @@ def test_arrows_and_marker(drawing_differ):
 (2,0)B,(2,1)W
 arrows:(0,1)R2D1
 """
-    expected = SvgDiagram(500, 250)
-    actual = SvgDiagram(500, 250)
+    expected = SvgDiagram(400, 300)
+    actual = SvgDiagram(400, 300)
 
     t = expected.turtle
     t.up()
-    t.goto(-50, -50)
+    t.goto(-150, 0)
     draw_domino(t, Domino(6, 5))
 
     t.forward(200)
@@ -736,8 +734,7 @@ arrows:(0,1)R2D1
 
     t = actual.turtle
     t.up()
-    t.goto(-100, 100)
+    t.goto(-200, 150)
     draw_diagram(actual.turtle, state)
 
-    drawing_differ.tolerance = 10
     drawing_differ.assert_equal(actual, expected, 'draw_arrows_and_marker')
